@@ -51,36 +51,21 @@ function rig_check_src_file($name)
 }
 
 // ------------------------------------------------------------
+// call the entry point
 
-// depending on the command-line, call the right php script
-//    1- "admin" -> admin.php
-// or 2- "image" -> image.php
-// or 3- "album" or nothing -> album.php
-
-
-if ($admin)
-{
-	rig_check_src_file($dir_install . $dir_src . "admin.php");
-	require_once($dir_install . $dir_src . "admin.php");
-}
-else if ($image)
-{
-	rig_check_src_file($dir_install . $dir_src . "image.php");
-	require_once($dir_install . $dir_src . "image.php");
-}
-else
-{
-	rig_check_src_file($dir_install . $dir_src . "album.php");
-	require_once($dir_install . $dir_src . "album.php");
-}
+rig_check_src_file($dir_install . $dir_src . "entry_point.php");
+require_once      ($dir_install . $dir_src . "entry_point.php");
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/03/12 07:11:45  ralfoide
+//	New upload dirs, new entry_point, new meta override
+//
 //	Revision 1.3  2003/02/16 20:09:41  ralfoide
 //	Update. Version 0.6.3.1
-//
+//	
 //	Revision 1.2  2002/10/20 09:03:19  ralfoide
 //	Display error when require_once files cannot be located
 //	

@@ -32,6 +32,12 @@ $pref_album_copyright_name = 'Your Name Here';
 
 
 
+// --- meta tags for album/image pages ---
+
+// Uncomment the next line if you want robots index and follow autorized for this album
+// $pref_html_meta = "";
+
+
 // ---- URL-Rewrite support ---
 
 // If non empty, URLs will be rewritten using this rule.
@@ -62,9 +68,12 @@ $pref_album_copyright_name = 'Your Name Here';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/03/12 07:11:45  ralfoide
+//	New upload dirs, new entry_point, new meta override
+//
 //	Revision 1.6  2003/02/16 20:09:40  ralfoide
 //	Update. Version 0.6.3.1
-//
+//	
 //	Revision 1.5  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.

@@ -18,8 +18,11 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
-[1.N] Merge DB support from rig-063-exp
+- in 0.6.4:
+[1.N] Drop DB support and dump 0.6.3-exp
+- in 0.6.3:
 - in 0.6.2.4:
+[1.F] Stable enough to become 0.6.3 (need file package on SourceForge)
 [3.F] URL-Rewrite support (cf site/prefs.php)
 - in 0.6.2.3:
 [1.F] Tuned album thumbnail table
@@ -49,8 +52,28 @@ Admin:
 
 -- todo --
 
+[0.6.4]
+20030112 [0.N] Idea is instead of hacking DB support in 0.6.3-exp, keep it for later when a class
+               will be used to manipulate files. Also classify parts of the source code if useful.
+20030112 [1.N] Document album/image workflow (i.e. when and how names are used)
+20030112 [1.N] Class RigItem (struct mAlbum + mImage + helper accessors like is_image/is_album)
+20030112 [1.N] Implement the freaking password page for once!
+20030112 [2.N] Make sure options can be stored with images (rig-option link) or folders created.
+20030112 [2.N] Make options XML files.
+20030112 [3.N] Admin-album page vs Admin-image page (use these from 0.6.3-exp)
+20030112 [3.N] Admin action to recompute all previews (to adjust size, etc.)
+20030112 [4.N] Merge all 0.6.3-exp code and discard this obsolete branch
+20030112 [5.N] Revise the TODO file strucutre -- separating Generic/Admin/DB doesn't really work for me.
+
+[for 0.6.3]
+20030118 [1.N] Album pref to customize the <meta name="robots" content="noindex, nofollow">
+20030118 [1.N] Make CVS tag_2003-01-DD_v063
+20030111 [1.N] Learn how to make a Debian package. Actually make one.
+20030108 [1.N] Make SourceForge file package for 0.6.3 and move on to 0.6.4
+20030108 [1.N] 0.6.2.4 considered stable enough to become 0.6.3
 20021101 [1.N] Only display phpinfo if _debug_ enabled or admin mode
 
+[for 0.6.2]
 20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
 20020712 [2.N] Detect browser capability for DHTML
 
@@ -69,7 +92,7 @@ Admin:
 
 -- partially done --
 
-20021012 [4.W] Ask Pascal about Japanese
+[0.6.4]
 20020712 [1.W] Rename functions using a constant rig_section_method naming
     20020712 [1.F] Renaming functions in admin_util.php
     20020712 [1.W] Renaming functions in common_display.php
@@ -77,14 +100,22 @@ Admin:
 
 -- done --
 
-20030107 [4.F] Bumped to version 0.6.2.7 and updated SourceForge
+[0.6.4]
+
+[0.6.3]
+20021012 [4.F] Ask Pascal about Japanese -> [20030112] gave up getting help
+[0.6.2.4]
+20030118 [1.F] Make CVS tag_2003-01-18_v0624
+20030107 [4.F] Bumped to version 0.6.2.4 and updated SourceForge
 20030107 [3.F] URL-Rewrite support (cf site/prefs.php)
+[0.6.2.3]
 20021104 [4.F] Bumped to version 0.6.2.3
 20021101 [3.F] Fixes in Spanish
 20021030 [2.F] Finalized album thumbnail table, cleaned up experimental code. Checked with IE5, IE6, NS4.7 and Mozilla 1.1
 20021030 [2.F] Experimenting with alternate table to display album thumbnails
 20021023 [2.F] Added <html lang>; now transmitting charset via http headers.
 20021023 [2.F] Fixes for international support of strings, specifically Japanese support
+[0.6.2.2]
 20021022 [2.F] Global gamma can be changed in the site-specific pref file
 20021021 [2.F] Added local override of gamma in prefs.php
 20021020 [1.F] jhead support for un*x
@@ -106,6 +137,7 @@ Admin:
     20021020 [1.F] Display error when require_once files cannot be located
     20020713 [1.F] Better overall error reporting
     20020713 [1.F] Prettier html for error reporting
+[0.6.2.1]
 20020712 [1.F] Fixed date display in album name in admin mode & back from admin mode
 20020712 [1.F] Disabled frame admin mode
 20020712 [1.F] Display phpinfo(ALL) on top of credits
@@ -116,15 +148,15 @@ Admin:
 
 -- todo --
 
-20021109 [3.N] Add SQL driver (use generic SQL support for PHP)
-20021109 [1.N] Rewrite TEXT driver for better performances
-20021109 [1.N] Make db-drivers class instances
-20021109 [1.N] Introduce IDAI class (id-album-image class)
+20021109 [3.N] DB: Add SQL driver (use generic SQL support for PHP)
+20021109 [1.N] DB: Rewrite TEXT driver for better performances
+20021109 [1.N] DB: Make db-drivers class instances
+20021109 [1.N] DB: Introduce IDAI class (id-album-image class)
 
 -- done --
 
-20021108 [1.F] Added DBA driver
-20021108 [1.F] Note: DB stuff currently only in separate rig-063-exp module
+20021108 [1.F] DB: Added DBA driver
+20021108 [1.F] DB: Note: DB stuff currently only in separate rig-063-exp module
 
 
 
@@ -132,24 +164,24 @@ Admin:
 
 -- todo --
 
-20021109 [2.N] Admin DB page to view current DB statistics
-20021109 [2.N] Admin DB page to synchronize dbs, select current one (check which installed), purge, etc.
+20021109 [2.N] Admin: DB page to view current DB statistics
+20021109 [2.N] Admin: DB page to synchronize dbs, select current one (check which installed), purge, etc.
 
-20020915 [1.N] Check compatible with port redirectors (aka http://localhost:8080/...)
+20020915 [1.N] Admin: Check compatible with port redirectors (aka http://localhost:8080/...)
 
-20020712 [2.N] Page to edit/reset passowrds
-20020712 [2.N] Use crypt passwords
+20020712 [2.N] Admin: Page to edit/reset passowrds
+20020712 [2.N] Admin: Use crypt passwords
 
-20020712 [2.N] Add an admin detail page: display details + options for one image
+20020712 [2.N] Admin: Add an admin detail page: display details + options for one image
 
-20020712 [3.N] Make preview buttons: Previews only, Images only, images+previews
+20020712 [3.N] Admin: Make preview buttons: Previews only, Images only, images+previews
 
-20020712 [4.N] Rename album (using db or ondisk?)
-20020712 [4.N] Rename image (using db or ondisk?)
-20020712 [4.N] Create albums
-20020712 [4.N] Upload images
-20020712 [5.N] Move albums
-20020712 [5.N] Delete albums
+20020712 [4.N] Admin: Rename album (using db or ondisk?)
+20020712 [4.N] Admin: Rename image (using db or ondisk?)
+20020712 [4.N] Admin: Create albums
+20020712 [4.N] Admin: Upload images
+20020712 [5.N] Admin: Move albums
+20020712 [5.N] Admin: Delete albums
 
 
 
@@ -331,9 +363,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2003/01/19 01:23:45  ralfoide
+//	Update
+//
 //	Revision 1.4  2003/01/07 17:39:41  ralfoide
 //	URL-Rewrite. Version 0.6.2.4
-//
+//	
 //	Revision 1.3  2002/11/05 08:54:04  ralfoide
 //	Version 0.6.2.3 -- mostly fixes
 //	

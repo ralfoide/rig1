@@ -321,7 +321,6 @@ $pref_image_ignore_list	= array("/fuzzy/",
 */
 
 
-
 // --- admin viewing options ---
 
 $pref_admin_size		= 256;
@@ -398,23 +397,6 @@ $pref_html_meta = "<meta name=\"robots\" content=\"noindex, nofollow\">";
 
 // --- Global display preferences ---
 
-
-/***********************************************************
- *
- *	Setting: 		$pref_disable_album_borders
- *	Type:			Boolean (0 or 1)
- *	Default:		0
- *	
- * When set to 1, disables album thumbnails borders.
- * Necessary for Mozilla 1.0 lovers, since it doesn't render the actual table correctly.
- * Will be fixed later (Note that Mozilla 1.2 and above works just fine!)
- *
- * Default: line commented or value 0. Uncomment and set to 1 to disable image border.
- *
- ***********************************************************/
-
-
-$pref_disable_album_borders = 0;
 
 
 /***********************************************************
@@ -535,14 +517,46 @@ $pref_album_with_description_layout = 'vert';
 $pref_nb_col		= 5;
 
 
+/***********************************************************
+ *
+ *	Setting: 		$pref_use_album_border
+ *	Type:			Boolean (TRUE or FALSE)
+ *	Default:		TRUE
+ *	
+ * When set to true, displays a border around the album thumbnails
+ * using the rig_images/album_(bottom|right)(left|line|right).gif files
+ *
+ ***********************************************************/
+
+$pref_use_album_border	= TRUE;
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_use_image_border
+ *	Type:			Boolean (TRUE or FALSE)
+ *	Default:		TRUE
+ *	
+ * When set to true, displays a border around the image thumbnails
+ * using the rig_images/image_(bottom|right)(left|line|right).gif files
+ *
+ ***********************************************************/
+
+$pref_use_image_border	= TRUE;
+
+
+
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2003/08/15 07:15:03  ralfoide
+//	Album/image border usage flags
+//
 //	Revision 1.14  2003/08/14 04:42:08  ralfoide
 //	Album & Image ignore lists
-//
+//	
 //	Revision 1.13  2003/07/21 04:59:29  ralfoide
 //	Alternate album layout for description.
 //	Auto-swithc album layout on description presence.

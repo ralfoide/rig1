@@ -340,7 +340,8 @@ function rig_image_info($abs_file)
 						$info["w"] = $res[2];
 						$info["h"] = $res[3];
 						
-						if (is_string($res[4]) && preg_match("/@([^@]*)@/", $res[4], $extra) > 0)
+						// RM 20040602 check res[4] is set before accessing it
+						if (isset($res[4]) && is_string($res[4]) && preg_match("/@([^@]*)@/", $res[4], $extra) > 0)
 							$info["e"] = $extra[1];
 						else
 							$info["e"] = '';
@@ -736,7 +737,7 @@ function rig_runtime_filetype_support()
 	if ($retvar || !is_array($output) || $n == 0 || ($n % 2) != 0)
 	{
 		rig_html_error("Runtime File Type Array Error",
-					   "Error $retvar when collection supported file type information<p>" .
+					   "Error $retvar when collecting supported file type information<p>" .
 					   "<b>CWD:</b> " . getcwd() . "<br>" .
 					   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|<br>" .
 					   "<b>Error:</b>$php_errormsg",
@@ -763,9 +764,12 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.17  2004/06/03 14:14:47  ralfoide
+//	Fixes to support PHP 4.3.6
+//
 //	Revision 1.16  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.15  2003/11/25 05:05:34  ralfoide
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.

@@ -293,7 +293,6 @@ function rig_display_album_list()
 		// ---- collect information on the album ----
 
 		// prepare title
-
 		$title = "<a href=\"$link\">$pretty</a>\n";
 
 		
@@ -1457,9 +1456,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.35  2004/06/03 14:14:47  ralfoide
+//	Fixes to support PHP 4.3.6
+//
 //	Revision 1.34  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.33  2004/03/02 10:38:01  ralfoide
 //	Translation of tooltip string.
 //	New page title strings.

@@ -912,7 +912,7 @@ function rig_self_url($in_image = -1,
 	if ($use_rewrite)
 		$url = $pref_url_rewrite['index'];
 	else
-		$url = $_SERVER['PHP_SELF'];
+		$url = rig_get($_SERVER, 'PHP_SELF');	// RM 20040516 use rig_get to access global
 
 	$params = "";
 	$param_concat_char = "?";
@@ -2154,6 +2154,7 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 	$can_access			= FALSE;
 	$current_album_page	= -1;
 	$current_image_page	= -1;
+	$abs_dir			= '';					// RM 20040601 - v0.6.4.5
 	
 
 	// first try the index argument
@@ -3137,6 +3138,7 @@ function rig_begin_buffering()
 	global $abs_album_cache_path;
 	global $abs_option_path;
 	global $dir_abs_src;
+	global $dir_abs_admin_src;			// RM 20040601 v0.6.4.5
 	global $dir_abs_globset;
 	global $dir_abs_locset;
 
@@ -3189,7 +3191,8 @@ function rig_begin_buffering()
 		if ($dir_abs_src != $dir_abs_locset)
 			$check_list[] = $dir_abs_locset;
 
-		$check_list[] = $abs_image_cache_path . rig_prep_sep($current_real_album);
+		// RM 20040601 v.0.6.4.5
+		$check_list[] = $abs_album_cache_path . rig_prep_sep($current_real_album);
 
 		// cache is valid if not expired
 		$is_valid  = !rig_check_expired($tm_html, $check_list);
@@ -3388,9 +3391,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.41  2004/06/03 14:14:47  ralfoide
+//	Fixes to support PHP 4.3.6
+//
 //	Revision 1.40  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.39  2004/03/02 10:38:01  ralfoide
 //	Translation of tooltip string.
 //	New page title strings.

@@ -42,7 +42,8 @@ interface Test
 
 function trace($msg)
 {
-	return;
+// RM 20040609 removed return that disabled method
+//	return;
 	print($msg);
 	flush();
 }
@@ -52,7 +53,16 @@ if (phpversion() >= '4')
 	function PHPUnit_error_handler($errno, $errstr, $errfile, $errline)
 	{
 		global $PHPUnit_testRunning;
-		$PHPUnit_testRunning[0]->fail("<B>PHP ERROR:</B> ".$errstr." <B>in</B> ".$errfile." <B>at line</B> ".$errline);
+		
+		// RM 20040609
+		if ($PHPUnit_testRunning == null)
+		{
+			trace("<B>**UNEXPECTED** PHP ERROR:</B> ".$errstr." <B>in</B> ".$errfile." <B>at line</B> ".$errline);
+		}
+		else
+		{
+			$PHPUnit_testRunning[0]->fail("<B>PHP ERROR:</B> ".$errstr." <B>in</B> ".$errfile." <B>at line</B> ".$errline);
+		}
 	}
 }
 
@@ -84,10 +94,11 @@ class Assert
 	function assert($boolean, $message=0)
 	{
 		if (! $boolean)
-		$this->fail($message);
+			$this->fail($message);
 	}
 
-	function assertEquals($expected, $actual, $message=0)
+	function assertEquals($actual, $expected, $message=0)
+	// RM 20040609 inverted assertEquals order => $action => expected => $message...
 	{
 		if (gettype($expected) != gettype($actual)) 
 		{
@@ -140,7 +151,95 @@ class Assert
 		}
 	}
 
-	function assertRegexp($regexp, $actual, $message=false) 
+
+	function assertIsNull($actual, $message=0)
+	// RM 20040609 added assertIsNull
+	{
+		return $this->assertEquals($actual, NULL, $message);
+	}
+
+
+	function assertNotNull($actual, $message=0)
+	// RM 20040609 added assertNotNull
+	{
+		$expected = NULL;
+var_dump($actual);
+		if (phpversion() >= '4.0.4') 
+		{
+var_dump(is_null($actual));
+var_dump(is_null($expected));
+			if (is_null($expected) == is_null($actual)) 
+			{
+				$this->failNotEquals($expected, $actual, "!expected", $message);
+				return;
+			}
+		}
+		else
+		{
+			if ($expected == $actual) 
+			{
+				$this->failNotEquals($expected, $actual, "!expected", $message);
+			}
+		}
+	}
+
+
+	function assertNotEquals($actual, $expected, $message=0)
+	// RM 20040609 added assertNotEquals
+	{
+		if (gettype($expected) != gettype($actual)) 
+		{
+			$this->failNotEquals($expected, $actual, "!expected", $message);
+			return;
+		}
+
+		if (phpversion() < '4') 
+		{
+			if (is_object($expected) or is_object($actual)
+				or is_array($expected) or is_array($actual)) 
+			{
+				$this->error("INVALID TEST: cannot compare arrays or objects in PHP3");
+				return;
+			}
+		}
+
+		if (phpversion() >= '4' && is_object($expected)) 
+		{
+			if (get_class($expected) != get_class($actual)) 
+			{
+				$this->failNotEquals($expected, $actual, "!expected", $message);
+				return;
+			}
+
+			if (method_exists($expected, "equals")) 
+			{
+				if ($expected->equals($actual)) 
+				{
+					$this->failNotEquals($expected, $actual, "!expected", $message);
+				}
+			
+				return;		// no further tests after equals()
+
+			}
+		}
+
+		if (phpversion() >= '4.0.4') 
+		{
+			if (is_null($expected) == is_null($actual)) 
+			{
+				$this->failNotEquals($expected, $actual, "!expected", $message);
+				return;
+			}
+		}
+		
+		if ($expected == $actual) 
+		{
+			$this->failNotEquals($expected, $actual, "!expected", $message);
+		}
+	}
+
+	function assertRegexp($actual, $regexp, $message=false) 
+	// RM 20040609 inverted assertEquals order => $action => expected => $message...
 	{
 		if (! preg_match($regexp, $actual)) 
 		{
@@ -167,7 +266,8 @@ class Assert
 		}
 	}
 
-	function _formatValue($value, $class="") 
+	function _formatValue($value, $class="", $label="") 
+	// RM 20040609 adding label
 	{
 		$translateValue = $value;
 		if (phpversion() >= '4.0.0') 
@@ -189,29 +289,43 @@ class Assert
 			}
 		}
 
-		// RM 20040226 suggestion from http://sourceforge.net/tracker/index.php?func=detail&aid=730811&group_id=10610&atid=110610
-		// $htmlValue = "<code class=\"$class\">" . htmlspecialchars($translateValue) . "</code>";
-		$t = $class; if ($t == 'actual') $t .= '&nbsp;&nbsp;';
-		$htmlValue = "<code class=\"$class\">"
-					. $t . ": "
-					. htmlspecialchars($translateValue)
-					. "</code>";
 
 		if (phpversion() >= '4.0.0') 
 		{
+			// RM 20040609
+			$htmlValue = "<code class=\"$class\">"
+						. $label . ": ";
+
 			if (is_bool($value)) 
 			{
-				$htmlValue = $value ? "<i>true</i>" : "<i>false</i>";
+				// RM 20040609 fix = => .=
+				$htmlValue .= $value ? "<i>True&nbsp;</i>" : "<i>False</i>";
 			}
 			elseif (phpversion() >= '4.0.4' && is_null($value)) 
 			{
-				$htmlValue = "<i>null</i>";
+				// RM 20040609 fix = => .=
+				$htmlValue .= "<i>null</i>";
 			}
+			else
+			{
+				$htmlValue .= htmlspecialchars($translateValue);
+			}
+
+			$htmlValue .= "</code>";
 
 			$htmlValue .= "&nbsp;&nbsp;&nbsp;<span class=\"typeinfo\">";
 			$htmlValue .= "type:" . gettype($value);
 			$htmlValue .= is_object($value) ? ", class:" . get_class($value) : "";
 			$htmlValue .= "</span>";
+		}
+		else
+		{
+			// RM 20040226 suggestion from http://sourceforge.net/tracker/index.php?func=detail&aid=730811&group_id=10610&atid=110610
+			// $htmlValue = "<code class=\"$class\">" . htmlspecialchars($translateValue) . "</code>";
+			$htmlValue = "<code class=\"$class\">"
+						. $label . ": "
+						. htmlspecialchars($translateValue)
+						. "</code>";
 		}
 		
 		return $htmlValue;
@@ -219,13 +333,22 @@ class Assert
 
 	function failNotEquals($expected, $actual, $expected_label, $message=0) 
 	{
+		// RM 20040609
+		$expect = 'Expected';
+		if ($expected_label[0] == '!')
+		{
+			$expect = 'Unwanted';
+		}
+		
+		
 		// Private function for reporting failure to match.
 		$str = $message ? ($message . ' ') : '';
 		//$str .= "($expected_label/actual)<br>";
 		$str .= "<br>";
 		$str .= sprintf("%s<br>%s",
-		$this->_formatValue($expected, "expected"),
-		$this->_formatValue($actual, "actual"));
+						$this->_formatValue($expected, "expected", $expect),
+						$this->_formatValue($actual, "actual", "Actual&nbsp;&nbsp;"));
+
 		$this->fail($str);
 	}
 }
@@ -782,9 +905,12 @@ class TestRunner
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2004/07/09 05:50:00  ralfoide
+//	Fixes and improvements to look
+//
 //	Revision 1.4  2004/06/03 14:16:24  ralfoide
 //	Experimenting with module classes
-//
+//	
 //	Revision 1.3  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

@@ -282,7 +282,7 @@ function rig_image_info($abs_file)
 		// --- get the file's creation date ---
 
 		$modified  = stat($abs_file);
-		$info["d"] = date($html_img_date, $modified[9]);
+		$info["d"] = strftime($html_img_date, $modified[9]);
 
 		// get the file type -- RM 20030628
 		$type = rig_get_file_type($abs_file);
@@ -366,18 +366,22 @@ function rig_get_album_preview($album, $use_default = TRUE)
 {
 	$abs_path = "";
 	$url_path = "";
-	rig_build_album_preview($album, &$abs_path, &$url_path, $use_default);
+	rig_build_album_preview($album, &$abs_path, &$url_path, -1, -1, $use_default);
 	return $url_path;
 }
 
 
 //***********************************************************************************
 function rig_build_album_preview($album, &$abs_path, &$url_path,
+								 $size = -1, $quality = -1,
 								 $use_default = TRUE, $check_icon_properties = FALSE)
 //***********************************************************************************
 // Returns TRUE if album icon could be found, otherwise FALSE and returns the
 // path to the default one
-// RM 20030125 added check_icon_properties to rebuild the icon if necessary
+// RM 20030125: added check_icon_properties to rebuild the icon if necessary
+// RM 20030720: an preview with a non-default size/quality can be requested, in which case
+// the album's default preview is still the standard size but a copy is returned with a 
+// different size.
 {
 	global $dir_images;
 	global $dir_abs_album;
@@ -394,8 +398,8 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 	// the target file this is all about
 	$dest_file = rig_prep_sep($album) . rig_prep_sep(ALBUM_ICON);
 
-	$abs_path = $abs_preview_path  . $dest_file;
-	$url_path = $dir_preview . $dest_file;
+	$abs_path = $abs_preview_path . $dest_file;
+	$url_path = $dir_preview      . $dest_file;
 
 	// -1- perform various checks
 
@@ -404,7 +408,7 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 		// if there is no icon, we need to build one
 		$create_icon = TRUE;
 	}
-	else if ($check_icon_properties)
+	else if ($check_icon_properties || ($s != -1 && $s != $pref_preview_size))
 	{
 		// check several properties of the icon: the file's date, the size, etc.
 
@@ -416,11 +420,15 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 
 		if ($s == 0)
 		{
-			echo "<br>Album icon <font color=red>does not exist!</font>\n";
+			if ($admin)
+				echo "<br>Album icon <font color=red>does not exist!</font>\n";
+
+			$create_icon = TRUE;
 		}
 		else if ($s != $pref_preview_size)
 		{
-			echo "<br>Album icon needs to be rebuild: does not have preview size\n";
+			if ($admin)
+				echo "<br>Album icon needs to be rebuild: does not have preview size\n";
 
 			// need to create if size is not up-to-date
 			$create_icon = TRUE;
@@ -445,12 +453,14 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 			if (!rig_is_file($source_file))
 			{
 				$create_icon = TRUE;
-				echo "<br>Album icon needs to be rebuild: source file does not exist\n";
+				if ($admin)
+					echo "<br>Album icon needs to be rebuild: source file does not exist\n";
 			}
 			else if (filemtime($source_file) > $date_dest)
 			{
 				$create_icon = TRUE;
-				echo "<br>Album icon needs to be rebuild: source file is newer!\n";
+				if ($admin)
+					echo "<br>Album icon needs to be rebuild: source file is newer!\n";
 			}
 		}
 	}
@@ -461,7 +471,7 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 	{
 		// if this album has information about the icon, use it
 		// make sure we have the correct album options
-		if ($album != $current_album)
+		if ($album != $current_album && !$album_options_changed)
 			$album_options_changed = rig_read_album_options($album);
 
 		global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
@@ -473,11 +483,31 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 			rig_select_random_album_icon($album);
 	}
 
+	// -3- If a non-default size is requested, create the preview now
+	if ($size != -1 && $size != $pref_preview_size)
+	{
+		// if this album has information about the icon, use it
+		// make sure we have the correct album options
+		if ($album != $current_album && !$album_options_changed)
+			$album_options_changed = rig_read_album_options($album);
+
+		global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
+
+		if (is_array($list_album_icon) && is_string($list_album_icon['f']))
+		{
+			$info = rig_build_preview_ex($album . rig_prep_sep($list_album_icon['a']),
+										 $list_album_icon['f'],
+										 $size, $quality);
+			$abs_path = rig_post_sep($info['a']) . $info['p'];
+			$url_path = rig_post_sep($info['r']) . $info['p'];
+  		}
+	}
+
 	// read the current options back if changed
 	if ($album_options_changed)
 		rig_read_album_options($current_album, $check_icon_properties);
 
-	// if there's a file, just use that
+	// if there's a file, just use it
 	if (rig_is_file($abs_path) || !$use_default)
 	{
 		return TRUE;
@@ -491,9 +521,10 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 }
 
 
-//****************************************************************************************
-function rig_set_album_icon($dest_album, $prev_album, $prev_image, $update_options = TRUE)
-//****************************************************************************************
+//****************************************************************
+function rig_set_album_icon($dest_album, $prev_album, $prev_image,
+							$update_options = TRUE)
+//****************************************************************
 /*
 	Creates and sets the icon for this album.
 	Returns TRUE if the icon could be made succesfully, FALSE otherwise.
@@ -620,9 +651,12 @@ function rig_select_random_album_icon($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/07/21 04:55:37  ralfoide
+//	Customizable size for album previews
+//
 //	Revision 1.10  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
-//
+//	
 //	Revision 1.9  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
 //	

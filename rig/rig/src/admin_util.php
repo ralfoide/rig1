@@ -222,7 +222,7 @@ function rig_admin_mk_preview($album,
 	{
 		$abs_path = "";
 		$url_path = "";
-		rig_build_album_preview($album, &$abs_path, &$url_path, TRUE, TRUE);
+		rig_build_album_preview($album, &$abs_path, &$url_path, -1, -1, TRUE, TRUE);
 	}
 
 	echo "<p>Done for <i>$album</i><hr></center><p>\n";
@@ -936,9 +936,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/07/21 04:55:11  ralfoide
+//	Customizable size for album previews
+//
 //	Revision 1.12  2003/05/26 17:52:55  ralfoide
 //	Removed unused language strings. Added new rig_display_back_to_album method
-//
+//	
 //	Revision 1.11  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)

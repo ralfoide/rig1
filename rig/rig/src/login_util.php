@@ -312,10 +312,12 @@ function rig_display_user_name($user = "")
 //****************************************
 {
 	global $html_welcome;
+	global $html_welcome_guest;	// RM 20040222 0.6.4.5
 	global $html_chg_user;
 	global $html_welcome;
 	global $display_user;
 	global $rig_user;
+	global $pref_guest_username;	// RM 20040222 0.6.4.5
 
 	if ($display_user)
 		$user = $display_user;
@@ -323,7 +325,14 @@ function rig_display_user_name($user = "")
 	if (!$user)
 		$user = $rig_user;
 
-	if ($user)
+	if ($rig_user == $pref_guest_username)
+	{
+		// RM 20040222 0.6.4.5
+		$s = str_replace("[name]", $user, $html_welcome_guest);
+		$s = str_replace("[change-link]", "<a href=\"" . rig_self_url(-1, -1, -1, "force_login=force") . "\">$html_chg_user</a>", $s);
+		echo $s;
+	}
+	else if ($user)
 	{
 		$s = str_replace("[name]", $user, $html_welcome);
 		$s = str_replace("[change-link]", "<a href=\"" . rig_self_url(-1, -1, -1, "force_login=force") . "\">$html_chg_user</a>", $s);
@@ -336,9 +345,12 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2004/02/27 08:46:39  ralfoide
+//	Don't print guest user name (avoid adding -san to guest in Japanese)
+//
 //	Revision 1.12  2004/02/18 07:39:48  ralfoide
 //	Fixes for \r\n in passwd files
-//
+//	
 //	Revision 1.11  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)

@@ -51,7 +51,7 @@ admin_perform_before_header(self_url());
 	{
 ?>
 		<p>
-		<img src="<?= encode_url_link(get_album_preview($current_album, TRUE)) ?>">
+		<img src="<?= rig_encode_url_link(get_album_preview($current_album, TRUE)) ?>">
 		<br>
 		<?php display_current_album() ?>
 		<p>
@@ -167,9 +167,12 @@ admin_perform_before_header(self_url());
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/21 01:53:43  ralfoide
+//	prefixing functions with rig_
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

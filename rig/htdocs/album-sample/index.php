@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -78,9 +78,12 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/02/16 20:09:41  ralfoide
+//	Update. Version 0.6.3.1
+//
 //	Revision 1.2  2002/10/20 09:03:19  ralfoide
 //	Display error when require_once files cannot be located
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

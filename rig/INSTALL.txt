@@ -1,4 +1,4 @@
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -176,8 +176,11 @@ R/
 ----------
 --
 -- $Log$
--- Revision 1.1  2002/06/21 20:41:46  ralfoide
--- Initial revision
+-- Revision 1.2  2003/02/16 20:08:57  ralfoide
+-- Update. Version 0.6.3.1
+--
+-- Revision 1.1.1.1  2002/06/21 20:41:46  ralfoide
+-- Initial revision, based on rig 0.6
 --
 -- Revision 1.6  2001/11/26 08:17:55  ralf
 -- updated install.txt file for v0.6

@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -93,9 +93,12 @@ $pref_date_sep						= ' - ';	// separator between date and description
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2003/02/16 20:10:35  ralfoide
+//	Update. Version 0.6.3.1
+//
 //	Revision 1.4  2003/01/07 17:54:03  ralfoide
 //	Moved URL-Rewrite conf array from global pref file to album-local pref file
-//
+//	
 //	Revision 1.3  2002/10/21 01:51:36  ralfoide
 //	Multiple language and theme support
 //	

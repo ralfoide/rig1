@@ -1,4 +1,4 @@
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf

@@ -1,4 +1,4 @@
-/* vim: set expandtab tabstop=4 shiftwidth=4: */
+/* vim: set tabstop=4 shiftwidth=4: */
 //**********************************************
 // RIG version 0.6.x
 // Copyright (c) 2001-2002 Ralf
@@ -53,6 +53,13 @@ Admin:
 -- todo --
 
 [0.6.4]
+20030208 [2.N] Video-Exp: admin-video page to edit properties for one video file (currently: time of thumbnail)
+20030208 [2.N] Video-Exp: use mplayer or ffmpeg(?) to extract one jpg/png image from the movie at a given time
+20030208 [2.N] Video-Exp: find how to play a video in a web browser (<object>+<embed> or video/X stream ?)
+20030208 [2.N] Video-Exp: enable video support if mplayer available (Q: howto guess extensions/mime-types?)
+20030208 [1.N] PNG: browse PNG files in dirs / simulate jhead-like info for display
+20030208 [1.N] rig_thumbnail: add PNG support. use "libpng" (Debian packages libpng3 and libpng2-dev)
+20030208 [1.N] rig_thumbnail: use "libjpeg62" (Debian packages libjpeg62 and libjpeg62-dev)
 20030119 [4.N] Experiment: can the PHP code get the browser's window size via JavaScript? (for a full screen view)
 20030119 [4.N] Templates: second display image template, with no link images and tiny header line (good for a full screen view)
 20030119 [3.N] Templates: create HTML templates, using keywords instead of PHP code
@@ -60,6 +67,7 @@ Admin:
 20030118 [1.N] Cookies: use only one cookie for user+passwd (one admin, one normal)
 20030118 [1.N] Cookies: don't store image size cookie if default size (remove existing cookie)
 20030118 [1.N] Cookies: don't store a cookie for the guest mode (remove existing cookie)
+20030112 [4.N] Merge all 0.6.3-exp code and discard this obsolete branch
 20030112 [0.N] Idea is instead of hacking DB support in 0.6.3-exp, keep it for later when a class
                will be used to manipulate files. Also classify parts of the source code if useful.
 20030112 [1.N] Document album/image workflow (i.e. when and how names are used)
@@ -69,11 +77,12 @@ Admin:
 20030112 [2.N] Make options XML files.
 20030112 [3.N] Admin-album page vs Admin-image page (use these from 0.6.3-exp)
 20030112 [3.N] Admin action to recompute all previews (to adjust size, etc.)
-20030112 [4.N] Merge all 0.6.3-exp code and discard this obsolete branch
 20030112 [5.N] Revise the TODO file strucutre -- separating Generic/Admin/DB doesn't really work for me.
 
 [for 0.6.3]
-20030119 [1.N] Bug: cookie path should use the real URL, not the rewritten one (use a pref?)
+20030126 [2.N] Must not display album images borders with Mozilla 1.0 (broken)
+20030126 [2.N] Need javascript to detect browser (if javascript supported)
+20030119 [1.N] Bug/URL-rewrite: cookie path should use the real URL, not the rewritten one (use a pref?)
 20030118 [1.N] Album pref to customize the <meta name="robots" content="noindex, nofollow">
 20030118 [1.N] Make CVS tag_2003-01-DD_v063
 20030111 [1.N] Learn how to make a Debian package. Actually make one.
@@ -100,24 +109,34 @@ Admin:
 -- partially done --
 
 [0.6.4]
-20020712 [1.W] Rename functions using a constant rig_section_method naming
-    20020712 [1.F] Renaming functions in admin_util.php
-    20020712 [1.W] Renaming functions in common_display.php
-    20020713 [1.W] Renaming functions in common.php
 
 -- done --
 
 [0.6.4]
 
+[0.6.3.1]
+20030215 [1.F] Bumped to version 0.6.3.1, updating sourceforge CVS
+
 [0.6.3]
+20030125 [1.F] Admin: create-previews also fix album_icon.jpg when possible (update, resize)
+20030125 [1.F] Admin: fix_options to convert options.txt from 0.6.2 into 0.6.3
+20030124 [3.F] Added a rig_mkdir to build full paths (vs mkdir that only adds one terminal directory)
+20030122 [3.F] Changed rig_create_options_dir to mirror hierarchy in rig-options directory
+20030122 [3.F] Experimenting with a "fix options" admin item
+20020712 [1.F] Rename functions using a constant rig_section_method naming (-> 20030120)
+    20020712 [1.F] Renaming functions in admin_util.php
+    20020712 [1.F] Renaming functions in common_display.php (-> 20030120)
+    20020713 [1.F] Renaming functions in common.php (-> 20030120)
 20030119 [1.F] Display: show number of albums or images in table view.
 20030119 [1.F] Display: *must* display credits in images or album mode (aka "All images (c) Ralf"). Language dependant.
 20021101 [1.F] Only display phpinfo if _debug_ enabled or admin mode
 20021012 [4.F] Ask Pascal about Japanese -> [20030112] gave up getting help
+
 [0.6.2.4]
 20030118 [1.F] Make CVS tag_2003-01-18_v0624
 20030107 [4.F] Bumped to version 0.6.2.4 and updated SourceForge
 20030107 [3.F] URL-Rewrite support (cf site/prefs.php)
+
 [0.6.2.3]
 20021104 [4.F] Bumped to version 0.6.2.3
 20021101 [3.F] Fixes in Spanish
@@ -125,6 +144,7 @@ Admin:
 20021030 [2.F] Experimenting with alternate table to display album thumbnails
 20021023 [2.F] Added <html lang>; now transmitting charset via http headers.
 20021023 [2.F] Fixes for international support of strings, specifically Japanese support
+
 [0.6.2.2]
 20021022 [2.F] Global gamma can be changed in the site-specific pref file
 20021021 [2.F] Added local override of gamma in prefs.php
@@ -147,6 +167,7 @@ Admin:
     20021020 [1.F] Display error when require_once files cannot be located
     20020713 [1.F] Better overall error reporting
     20020713 [1.F] Prettier html for error reporting
+
 [0.6.2.1]
 20020712 [1.F] Fixed date display in album name in admin mode & back from admin mode
 20020712 [1.F] Disabled frame admin mode
@@ -373,10 +394,13 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/02/16 20:08:57  ralfoide
+//	Update. Version 0.6.3.1
+//
 //	Revision 1.6  2003/01/20 12:39:50  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.
-//
+//	
 //	Revision 1.5  2003/01/19 01:23:45  ralfoide
 //	Update
 //	

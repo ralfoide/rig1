@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -62,10 +62,13 @@ $pref_album_copyright_name = 'Your Name Here';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/02/16 20:09:40  ralfoide
+//	Update. Version 0.6.3.1
+//
 //	Revision 1.5  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.
-//
+//	
 //	Revision 1.4  2003/01/07 17:52:50  ralfoide
 //	URL-Rewrite conf array moved in the album-specific pref file
 //	

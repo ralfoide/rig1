@@ -1,4 +1,4 @@
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -56,6 +56,9 @@ customary fashion, plus the right to make reasonable modifications.
   recipients of the item may redistribute it under the same conditions they
   received it. 
 
+
+3. Rules
+--------
 
 1. You may make and give away verbatim copies of the source form of the
    Standard Version of this Package without restriction, provided that you
@@ -127,10 +130,12 @@ The End
 
 
 
-Copyright © 2001-2002, Raphaël MOLL, a.k.a. "Le Ralf", "R'alf" or "Ralf". 
+Copyright © 2001-2003, Raphaël MOLL, a.k.a. "Le Ralf", "R'alf" or "Ralf". 
 
-RIG License 1.0, prepared May the 31st 2002 by R'alf 
-http://rig.powerpulsar.com 
+RIG License 1.0
+prepared 2002/05/31 by R'alf
+updated 2003/02/02 by R'alf
+http://rig.powerpulsar.com
 
 
 |------------------------------------------------------------------------78--|

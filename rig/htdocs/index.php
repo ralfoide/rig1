@@ -1,11 +1,28 @@
 <?php
 // vim: set tabstop=4 shiftwidth=4: //
-//**********************************************
-// RIG version 1.0
-// Copyright (c) 2003 Ralf
-//**********************************************
-// $Id$
-//**********************************************
+//************************************************************************
+/*
+	$Id$
+
+	Copyright 2004, Raphael MOLL.
+
+	This file is part of RIG-Thumbnail.
+
+	RIG-Thumbnail is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	RIG-Thumbnail is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with RIG-Thumbnail; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
+//************************************************************************
 
 
 // Load location settings (must be done before anything else)
@@ -22,9 +39,12 @@ require_once("check_entry.php");
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2004/07/17 07:52:30  ralfoide
+//	GPL headers
+//
 //	Revision 1.2  2003/08/21 20:10:11  ralfoide
 //	New check_entry.php
-//
+//	
 //	Revision 1.1  2003/08/18 02:10:13  ralfoide
 //	Reorganazing
 //	

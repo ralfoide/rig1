@@ -1,9 +1,0 @@
-AuthName "RIG Administration"
-AuthType Basic
-
-<FilesMatch "\.(bak|txt|ep)$">
-    order deny,allow
-    deny from all
-</FilesMatch>
-
-

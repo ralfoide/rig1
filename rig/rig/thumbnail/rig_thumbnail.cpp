@@ -214,6 +214,77 @@ char * rig_unslash(const char *filename)
 }
 
 
+//**************************************
+void rig_video_frame(RigRgb *in_out_rgb)
+//**************************************
+{
+	if (!in_out_rgb)
+		return;
+
+	int32 sx = in_out_rgb->Sx();
+	int32 sy = in_out_rgb->Sy();
+
+	// the pattern is 10x10, so a reasonable thumbnail size is at least 30x10 to use it
+	if (sx < 30 || sy < 10)
+		return;
+
+	// define the pattern (00=black, FF=white)
+	#define K_VIDFRAME_SX 8
+	#define K_VIDFRAME_SY 10
+	#define B 0x00,
+	#define w 0xC0,
+	const uint8 pattern[] =
+	{
+		B B B B B B B B
+		B B w w w w B B
+		B w w w w w w B	// 1
+		B w w w w w w B	// 2
+		B w w w w w w B	// 3
+		B w w w w w w B	// 4
+		B w w w w w w B	// 5
+		B w w w w w w B	// 6
+		B B w w w w B B
+		B B B B B B B B
+		0
+	};
+	#undef B
+	#undef w
+
+	// destinations
+	int32 of7 = sx-K_VIDFRAME_SX;
+	uint8 * dest[6] =
+	{
+		in_out_rgb->R(), in_out_rgb->R() + of7,
+		in_out_rgb->G(), in_out_rgb->G() + of7,
+		in_out_rgb->B(), in_out_rgb->B() + of7
+	};
+
+	const uint8 *src;
+	for(int32 i = 0; sy; sy--, i--, src += K_VIDFRAME_SX)
+	{
+		if (!i)
+		{
+			src = pattern;
+			i = K_VIDFRAME_SY;
+		}
+
+		for(int32 j=0; j<6; j++)
+		{
+			for(int32 k=0; k<K_VIDFRAME_SX; k++)
+			{
+				uint8 a = src[k];
+				if (a)
+					*(dest[j]++) |= a;
+				else
+					*(dest[j]++) = a;
+			}
+			dest[j] += of7;
+		}
+	}
+}
+
+
+
 //---------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------
 //
@@ -256,8 +327,10 @@ void rig_resize_image(const char * in_filename,
 {
 	int32 wsrc, hsrc;
 	int32 wdst, hdst;
+	bool  is_video = false;
 	RigRgb *in_rgb = NULL;
 	RigRgb *out_rgb = NULL;
+
 
 	DPRINTF(("FILE-IN:'%s'\nFILE-OUT:'%s'\n", in_filename, out_filename));
 
@@ -270,7 +343,10 @@ void rig_resize_image(const char * in_filename,
 		in_rgb = rig_jpeg_read(name);
 
 		if (!in_rgb)
+		{
 			in_rgb = rig_avifile_read(name);
+			is_video = (in_rgb != NULL);
+		}
 
 		if (!in_rgb)
 			throw("rig_resize_image: could not read image.\n");
@@ -310,6 +386,11 @@ void rig_resize_image(const char * in_filename,
 		{
 			out_rgb->ApplyGamma(gamma);
 		}
+
+		// apply decorations
+		
+		if (is_video)
+			rig_video_frame(out_rgb);
 
 		// write output image
 
@@ -455,9 +536,12 @@ int main(int argc, char *argv[])
 /*****************************************************************************
 
 	$Log$
+	Revision 1.3  2003/07/14 18:42:01  ralfoide
+	Frame in video thumbnail
+
 	Revision 1.2  2003/06/30 06:05:59  ralfoide
 	Avifile support (get info and thumbnail for videos)
-
+	
 	Revision 1.1  2002/08/04 00:58:08  ralfoide
 	Uploading 0.6.2 on sourceforge.rig-thumbnail
 	

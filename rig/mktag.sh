@@ -41,5 +41,31 @@ then
 	exit 1
 fi
 
-cvs -z3 rtag $1 rig
+TEMP=`mktemp`
+
+cvs -z3 rtag $2 $1 rig | tee "$TEMP"
+
+RETVAL=$?
+
+echo
+
+if [ "$RETVAL" != "0" ]
+then
+	echo "Error $RETVAL occured during CVS"
+else
+	echo "CVS done successfully"
+
+	# the stupid CVS returns 0 even if some errors occured.
+	if grep -s -q "^W .* NOT MOVING tag" "$TEMP"
+	then
+		echo "Suggestion: to force moving a tag, use:"
+		echo "	$0 $* -F"
+	fi
+fi
+
+if [ -f "$TEMP" ]
+then
+	rm -f "$TEMP"
+fi
+echo
 

@@ -26,7 +26,13 @@ else
 
 	# keep only the directory portion of the calling program name
 	D="$0"
+	if [ -L "$D" ];
+	then
+		# dereference link
+		D=`ls -l "$D" | sed 's/^.*-> //'`
+	fi
 	D=${D/`basename $D`/}
+	
 
 	V1="./rig/src/version.php"
 	V=V1

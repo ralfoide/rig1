@@ -131,7 +131,7 @@ rig_display_body();
 	<?php
 		rig_display_options();
 	?>
-	<a href="<?= rig_self_url(-1, -1, TRUE) ?>"><?= $html_admin_intrfce ?></a>
+	<a href="<?= rig_self_url(-1, -1, RIG_SELF_URL_ADMIN) ?>"><?= $html_admin_intrfce ?></a>
 <p>
 
 
@@ -146,6 +146,11 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/03/12 07:02:08  ralfoide
+//	New admin image vs album (alpha version not finished).
+//	New admin translate page (alpha version not finished).
+//	New pref to override the <meta> line in album/image display.
+//
 //	Revision 1.6  2003/02/16 20:22:54  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -153,7 +158,7 @@ rig_display_body();
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.5  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.

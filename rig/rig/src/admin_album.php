@@ -176,7 +176,7 @@ rig_display_body();
 		rig_display_options();
 	?>
 	<?= $html_back_to ?>
-	<a href="<?= rig_self_url("", -1, FALSE) ?>"><?= $display_album_title ?></a>
+	<a href="<?= rig_self_url("", -1, RIG_SELF_URL_NORMAL) ?>"><?= $display_album_title ?></a>
 <p>
 
 <?php
@@ -191,9 +191,14 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.1  2003/03/12 07:02:07  ralfoide
+//	New admin image vs album (alpha version not finished).
+//	New admin translate page (alpha version not finished).
+//	New pref to override the <meta> line in album/image display.
+//
 //	Revision 1.7  2003/02/17 07:47:00  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
-//
+//	
 //	Revision 1.6  2003/02/16 20:22:53  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

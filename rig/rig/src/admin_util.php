@@ -775,7 +775,7 @@ function rig_admin_display_album()
 		}		
 
 		// link to change album visibility
-		$vis_link = rig_self_url(-1, -1, -1, "admin=show_album&item=$dir&show_album=$vis_val#$key");
+		$vis_link = rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "admin=show_album&item=$dir&show_album=$vis_val#$key");
 	?>
 			<td <?= $w ?>>
 			<center>
@@ -787,7 +787,7 @@ function rig_admin_display_album()
 
 				<br>
 
-				<a href="<?= rig_self_url("", $name, TRUE) ?>"><img src="<?= $preview ?>" alt="<?= $dir ?>" border="1" ></a>
+				<a href="<?= rig_self_url("", $name, RIG_SELF_URL_ADMIN) ?>"><img src="<?= $preview ?>" alt="<?= $dir ?>" border="1" ></a>
 				<br>
 
 				<a href="<?= $vis_link ?>">
@@ -863,7 +863,7 @@ function rig_admin_display_image()
 
 		// link to change image visibility
 		// RM 20021022 fix for changing image visibility
-		$vis_link = rig_self_url(-1, -1, TRUE, "admin=show_image&item=$file&show_image=$vis_val#$key");
+		$vis_link = rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "admin=show_image&item=$file&show_image=$vis_val#$key");
 
 		?>
 			<td <?= $w ?>>
@@ -930,7 +930,7 @@ function rig_admin_insert_icon_popup()
 	// remove the last item
 	unset($list[$n]);
 
-	echo "<option value='0'>$html_root</option>\n";
+	echo "<option value='0'>[Select an album name]</option>\n";
 
 	foreach($list as $key => $item)
 	{
@@ -944,9 +944,14 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/03/12 07:02:07  ralfoide
+//	New admin image vs album (alpha version not finished).
+//	New admin translate page (alpha version not finished).
+//	New pref to override the <meta> line in album/image display.
+//
 //	Revision 1.9  2003/02/17 07:47:01  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
-//
+//	
 //	Revision 1.8  2003/02/16 20:22:54  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

@@ -59,6 +59,8 @@
 	abs_preview_path
 	abs_option_path
 	abs_preview_exec
+	abs_upload_src_path
+	abs_upload_album_path
 
 	List of globals (from album options):
 	-------------------------------------
@@ -92,21 +94,21 @@ define("ALBUM_OPTIONS_XML",		"options.xml");
 $time_start = rig_getmicrotime();
 
 // read site-prefs and then override with local prefs, if any
-rig_check_src_file($dir_install . $dir_globset . "prefs.php");
-require_once      ($dir_install . $dir_globset . "prefs.php");
+require_once(rig_require_once("prefs.php", $dir_globset));
 
 if (rig_is_file ($dir_locset . "prefs.php"))
 	require_once($dir_locset . "prefs.php");
 
 // setup...
-rig_check_src_file($dir_install . $dir_src . "login_util.php");
-require_once      ($dir_install . $dir_src . "login_util.php");
+require_once(rig_require_once("version.php",    $dir_src));
+require_once(rig_require_once("login_util.php", $dir_src));
 
 rig_read_prefs_paths();
 rig_handle_cookies();
 
 
 // DEBUG default prefs/curr for lang and theme
+// echo "<p> rig_version = "   ; var_dump($rig_version);
 // echo "<p> pref_default_lang = "   ; var_dump($pref_default_lang);
 // echo "<p> current_language = "; var_dump($current_language);
 // echo "<p> pref_default_theme = "; var_dump($pref_default_theme);
@@ -116,22 +118,21 @@ rig_handle_cookies();
 // include language strings
 //-------------------------
 // RM 20020714 fix: always load the str_en first
-rig_check_src_file($dir_install . $dir_src . "str_en.php");
-require_once      ($dir_install . $dir_src . "str_en.php");
+require_once(rig_require_once("str_en.php", $dir_src, $abs_upload_src_path));
 
 // and override with other language if not english
 
 // DEBUG
 // rig_check_src_file($dir_install . $dir_src . "str_$current_language.php");
 
+
 // Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
 if (!isset($current_language) || !rig_is_file($dir_install . $dir_src . "str_$current_language.php"))
 	$current_language = $pref_default_lang;
 
-if ($current_language != 'en')
+if (is_string($current_language) && $current_language != 'en')
 {
-	rig_check_src_file($dir_install . $dir_src . "str_$current_language.php");
-	require_once      ($dir_install . $dir_src . "str_$current_language.php");
+	require_once(rig_require_once("str_$current_language.php", $dir_src, $abs_upload_src_path));
 }
 
 // include theme strings
@@ -142,26 +143,18 @@ if ($current_language != 'en')
 
 if (!isset($current_theme) || !rig_is_file($dir_install . $dir_src . "theme_$current_theme.php"))
 	$current_theme = $pref_default_theme;
-rig_check_src_file($dir_install . $dir_src . "theme_$current_theme.php");
-require_once      ($dir_install . $dir_src . "theme_$current_theme.php");
-
-
-rig_check_src_file($dir_install . $dir_src . "version.php");
-require_once      ($dir_install . $dir_src . "version.php");
+require_once(rig_require_once("theme_$current_theme.php", $dir_src, $abs_upload_src_path));
 
 rig_setup();
 rig_create_option_dir("");
 
-rig_check_src_file($dir_install . $dir_src . "common_display.php");
-require_once      ($dir_install . $dir_src . "common_display.php");
-rig_check_src_file($dir_install . $dir_src . "common_images.php");
-require_once      ($dir_install . $dir_src . "common_images.php");
-rig_check_src_file($dir_install . $dir_src . "common_xml.php");			// RM 20030216
-require_once      ($dir_install . $dir_src . "common_xml.php");
+// load common source code -- note these do not use the src_upload override
+require_once(rig_require_once("common_display.php", $dir_src));
+require_once(rig_require_once("common_images.php",  $dir_src));
+require_once(rig_require_once("common_xml.php",     $dir_src));			// RM 20030216
 
 // RM 20021021 not for rig 062 yet
-// rig_check_src_file($dir_install . $dir_src . "common_db.php");
-// require_once      ($dir_install . $dir_src . "common_db.php");
+// require_once(rig_require_once("common_db.php",  $dir_src));
 
 rig_setup_db();
 
@@ -212,6 +205,65 @@ function rig_html_error($title_str,
 	echo "</body>\n";
 
 	return FALSE;
+}
+
+//-----------------------------------------------------------------------
+
+
+//*********************************************************************
+function rig_require_once($filename, $main_dir, $abs_override_dir = "")
+//*********************************************************************
+// RM 20030308
+//
+// Includes a PHP source file, looking in $dir_install + $main_dir
+// or $abs_override_dir. The override dir is checked FIRST and is ABSOLUTE!
+// it's purpose is to override the main file with the overriding one.
+//
+// It is ok for the override dir not to exist or not contain the file.
+// It is mandatory that the main dir exists and contains the file.
+//
+// IMPORTANT: require_once uses the caller's scope which means the
+// file can't be included/required here or it wouldn't have a global scope
+// thus this function actually returns a string with the file to be
+// required and it's up to the caller to actually perform the require_once().
+{
+	global $dir_install, $abs_upload_src_path;
+
+	// DEBUG
+	// echo "<p>rig_require_once: filename='$filename', main_dir='$main_dir', abs_override_dir='$abs_override_dir' \n";
+
+	$main = rig_post_sep($dir_install) . rig_post_sep($main_dir);
+	$over = rig_post_sep($abs_override_dir);
+
+	// check params
+
+	if (!$filename)
+	{
+		return rig_html_error("Invalid parameter!",
+			                  "Empty 'filename' argument in function rig_require_once!",
+	            		      $main_dir);
+	}
+
+	if (!$main_dir)
+	{
+		return rig_html_error("Invalid parameter!",
+			                  "Empty 'main_dir' argument in function rig_require_once!",
+	            		      $filename);
+	}
+
+	// check main file exists -- it must, even if we're going to use the override
+
+	if (!rig_check_src_file($main . $filename))
+		return FALSE;
+
+	// check override file and use it exists
+	if ($abs_override_dir && rig_is_file($over . $filename))
+	{
+		return $over . $filename;
+	}
+
+	// otherwise default to the main one
+	return $main . $filename;
 }
 
 
@@ -649,16 +701,22 @@ function rig_create_option_dir($album)
 }
 
 
+// defines for in_page in rig_self_url -- RM 20030308
+define("RIG_SELF_URL_NORMAL",		0);	// album+image user view
+define("RIG_SELF_URL_ADMIN",		1);	// album+image admin view
+define("RIG_SELF_URL_UPLOAD",		2);	// upload *admin* view
+define("RIG_SELF_URL_TRANSLATE",	3);	// translate *admin* view
+
 //*****************************************************************
 function rig_self_url($in_image = -1,
 					  $in_album = -1,
-					  $in_admin = -1,
+					  $in_page = -1,
 					  $in_extra = "")
 //*****************************************************************
 // encode album/image name as url links
 // in_image: -1 (use current if any) or text for image=...
 // in_album: -1 (use current if any) or text for album=...
-// in_admin: -1 (use current if any) or TRUE for "admin=on"
+// in_page : -1 (use current if any) or RIG_SELF_URL_xxx (see above)
 // in_extra: extra parameters (in the form name=val&name=val etc)
 //
 // Use URL-Rewriting when defined in prefs [RM 20030107]
@@ -666,6 +724,8 @@ function rig_self_url($in_image = -1,
 	global $album;				// from index.php url line
 	global $image;				// from index.php url line
 	global $admin;				// from index.php url line
+	global $translate;			// from index.php url line -- RM 20030308
+	global $upload;				// from index.php url line -- RM 20030308
 	global $credits;
 	global $phpinfo;
 	global $current_id;
@@ -674,6 +734,10 @@ function rig_self_url($in_image = -1,
 	global $PHP_SELF;
 	global $_debug_;
 	global $pref_url_rewrite;	// RM 20030107
+
+	// DEBUG
+	// echo "<p>rig_self_url: in_page=$in_page\n";
+
 
 	$use_rewrite = (is_array($pref_url_rewrite) && count($pref_url_rewrite) >= 3);
 
@@ -707,19 +771,34 @@ function rig_self_url($in_image = -1,
 	if ($in_image)
 		$in_image = rig_encode_url_link($in_image);
 
-	if (is_int($in_admin) && $in_admin == -1)
+	// check in_page param
+	if (is_int($in_page) && $in_page == -1)
 	{
-		$in_admin = $admin;
+		// translate and upload imply admin so they must be tested first
+		if ($translate)		$in_page = RIG_SELF_URL_TRANSLATE;
+		else if ($upload)	$in_page = RIG_SELF_URL_UPLOAD;
+		else if ($admin)	$in_page = RIG_SELF_URL_ADMIN;
+		else				$in_page = RIG_SELF_URL_NORMAL;
 	}
 
-	if ($in_admin && !strstr($in_extra, "admin="))
+	// switch on in_page values
+	switch($in_page)
 	{
-		// note that if in_extra contains a specific "admin="
-		// parameter, we don't need to do that
-		if ($params)
-			$params .= "&";
-		$params .= "admin=on";
+		case RIG_SELF_URL_ADMIN:
+			rig_url_add_param(&$params, 'admin', 'on');
+			break;
+
+		case RIG_SELF_URL_TRANSLATE:
+			rig_url_add_param(&$params, 'admin', 'on');
+			rig_url_add_param(&$params, 'translate', 'on');
+			break;
+
+		case RIG_SELF_URL_UPLOAD:
+			rig_url_add_param(&$params, 'admin', 'on');
+			rig_url_add_param(&$params, 'upload', 'on');
+			break;
 	}
+
 
 	if ($in_album)
 	{
@@ -730,9 +809,7 @@ function rig_self_url($in_image = -1,
 		}
 		else
 		{
-			if ($params)
-				$params .= "&";
-			$params .= "album=$in_album";
+			rig_url_add_param(&$params, 'album', $in_album);
 		}
 	}
 
@@ -746,32 +823,19 @@ function rig_self_url($in_image = -1,
 		}
 		else
 		{
-			if ($params)
-				$params .= "&";
-			$params .= "image=$in_image";
+			rig_url_add_param(&$params, 'image', $in_image);
 		}
 	}
 
 	if ($_debug_)
-	{
-		if ($params)
-			$params .= "&";
-		$params .= "_debug_=1";
-	}
+		rig_url_add_param(&$params, '_debug_', '1');
 
-	if ($credits == 'on' && !strstr($in_extra, 'credits='))
-	{
-		if ($params)
-			$params .= "&";
-		$params .= "credits=$credits";
-	}
+	if ($credits == 'on')
+		rig_url_add_param(&$params, 'credits', $credits);
 
-	if ($phpinfo == 'on' && !strstr($in_extra, 'phpinfo='))
-	{
-		if ($params)
-			$params .= "&";
-		$params .= "phpinfo=$phpinfo";
-	}
+	if ($phpinfo == 'on')
+		rig_url_add_param(&$params, 'phpinfo', $phpinfo);
+
 
 	// the extra must always be the last one
 	if ($in_extra)
@@ -782,6 +846,7 @@ function rig_self_url($in_image = -1,
 
 		$params .= "$in_extra";
 	}
+
 
 	// [RM 20030107]
 	if ($use_rewrite)
@@ -795,6 +860,32 @@ function rig_self_url($in_image = -1,
 		return $url . $param_concat_char . $params;
 	else
 		return $url;
+}
+
+
+//***********************************************************
+function rig_url_add_param(&$inout_url, $in_param, $in_value)
+//***********************************************************
+// RM 20030308 utility function to add one parameter in rig_self_url()
+{
+	// param can't be empty
+	if (!is_string($in_param) || $in_param == '')
+		return;
+
+	// param must end with a '='
+	if ($in_param[strlen($in_param)-1] != '=')
+		$in_param .= '=';
+	
+	// check param is not already in the url
+	if (!strstr($inout_url, $in_param))
+	{
+		// append to url
+		if ($inout_url)
+			$inout_url .= '&';
+
+		// add param=value to the url
+		$inout_url .= $in_param . $in_value;
+	}
 }
 
 
@@ -832,7 +923,7 @@ function rig_read_prefs_paths()
 	global $dir_preview, $abs_preview_path;
 	$abs_preview_path = realpath($dir_abs_album . $dir_preview);
 
-	if (!is_string($abs_album_path))
+	if (!is_string($abs_preview_path))
 	{
 		rig_html_error("Missing Previews Directory",
 					   "Can't get absolute path for the previews directory. <p>" .
@@ -846,13 +937,39 @@ function rig_read_prefs_paths()
 	global $dir_option, $abs_option_path;
 	$abs_option_path = realpath($dir_abs_album . $dir_option);
 
-	if (!is_string($abs_album_path))
+	if (!is_string($abs_option_path))
 	{
 		rig_html_error("Missing Options Directory",
 					   "Can't get absolute path for the options directory. <p>" .
 					   "<b>Base directory:</b> $dir_abs_album<br>" .
 					   "<b>Target directory:</b> $dir_option<br>" ,
 					   $dir_abs_album . $dir_option);
+	}
+
+	// --- upload_src directory ---
+	global $dir_upload_src, $abs_upload_src_path;
+	$abs_upload_src_path = realpath($dir_abs_album . $dir_upload_src);
+
+	if (!is_string($abs_upload_src_path))
+	{
+		rig_html_error("Missing Upload Sources Directory",
+					   "Can't get absolute path for the upload_src directory. <p>" .
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_upload_src<br>" ,
+					   $dir_abs_album . $dir_upload_src);
+	}
+
+	// --- upload_album directory ---
+	global $dir_upload_album, $abs_upload_album_path;
+	$abs_upload_album_path = realpath($dir_abs_album . $dir_upload_album);
+
+	if (!is_string($abs_upload_album_path))
+	{
+		rig_html_error("Missing Upload Albums Directory",
+					   "Can't get absolute path for the upload_album directory. <p>" .
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_upload_album<br>" ,
+					   $dir_abs_album . $dir_upload_album);
 	}
 
 	// --- rig_thumbnail application ---
@@ -1777,11 +1894,17 @@ function rig_parse_string_data($filename)
 //
 // The prefered line separator is the Unix mode, i.e. only LF (/n) as linefeed.
 {
-	global $dir_install, $dir_src;
+	global $dir_install, $dir_src, $abs_upload_src_path;
 
 
 	// get the installation-relative path of the file
-	$filename = $dir_install . $dir_src . $filename;
+	$file1 = rig_post_sep($dir_install . $dir_src) . $filename;
+	$file2 = rig_post_sep($abs_upload_src_path)    . $filename;
+
+	if (rig_is_file($file2))
+		$filename = $file2;
+	else
+		$filename = $file1;
 
 	// open the file
 	$file = @fopen($filename, "rt");
@@ -1867,9 +1990,14 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.19  2003/03/12 07:02:08  ralfoide
+//	New admin image vs album (alpha version not finished).
+//	New admin translate page (alpha version not finished).
+//	New pref to override the <meta> line in album/image display.
+//
 //	Revision 1.18  2003/02/23 10:18:36  ralfoide
 //	plain vs crypt vs MD5 password in the password file
-//
+//	
 //	Revision 1.17  2003/02/23 08:14:36  ralfoide
 //	Login: display error msg when invalid password or invalid user
 //	

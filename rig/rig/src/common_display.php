@@ -18,6 +18,7 @@ function rig_display_header($title)
 	global $html_encoding;
 	global $html_language_code;
 	global $theme_css_head;
+	global $admin;
 
 	// Online reference:
 
@@ -48,12 +49,19 @@ function rig_display_header($title)
 	if ($html_encoding)
 		header("Content-Type: text/html; charset=$html_encoding");
 
+	// prepare the meta tags line
+	$meta = "";
+	
+	if (!$admin && $pref_html_meta)
+		$meta = $pref_html_meta;
+
+
 // The indentation below is made on purpose, to make sure there's nothing before doctype
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html <?= $lang ?>>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?= $html_encoding ?>">
-	<meta name="robots" content="noindex, nofollow"> 
+	<?= $meta ?> 
  	<title>
 		<?= $title ?>
 	</title>
@@ -714,6 +722,8 @@ function rig_display_options($use_hr = TRUE)
 function rig_display_language()
 //*****************************
 {
+	global $admin;
+	global $translate;
 	global $html_desc_lang;
 	global $html_language;
 	global $current_language;
@@ -728,9 +738,27 @@ function rig_display_language()
 			echo "&nbsp;|&nbsp;";
 
 		if ($current_language == $key)
-			echo $value;
+		{
+			// if in admin mode and not already in translate mode, display the edit language link
+			// RM 20030308 TBT -- Translate "Edit"
+			if ($admin && !$translate)
+			{
+				echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_TRANSLATE, "lang=$key#lang") . "\">Edit $value</a>] \n";
+			}
+			else if ($admin && $translate)
+			{
+				echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_TRANSLATE, "lang=$key#lang") . "\">Reload $value</a>] \n";
+				echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "lang=$key#lang") . "\">Exit Edit $value</a>] \n";
+			}
+			else
+			{
+				echo $value;
+			}
+		}
 		else
+		{
 			echo "<a href=\"" . rig_self_url(-1, -1, -1, "lang=$key#lang") . "\">$value</a>\n";
+		}
 
 		$sep = TRUE;
 	}
@@ -914,9 +942,14 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/03/12 07:02:08  ralfoide
+//	New admin image vs album (alpha version not finished).
+//	New admin translate page (alpha version not finished).
+//	New pref to override the <meta> line in album/image display.
+//
 //	Revision 1.13  2003/02/17 07:47:03  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
-//
+//	
 //	Revision 1.12  2003/02/16 20:22:55  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

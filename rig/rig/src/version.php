@@ -7,15 +7,20 @@
 // $Id$
 //**********************************************
 
-$rig_version = "0.6.3.1";
+$rig_version = "0.6.3.2";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/03/12 07:02:08  ralfoide
+//	New admin image vs album (alpha version not finished).
+//	New admin translate page (alpha version not finished).
+//	New pref to override the <meta> line in album/image display.
+//
 //	Revision 1.8  2003/02/17 08:18:42  ralfoide
 //	Version 0.6.3.1 started...
-//
+//	
 //	Revision 1.7  2003/02/16 20:22:59  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

@@ -38,9 +38,11 @@ class RPrefAlbum extends RPrefBase
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/07/11 15:55:25  ralfoide
+//	Cosmetics
+//
 //	Revision 1.1  2003/06/30 06:09:22  ralfoide
 //	New OO code layout
-//
 //	
 //-------------------------------------------------------------
 ?>

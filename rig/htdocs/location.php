@@ -12,29 +12,58 @@
 // ---- global settings ---
   
 // base installation directory (absolute path)
-$dir_install			= "/home/ralf/rig/";
-// php sources
-$dir_src				= "src/";
+// The directory string must end with / (un*x) or \\ (windows)
+$dir_abs_install		= "/home/ralf/rig/";
+
+// php sources: view sources and admin sources
+// Note: $dir_abs_src semantic has changed! Both are *absolute* paths instead
+// of being relative to $dir_abs_install.
+// The directory string must end with / (un*x) or \\ (windows)
+$dir_abs_src			= $dir_abs_install . "src/";
+$dir_abs_admin_src		= $dir_abs_install . "admin/";
+
 // global settings
-$dir_globset			= "settings/";
+// Note: $dir_abs_globset semantic has changed! Path is *absolute* instead of relative to $dir_abs_install
+// The directory string must end with / (un*x) or \\ (windows)
+$dir_abs_globset		= $dir_abs_install . "settings/";
+
 
 // ---- local settings ---
 
-// the site-album directory (i.e. _this_ directory in absolute)
+// The site-album directory (i.e. _this_ directory in absolute)
+// The 2 lines below automatically compute the absolute local file-system path
+// to the entry point "index.php" file.
 $dir_info_album			= pathinfo($PATH_TRANSLATED);
 $dir_abs_album			= $dir_info_album["dirname"];
-// relative-url for rig images
-$dir_images				= "rig-images/";
-// local settings
-$dir_locset				= "";
-// album location
-$dir_album				= "my-photos/";
-$dir_preview			= "rig-cache/";
-$dir_option				= "rig-options/";
 
-// upload locations
-$dir_upload_src         = "upload_src/";
-$dir_upload_album       = "upload_photos/";
+// local settings
+// This directory is *always* relative to $dir_abs_album.
+// The directory string must end with / (un*x) or \\ (windows)
+$dir_abs_locset				= "./";
+
+
+// ---- URL settings ---
+
+// Relative-URL for rig images
+// Physically, this is relative to $dir_abs_album (i.e. where index.php is)
+// The URL string must end with /
+$dir_images				= "rig-images/";
+
+// Album location
+// Physically, this is relative to $dir_abs_album (i.e. where index.php is)
+// The URL string must end with /
+$dir_album				= "my-photos/";
+$dir_image_cache		= "rig-cache/";
+$dir_album_cache		= "rig-cache/";
+$dir_option				= "rig-options/";
+$dir_comment			= "rig-options/";
+$dir_vote				= "rig-options/";
+
+// Upload locations
+// Physically, this is relative to $dir_abs_album (i.e. where index.php is)
+// The URL string must end with /
+$dir_upload_src         = "upload-src/";
+$dir_upload_album       = "upload-photos/";
 
 
 
@@ -42,9 +71,12 @@ $dir_upload_album       = "upload_photos/";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/08/21 20:14:10  ralfoide
+//	New dir_variables, some made absolute, some renamed for clarity
+//
 //	Revision 1.1  2003/08/18 02:10:13  ralfoide
 //	Reorganazing
-//
+//	
 //	Revision 1.3  2003/03/12 07:11:45  ralfoide
 //	New upload dirs, new entry_point, new meta override
 //	

@@ -1174,6 +1174,18 @@ function rig_handle_cookies()
 	global $rig_user,	  $rig_passwd;
 	global $rig_adm_user, $rig_adm_passwd;
 
+	// Description of variables:
+	//
+	//	GET/POSTDATA name	COOKIE name
+	// lang					rig_lang
+	// theme				rig_theme
+	// img_size				rig_img_size
+	// force_login			n/a
+	// user					rig_user
+	// passwd				rig_passwd
+	// admusr				rig_adm_user
+	// admpwd				rig_adm_passwd
+
 	if ($lang)
 	{
 		rig_set_cookie_val("rig_lang", $lang);
@@ -1207,14 +1219,23 @@ function rig_handle_cookies()
 		$rig_img_size = $pref_image_size;
 	}
 
+	// colons are NOT accepted in username or password from GET/POSTDATA
+	// but they may appear in the cookie (to make sure encrypted cookies values
+	// are not used to feed a faked GET/POSTDATA)
+	if (is_string($user  )) $user   = str_replace(':', '', $user  );
+	if (is_string($passwd)) $passwd = str_replace(':', '', $passwd);
+	if (is_string($admusr)) $admusr = str_replace(':', '', $admusr);
+	if (is_string($admpwd)) $admpwd = str_replace(':', '', $admpwd);
+
 	if (!$force_login && $user)
 	{
 		// first erase existing cookie (set time to past value)
 		rig_set_cookie_val("rig_user"  , $rig_user,	  false);
 		rig_set_cookie_val("rig_passwd", $rig_passwd, false);
 
+		// this info will be validated and modified by the test function
 		$rig_user   = $user;
-		$rig_passwd = crypt($passwd);
+		$rig_passwd = $passwd;
 
 		if (rig_test_user_pwd(FALSE, &$rig_user, &$rig_passwd, &$login_error))
 		{
@@ -1236,8 +1257,9 @@ function rig_handle_cookies()
 		rig_set_cookie_val("rig_adm_user"  , $rig_adm_user  , false);
 		rig_set_cookie_val("rig_adm_passwd", $rig_adm_passwd, false);
 
+		// this info will be validated and modified by the test function
 		$rig_adm_user   = $admusr;
-		$rig_adm_passwd = crypt($admpwd);
+		$rig_adm_passwd = $admpwd;
 
 		if (rig_test_user_pwd(TRUE, &$rig_adm_user, &$rig_adm_passwd, &$login_error))
 		{
@@ -1845,9 +1867,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.18  2003/02/23 10:18:36  ralfoide
+//	plain vs crypt vs MD5 password in the password file
+//
 //	Revision 1.17  2003/02/23 08:14:36  ralfoide
 //	Login: display error msg when invalid password or invalid user
-//
+//	
 //	Revision 1.16  2003/02/17 10:03:00  ralfoide
 //	Toying with XML
 //	

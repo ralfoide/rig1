@@ -69,7 +69,12 @@ function rig_enter_login($url, $admin = FALSE)
 	{
 		rig_remove_login_cookies($admin);
 		rig_nocache_headers();
-		if ($force_login != "force") $force_login = "fail";
+
+		if ($force_login == "force")
+			$login_error = "";
+		else
+			$force_login = "fail";
+
 		include($dir_install . $dir_src . "login.php");
 		exit;
 	}
@@ -82,6 +87,26 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 // returns TRUE if user/passwd is valid
 // returns FALSE otherwise and clear the user/passwd variables
 // RM 20030222 adding error message
+//
+// RM 20030222 documenting the format of the user/password file:
+/*
+	# User/password file - RIG 0.6.3 # do not remove signature line
+	# Format:
+	# - lines starting by # are comment, empty lines are ignored
+	# - each line is in the format  "user:type:password:[display name]"
+	# - the type is one of these letters:
+	#	 empty : there is no password, _anythink_ is accepted
+	#    t     : plain-text password
+	#    c     : crypt(3) password -- cf mkpasswd(1)
+	#    m     : md5 password -- not implemented yet, cf md5sum(1) and echo -n
+	#    i     : invalid user, cannot log in
+	# - a wrong type will invalid the user
+	# - the display name is everything after the third colon till the end of the line and is optional
+	# - colons are accepted in the display name
+	# - colons are NOT accepted in user name, type or any form of password!
+	# - the minimum user line should look like "username:::", colons are mandatory!
+	#
+*/
 {
 	global $dir_locset;
 	global $dir_install;
@@ -92,9 +117,7 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 	$display_user = "";
 
 	// DEBUG
-	// echo "testing user/pwd: user='$user' pwd='$passwd' admin='$admin'\n";
-	// RM 090401 TBDL
-	// $passwd = "";
+	// echo "<p>testing user/pwd: user='$user' pwd='$passwd' admin='$admin'\n";
 
 	if ($user)
 	{
@@ -116,27 +139,80 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 				$line = fgets($file, 1023);
 				if (is_string($line) && $line[0] != '#')
 				{
-					$p = split(':', $line, 3);
-					if (is_array($p))
-					{
-						if ($p[0] == $user)
+					// see comments in function header for line format
+					list($u, $t, $p, $n) = split(':', $line, 4);
+
+					// DEBUG
+					// echo "<br>U=$u T=$t P=$p N=$n\n";
+
+					if (is_string($u))
+					{	
+						if ($u == $user)
 						{
-							// if password is empty in password file, it does not matter
-							// what password was given, they all match. otherwise, must match
-							// RM 2003022 TBDL use crypt()
-							if ($p[1][0] == '' || $p[1] == $passwd)
+							// invalid types are not tested, they just invalid the user
+							// type 'i' is obviously not tested here :-)
+							if ($t == '')
 							{
+								// empty password, accept everything
 								$valid = TRUE;
 							}
-							else
+							else if ($t == 't')
 							{
-								$logerr = "Error: Invalid password";	// RM 20030222 TBLD translation string
+								$valid = ($passwd == $p);
+
+								// leave $passwd as is, we'll store the plain password
+
+								if (!$valid)
+									$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
 							}
-						}
+							else if ($t == 'c')
+							{
+								// if the stored password is already a crypt, it should match texto
+								if (substr($passwd, 0, 2) == "c:")
+								{
+									$valid = (substr($passwd, 2) == $p);
+								}
+								else
+								{
+									// cf http://www.php.net/manual/en/function.crypt.php
+									$valid = (crypt($passwd, $p) == $p);
+
+									// store the crypted password from the config file
+									if ($valid)
+										$passwd = "c:$p";
+								}
+
+								if (!$valid)
+									$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
+							}
+							else if ($t == 'm')
+							{
+								// if the stored password is already a MD5, it should match texto
+								if (substr($passwd, 0, 2) == "m:")
+								{
+									$valid = (substr($passwd, 2) == $p);
+								}
+								else
+								{
+									// get the MD5 of the user's input the first time
+									if (!$pass_md5)
+										$pass_md5 = md5($passwd);
+									
+									$valid = ($p == $pass_md5);
+
+									// store the MD5 from the config file
+									if ($valid)
+										$passwd = "m:$p";
+								}
+								
+								if (!$valid)
+									$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
+							} // if type
+						} // if user
 								
 						if ($valid)
 						{
-							$display_user = $p[2];
+							$display_user = $n;
 							break;
 						}
 					}
@@ -162,10 +238,10 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 	}
 
 	if (!$logerr && !$display_user)
-		$logerr = "Error: Invalid user name";	// RM 20030222 TBLD translation string
+		$logerr = "Error: Invalid user name or password";	// RM 20030222 TBDL translation string
 
 	// DEBUG
-	// echo "valid='$valid'<br>\n";
+	// echo "<br>valid='$valid' -- logerr=$logerr\n";
 
 	return $valid;
 }
@@ -200,9 +276,12 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/02/23 10:18:36  ralfoide
+//	plain vs crypt vs MD5 password in the password file
+//
 //	Revision 1.7  2003/02/23 08:14:36  ralfoide
 //	Login: display error msg when invalid password or invalid user
-//
+//	
 //	Revision 1.6  2003/02/16 20:22:56  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

@@ -21,6 +21,9 @@ Generic:
 - in 0.6.4:
 [1.N] Drop DB support and dump 0.6.3-exp
 - in 0.6.3.1:
+[1.F] Login: plain vs crypt vs MD5 password in the password file
+[1.F] Login: display error msg for invalid user/password
+[1.F] Themes: Added gray theme color
 - in 0.6.3:
 [1.F] Display copyright in image page, display number of images/albums in tables
 [1.F] Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
@@ -59,7 +62,6 @@ Admin:
 -- todo --
 
 [0.6.4]
-20030222 [1.N] Login: allow for plain vs crypt vs MD5 password in the password file
 20030220 [7.N] Manual: write real CODINGRULES.TXT
 20030220 [6.N] Manual: write real INSTALL.TXT explaining site vs. album locations
 20030220 [6.N] Manual: write real INSTALL.TXT based on CVS checkout
@@ -124,6 +126,7 @@ Admin:
 [0.6.4]
 
 [0.6.3.1]
+20030222 [1.F] Login: allow for plain vs crypt vs MD5 password in the password file
 20030222 [1.F] Login: display error msg when invalid password
 20030222 [1.F] Login: display error msg when invalid user
 20030220 [1.F] Themes: Added gray theme color
@@ -440,9 +443,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/02/23 10:18:35  ralfoide
+//	plain vs crypt vs MD5 password in the password file
+//
 //	Revision 1.12  2003/02/23 08:14:34  ralfoide
 //	Login: display error msg when invalid password or invalid user
-//
+//	
 //	Revision 1.11  2003/02/21 09:03:02  ralfoide
 //	Added gray theme color
 //	

@@ -37,9 +37,8 @@ $dir_info_album			= pathinfo($PATH_TRANSLATED);
 $dir_abs_album			= $dir_info_album["dirname"];
 
 // local settings
-// This directory is *always* relative to $dir_abs_album.
-// The directory string must end with / (un*x) or \\ (windows)
-$dir_abs_locset				= "./";
+// $dir_abs_locset is optional: it is either an empty string or an absolute path -- RM 20030919 fixed
+$dir_abs_locset				= "";
 
 
 // ---- URL settings ---
@@ -71,9 +70,12 @@ $dir_upload_album       = "upload-photos/";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/11/09 20:53:57  ralfoide
+//	Fixed dir_abs_locset
+//
 //	Revision 1.2  2003/08/21 20:14:10  ralfoide
 //	New dir_variables, some made absolute, some renamed for clarity
-//
+//	
 //	Revision 1.1  2003/08/18 02:10:13  ralfoide
 //	Reorganazing
 //	

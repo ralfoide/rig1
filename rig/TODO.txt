@@ -19,6 +19,7 @@ Summary of features for RIG:
 
 Generic:
 - in 0.6.4.4:
+[1.F] Fix: invalidate html cache if image data cache modified
 [2.F] Video: Use JavaScript browser & OS detection to customize html tag and display proper install codec links
 [1.F] Video: Display video codec name and use to customize html viewer tag.
 - in 0.6.4.3:
@@ -186,6 +187,10 @@ Admin:
 
 
 -- done --
+
+[0.6.4.5]
+
+20031207 [1.W] CVS: Moving on to 0.6.4.5
 
 [0.6.4.4]
 
@@ -662,9 +667,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.42  2003/12/07 19:48:37  ralfoide
+//	Updating SourceForge, tagging as tag_2003-12-07_v0644, ready to move on to 0.6.4.5
+//
 //	Revision 1.41  2003/12/07 19:41:41  ralfoide
 //	Fix: invalidate html cache if image data cache modified
-//
+//	
 //	Revision 1.40  2003/11/29 22:35:01  ralfoide
 //	Video: JavaScript browser & OS detection, customize install codec links, etc.
 //	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)

@@ -1,0 +1,34 @@
+Class Hierarchy for RIG
+-----------------------
+
+RModuleManager		=> gModMan
+RModule				(name, loader pattern)
+	RModLogin
+	RModQuery
+	RModAlbum		(generic album content)
+		RModRigAlbum	(folder with only rig files)
+		RModIzuDir		(folder with only izu files)
+	RModPage
+		RModRigImage
+		RModIzuPage
+		RModZipPage
+	RModPageStat
+	RModAccessLog
+	RModCss
+	RModCache
+	RModOptions
+	RModStrings		(provides i18n str:html_...)
+
+RTemplateManager	=> gTempMan
+RTemplate			(name, parent module etc.)
+
+RMediaInfo			(query, web path, real path, cache path, option path)
+	RMediaDir		(list/cache content)
+	RMediaFile
+
+---------------
+*	$Log$
+*	Revision 1.1  2004/06/03 14:17:33  ralfoide
+*	Experimenting with module classes
+*
+---------------

@@ -62,7 +62,7 @@ class Exception
 	var $message;
 	var $type;
 
-	function Exception($message, $type = 'FAILURE')
+	function Exception($message, $type = 'FAILURE')	// RM 20040602 reference passing for PHP 4.3.6
 	{
 		$this->message = $message;
 		$this->type = $type;
@@ -247,7 +247,9 @@ class TestCase extends Assert /* implements Test */
 		$this->fName = $name;
 	}
 
-	function run($testResult=0) 
+
+
+	function run(&$testResult) 	// RM 20040602 reference passing for PHP 4.3.6
 	{
 		/* Run this single test, by calling the run() method of the
 		TestResult object which will in turn call the runBare() method
@@ -261,7 +263,7 @@ class TestCase extends Assert /* implements Test */
 			$testResult = $this->_createResult();
 		
 		$this->fResult = $testResult;
-		$testResult->run(&$this);
+		$testResult->run($this);	// RM 20040602 reference passing for PHP 4.3.6
 		$this->fResult = 0;
 		return $testResult;
 	}
@@ -340,14 +342,14 @@ class TestCase extends Assert /* implements Test */
 		//printf("TestCase::fail(%s)<br>\n", ($message) ? $message : '');
 		/* JUnit throws AssertionFailedError here.  We just record the
 		failure and carry on */
-		$this->fExceptions[] = new Exception(&$message, 'FAILURE');
+		$this->fExceptions[] = new Exception($message, 'FAILURE');	// RM 20040602 reference passing for PHP 4.3.6
 	}
 	
 	function error($message) 
 	{
 		/* report error that requires correction in the test script
 		itself, or (heaven forbid) in this testing infrastructure */
-		$this->fExceptions[] = new Exception(&$message, 'ERROR');
+		$this->fExceptions[] = new Exception($message, 'ERROR');	// RM 20040602 reference passing for PHP 4.3.6
 		$this->fResult->stop();	// [does not work]
 	}
 	
@@ -479,7 +481,7 @@ class TestSuite /* implements Test */
 		{
 			if ($testResult->shouldStop())
 				break;
-			$test->run(&$testResult);
+			$test->run($testResult);	// RM 20040602 reference passing for PHP 4.3.6
 		}
 	}
 
@@ -549,12 +551,12 @@ class TestResult
 
 	function addError($test, $exception) 
 	{
-		$this->fErrors[] = new TestFailure(&$test, &$exception);
+		$this->fErrors[] = new TestFailure($test, $exception);	// RM 20040602 reference passing for PHP 4.3.6
 	}
 
 	function addFailure($test, $exception) 
 	{
-		$this->fFailures[] = new TestFailure(&$test, &$exception);
+		$this->fFailures[] = new TestFailure($test, $exception);	// RM 20040602 reference passing for PHP 4.3.6
 	}
 
 	function getFailures() 
@@ -562,7 +564,7 @@ class TestResult
 		return $this->fFailures;
 	}
 
-	function run($test) 
+	function run(&$test) 	// RM 20040602 reference passing for PHP 4.3.6
 	{
 		/* Run a single TestCase in the context of this TestResult */
 		$this->_startTest($test);
@@ -582,7 +584,7 @@ class TestResult
 		}
 	
 		//    if ($exceptions)
-		//      $this->fFailures[] = new TestFailure(&$test, &$exceptions);
+		//      $this->fFailures[] = new TestFailure($test, $exceptions);	// RM 20040602 reference passing for PHP 4.3.6
 	
 		$this->_endTest($test);
 	}
@@ -780,9 +782,12 @@ class TestRunner
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2004/06/03 14:16:24  ralfoide
+//	Experimenting with module classes
+//
 //	Revision 1.3  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.2  2004/02/27 08:48:13  ralfoide
 //	Reformated source to my indentation rules.
 //	Added suggestion found in phpunit's bug list to add expected/actual keywords in failures.

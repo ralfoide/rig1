@@ -243,9 +243,12 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2002/10/24 21:32:47  ralfoide
+//	dos2unix fix
+//
 //	Revision 1.4  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
-//
+//	
 //	Revision 1.3  2002/10/20 11:50:49  ralfoide
 //	jhead support
 //	

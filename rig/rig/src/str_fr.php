@@ -144,9 +144,12 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2002/10/24 21:32:46  ralfoide
+//	dos2unix fix
+//
 //	Revision 1.5  2002/10/23 16:01:00  ralfoide
 //	Added <html lang>; now transmitting charset via http headers.
-//
+//	
 //	Revision 1.4  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
 //	

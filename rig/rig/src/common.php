@@ -1615,9 +1615,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2002/10/24 21:32:47  ralfoide
+//	dos2unix fix
+//
 //	Revision 1.8  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
-//
+//	
 //	Revision 1.7  2002/10/21 07:33:33  ralfoide
 //	debug stuff
 //	

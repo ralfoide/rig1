@@ -223,26 +223,27 @@ function display_album_list()
 				$sx = $pref_preview_size;
 				$sy = $pref_preview_size;
 			}
+
 			?>
 
-			<table border="0" cellspacing="0" cellpadding="0">
-			  <tr>
-			    <td><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0"><tr><td>
-					<a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<? $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td></tr></table></td>
-			    <td><img src="<?= $box_tr ?>" width="3" height="3"><br><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
-			    <td><img src="<?= $box_tr ?>" width="3" height="6"><br><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
-			  </tr>
-			  <tr>
-			    <td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
-			    <td><img src="<?= $box_br ?>" width="3" height="3"></td>
-			    <td><img src="<?= $line_r ?>" width="3" height="3"></td>
-			  </tr>
-			  <tr>
-			    <td><img src="<?= $box_tr ?>" width="6" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
-			    <td><img src="<?= $line_b ?>" width="3" height="3"></td>
-			    <td><img src="<?= $box_br ?>" width="3" height="3"></td>
-			  </tr>
-			</table>
+<table border="1" cellspacing="0" cellpadding="0">
+<tr height="<?= $sy+2 ?>">
+<td width="<?= $sx+2 ?>"><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0"><tr height="<?= $sy+2 ?>"><td width="<?= $sx+2 ?>">
+<a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<? $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td></tr></table></td>
+<td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
+<td><img src="<?= $box_tr ?>" width="3" height="6"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
+</tr>
+<tr height="3">
+<td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
+<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+<td><img src="<?= $line_r ?>" width="3" height="3"></td>
+</tr>
+<tr height="3">
+<td><img src="<?= $box_tr ?>" width="6" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
+<td><img src="<?= $line_b ?>" width="3" height="3"></td>
+<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+</tr>
+</table>
 			
 			<?php
 		}
@@ -752,9 +753,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2002/10/24 21:32:47  ralfoide
+//	dos2unix fix
+//
 //	Revision 1.6  2002/10/23 16:01:01  ralfoide
 //	Added <html lang>; now transmitting charset via http headers.
-//
+//	
 //	Revision 1.5  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
 //	

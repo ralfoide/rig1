@@ -377,9 +377,12 @@ function select_random_album_icon($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2002/10/24 21:32:47  ralfoide
+//	dos2unix fix
+//
 //	Revision 1.5  2002/10/22 22:32:52  ralfoide
 //	Fix to prevent dup slashes in preview links
-//
+//	
 //	Revision 1.4  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
 //	

@@ -170,9 +170,12 @@ function display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2002/10/24 21:32:47  ralfoide
+//	dos2unix fix
+//
 //	Revision 1.3  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
-//
+//	
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
 //	
@@ -184,3 +187,4 @@ function display_user_name($user = "")
 //	
 //-------------------------------------------------------------
 ?>
+

@@ -732,9 +732,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2002/10/24 21:32:47  ralfoide
+//	dos2unix fix
+//
 //	Revision 1.6  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
-//
+//	
 //	Revision 1.5  2002/10/22 08:37:47  ralfoide
 //	Fix for chaning image visibility
 //	

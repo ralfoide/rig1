@@ -99,7 +99,7 @@ handle_cookies();
 
 // include language strings, default is english ("en")
 // Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
-if (!file_exist($dir_install . $dir_src . "str_$current_language.php") || !$current_language)
+if (!file_exists($dir_install . $dir_src . "str_$current_language.php") || !$current_language)
 	$current_language = 'en';
 require_once($dir_install . $dir_src . "str_$current_language.php");
 require_once($dir_install . $dir_src . "version.php");
@@ -1201,9 +1201,12 @@ function get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2002/10/16 06:58:21  ralfoide
+//	Fixed typo
+//
 //	Revision 1.3  2002/10/16 05:05:24  ralfoide
 //	Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
-//
+//	
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
 //	

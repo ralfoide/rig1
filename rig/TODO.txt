@@ -85,10 +85,7 @@ Admin:
 [future]
 
 
-20030812 [1.N] CVS: upload 0.6.4.0 to CVS
-20030812 [1.N] Version: 0.6.3.5 stable enough to become 0.6.4.0 stable
-
-20030807 [1.N] Japanese: Should '-san' be added to "Guest" user name? [Tatsuo->Yes]
+20030807 [1.N] Japanese: Should '-san' be added to "Guest" user name? [Tatsuo->No]
 20030802 [4.N] Images: Slideshow using HTML DOM to replace image in container (need browser detection)
 20030802 [1.N] Images: Slideshow using HTML refresh ('low-tech')
 20030802 [2.N] Jhead: Use jhead to detect image rotation and rotate image automatically
@@ -153,6 +150,12 @@ Admin:
 
 [0.6.4.1]
 
+20030817 [1.F] Fix: Expire album HTML cache if album options have changed
+20030817 [1.F] CVS: Moving rig/htdocs/album-sample into rig/htdocs (thus invalidated fresh INSTALL.txt, -sigh-)
+20030817 [1.F] CVS: uploaded to CVS
+20030817 [1.F] Fix: Bug in read/write album options (write was not reusing previously read arrays)
+20030817 [1.F] Code: Merged experimental branch 0.6.4.1 back into 0.6.4.0
+20030816 [1.F] Manual: Updated INSTALL.txt, added INSTALL.html
 20030809 [1.F] Albums: cache rendered HTML (expires on album/prefs/src modifications)
 20030807 [2.F] rig_thumbnail: Updated -t (test/benchmark) flag (incorrect timing under Cygwin), added video frame benchmark
 20030807 [2.F] rig_thumbnail: Using -O3 gcc flag to compile
@@ -174,11 +177,13 @@ Admin:
 20030814 [1.F] Fix: Admin mode was not using ignore lists
 20030814 [1.F] Feature: Pref to enable album/image thumbnail in album view
 20030814 [1.F] Feature: Border for image thumbnails in album view
-20030813 [1.F] Bumped version to 0.6.4.0 (stable)
+20030813 [1.F] Bumped version to 0.6.4.0 [stable? -> Not quite]
+20030812 [1.F] CVS: upload 0.6.4.0 to CVS
 
 [0.6.3.5]
 
 20030813 [1.F] Feature: Add "ignore lists" for albums/images (regexp patterns of files to be ignored) [Request from AR]
+20030812 [1.F] Version: 0.6.3.5 stable enough to become 0.6.4.0 stable? [-> No]
 20030721 [1.F] rig_thumbnail: Detects and uses gcc-3.3 (required for latest libavifile 0.7.33)
 20030721 [1.F] rig_thumbnail: Doesn't link with the default libavifile-0.7-dev/unstable
 20030720 [1.F] Albums: Auto-switch between grid and vertical layout (if descriptions present)
@@ -577,9 +582,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.31  2003/08/18 04:33:47  ralfoide
+//	Tagging 0.6.4.0 and 0.6.4.1, ready to move on 0.6.4.2
+//
 //	Revision 1.30  2003/08/18 03:07:55  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
-//
+//	
 //	Revision 1.29  2003/08/15 07:16:13  ralfoide
 //	Album HTML cache generation, image thumbnail borders, etc.
 //	

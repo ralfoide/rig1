@@ -22,7 +22,7 @@ rig_prepare_image($id, $album, $image);
 rig_display_header($display_title);
 rig_display_body();
 
-if ($_test_==2)
+if ($_test_==5)
 {
 	?>
 
@@ -30,14 +30,8 @@ if ($_test_==2)
 
 document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>");
 
-/*
-document.write("CODE: ")
-document.write(navigator.appCodeName + "<br>")
-document.write("PLATFORM: ")
-document.write(navigator.platform + "<br>")
-*/
 </script>
-	
+
 	<?php
 }
 
@@ -97,9 +91,12 @@ document.write(navigator.platform + "<br>")
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/07/14 18:30:37  ralfoide
+//	Javascript test
+//
 //	Revision 1.9  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
-//
+//	
 //	Revision 1.8  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.

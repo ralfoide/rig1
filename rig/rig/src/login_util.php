@@ -170,9 +170,12 @@ function display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2002/10/24 23:57:49  ralfoide
+//	Fix for end-of-file
+//
 //	Revision 1.4  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
-//
+//	
 //	Revision 1.3  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
 //	
@@ -186,5 +189,8 @@ function display_user_name($user = "")
 //	version 0.6 with location.php
 //	
 //-------------------------------------------------------------
-?>
 
+// IMPORTANT: the "? >" must be the LAST LINE of this file, otherwise
+// some HTTP output will be started by PHP4 and setting headers or cookies
+// will fail with a PHP error message.
+?>

@@ -123,7 +123,7 @@ require_once(rig_require_once("prefs.php", $dir_abs_globset));
 
 // $dir_abs_locset is optional: it is either an empty string or an absolute path -- RM 20030919 fixed
 if (is_string($dir_abs_locset) && $dir_abs_locset != "" && rig_is_file($dir_abs_locset . "prefs.php"))
-	require_once($dir_abs_locset . "prefs.php");
+	require_once(rig_post_sep($dir_abs_locset) . "prefs.php");
 
 // setup...
 require_once(rig_require_once("version.php"));
@@ -149,11 +149,11 @@ require_once(rig_require_once("str_en.php", $dir_abs_src, $abs_upload_src_path))
 // and override with other language if not english
 
 // DEBUG
-// rig_check_src_file($dir_abs_src . "str_$current_language.php");
+// rig_check_src_file(rig_post_sep($dir_abs_src) . "str_$current_language.php");
 
 
 // Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
-if (!isset($current_language) || !rig_is_file($dir_abs_src . "str_$current_language.php"))
+if (!isset($current_language) || !rig_is_file(rig_post_sep($dir_abs_src) . "str_$current_language.php"))
 	$current_language = $pref_default_lang;
 
 if (is_string($current_language) && $current_language != 'en')
@@ -167,7 +167,7 @@ if (is_string($current_language) && $current_language != 'en')
 // DEBUG
 // rig_check_src_file($dir_abs_src . "theme_$current_theme.php");
 
-if (!isset($current_theme) || !rig_is_file($dir_abs_src . "theme_$current_theme.php"))
+if (!isset($current_theme) || !rig_is_file(rig_post_sep($dir_abs_src) . "theme_$current_theme.php"))
 	$current_theme = $pref_default_theme;
 
 require_once(rig_require_once("theme_$current_theme.php", $dir_abs_src, $abs_upload_src_path));
@@ -289,7 +289,7 @@ function rig_require_once($filename, $abs_main_dir = "", $abs_override_dir = "")
 	if (is_string($abs_main_dir) && $abs_main_dir != "")
 		$main = rig_post_sep($abs_main_dir);
 	else
-		$main = $dir_abs_src;
+		$main = rig_post_sep($dir_abs_src);
 
 	if (is_string($abs_override_dir) && $abs_override_dir != "")
 		$over = rig_post_sep($abs_override_dir);
@@ -912,10 +912,11 @@ function rig_self_url($in_image = -1,
 	$phpinfo	= rig_get($_GET,'phpinfo'	);
 	$_debug_	= rig_get($_GET,'_debug_'	);
 
-
 	// DEBUG
 	// echo "<p>rig_self_url: in_page=$in_page\n";
 
+
+	// Using Url rewrite?
 
 	$use_rewrite = (is_array($pref_url_rewrite) && count($pref_url_rewrite) >= 3);
 
@@ -924,8 +925,12 @@ function rig_self_url($in_image = -1,
 	else
 		$url = rig_get($_SERVER, 'PHP_SELF');	// RM 20040516 use rig_get to access global
 
+	// Parameters and ? character to start parameters
+
 	$params = "";
 	$param_concat_char = "?";
+
+	// Prepare album variable
 
 	if ($in_album == -1)
 	{
@@ -938,6 +943,9 @@ function rig_self_url($in_image = -1,
 	if ($in_album)
 		$in_album = rig_encode_url_link($in_album);
 
+
+	// Prepare image variable
+
 	if ($in_image == -1)
 	{
 		$in_image = $current_image;
@@ -949,7 +957,9 @@ function rig_self_url($in_image = -1,
 	if ($in_image)
 		$in_image = rig_encode_url_link($in_image);
 
-	// check in_page param
+
+	// Page type parameter
+
 	if (is_int($in_page) && $in_page == -1)
 	{
 		// translate and upload imply admin so they must be tested first
@@ -978,6 +988,8 @@ function rig_self_url($in_image = -1,
 	}
 
 
+	// Add album parameter
+
 	if ($in_album)
 	{
 		if ($use_rewrite)
@@ -991,6 +1003,8 @@ function rig_self_url($in_image = -1,
 		}
 	}
 
+	
+	// Add image parameter
 
 	if ($in_image)
 	{
@@ -1005,26 +1019,34 @@ function rig_self_url($in_image = -1,
 		}
 	}
 
-	// RM 20030908
+
+	// Add album pagination index
+
 	if ($in_apage > -1)
 	{
-		rig_url_add_param($params, 'apage', $in_apage);
+		if ($in_apage > 1)
+			rig_url_add_param($params, 'apage', $in_apage);
 	}
-	else if (is_integer($current_album_page) && $current_album_page > 0)
+	else if (is_integer($current_album_page) && $current_album_page > 1)
 	{
 		rig_url_add_param($params, 'apage', $current_album_page);
 	}
 
+
+	// Add image pagination index
+
 	if ($in_ipage > -1)
 	{
-		rig_url_add_param($params, 'ipage', $in_ipage);
+		if ($in_ipage > 1)
+			rig_url_add_param($params, 'ipage', $in_ipage);
 	}
-	else if (is_integer($current_image_page) && $current_image_page > 0)
+	else if (is_integer($current_image_page) && $current_image_page > 1)
 	{
 		rig_url_add_param($params, 'ipage', $current_image_page);
 	}
 
-	// ---
+
+	// Add debug, credits and phpinfo parameters
 
 	if ($_debug_)
 		rig_url_add_param($params, '_debug_', '1');
@@ -1036,7 +1058,9 @@ function rig_self_url($in_image = -1,
 		rig_url_add_param($params, 'phpinfo', $phpinfo);
 
 
+	// Add any extra
 	// the extra must always be the last one
+
 	if ($in_extra)
 	{
 		// don't add the & if the extra is <a name=> jump label (#label)
@@ -2485,6 +2509,10 @@ function rig_load_album_list($show_all = FALSE)
 //*****************************************************
 function rig_max_album_page($nb_col = -1, $nb_row = -1)
 //*****************************************************
+// This method computes how many pages will be used to display
+// the current album list.
+// It also enables/disable pagination as required.
+//
 // This function computes $max_album_page 
 // It also adjusts $current_album_page
 // And it returns the number of thumbnails per page, or 0
@@ -2522,7 +2550,8 @@ function rig_max_album_page($nb_col = -1, $nb_row = -1)
 				$current_album_page = $max_album_page;
 			
 			// if more than one page, enable pagination
-			if ($current_album_page == 0 && $max_album_page > 0)
+			// RM 20040708 fix: enable pagination only if more than one page
+			if ($current_album_page == 0 && $max_album_page > 1)
 				$current_album_page = 1;
 		}
 		else
@@ -2539,6 +2568,9 @@ function rig_max_album_page($nb_col = -1, $nb_row = -1)
 //*****************************************************
 function rig_max_image_page($nb_col = -1, $nb_row = -1)
 //*****************************************************
+// This method computes how many pages will be used to display
+// the current image list.
+// It also enables/disable pagination as required.
 {
 	global $max_image_page;
 	global $current_image_page;
@@ -2572,7 +2604,8 @@ function rig_max_image_page($nb_col = -1, $nb_row = -1)
 				$current_image_page = $max_image_page;
 			
 			// if more than one page, enable pagination
-			if ($current_image_page == 0 && $max_image_page > 0)
+			// RM 20040708 fix: enable pagination only if more than one page
+			if ($current_image_page == 0 && $max_image_page > 1)
 				$current_image_page = 1;
 		}
 		else
@@ -3402,10 +3435,13 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.43  2004/07/09 05:51:10  ralfoide
+//	Fixes: don't add useless parameters in URL, no pagination when only one page, etc.
+//
 //	Revision 1.42  2004/07/06 04:10:58  ralfoide
 //	Fix: using "img" query param instead of "image"
 //	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.
-//
+//	
 //	Revision 1.41  2004/06/03 14:14:47  ralfoide
 //	Fixes to support PHP 4.3.6
 //	

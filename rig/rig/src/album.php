@@ -10,39 +10,6 @@
 
 require_once($dir_abs_src . "common.php");
 
-// OO test -- RM 20030805
-/*
-if (isset($_GET['_test_']) && $_GET['_test_'] == 1)
-{
-	require_once($dir_abs_src . "common.php");
-	require_once(rig_require_once("RUser.php"));
-	require_once(rig_require_once("RAlbum.php"));
-
-	// log in and get the current user
-	$rig_user = new RUser();
-
-	// path onto this album or image
-	$rig_path = new RPath($dir_album, $abs_album_path, rig_get($_GET,'album'), rig_get($_GET,'image'));
-
-	// this is always an album, initialize an instance
-	$rig_album = new RAlbum($rig_path);
-
-	// load preferences (ptions) and file lists...
-	if ($rig_album->Load())
-	{
-		// render album
-		if ($rig_album->Render())
-		{
-			// update album options (no-op right now)
-			$rig_album->Sync();
-		}
-	}
-
-	exit("");
-}
-*/
-// END OO test -- RM 20030805
-
 rig_enter_login(rig_self_url(""));
 
 rig_prepare_album(rig_get($_GET,'album'), rig_get($_GET,'apage', 0), rig_get($_GET,'ipage', 0));
@@ -194,6 +161,9 @@ rig_terminate_db();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2004/02/23 04:18:13  ralfoide
+//	Removed obsolete OO test
+//
 //	Revision 1.13  2003/11/09 20:52:11  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)
@@ -201,7 +171,7 @@ rig_terminate_db();
 //	Fix: Changed credit line
 //	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
 //	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//
+//	
 //	Revision 1.12  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)

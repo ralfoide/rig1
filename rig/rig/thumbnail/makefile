@@ -20,16 +20,16 @@ all:
 	@echo
 
 no-video:
-	make -f makefile-no-video
+	$(MAKE) -f makefile-no-video
 
 with-video:
-	make -f makefile-with-video
+	$(MAKE) -f makefile-with-video
 
 # -----------------------------
 
 clean:
 	rm -fv $(OFILES)
-	make -f makefile-libjpeg clean
+	$(MAKE) -f makefile-libjpeg clean
 	@echo
 	@echo "**** IMPORTANT: To remove $(EFILES) too, use 'make clean-all' *****"
 	@echo
@@ -46,6 +46,10 @@ extra-clean: clean-all
 
 #
 # $Log$
+# Revision 1.6  2003/11/25 05:03:30  ralfoide
+# Using Gnu Make builtin MAKE variable instead of hardcoded make name.
+# Allows for script to run with -j n for multi processor support.
+#
 # Revision 1.5  2003/11/09 20:53:30  ralfoide
 # Added clean-all target to remove exe too
 #

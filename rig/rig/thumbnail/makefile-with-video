@@ -59,7 +59,7 @@ all: libjpeg $(TARGET)
 # -----------------------------
 
 libjpeg:
-	make -f makefile-libjpeg
+	$(MAKE) -f makefile-libjpeg
 
 # -----------------------------
 
@@ -71,7 +71,7 @@ $(OFILES): %.o: %.cpp
 
 clean:
 	rm -fv $(OFILES)
-	make -f makefile-libjpeg clean
+	$(MAKE) -f makefile-libjpeg clean
 
 # -----------------------------
 
@@ -90,6 +90,10 @@ info:
 
 #
 # $Log$
+# Revision 1.6  2003/11/25 05:03:30  ralfoide
+# Using Gnu Make builtin MAKE variable instead of hardcoded make name.
+# Allows for script to run with -j n for multi processor support.
+#
 # Revision 1.5  2003/08/18 02:07:55  ralfoide
 # Update
 #

@@ -24,6 +24,7 @@ function rig_display_video($type)
 	global $pref_image_size;
 	global $pref_image_quality;
 
+
 	global $_test_;
 	if (isset($_test_)) echo "Test type: $_test_<br>";
 
@@ -52,12 +53,18 @@ function rig_display_video($type)
 		else
 			$sy = 240;
 
+		// for QT, add 16 to the height to see the controls (cf doc above)
+		$sy2 = $sy+16;
+
 		$subtype = substr($type, 6);
 
 
 		// get some details based on the video codec
-		$codec_info = rig_display_codec_detail($info);
+		$codec_info = array_merge(rig_display_codec_detail($info), rig_display_os_detail());
 		$codec_install = "";
+
+		$codec_is_divx = false;
+		$codec_is_windowsmedia = false;
 
 		if ($codec_info != NULL)
 		{
@@ -78,12 +85,29 @@ function rig_display_video($type)
 			{
 				foreach($codec_url as $name => $url)
 				{
-					if (is_string($name))
-						// RM 20031124 TBT To Be Translated
-						$codec_install .= "[&nbsp;<a href=\"$url\">Install $name</a>&nbsp;] ";
+					if (strpos($url, "rig:" ) === 0)
+					{
+						// filter out and process rig-specific commands
+
+						if (strpos($url, "divx"        ) !== FALSE)
+							$codec_is_divx = TRUE;
+						if (strpos($url, "windowsmedia") !== FALSE)
+							$codec_is_windowsmedia = TRUE;
+					}
 					else
-						// RM 20031124 TBT To Be Translated
-						$codec_install .= "[&nbsp;<a href=\"$url\">Install the player</a>&nbsp;]";
+					{
+						// display links
+
+						if (is_string($name) && preg_match("/\(([^\)]*)\)(.*)/", $name, $matches) == 1)
+							// RM 20031124 TBT To Be Translated
+							$codec_install .= rig_video_javascript_testline($matches[1], "[&nbsp;<a href=\"$url\">Install&nbsp;" . $matches[2] . "</a>&nbsp;] ");
+						else if (is_string($name))
+							// RM 20031124 TBT To Be Translated
+							$codec_install .= "[&nbsp;<a href=\"$url\">Install&nbsp;$name</a>&nbsp;] ";
+						else
+							// RM 20031124 TBT To Be Translated
+							$codec_install .= "[&nbsp;<a href=\"$url\">Install&nbsp;the&nbsp;player</a>&nbsp;]";
+					}
 				}
 			}
 		}
@@ -92,12 +116,13 @@ function rig_display_video($type)
 			$codec_detail = "";
 		}
 
+
 		if ($subtype == "avi")
 		{
 			// ----------------------------------------
 			// -------------- AVI ---------------------
 			// ----------------------------------------
-
+	
 			// Link
 			// Windows Media Player <object>
 			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/addwmwebpage.asp?frame=true&hidetoc=true
@@ -115,226 +140,143 @@ function rig_display_video($type)
 			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/6-4compat.asp
 			//		Windows Media Player 9 Series 6BF52A52-394A-11d3-B153-00C04F79FAA6
 			// http://home.maconstate.edu/dadams/Tutorials/AV/AV03/av03-03.htm
-
-		if ($_test_==4)
-		{
+	
 			// Win32 Moz 1.4: doesn't work
 			// Win32 IE6: unsafe ActiveX, won't play
-			?>
-		
-			<object data="<?= $full ?>" type="video/x-msvideo" />
-		
-			<?php
-		}
-		else if ($_test_==3)
-		{
+			// <!-- object data="<@= $full @>" type="video/x-msvideo" / -->
 			// Win32  Moz 1.4: WMV7 displays but doesn't play
 			// Win32  IE6: WMV9 shows with bad aspect ratio, plays.
 			// MacOSX Safari: yes if WMV 7.1/MacOS X installed before
-			
-			?>
-				<embed
-					type="application/x-msvideo"
-					src="<?= $full ?>"
-					width="<?= $sx ?>" height="<?= $sy ?>"
-				>
-				</embed>
-			<?php
-		}
-		else
-		{
-			// Win32  Moz 1.4: WMV7 displays but doesn't play
-			// Win32  IE6: WMV9 shows, plays (using lack of image size, otherwise bad aspect ratio).
-			// MacOSX Safari: no pluging, and MS download page invalid
-
-				?>
-				<object 
-					classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6"
-					codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112"
-					id="mediaplayer1">
-					<!-- width="<?= $sx ?>" height="<?= $sy ?>" -->
-					<param name="URL" value="<?= $full ?>">
-					<param name="Filename" value="<?= $full ?>">
-					<param name="AutoStart" value="True">
-					<param name="ShowControls" value="True">
-					<param name="ShowStatusBar" value="True">
-					<param name="ShowDisplay" value="True">
-					<param name="AutoRewind" value="True">
-		
-				<embed 
-					type="application/x-mplayer2"
-					pluginspage="http://www.microsoft.com/Windows/Downloads/Contents/MediaPlayer/"
-					src="<?= $full ?>"
-					width="<?= $sx ?>" height="<?= $sy ?>"
-					filename="<?= $full ?>"
-					autostart="True" 
-					showcontrols="True"
-					showstatusbar="True" 
-					showdisplay="True"
-					autorewind="True">
-				</embed> 
-				</object>
 	
-				<p>
-				<font size="-1">
-				<?= $codec_detail ?>
-				<br>
-				<?= $codec_install ?>
-				[&nbsp;<a href="<?= $full ?>">External display</a>&nbsp;]
-				</font>
-			<?php
-			}
-		}
+			rig_video_generate_javascript(
+				array(
+				"is_win" => array(
+							TRUE,
+							"<object "
+							. "	classid=\"CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6\""
+							. "	codebase=\"http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112\""
+							. "	id=\"mediaplayer1\">"
+							. "	<param name=\"URL\" value=\"$full\">"
+							. "	<param name=\"Filename\" value=\"$full\">"
+							. "	<param name=\"AutoStart\" value=\"True\">"
+							. "	<param name=\"ShowControls\" value=\"True\">"
+							. "	<param name=\"ShowStatusBar\" value=\"True\">"
+							. "	<param name=\"ShowDisplay\" value=\"True\">"
+							. "	<param name=\"AutoRewind\" value=\"True\"> "
+							. "<embed "
+							. "	type=\"application/x-mplayer2\""
+							. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\""
+							. "	src=\"$full\""
+							. "	width=\"$sx\" height=\"$sy\""
+							. "	filename=\"$full\""
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\""
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\""
+							. "	autorewind=\"True\"> "
+							. "</embed> "
+							. "</object> "
+							),
+				"is_mac" => array(
+							$codec_is_windowsmedia && !$codec_is_divx,
+							"<embed "
+							. "	type=\"application/x-mplayer2\" "
+							. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
+							. "	src=\"$full\" "
+							. "	width=\"$sx\" height=\"$sy2\" "
+							. "	filename=\"$full\" "
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\" "
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\" "
+							. "	autorewind=\"True\">"
+							. "</embed> ",
+							TRUE,
+							"<embed "
+							. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
+							. "	src=\"$full\" "
+							. "	width=\"$sx\" height=\"$sy2\" "
+							. "	filename=\"$full\" "
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\" "
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\" "
+							. "	autorewind=\"True\">"
+							. "</embed> "
+							),
+				// not windows, not mac (includes is_linux, etc.)
+				"else" => array(
+							TRUE,
+							"<embed "
+							. "	type=\"application/x-mplayer2\" "
+							. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
+							. "	src=\"$full\" "
+							. "	width=\"$sx\" height=\"$sy\" "
+							. "	filename=\"$full\" "
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\" "
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\" "
+							. "	autorewind=\"True\">"
+							. "</embed> "
+							),
+				// javascript not enabled
+				"noscript" => array(
+							"<embed "
+							. "	src=\"$full\" "
+							. "	width=\"$sx\" height=\"$sy\" "
+							. "	filename=\"$full\" "
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\" "
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\" "
+							. "	autorewind=\"True\">"
+							. "</embed> ".
+							"<p>",
+							"Please enable JavaScript to allow this programm to select the most appropriate video ",
+							"viewer for your configuration."
+							)
+				)
+			);
+		} // end if avi
 		else if ($subtype == "mpeg")
 		{
 			// ----------------------------------------
 			// -------------- MPEG --------------------
 			// ----------------------------------------
 	
-			if ($_test_==4)
-			{
-				?>
-			
-				<object data="<?= $full ?>" type="video/mpeg" />
-			
-				<?php
-			}
-			else
-			{
-				?>
-					<embed
-						src="<?= $full ?>"
-						width="<?= $sx ?>" height="<?= $sy ?>"
-					>
-					</embed>
+			// Always use <embed>
 
-				<p>
-				<font size="-1">
-				<?= $codec_detail ?>
-				<br>
-				<?= $codec_install ?>
-				[&nbsp;<a href="<?= $full ?>">External display</a>&nbsp;]
-				</font>
-
-				<?php
-			}
-		}
+			?>
+				<embed
+					src="<?= $full ?>"
+					width="<?= $sx ?>" height="<?= $sy ?>"
+				>
+				</embed>
+			<?php
+		} // end if mpeg
 		else if ($subtype == "quicktime")
 		{
 			// ----------------------------------------
 			// -------------- QuickTime ---------------
-	
 			// ----------------------------------------
-
+	
 			// QuickTime EMBED attributes are described here:
 			// http://www.apple.com/quicktime/authoring/embed2.html
 			//
 			// QuickTime OBJECT tag:
 			// http://www.apple.com/quicktime/tools_tips/tutorials/activex.html
 
-			// for QT, add 16 to the height to see the controls (cf doc above)
-			$sy2 = $sy+16;
-
-			
-
-
-	
 			/*
 				The following EMBED attributes are supposedly supported but break the QT player
 				when used:
 					type="video/quicktime"
-					qtsrc="<?= $full ?>"
+					qtsrc="url"
 					qtsrcdontusebrowser
 	
 				codebase="http://www.apple.com/qtactivex/qtplugin.cab">
 			*/
 	
-	if ($_test_==4)
-	{
-		?>
-	
-		<object data="<?= $full ?>" type="video/quicktime" />
-	
-		<?php
-	}
-	else if ($_test_==3)
-	{
-	
-			?>
-				<embed
-					src="<?= $full ?>"
-					width="<?= $sx ?>" height="<?= $sy2 ?>"
-					controller="true"
-					scale="aspect"
-					autohref="yes"
-					autoplay="yes"
-				>
-				</embed>
-				
-				<br>
-				
-				<font size="-1">
-				[&nbsp;<a href="<?= $full ?>">External display</a>&nbsp;]
-				<br>
-				Players: 
-					<a href="http://www.mplayerhq.hu/homepage/">Linux MPlayer</a>
-					|
-					<a href="http://www.apple.com/quicktime/download/">Apple Quicktime</a>
-					|
-					<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
-				</font>
-			<?php
-	}
-	else if ($_test_==2)
-	{
-//	<script language="JavaScript" type="text/javascript" src="browser_detect.js"></script>
-
-	    ?>
-	
-	
-	<script type="text/javascript" language="JavaScript">
-
-alert("here");
-document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>");
-	
-	document.write("BROWSER: ")
-	document.write(navigator.appName + "<br>")
-	document.write("BROWSERVERSION: ")
-	document.write(navigator.appVersion + "<br>")
-	document.write("CODE: ")
-	document.write(navigator.appCodeName + "<br>")
-	document.write("PLATFORM: ")
-	document.write(navigator.platform + "<br>")
-	
-		document.write('<embed')
-		document.write('src="<?= $full ?>"')
-		document.write('width="<?= $sx ?>" height="<?= $sy2 ?>"')
-		document.write('controller="true"')
-		document.write('scale="aspect"')
-		document.write('autohref="yes"')
-		document.write('autoplay="yes"')
-		document.write('pluginspage="http://www.apple.com/quicktime/download/">')
-		document.write('</embed>')
-	
-	
-	<noscript>
-				<embed
-					src="<?= $full ?>"
-					width="<?= $sx ?>" height="<?= $sy2 ?>"
-					controller="true"
-					scale="aspect"
-					autohref="yes"
-					autoplay="yes"
-					pluginspage="http://www.apple.com/quicktime/download/"
-				>
-				</embed>
-	</noscript>
-	</script>
-	
-	    <?php
-	}
-	else
-	{
 			?>
 				<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b"
 					codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"
@@ -355,18 +297,23 @@ document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>")
 				>
 				</embed>
 				</object>
-				
-				<p>
-				<font size="-1">
-				<?= $codec_detail ?>
-				<br>
-				<?= $codec_install ?>
-				[&nbsp;<a href="http://www.apple.com/quicktime/download/">Apple Quicktime</a>&nbsp;]
-				[&nbsp;<a href="<?= $full ?>">External display</a>&nbsp;]
-				</font>
-				<?php
-		}
-	} // non-javascript test
+			<?php
+		} // end if qt
+
+		// ---------------------------------------------
+		// --- Display links & info below the player ---
+		// ---------------------------------------------
+
+		?>
+			<p>
+			<font size="-1">
+			<?= $codec_detail ?>
+			<br>
+			<?= $codec_install ?>
+			[&nbsp;<a href="<?= $full ?>">External&nbsp;display</a>&nbsp;]
+			</font>
+		<?php
+
 	} // if video
 
     // debug
@@ -375,13 +322,34 @@ document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>")
 }
 
 
+//******************************
+function rig_display_os_detail()
+//******************************
+// Returns an array similar to codec_detail but that
+// contains links that are always to be displayed in the
+// context of a given OS (typically linux)
+{
+	return array("(is_linux)MPlayer&nbsp;Plugin" 	=> "http://mplayerplug-in.sourceforge.net/",
+				 "(is_linux)MPlayer" 				=> "http://www.mplayerhq.hu/",
+				 "(is_linux)Xine" 					=> "http://xine.sf.net/",
+				 "(is_win)Windows&nbsp;Media&nbsp;Player" => "http://www.microsoft.com/windows/windowsmedia/default.aspx"
+				 );
+}
+
+
 //**************************************
 function rig_display_codec_detail($info)
 //**************************************
 // Input: an array with 'e' element contains the video codec FourCC
 // Output: an array with:
-//	'n' => name, f.ex. "Divx 3.0"
-//	'u' => download/install URL
+// - the codec name
+// - entries in the format "(javascript-condition)Program Name" => "program url"
+//   that will result in the text "Install <program name>"
+// - entries in the format "program url"
+//   that will result in the text "Install the player"
+//
+// TODO: refactor to get it rid of the annoying duplication of detailed entries.
+//
 // Return NULL if there's no info detail.
 {
 	if (is_array($info) && is_string($info['e']))
@@ -393,15 +361,32 @@ function rig_display_codec_detail($info)
 
 		$map = array(
 			"DIVX"			=> array("DivX ;-)",
-									 "DivX Codec" => "http://www.divx.com/",
-									 "Windows Media Player" => "http://www.microsoft.com/windows/windowsmedia/default.aspx"
+									 "rig:is-divx-format",
+									 "(!is_mac && !is_linux)DivX Codec" 		=> "http://www.divx.com/",
+									 "(is_mac)DivX&nbsp;Codec" 					=> "http://www.divx.com/divx/mac",
+									 "(is_linux)DivX&nbsp;Codec" 				=> "http://www.divx.com/divx/linux/"
 									),
-			"DIV3"			=> array("DivX 3", "http://www.divx.com/"),
-			"DX50"			=> array("DivX 5", "http://www.divx.com/"),
-			"XVID"			=> array("XVID", "http://www.xvid.org/"),
+			"DIV3"			=> array("DivX 3",
+									 "rig:is-divx-format",
+									 "(!is_mac && !is_linux)DivX&nbsp;Codec" 	=> "http://www.divx.com/",
+									 "(is_mac)DivX&nbsp;Codec" 					=> "http://www.divx.com/divx/mac",
+									 "(is_linux)DivX&nbsp;Codec" 				=> "http://www.divx.com/divx/linux/"
+									),
+			"DX50"			=> array("DivX 5",
+									 "rig:is-divx-format",
+									 "(!is_mac && !is_linux)DivX&nbsp;Codec" 	=> "http://www.divx.com/",
+									 "(is_mac)DivX&nbsp;Codec" 					=> "http://www.divx.com/divx/mac",
+									 "(is_linux)DivX&nbsp;Codec" 				=> "http://www.divx.com/divx/linux/"
+									),
+			"XVID"			=> array("XVID",
+									 "XviD&nbsp;Codec" 							=> "http://www.xvid.org/"
+									),
 			
 			"MP42"			=> "Microsoft MPEG-4 v2",
-			"WMV[1-9]"		=> array("Windows Media Format", "http://www.microsoft.com/windows/windowsmedia/default.aspx"),
+			"WMV[1-9]"		=> array("Windows Media Format",
+									 "rig:is-windowsmedia-format",
+									 "(!is_win)Windows&nbsp;Media&nbsp;Player" 	=> "http://www.microsoft.com/windows/windowsmedia/default.aspx"
+									),
 			
 			"M[LJ]PG"		=> "Motion JPEG",
 			"MPG1"			=> "MPEG 1 Stream",
@@ -409,9 +394,15 @@ function rig_display_codec_detail($info)
 			"MPG4"			=> "MPEG 4 Stream",
 			"MPG[1-9]"		=> "MPEG Stream",
 			
-			"RV[1-9][0-9]"	=> array("Real Video", "http://www.real.com/"),
-			"SVQ[1-9]"		=> array("Quicktime Sorenson", "http://www.apple.com/quicktime/"),
-			"MOV."			=> array("Quicktime Movie", "http://www.apple.com/quicktime/"),
+			"RV[1-9][0-9]"	=> array("Real Video",
+									 "RealOne" => "http://www.real.com/"
+									 ),
+			"SVQ[1-9]"		=> array("Quicktime Sorenson",
+									 "QuickTime" => "http://www.apple.com/quicktime/"
+									 ),
+			"MOV."			=> array("Quicktime Movie",
+									 "QuickTime" => "http://www.apple.com/quicktime/"
+									 ),
 			"IV[3-5][0-9]"	=> "Intel Indeo",
 			"cvid"			=> "Cinepak",
 
@@ -540,6 +531,100 @@ function rig_display_codec_detail($info)
 }
 
 
+//*******************************************
+function rig_video_generate_javascript($desc)
+//*******************************************
+/*
+	desc is an array of array, which syntax goes more or less like this:
+	"javascript_boolean" => array(php_boolean, "<codec>", "link1", "link2",
+								   php_boolean, "<codec>", "link1", "link2",
+								   etc.);
+*/
+{
+	echo "<script LANGUAGE=\"JavaScript\">\n";
+	echo "<!--\n";
+
+	$need_else = FALSE;
+	$no_script_detail = FALSE;
+
+	foreach($desc as $js_test => $detail)
+	{
+		if ($js_test == "noscript")
+		{
+			$no_script_detail = $detail;
+		}
+		else
+		{
+			while(count($detail))
+			{
+				$php_test = array_shift($detail);
+	
+				if (is_bool($php_test) && $php_test === TRUE)
+				{
+					$codec = array_shift($detail);
+						
+					if (is_string($codec))
+					{
+						if ($need_else)
+							echo "else ";
+						else
+							$need_else = TRUE;
+	
+						if ($js_test != "else")
+							echo "if ($js_test)\n";
+	
+						// Need to escape some characters from the written line
+						// f.ex. at least ' is not acceptable in write('something').
+						
+						$codec = str_replace("'", "\\'", $codec);
+	
+					// Generate the Javascript line
+	
+						echo " document.write('$codec');\n";
+					}
+					
+					// get remaining strings as links			
+				}
+			} // while
+		} // if
+	}
+
+	echo "//-->\n";
+	echo "</script>\n";
+
+	if (is_array($no_script_detail))
+	{
+		echo "<noscript>\n";
+		foreach($no_script_detail as $str)
+			echo $str . "\n";
+		echo "</noscript>\n";
+	}
+	
+}
+
+
+//**************************************************
+function rig_video_javascript_testline($test, $line)
+//**************************************************
+{
+	// Need to escape some characters from the written line
+	// f.ex. at least ' is not acceptable in write('something').
+	
+	$line = str_replace("'", "\\'", $line);
+	
+	
+	// Generate the Javascript line
+	
+	return
+		  "<script LANGUAGE=\"JavaScript\">\n"
+		. "<!--\n"
+		. "if ($test)\n"
+		. "	document.write('$line');\n"
+		. "//-->\n"
+		. "</script>\n";
+	
+}
+
 
 
 //-----------------------------------------------------------------------
@@ -547,10 +632,14 @@ function rig_display_codec_detail($info)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/11/29 22:35:42  ralfoide
+//	Video: JavaScript browser & OS detection, customize install codec links, etc.
+//	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)
+//
 //	Revision 1.1  2003/11/25 05:05:34  ralfoide
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.
 //	Isolated video display routines in new source file.
-//
+//	
 //-------------------------------------------------------------
 ?>

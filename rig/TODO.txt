@@ -18,6 +18,9 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
+- in 0.6.4.4:
+[2.F] Video: Use JavaScript browser & OS detection to customize html tag and display proper install codec links
+[1.F] Video: Display video codec name and use to customize html viewer tag.
 - in 0.6.4.3:
 [1.N] Feature: Follow image symlinks
 [1.F] Feature: Split album/images pages in several pages if too many to display
@@ -104,6 +107,10 @@ Admin:
 
 [future]
 
+20031129 [1.N] Fix: WMV video doesn't play under Win/Mozilla
+20031129 [2.N] Fix: Disable pagination display if there's only one page
+20031129 [2.N] Fix: Pagination display incorrect in vertical mode
+
 20030921 [3.N] Themes: add a green theme (dark green background, light green text, yellow titles)
 20030921 [2.N] Themes: add a color-sample page, with all color UI elements to test new color schemes in a single place
 
@@ -182,6 +189,11 @@ Admin:
 
 [0.6.4.4]
 
+20031129 [2.F] Video: Notification and default display in case JavaScript is disabled
+20031129 [2.F] Video: Adjustement to download links depending on the target OS
+20031128 [2.F] Video: MacOS DivX download page: http://www.divx.com/divx/mac/
+20031128 [2.F] Video: MacOS WMP download url obsolete in <embed> tag
+20031128 [1.F] Video: Need javascript based OS detection and customization of page
 20031124 [1.F] Video: Use the video codec to display a specific codec/player install link
 20031110 [1.F] rig_thumbnail: Report the video codec
 20031109 [1.F] CVS: Moving on to 0.6.4.4
@@ -649,9 +661,13 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.40  2003/11/29 22:35:01  ralfoide
+//	Video: JavaScript browser & OS detection, customize install codec links, etc.
+//	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)
+//
 //	Revision 1.39  2003/11/25 05:06:23  ralfoide
 //	New display of video codec. New video display common file.
-//
+//	
 //	Revision 1.38  2003/11/09 20:52:52  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Comments (edit page, organizing workflow)

@@ -8,6 +8,7 @@
 //**********************************************
 
 
+
 //-----------------------------------------------------------------------
 
 
@@ -1741,11 +1742,15 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.30  2003/11/29 22:35:41  ralfoide
+//	Video: JavaScript browser & OS detection, customize install codec links, etc.
+//	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)
+//
 //	Revision 1.29  2003/11/25 05:05:34  ralfoide
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.
 //	Isolated video display routines in new source file.
-//
+//	
 //	Revision 1.28  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)

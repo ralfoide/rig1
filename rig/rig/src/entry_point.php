@@ -75,29 +75,14 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.8  2004/02/23 04:09:00  ralfoide
 //	Entry point for overview test and for phpUnit testing
 //
-//	Revision 1.7  2004/02/18 07:38:51  ralfoide
-//	Ovierview test
-//	
-//	Revision 1.6  2003/11/09 20:52:12  ralfoide
-//	Fix: image resize popup broken (img_size value not memorized?)
-//	Feature: Comments (edit page, organizing workflow)
-//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
-//	Fix: Changed credit line
-//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
-//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//	
-//	Revision 1.5  2003/08/21 20:18:02  ralfoide
-//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//	
-//	Revision 1.4  2003/08/18 03:05:12  ralfoide
-//	PHP 4.3.x support
-//	
-//	Revision 1.3  2003/06/30 06:08:11  ralfoide
-//	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
-//	
+//	[...]
+//
 //	Revision 1.2  2003/05/26 17:52:30  ralfoide
 //	Disabled admin_image (not finished -- experimental)
 //	
@@ -105,18 +90,10 @@ else
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
 //	New pref to override the <meta> line in album/image display.
-//	
-//	Revision 1.3  2003/02/16 20:09:41  ralfoide
-//	Update. Version 0.6.3.1
-//	
-//	Revision 1.2  2002/10/20 09:03:19  ralfoide
-//	Display error when require_once files cannot be located
-//	
-//	Revision 1.1  2002/08/04 00:58:08  ralfoide
-//	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//	
+//
+//	[...]
+//
 //	Revision 1.1  2001/11/26 04:35:05  ralf
 //	version 0.6 with location.php
-//	
 //-------------------------------------------------------------
 ?>

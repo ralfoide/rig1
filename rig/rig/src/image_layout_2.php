@@ -236,12 +236,14 @@
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.2  2003/07/14 18:31:14  ralfoide
 //	Don't show image size popup for videos
-//
+//	
 //	Revision 1.1  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.
-//	
 //-------------------------------------------------------------
 ?>

@@ -780,11 +780,13 @@ class TestRunner
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.2  2004/02/27 08:48:13  ralfoide
 //	Reformated source to my indentation rules.
 //	Added suggestion found in phpunit's bug list to add expected/actual keywords in failures.
 //	Fixed broken call set_error_handler (annoying php output in html)
-//
 //-------------------------------------------------------------
 
 ?>

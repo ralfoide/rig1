@@ -345,58 +345,19 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.13  2004/02/27 08:46:39  ralfoide
 //	Don't print guest user name (avoid adding -san to guest in Japanese)
 //
-//	Revision 1.12  2004/02/18 07:39:48  ralfoide
-//	Fixes for \r\n in passwd files
-//	
-//	Revision 1.11  2003/11/09 20:52:12  ralfoide
-//	Fix: image resize popup broken (img_size value not memorized?)
-//	Feature: Comments (edit page, organizing workflow)
-//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
-//	Fix: Changed credit line
-//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
-//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//	
-//	Revision 1.10  2003/08/21 20:18:02  ralfoide
-//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//	
-//	Revision 1.9  2003/08/18 03:05:12  ralfoide
-//	PHP 4.3.x support
-//	
-//	Revision 1.8  2003/02/23 10:18:36  ralfoide
-//	plain vs crypt vs MD5 password in the password file
-//	
-//	Revision 1.7  2003/02/23 08:14:36  ralfoide
-//	Login: display error msg when invalid password or invalid user
-//	
-//	Revision 1.6  2003/02/16 20:22:56  ralfoide
-//	New in 0.6.3:
-//	- Display copyright in image page, display number of images/albums in tables
-//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
-//	- Using rig_options directory
-//	- Renamed src function with rig_ prefix everywhere
-//	- Only display phpinfo if _debug_ enabled or admin mode
-//	
-//	Revision 1.5  2002/10/24 23:57:49  ralfoide
-//	Fix for end-of-file
-//	
-//	Revision 1.4  2002/10/24 21:32:47  ralfoide
-//	dos2unix fix
-//	
-//	Revision 1.3  2002/10/23 08:41:03  ralfoide
-//	Fixes for internation support of strings, specifically Japanese support
-//	
-//	Revision 1.2  2002/10/16 04:48:37  ralfoide
-//	Version 0.6.2.1
-//	
+//	[...]
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
 //-------------------------------------------------------------
 
 // IMPORTANT: the "? >" must be the LAST LINE of this file, otherwise

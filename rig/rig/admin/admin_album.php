@@ -189,25 +189,21 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2004/03/09 06:22:29  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.2  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)
-//
+//	
 //	Revision 1.1  2003/08/21 20:15:32  ralfoide
 //	Moved admin src into separate folder
 //	
 //	Revision 1.4  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//	
-//	Revision 1.3  2003/05/26 17:52:56  ralfoide
-//	Removed unused language strings. Added new rig_display_back_to_album method
-//	
-//	Revision 1.2  2003/03/17 08:24:42  ralfoide
-//	Fix: added pref_disable_web_translate_interface (disabled by default)
-//	Fix: added pref_disable_album_borders (enabled by default)
-//	Fix: missing pref_copyright_name in settings/prefs.php
-//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//	
+//
+//	[...]
+//
 //	Revision 1.1  2003/03/12 07:02:07  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
@@ -215,35 +211,10 @@ rig_display_body();
 //	
 //	Revision 1.7  2003/02/17 07:47:00  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
-//	
-//	Revision 1.6  2003/02/16 20:22:53  ralfoide
-//	New in 0.6.3:
-//	- Display copyright in image page, display number of images/albums in tables
-//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
-//	- Using rig_options directory
-//	- Renamed src function with rig_ prefix everywhere
-//	- Only display phpinfo if _debug_ enabled or admin mode
-//	
-//	Revision 1.5  2002/10/23 08:39:34  ralfoide
-//	Fixes for internationalization of strings
-//	
-//	Revision 1.4  2002/10/21 07:33:59  ralfoide
-//	Admin page which respect themes
-//	
-//	Revision 1.3  2002/10/21 01:53:43  ralfoide
-//	prefixing functions with rig_
-//	
-//	Revision 1.2  2002/10/16 04:48:37  ralfoide
-//	Version 0.6.2.1
-//	
-//	Revision 1.1  2002/08/04 00:58:08  ralfoide
-//	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//	
-//	Revision 1.3  2001/11/26 06:40:50  ralf
-//	fix for diaply credits
-//	
+//
+//	[...]
+//
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
 //-------------------------------------------------------------
 ?>

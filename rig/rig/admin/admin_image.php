@@ -350,10 +350,13 @@ if (rig_is_visible())
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2004/03/09 06:22:29  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.2  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)
-//
+//	
 //	Revision 1.1  2003/08/21 20:15:32  ralfoide
 //	Moved admin src into separate folder
 //	
@@ -373,7 +376,5 @@ if (rig_is_visible())
 //	
 //	Revision 1.1  2002/10/14 07:05:17  ralf
 //	Update 0.6.3 build 1
-//	
-//	
 //-------------------------------------------------------------
 ?>

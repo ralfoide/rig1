@@ -161,68 +161,15 @@ rig_terminate_db();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2004/03/09 06:22:29  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.14  2004/02/23 04:18:13  ralfoide
 //	Removed obsolete OO test
 //
-//	Revision 1.13  2003/11/09 20:52:11  ralfoide
-//	Fix: image resize popup broken (img_size value not memorized?)
-//	Feature: Comments (edit page, organizing workflow)
-//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
-//	Fix: Changed credit line
-//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
-//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//	
-//	Revision 1.12  2003/09/13 21:55:54  ralfoide
-//	New prefs album nb col vs image nb col, album nb row vs image nb row.
-//	New pagination system (several pages for image/album grids if too many items)
-//	
-//	Revision 1.11  2003/09/08 03:54:35  ralfoide
-//	Re-implemented follow-album-symlink the proper way, by separating
-//	current_album (the symlink source) from current_real_album (the symlink dest)
-//	
-//	Revision 1.10  2003/08/21 20:18:02  ralfoide
-//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//	
-//	Revision 1.9  2003/08/18 03:07:14  ralfoide
-//	PHP 4.3.x support, new runtime filetype support
-//	
-//	Revision 1.8  2003/08/15 07:12:07  ralfoide
-//	Album HTML cache generation
-//	
-//	Revision 1.7  2003/03/12 07:02:08  ralfoide
-//	New admin image vs album (alpha version not finished).
-//	New admin translate page (alpha version not finished).
-//	New pref to override the <meta> line in album/image display.
-//	
-//	Revision 1.6  2003/02/16 20:22:54  ralfoide
-//	New in 0.6.3:
-//	- Display copyright in image page, display number of images/albums in tables
-//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
-//	- Using rig_options directory
-//	- Renamed src function with rig_ prefix everywhere
-//	- Only display phpinfo if _debug_ enabled or admin mode
-//	
-//	Revision 1.5  2003/01/20 12:39:51  ralfoide
-//	Started version 0.6.3. Display: show number of albums or images in table view.
-//	Display: display copyright in images or album mode with pref name and language strings.
-//	
-//	Revision 1.4  2002/10/24 21:32:47  ralfoide
-//	dos2unix fix
-//	
-//	Revision 1.3  2002/10/21 01:55:12  ralfoide
-//	Prefixing functions with rig_, multiple language and theme support, better error reporting
-//	
-//	Revision 1.2  2002/10/16 04:48:37  ralfoide
-//	Version 0.6.2.1
-//	
-//	Revision 1.1  2002/08/04 00:58:08  ralfoide
-//	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//	
-//	Revision 1.3  2001/11/26 06:40:50  ralf
-//	fix for diaply credits
-//	
+//	[...]
+//
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
 //-------------------------------------------------------------
 ?>

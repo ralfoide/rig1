@@ -646,9 +646,12 @@ function rig_video_javascript_testline($test, $line)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.4  2004/02/27 08:49:42  ralfoide
 //	Translation for video strings
-//
+//	
 //	Revision 1.3  2003/11/29 22:44:23  ralfoide
 //	Fixed line endings (some lines in dos mode converted to unix mode)
 //	
@@ -660,6 +663,5 @@ function rig_video_javascript_testline($test, $line)
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.
 //	Isolated video display routines in new source file.
-//	
 //-------------------------------------------------------------
 ?>

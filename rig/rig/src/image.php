@@ -22,19 +22,6 @@ rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'image'));
 rig_display_header($display_title);
 rig_display_body();
 
-if (rig_get($_GET,'_test_', 0)==5)
-{
-	?>
-
-<script language="JavaScript" type="text/javascript">
-
-document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>");
-
-</script>
-
-	<?php
-}
-
 ?>
 
 <center>
@@ -91,58 +78,16 @@ document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>")
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.13  2003/09/13 21:55:55  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)
 //
-//	Revision 1.12  2003/08/21 20:18:02  ralfoide
-//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//	
-//	Revision 1.11  2003/08/18 03:05:12  ralfoide
-//	PHP 4.3.x support
-//	
-//	Revision 1.10  2003/07/14 18:30:37  ralfoide
-//	Javascript test
-//	
-//	Revision 1.9  2003/07/11 15:56:38  ralfoide
-//	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
-//	
-//	Revision 1.8  2003/03/22 01:22:56  ralfoide
-//	Fixed album/image count display in admin mode
-//	Added "old" layout for image display, with image layout pref variable.
-//	
-//	Revision 1.7  2003/02/16 20:22:56  ralfoide
-//	New in 0.6.3:
-//	- Display copyright in image page, display number of images/albums in tables
-//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
-//	- Using rig_options directory
-//	- Renamed src function with rig_ prefix everywhere
-//	- Only display phpinfo if _debug_ enabled or admin mode
-//	
-//	Revision 1.6  2003/01/20 12:39:51  ralfoide
-//	Started version 0.6.3. Display: show number of albums or images in table view.
-//	Display: display copyright in images or album mode with pref name and language strings.
-//	
-//	Revision 1.5  2002/10/24 21:32:47  ralfoide
-//	dos2unix fix
-//	
-//	Revision 1.4  2002/10/21 01:55:12  ralfoide
-//	Prefixing functions with rig_, multiple language and theme support, better error reporting
-//	
-//	Revision 1.3  2002/10/20 11:50:49  ralfoide
-//	jhead support
-//	
-//	Revision 1.2  2002/10/16 04:47:59  ralfoide
-//	Changed layout: prev/next links aside the image, image size at bottom
-//	
-//	Revision 1.1  2002/08/04 00:58:08  ralfoide
-//	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//	
-//	Revision 1.3  2001/11/26 06:40:50  ralf
-//	fix for diaply credits
-//	
+//	[...]
+//
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
 //-------------------------------------------------------------
 ?>

@@ -3388,148 +3388,17 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.40  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.39  2004/03/02 10:38:01  ralfoide
 //	Translation of tooltip string.
 //	New page title strings.
 //
-//	Revision 1.38  2004/02/18 07:38:03  ralfoide
-//	Added rig_unset_global.
-//	Fixed resetting global arrays when parsing album options.
-//	
-//	Revision 1.37  2003/12/07 19:41:41  ralfoide
-//	Fix: invalidate html cache if image data cache modified
-//	
-//	Revision 1.36  2003/11/25 05:05:33  ralfoide
-//	Version 0.6.4.4 started.
-//	Added video install codec/player link & codec info.
-//	Isolated video display routines in new source file.
-//	
-//	Revision 1.35  2003/11/09 20:52:12  ralfoide
-//	Fix: image resize popup broken (img_size value not memorized?)
-//	Feature: Comments (edit page, organizing workflow)
-//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
-//	Fix: Changed credit line
-//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
-//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//	
-//	Revision 1.34  2003/09/13 21:55:54  ralfoide
-//	New prefs album nb col vs image nb col, album nb row vs image nb row.
-//	New pagination system (several pages for image/album grids if too many items)
-//	
-//	Revision 1.33  2003/09/08 03:54:35  ralfoide
-//	Re-implemented follow-album-symlink the proper way, by separating
-//	current_album (the symlink source) from current_real_album (the symlink dest)
-//	
-//	Revision 1.32  2003/09/01 20:54:52  ralfoide
-//	Implemented pref_follow_album_symlinks
-//	
-//	Revision 1.31  2003/08/21 20:19:30  ralfoide
-//	New dir/path variables, new enable prefs (album/image hidden, descriptions, album cache), updated rig_require_once
-//	
-//	Revision 1.30  2003/08/18 04:25:30  ralfoide
-//	Expire album cache when album option change. Capitalize album month name.
-//	
-//	Revision 1.29  2003/08/18 03:05:12  ralfoide
-//	PHP 4.3.x support
-//	
-//	Revision 1.28  2003/08/16 05:35:34  ralfoide
-//	fix in case locset is empty
-//	
-//	Revision 1.27  2003/08/15 07:12:44  ralfoide
-//	Album HTML cache generation, disabled xml read options
-//	
-//	Revision 1.26  2003/08/14 04:42:08  ralfoide
-//	Album & Image ignore lists
-//	
-//	Revision 1.25  2003/07/21 04:56:46  ralfoide
-//	Using strftime (localizable) for dates; Ability to set locale depending on page language
-//	
-//	Revision 1.24  2003/07/19 07:52:36  ralfoide
-//	Vertical layout for albums
-//	
-//	Revision 1.23  2003/07/14 18:30:14  ralfoide
-//	Support for descript.ion and file_info.diz
-//	
-//	Revision 1.22  2003/06/30 06:08:11  ralfoide
-//	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
-//	
-//	Revision 1.21  2003/03/22 01:22:56  ralfoide
-//	Fixed album/image count display in admin mode
-//	Added "old" layout for image display, with image layout pref variable.
-//	
-//	Revision 1.20  2003/03/17 08:24:42  ralfoide
-//	Fix: added pref_disable_web_translate_interface (disabled by default)
-//	Fix: added pref_disable_album_borders (enabled by default)
-//	Fix: missing pref_copyright_name in settings/prefs.php
-//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//	
-//	Revision 1.19  2003/03/12 07:02:08  ralfoide
-//	New admin image vs album (alpha version not finished).
-//	New admin translate page (alpha version not finished).
-//	New pref to override the <meta> line in album/image display.
-//	
-//	Revision 1.18  2003/02/23 10:18:36  ralfoide
-//	plain vs crypt vs MD5 password in the password file
-//	
-//	Revision 1.17  2003/02/23 08:14:36  ralfoide
-//	Login: display error msg when invalid password or invalid user
-//	
-//	Revision 1.16  2003/02/17 10:03:00  ralfoide
-//	Toying with XML
-//	
-//	Revision 1.15  2003/02/17 07:47:01  ralfoide
-//	Debugging. Fixed album visibility not being used correctly
-//	
-//	Revision 1.14  2003/02/17 07:34:54  ralfoide
-//	Conditional debuggin
-//	
-//	Revision 1.13  2003/02/16 22:42:27  ralfoide
-//	Report mkdir failure. Misc fix.
-//	
-//	Revision 1.12  2003/02/16 21:30:32  ralfoide
-//	fix reading _value lines in options.txt
-//	
-//	Revision 1.11  2003/02/16 20:22:54  ralfoide
-//	New in 0.6.3:
-//	- Display copyright in image page, display number of images/albums in tables
-//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
-//	- Using rig_options directory
-//	- Renamed src function with rig_ prefix everywhere
-//	- Only display phpinfo if _debug_ enabled or admin mode
-//	
-//	Revision 1.10  2003/01/07 18:02:01  ralfoide
-//	Support for URL-Rewrite conf array
-//	
-//	Revision 1.9  2002/10/24 21:32:47  ralfoide
-//	dos2unix fix
-//	
-//	Revision 1.8  2002/10/23 08:41:03  ralfoide
-//	Fixes for internation support of strings, specifically Japanese support
-//	
-//	Revision 1.7  2002/10/21 07:33:33  ralfoide
-//	debug stuff
-//	
-//	Revision 1.6  2002/10/21 01:55:12  ralfoide
-//	Prefixing functions with rig_, multiple language and theme support, better error reporting
-//	
-//	Revision 1.5  2002/10/20 11:49:37  ralfoide
-//	Added shell_filename2
-//	
-//	Revision 1.4  2002/10/16 06:58:21  ralfoide
-//	Fixed typo
-//	
-//	Revision 1.3  2002/10/16 05:05:24  ralfoide
-//	Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
-//	
-//	Revision 1.2  2002/10/16 04:48:37  ralfoide
-//	Version 0.6.2.1
-//	
-//	Revision 1.1  2002/08/04 00:58:08  ralfoide
-//	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//	
+//	[...]
+//
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
 //-------------------------------------------------------------
 
 // IMPORTANT: the "? >" must be the LAST LINE of this file, otherwise

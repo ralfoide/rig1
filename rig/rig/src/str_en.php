@@ -180,80 +180,21 @@ $html_album_date	= '%B %Y';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.18  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.17  2004/03/02 10:38:01  ralfoide
 //	Translation of tooltip string.
 //	New page title strings.
 //
-//	Revision 1.16  2004/02/27 08:49:42  ralfoide
-//	Translation for video strings
-//	
-//	Revision 1.15  2003/11/09 20:52:12  ralfoide
-//	Fix: image resize popup broken (img_size value not memorized?)
-//	Feature: Comments (edit page, organizing workflow)
-//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
-//	Fix: Changed credit line
-//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
-//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//	
-//	Revision 1.14  2003/07/23 01:19:13  ralfoide
-//	Language: strings for tooltip details
-//	
-//	Revision 1.13  2003/07/21 04:54:45  ralfoide
-//	Added date format for album display; changed dates format to strftime (localizable); setting locale
-//	
-//	Revision 1.12  2003/06/15 19:09:49  ralfoide
-//	Version 0.6.3.3: Japanese translation completed
-//	
-//	Revision 1.11  2003/05/26 17:51:08  ralfoide
-//	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
-//	
-//	Revision 1.10  2003/03/17 08:24:43  ralfoide
-//	Fix: added pref_disable_web_translate_interface (disabled by default)
-//	Fix: added pref_disable_album_borders (enabled by default)
-//	Fix: missing pref_copyright_name in settings/prefs.php
-//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//	
-//	Revision 1.9  2003/02/21 09:03:03  ralfoide
-//	Added gray theme color
-//	
-//	Revision 1.8  2003/02/16 20:22:57  ralfoide
-//	New in 0.6.3:
-//	- Display copyright in image page, display number of images/albums in tables
-//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
-//	- Using rig_options directory
-//	- Renamed src function with rig_ prefix everywhere
-//	- Only display phpinfo if _debug_ enabled or admin mode
-//	
-//	Revision 1.7  2003/01/20 12:39:51  ralfoide
-//	Started version 0.6.3. Display: show number of albums or images in table view.
-//	Display: display copyright in images or album mode with pref name and language strings.
-//	
-//	Revision 1.6  2002/11/02 04:09:32  ralfoide
-//	Fixes for URLs in international strings
-//	
-//	Revision 1.5  2002/10/23 16:01:01  ralfoide
-//	Added <html lang>; now transmitting charset via http headers.
-//	
-//	Revision 1.4  2002/10/23 08:41:03  ralfoide
-//	Fixes for internation support of strings, specifically Japanese support
-//	
-//	Revision 1.3  2002/10/21 01:52:48  ralfoide
-//	Multiple language and theme support
-//	
-//	Revision 1.2  2002/10/16 04:48:37  ralfoide
-//	Version 0.6.2.1
-//	
+//	[...]
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//	
-//	Revision 1.4  2001/11/28 11:52:48  ralf
-//	v0.6.1: display image last modification date
-//	
-//	Revision 1.3  2001/11/26 07:27:59  ralf
-//	links from credits to license
-//	
+//
+//	[...]
+//
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
 //-------------------------------------------------------------
 ?>

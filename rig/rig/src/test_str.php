@@ -104,16 +104,18 @@ function check_string(&$test, $str_name, $same_as_english = FALSE)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.2  2004/03/02 10:38:01  ralfoide
 //	Translation of tooltip string.
 //	New page title strings.
-//
+//	
 //	Revision 1.1  2004/02/27 08:44:25  ralfoide
 //	Test unit for strings.
 //	Ability to check strings are present and different in the 4 languages
 //	
 //	Revision 1.1  2004/02/23 04:08:25  ralfoide
 //	Setting up phpUnit testing
-//	
 //-------------------------------------------------------------
 ?>

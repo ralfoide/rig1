@@ -76,11 +76,13 @@ $result->report();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//
 //	Revision 1.2  2004/02/27 08:44:57  ralfoide
 //	New test unit for strings
-//
+//	
 //	Revision 1.1  2004/02/23 04:08:25  ralfoide
 //	Setting up phpUnit testing
-//	
 //-------------------------------------------------------------
 ?>

@@ -37,7 +37,7 @@ if ($admin)
 		rig_check_src_file($dir_install . $dir_src . "admin_translate.php");
 		require_once(      $dir_install . $dir_src . "admin_translate.php");
 	}
-	else if ($rig_is_image)
+	else if (0 && $rig_is_image) // RM 20030525 deactivated
 	{
 		rig_check_src_file($dir_install . $dir_src . "admin_image.php");
 		require_once(      $dir_install . $dir_src . "admin_image.php");
@@ -66,11 +66,14 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/05/26 17:52:30  ralfoide
+//	Disabled admin_image (not finished -- experimental)
+//
 //	Revision 1.1  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
 //	New pref to override the <meta> line in album/image display.
-//
+//	
 //	Revision 1.3  2003/02/16 20:09:41  ralfoide
 //	Update. Version 0.6.3.1
 //	

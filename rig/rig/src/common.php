@@ -2442,7 +2442,12 @@ function rig_begin_buffering()
 		$tm_option = filemtime($abs_option_path . rig_prep_sep($current_album));
 		$tm_src    = filemtime($dir_install     . rig_prep_sep($dir_src));
 		$tm_global = filemtime($dir_install     . rig_prep_sep($dir_globset));
-		$tm_local  = filemtime($dir_locset);
+
+		// Quick fix in case locset is empty -- RM 20030815
+		if (is_string($dir_locset) && $dir_locset && rig_is_dir($dir_locset))
+			$tm_local  = filemtime($dir_locset);
+		else
+			$tm_local = $tm_html;
 
 		$is_valid =    ($tm_html >= $tm_album)
 		            && ($tm_html >= $tm_option)
@@ -2632,9 +2637,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.28  2003/08/16 05:35:34  ralfoide
+//	fix in case locset is empty
+//
 //	Revision 1.27  2003/08/15 07:12:44  ralfoide
 //	Album HTML cache generation, disabled xml read options
-//
+//	
 //	Revision 1.26  2003/08/14 04:42:08  ralfoide
 //	Album & Image ignore lists
 //	

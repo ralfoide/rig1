@@ -1,0 +1,200 @@
+// vim: set tabstop=4 shiftwidth=4: //
+//**********************************************
+// RIG version 1.0
+// Copyright (c) 2001 Ralf
+//**********************************************
+// $Id$
+//**********************************************
+
+
+-------------------------
+--- RIG Install Notes ---
+-------------------------
+
+
+IMPORTANT
+---------
+
+This document assumes that:
+- you are familiar with the administration of your web server
+- PHP is installed, enabled, working and **tested** on your web server
+- although only Apache is mentionned below, RIG should be easily adaptable to others.
+
+
+
+QUICK-INSTALL procedure
+-----------------------
+
+If you are two busy to read all this document, please at least try this:
+
+1- untar the archive
+2- move it to a directory accessible from the web site
+3- cd to thumbnail and make
+   (this will download the jpeglib 6.b automatically and compile it)
+4- skip steps 5, 6 and 7
+5- update album-sample/admin_list.txt, change the admin name to something not too obvious
+6- update album-sample/user_list.txt (the default "guest" MUST be kept)
+7- review settings/prefs.php and album-sample/prefs.php (the defaults can be kept)
+8- place your photos in album-sample/my-photos
+9- try to access "rig/album-sample" via a web browser
+
+
+You should see your photos.
+Now relax a bit and please patiently continue reading.
+
+
+Setup of Directories
+--------------------
+
+RIG is composed of two parts:
+- global "site" files
+- local "album" files
+The php code, images and global preferences files are the "site" files.
+You can have has many albums as you want and still share the same php base code.
+Also it is possible to hide the admin/users list by not storing them under your DocumentRoot.
+
+The directory structure is the following:
+
+----------------------
+a) Everything specific to the album should go in one or 2 directores.
+----------------------
+
+Note: all files and folders discussed below match "rig/album-sample" in the RIG archive.
+
+By default, you want the album-specific php and images to be available under your DocumentRoot, whilst you want your preferences and user/admin list to be hidden.
+Lets' say "/home/foobar/public_html" is your DocumentRoot.
+
+You'll want to create an "album" directory there containing:
+- "album/index.php",  the entry point
+- "album/location.php", read by the index to know where things are located.
+- "album/rig-images", a link which should point onto the "rig/images" of the distribution
+- "album/my-photos", where you place your original images (Note: if you are an IDS user, this can be a link onto the ids/albums folder)
+- "album/rig-cache", the directory containing resized thumbnails created by RIG. It must be under the DocumentRoot since images need to be served by the web browser. This can be a link onto another disk if needed. RIG will never delete this directory (only its content, if needed). Note that if you are an IDS user, this must NOT point on IDS's cache, as name conflicts could occur or previews be mistakenly erased.
+- "album/rig-options", the directory contains options that RIG maintains about each album folder. Note that for the moment this is mostly empty, these options will be implemented later or restructured.
+
+- "admin_list.txt" and "user_list.txt" can be placed under the album, in which case you probably want to setup a .htaccess to forbid access to txt files in this directory
+- "admin_list.txt" and "user_list.txt" can be placed somewhere outside your DocumentRoot. If you do so, you'll need to update "location.php" and change "$dir_locset" with a RELATIVE path.
+
+
+Note that the photo folder only need read permissions most of the time.
+OTOH the rig-cache and rig-options need read/write/del permissions, typically from the user running Apache/PHP. Your best bet is to make them UID/GID of the apache's user/group (www-data.www-data in my case).
+
+I actually have my photo album link point to the ids/albums folder. Like that, no need to duplicate things.
+
+Note that "album/index.html" is a redirectory onto "index.php". _If_ your Apache config specifies that index.php can be the default document served for a directory, then you can get rid of the index.html. Since this is not Apache's default, I keep it.
+
+
+--------------------------
+b) Everything site-related should go in another directory
+--------------------------
+
+Now that's the easy part.
+
+1- Copy the "rig" folder from the archive to the location of your choice.
+Preferably, outside of your DocumentRoot, but it doesn't really matter.
+
+Remove the "album-sample" from your copied "rig" folder (or better: do not copy it!) since it has already be taken care of before in step (a).
+
+
+2- In your album site, update the location.php accordingly: "$dir_install" should contain the absolute path to the rig folder.
+
+3- Make sure the "rig-images" link in your album site folder points to the "rig/images" folder.
+
+
+
+Create the thumbnail app
+------------------------
+
+cd thumbnail
+make
+
+that should be enough.
+Otherwise, you're welcome to taunt me a second time :-)
+
+note that now on the jpeglib is no longer delivered in the RIG archive. This saves a lot of space.
+Instead, the makefile will use "wget" to download the lib and compile it. If you already have the jpeglib v6b tgz file somewhere, you can either:
+- copy "libjpeg.a" here: "thumbnail/jpegsrc/jpeg-6b/"
+- copy "jpeg-6b" folder here: "thumbnail/jpegsrc/jpeg-6b".
+- copy "jpegsrc.v6b.tar.gz" here: "thumbnail/jpegsrc".
+
+
+Then...
+-------
+
+The next thing you probably want to do is to edit album-sample/user_list.txt and admin_list.txt.
+The password field is not implemented yet (it can be filled by hand, it's a crypt() call).
+
+The prefs are currently edited in rig/settings/prefs.php and overwritten by album-sample/prefs.php. Note that I directly setup the prefs as php global variables. This is more efficient than parsing a pref file (I started with that, there's a nice routine in obsolete.php that does that, and of course there's the parse_ini_file() php routine which I found only later... :-p).
+
+The two essentials prefs you might want to change are:
+- the default image size (400),
+- the list of image sizes
+- the global gamma
+Eventually, you might want to change the jpeg qualities, but I think those are ok.
+You can also change the colors of the interface at once by editing this pref file.
+
+
+The admin
+---------
+Currently, in admin mode, you can:
+- randomly change the thumbnail of an album,
+- set the thumbnail to a specific image
+- create all thumbnails (recursively)
+- delete all thumbails (recursively, i.e. can process a sub album only if you wish)
+- decide if an album or an image should be shown or not (no group administration yet)
+
+
+To-Do Things
+------------
+
+Please consult "todo.txt" for future upgrade path.
+Please don't bug me with stuff I already plan to implement.
+If it's planned but not available yet, then don't rant about it!
+
+OTOH you can rant about the lack of structure of this document ;-)
+
+The bugs
+--------
+
+This is EXPERIMENTAL !
+Anyway can happen.
+'nuff said.
+
+
+One notable things is that currently, I ESPECIALLY get rid of slashes, back-slashes and dots if they appear at the beggining of the filename. That means the filename "...whatever.jpg" is rejected, whilst "whatever....jpg" works as you would expect.
+This can actually seen as a bug. In the future, I will only reject patterns like "../" or "/.././"...
+
+Also, since I use rig under both win32/apache and linux/apache, I convert back-slashes to slashes automatically.
+
+
+
+083101
+112501
+R/
+
+
+----------
+--
+-- $Log$
+-- Revision 1.2  2003/02/16 20:08:57  ralfoide
+-- Update. Version 0.6.3.1
+--
+-- Revision 1.1.1.1  2002/06/21 20:41:46  ralfoide
+-- Initial revision, based on rig 0.6
+--
+-- Revision 1.6  2001/11/26 08:17:55  ralf
+-- updated install.txt file for v0.6
+--
+-- Revision 1.5  2001/10/27 23:30:58  ralf
+-- distrib 0.5 ready to ship
+--
+-- Revision 1.4  2001/10/27 22:41:14  ralf
+-- distrib 0.5
+--
+-- Revision 1.3  2001/09/05 07:34:38  ralf
+-- dos->unix
+--
+-- Revision 1.2  2001/08/31 23:05:08  ralf
+-- added some notes for Marc
+--
+--

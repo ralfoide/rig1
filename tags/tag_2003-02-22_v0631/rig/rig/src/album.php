@@ -1,0 +1,180 @@
+<?php
+// vim: set tabstop=4 shiftwidth=4: //
+//**********************************************
+// RIG version 1.0
+// Copyright (c) 2001 Ralf
+//**********************************************
+// $Id$
+//**********************************************
+
+
+require_once($dir_install . $dir_src . "common.php");
+rig_enter_login(rig_self_url(""));
+
+rig_prepare_album($id, $album);
+rig_display_header($display_title);
+rig_display_body();
+
+?>
+
+<center>
+
+<?php
+	rig_display_section("<h1> $display_title </h1>",
+						$color_title_bg,
+						$color_title_text);
+	rig_display_user_name();
+
+	// RM 20020714 id: album->current_album
+	if ($current_album)
+	{
+?>
+<p>
+	<table border="0" cellpadding="0" cellspacing="0">
+		<tr><td>
+			<table width="100%" border="0" bgcolor="<?= $color_table_border ?>" cellpadding="10" cellspacing="1">
+				<tr><td bgcolor="<?= $color_header_bg ?>">
+					<center><b><font size="+2" color="<?= $color_header_text ?>">
+						<?= $html_current_album ?>
+					</font></b></center>
+				</td></tr>
+				<tr><td bgcolor="<?= $color_table_bg ?>">
+					<center><font color="<?= $color_index_text ?>">
+						<?php rig_display_current_album(FALSE) ?>
+					</font></center>
+				</td></tr>
+			</table>
+		</td></tr>
+	</table>
+<?php
+		flush();
+	} // end of if album
+?>
+<p>
+
+<?php
+	rig_load_album_list(TRUE);
+	if (rig_has_albums())
+	{
+?>
+
+	<table border="0" cellpadding="0" cellspacing="0">
+		<tr><td>
+			<table width="100%" border="0" bgcolor="<?= $color_table_border ?>" cellpadding="10" cellspacing="1">
+				<tr><td bgcolor="<?= $color_header_bg ?>">
+					<center><font size="+2" color="<?= $color_header_text ?>"><b>
+						<?= $html_albums ?>
+					</b></font></center>
+				</td></tr>
+				<tr><td width="100%" bgcolor="<?= $color_table_bg ?>">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<?php rig_display_album_list() ?>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr><td>&nbsp;</td></tr>
+						<tr><td width="80%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+							<div align="left"><?php rig_display_album_copyright() ?></div>
+						</font></td>
+						<td width="20%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+							<div align="right"><?php rig_display_album_count() ?></div>
+						</font></td></tr>
+					</table>
+				</td></tr>
+			</table>
+		</td></tr>
+	</table>
+<p>
+
+<?php
+		flush();
+	}	// end of if-has-albums
+
+	if (rig_has_images())
+	{
+?>
+
+  <table border="0" cellpadding="0" cellspacing="0">
+		<tr><td>
+			<table width="100%" border="0" bgcolor="<?= $color_table_border ?>" cellpadding="10" cellspacing="1">
+				<tr><td bgcolor="<?= $color_header_bg ?>">
+					<center><font size="+2" color="<?= $color_header_text ?>"><b>
+						<?= $html_images ?>
+					</b></font></center>
+				</td></tr>
+				<tr><td bgcolor="<?= $color_table_bg ?>">
+					<table width="100%" border="0" cellpadding="10" cellspacing="0">
+						<?php rig_display_image_list() ?>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr><td width="80%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+							<div align="left"><?php rig_display_album_copyright() ?></div>
+						</font></td>
+						<td width="20%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+							<div align="right"><?php rig_display_image_count() ?></div>
+						</font></td></tr>
+					</table>
+					</table>
+				</td></tr>
+			</table>
+		</td></tr>
+	</table>
+<p>
+
+<?php
+		flush();
+	}	// end of if-has-images
+
+	rig_display_back_album();
+?>
+
+<p>
+	<?php
+		rig_display_options();
+	?>
+	<a href="<?= rig_self_url(-1, -1, TRUE) ?>"><?= $html_admin_intrfce ?></a>
+<p>
+
+
+<?php
+	rig_display_credits($credits, $phpinfo);
+	rig_display_footer();
+	rig_terminate_db();
+?>
+
+</body>
+</html>
+<?php
+//-------------------------------------------------------------
+//	$Log$
+//	Revision 1.6  2003/02/16 20:22:54  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
+//	Revision 1.5  2003/01/20 12:39:51  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//	
+//	Revision 1.4  2002/10/24 21:32:47  ralfoide
+//	dos2unix fix
+//	
+//	Revision 1.3  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//	
+//	Revision 1.2  2002/10/16 04:48:37  ralfoide
+//	Version 0.6.2.1
+//	
+//	Revision 1.1  2002/08/04 00:58:08  ralfoide
+//	Uploading 0.6.2 on sourceforge.rig-thumbnail
+//	
+//	Revision 1.3  2001/11/26 06:40:50  ralf
+//	fix for diaply credits
+//	
+//	Revision 1.2  2001/11/26 04:35:20  ralf
+//	version 0.6 with location.php
+//	
+//-------------------------------------------------------------
+?>

@@ -1,0 +1,4 @@
+#format: #=comment, otherwise user:password:[display name]
+guest::Guest
+me::Joe Hacker
+you::Joe User

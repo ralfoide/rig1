@@ -54,6 +54,10 @@ fi
 
 VA=${DA/rig_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_/}
 VB=${DB/rig_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_/}
+VA2=${VA/v/}
+VB2=${VB/v/}
+VA2=${VA2/_tmp/}
+VB2=${VB2/_tmp/}
 
 # get date from filename
 
@@ -62,10 +66,10 @@ TB=${DB/rig_/} ; TB=${TB/_v[0-9]*/}
 
 # check versions & dates
 
-if [ "$VA" > "$VB" ]
+if [ "$VA2" -gt "$VB2" ]
 then
 	echo
-	echo "Error: $VA is greater than $VB. Are you sure?"
+	echo "Error: $VA2 is greater than $VB2. Are you sure?"
 	usage
 fi
 

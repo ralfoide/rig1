@@ -97,7 +97,8 @@ echo "########## CVS checkout $RIG ################"
 echo
 
 export CVS_RSH=ssh
-export CVSROOT=:ext:ralfoide@cvs.rig-thumbnail.sourceforge.net:/cvsroot/rig-thumbnail
+# export CVSROOT=:ext:ralfoide@cvs.rig-thumbnail.sourceforge.net:/cvsroot/rig-thumbnail
+export CVSROOT=:ext:ralfoide@cvs.sourceforge.net:/cvsroot/rig-thumbnail
 
 cvs -z3 checkout $TAG rig
 

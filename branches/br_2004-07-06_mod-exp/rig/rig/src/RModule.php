@@ -104,9 +104,12 @@ class RModule
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3.2.1  2004/07/14 06:24:32  ralfoide
+//	dos2unix
+//
 //	Revision 1.3  2004/07/07 03:26:04  ralfoide
 //	Experimental modules
-//
+//	
 //	Revision 1.1  2004/06/03 14:16:24  ralfoide
 //	Experimenting with module classes
 //	

@@ -154,8 +154,8 @@ class RModuleManager
 	//! Returns a pointer on the module instance or NULL.
 	//! If the module is already loaded, return the existing instance.
 	{
-		$name = strtolower($name);
-		if (!isset($this->mModules['$name']))
+		$lcname = strtolower($name);
+		if (!isset($this->mModules['$lcname']))
 		{
 			// Unknown module.
 			// RM 20040607 TODO print warning message (global warning function)
@@ -164,7 +164,7 @@ class RModuleManager
 		}
 
 		// get a reference on the module description
-		$m =& $this->mModules['$name'];
+		$m =& $this->mModules['$lcname'];
 		
 		// if there's already an instance, use it
 		// else get the instance
@@ -302,6 +302,7 @@ class RModuleManager
 	//! The module should be in a file "$name.php" with the same case.
 	{
 		global $dir_abs_mod;
+
 		require_once(rig_require_once($name . ".php", $dir_abs_mod));
 		
 		$m = new $name();
@@ -315,9 +316,12 @@ class RModuleManager
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3.2.2  2004/07/14 06:24:32  ralfoide
+//	dos2unix
+//
 //	Revision 1.3.2.1  2004/07/09 05:49:37  ralfoide
 //	Fixed typo in dir mod variable
-//
+//	
 //	Revision 1.3  2004/07/07 03:26:04  ralfoide
 //	Experimental modules
 //	

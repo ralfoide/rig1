@@ -49,9 +49,12 @@ class RModAlbum extends RModule
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.1.2.1  2004/07/14 06:24:17  ralfoide
+//	dos2unix
+//
 //	Revision 1.1  2004/07/07 03:25:31  ralfoide
 //	Experimental modules
-//
+//	
 //	Revision 1.1  2004/06/03 14:16:24  ralfoide
 //	Experimenting with module classes
 //	

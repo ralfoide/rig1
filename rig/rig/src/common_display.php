@@ -76,9 +76,9 @@ function rig_display_header($title)
 
 }
 
-//*************************
-function rig_display_body()
-//*************************
+//************************************
+function rig_display_body($extra = "")
+//************************************
 {
 	global $color_body_bg;
 	global $color_body_text;
@@ -92,6 +92,7 @@ function rig_display_body()
 			  link   ="<?= $color_body_link	 ?>"
 			  alink  ="<?= $color_body_alink ?>"
 			  vlink  ="<?= $color_body_vlink ?>"
+			  <?= $extra ?>
 		>
 	<?php
 }
@@ -1742,10 +1743,13 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.31  2004/02/18 07:38:29  ralfoide
+//	Allow for extra html in body (typically for JS)
+//
 //	Revision 1.30  2003/11/29 22:35:41  ralfoide
 //	Video: JavaScript browser & OS detection, customize install codec links, etc.
 //	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)
-//
+//	
 //	Revision 1.29  2003/11/25 05:05:34  ralfoide
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.

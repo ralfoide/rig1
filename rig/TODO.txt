@@ -22,7 +22,9 @@ Generic:
 [1.N] Drop DB support and dump 0.6.3-exp
 - in 0.6.3.6:
 - in 0.6.3.5:
-[1.W] Albums: Grid vs Vertical layout
+[1.F] Translation of dates in web pages
+[1.F] Albums: Display album modification date in grid layout
+[1.F] Albums: Grid vs Vertical layout
 - in 0.6.3.4:
 [2.F] Introduced support for videos (display and rig_thumbnail.exe)
 [1.F] Added movie frame to video thumbnails
@@ -160,7 +162,13 @@ Admin:
 
 [0.6.3.5]
 
-20030718 [1.W] Albums: Grid vs Vertical layout
+20030720 [1.F] Albums: Auto-switch between grid and vertical layout (if descriptions present)
+20030720 [1.F] Albums: Smaller preview thumbnails for vertical layout mode
+20030719 [2.F] Albums and Images: Displayed dates are translated using current locale
+20030719 [2.F] Translation: Set current LC_TIME locale depending on language setting
+20030719 [2.F] Albums: Display album's modification date in grid layout too
+20030719 [2.F] Albums: Tooltips for albums and images on all browsers supporting <img title>
+20030718 [1.F] Albums: Grid vs Vertical layout
 
 
 [0.6.3.4]
@@ -549,9 +557,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.26  2003/07/21 05:00:17  ralfoide
+//	Album dates; Dates format localizable; Setting locale on language; Album layout auto-switch.
+//
 //	Revision 1.25  2003/07/19 07:52:36  ralfoide
 //	Vertical layout for albums
-//
+//	
 //	Revision 1.24  2003/07/14 18:27:37  ralfoide
 //	New album frame table, frame in video thumbnail, support for descript.ion and file_info.diz
 //	

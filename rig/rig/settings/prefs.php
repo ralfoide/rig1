@@ -9,36 +9,210 @@
 
 // --- system-dependent prefs ---
 
+/***********************************************************
+ *
+ *	Section:	system-dependent prefs
+ *
+ *	For new installations: most likely, you will not need to
+ *	change anything in this section.
+ *
+ ***********************************************************/
+
 if (PHP_OS == 'WINNT')
 {
+	/***********************************************************
+	 *
+	 *	Section:	Windows (Win32) specific settings.
+	 *
+	 *	For new installations: most likely, you will not need to
+	 *	change anything in this section.
+	 *
+	 ***********************************************************/
+
+
 	// --- rig-thumbnail.exe options ---
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_preview_exec
+	 *	Type:			File-system relative path with \\ separators
+	 *	Relative to:	$dir_install
+	 *	Default:		thumbnail\\Release\\rig_thumbnail.exe
+	 *	
+	 *	This path indicates where the rig_thumbnail.exe application
+	 *	can be find. It has to be relative to the installation
+	 *	directory. For a Windows path, use \\ as directory separator.
+	 *	The path must NOT start by \\. 
+	 ***********************************************************/
+
 	$pref_preview_exec		= "thumbnail\\Release\\rig_thumbnail.exe";
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_mkdir_mask
+	 *	Type:			Octal mask
+	 *	Default:		0777
+	 *	
+	 *	The mask used to create the various cache and option directories
+	 *	for rig. Consult "man mkdir" on a Unix box or Cygwin for more info.
+	 *	The default is 0777: "0" to make it an octal number. Then each 7
+	 *	indicates full access rights for user/group/others.
+	 *
+	 ***********************************************************/
+
 	$pref_mkdir_mask		= 0777;
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_umask
+	 *	Type:			Octal mask
+	 *	Default:		0022
+	 *	
+	 *	The global mask for creating files (previews, thumbnails, options, etc.)
+	 *	for rig. Consult "man umask" on a Unix box or Cygwin for more info which
+	 *	mainly says "umask sets the umask to mask & 0777".
+	 *	The default is 0022: "0" to make it an octal number. Then 022
+	 *	to make it accessible only by the current user, not by group/others.
+	 *
+	 ***********************************************************/
+
 	$pref_umask				= 0022;
 
 	// --- customization of cookies ---
-	// cookie hostname (defaults to empty if not set)
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_cookie_host
+	 *	Type:			File-system relative path with \\ separators
+	 *	Default:		Empty string ""
+	 *	
+	 *	The host used for cookies.
+	 *	It is best to leave empty, in which case the host will be
+	 *	figured out automatically.
+	 *
+	 ***********************************************************/
+
     $pref_cookie_host       = "";
 
 	// --- pages rendering options ---
-	// The path to jhead or an empty string to disable it's usage.
-	// Disabled by default under Windows.
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_use_jhead
+	 *	Type:			String
+	 *	Default:		Empty string ""
+	 *	
+	 *	The path were jhead is located.
+	 *	JHead is a nice tool to extract EXIF information from digital camera images.
+	 *	Home page: http://www.sentex.net/~mwandel/jhead/
+	 *
+	 *	The default is an empty path since jhead is not generally installed
+	 *	by default under Windows.
+	 *
+	 ***********************************************************/
+
 	$pref_use_jhead			= "";
 }
 else // Un*x
 {
+	/***********************************************************
+	 *
+	 *	Section:	Un*x specific settings.
+	 *
+	 *	For new installations: most likely, you will not need to
+	 *	change anything in this section.
+	 *
+	 ***********************************************************/
+
 	// --- rig-thumbnail.exe options ---
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_preview_exec
+	 *	Type:			File-system relative path with / separators
+	 *	Relative to:	$dir_install
+	 *	Default:		thumbnail/rig_thumbnail.exe
+	 *	
+	 *	This path indicates where the rig_thumbnail.exe application
+	 *	can be find. It has to be relative to the installation
+	 *	directory. For a Unix path, use / as directory separator.
+	 *	The path must NOT start by /. 
+	 ***********************************************************/
+
 	$pref_preview_exec		= "thumbnail/rig_thumbnail.exe";
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_mkdir_mask
+	 *	Type:			Octal mask
+	 *	Default:		0777
+	 *	
+	 *	The mask used to create the various cache and option directories
+	 *	for rig. Consult "man mkdir" for more info.
+	 *	The default is 0777: "0" to make it an octal number. Then each 7
+	 *	indicates full access rights for user/group/others.
+	 *
+	 ***********************************************************/
+
 	$pref_mkdir_mask		= 0777;
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_umask
+	 *	Type:			Octal mask
+	 *	Default:		0022
+	 *	
+	 *	The global mask for creating files (previews, thumbnails, options, etc.)
+	 *	for rig. Consult "man umask" which mainly says 
+	 *	"umask sets the umask to mask & 0777".
+	 *	The default is 0022: "0" to make it an octal number. Then 022
+	 *	to make it accessible only by the current user, not by group/others.
+	 *
+	 ***********************************************************/
+
 	$pref_umask				= 0022;
 
 	// --- customization of cookies ---
-	// cookie hostname (defaults to empty if not set)
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_cookie_host
+	 *	Type:			String
+	 *	Default:		Empty string ""
+	 *	
+	 *	The host used for cookies.
+	 *	It is best to leave empty, in which case the host will be
+	 *	figured out automatically.
+	 *
+	 ***********************************************************/
+
     $pref_cookie_host       = "";
 
 	// --- page rendering options ---
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_use_jhead
+	 *	Type:			String
+	 *	Default:		exec("which jhead")
+	 *	
+	 *	The path were jhead is located.
+	 *	Use either exec("which jhead") or a path like "/usr/bin/jhead"
+	 *
+	 *	JHead is a nice tool to extract EXIF information from digital camera images.
+	 *	Home page: http://www.sentex.net/~mwandel/jhead/
+	 *
+	 ***********************************************************/
+
 	// The path to jhead or an empty string to disable it's usage.
-	// Use either exec("which jhead") or a path like "/usr/bin/jhead"
 	$pref_use_jhead			= exec("which jhead");
 }
 
@@ -46,18 +220,50 @@ else // Un*x
 
 // --- DB-links options ---
 
+
+/***********************************************************
+ *
+ *	Section:	Database options.
+ *
+ *	This version of RIG does not rely on database storage.
+ *	These settings do not apply here and MUST NOT be modified!
+ *
+ ***********************************************************/
+
 $pref_use_db			= FALSE;			// not for rig062 yet
 $pref_use_db_id			= $pref_use_db;		// use ids rather than names internally
 $pref_use_id_in_url		= $pref_use_db_id;	// use numeric ids in URLs rather than album/image names
 
+
+
 // --- thumbnails creation ---
+
+
+/***********************************************************
+ *
+ *	Section:	Thumbnail options.
+ *
+ *
+ ***********************************************************/
+
 
 $pref_preview_size		= 80;
 $pref_preview_quality	= 70;
 $pref_preview_timeout	= 10;
 $pref_nb_col			= 5;
 
+
+
 // --- image viewing options ---
+
+
+/***********************************************************
+ *
+ *	Section:	Preview options.
+ *
+ *
+ ***********************************************************/
+
 
 $pref_image_size		= 512;
 $pref_image_quality		= 75;
@@ -85,6 +291,15 @@ $pref_admin_size		= 256;
 
 
 // --- login options ---
+
+
+/***********************************************************
+ *
+ *	Section:	Login options.
+ *
+ *
+ ***********************************************************/
+
 
 $pref_allow_guest		= TRUE;				// can be TRUE (default) or FALSE
 $pref_auto_guest		= FALSE;			// FALSE will force login, TRUE will auto-log as guest
@@ -156,9 +371,12 @@ $pref_image_layout = "1";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/07/14 18:29:12  ralfoide
+//	Experimenting with better comments
+//
 //	Revision 1.10  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
-//
+//	
 //	Revision 1.9  2003/06/30 06:10:00  ralfoide
 //	Introduced file-types (for video vs image support)
 //	

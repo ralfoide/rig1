@@ -1,0 +1,68 @@
+#simplified makefile for Thumbnail for Linux
+#creates ./thumbnail.exe
+
+CC=gcc
+CFLAGS= -O
+LDFLAGS= 
+LDLIBS= -lstdc++ -lm -lc
+LN= $(CC)
+
+JPEG_TGZ =jpegsrc.v6b.tar.gz
+DIRJPEG1=./jpegsrc
+DIRJPEG2=./jpegsrc/jpeg-6b
+DIRJPEG3=./jpegsrc/ralf_patch
+LIBJPEG=$(DIRJPEG2)/libjpeg.a
+
+INCDIR=-I. -I$(DIRJPEG2)
+
+CFILES=rig_thumbnail.cpp rig_rgb.cpp rig_jpeg.cpp
+
+OFILES=$(patsubst %.cpp,%.o,$(CFILES))
+
+TARGET=rig_thumbnail.exe
+
+all: $(TARGET)
+
+$(TARGET): $(LIBJPEG) $(OFILES)
+	make -C $(DIRJPEG2) libjpeg.a
+	$(LN) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LIBJPEG) $(LDLIBS)
+
+$(OFILES): %.o: %.cpp
+	$(CC) -c $(CFLAGS) $(INCDIR) $< -o $@
+
+$(LIBJPEG):
+	if [ ! -f $(DIRJPEG1)/$(JPEG_TGZ) ]; \
+	then \
+		cd $(DIRJPEG1) ; \
+		wget ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz ; \
+	fi
+	if [ ! -d $(DIRJPEG2) ]; \
+	then \
+		( cd $(DIRJPEG1) ; tar xvzf $(JPEG_TGZ) ) ; \
+		cp -v $(DIRJPEG3)/*.h $(DIRJPEG3)/*.ds* $(DIRJPEG2)/ ; \
+	fi
+	if [ ! -f $(LIBJPEG) ]; \
+	then \
+		cd $(DIRJPEG2) ; \
+		./configure ; \
+	fi
+
+clean:
+	rm -fv $(OFILES)
+	make -C $(DIRJPEG) clean
+
+# --- experimental ---
+
+rig_exif: rig_exif.c
+	gcc $(INCDIR) rig_exif.c -o rig_exif
+
+
+#
+# $Log$
+# Revision 1.1  2002/08/04 00:58:08  ralfoide
+# Uploading 0.6.2 on sourceforge.rig-thumbnail
+#
+# Revision 1.1  2001/11/26 00:07:40  ralf
+# Starting version 0.6: location and split of site vs album files
+#
+#

@@ -1,0 +1,2 @@
+#format: #=comment, otherwise user:password:[display name]
+admin::Rig Owner Administrator

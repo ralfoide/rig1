@@ -253,6 +253,10 @@ $pref_preview_size		= 80;
 $pref_preview_quality	= 70;
 $pref_preview_timeout	= 10;
 
+// RM 20030720
+// size and quality of small preview (used for vertical album layout)
+$pref_small_preview_size	= 64;
+$pref_small_preview_quality	= 60;
 
 
 // --- image viewing options ---
@@ -439,7 +443,7 @@ $pref_image_layout = '1';
  *	Type:			String (either 'grid' or 'vert' only)
  *	Default:		'grid'
  *	
- * Selects the default album layout.
+ * Selects the default layout for albums with NO descriptions.
  *
  * There are currently two album layouts:
  *
@@ -460,7 +464,28 @@ $pref_image_layout = '1';
  *
  ***********************************************************/
 
-$pref_album_layout = 'vert'; //'grid';
+$pref_album_layout = 'grid';
+
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_album_with_description_layout
+ *	Type:			String (either 'grid' or 'vert' only)
+ *	Default:		'vert'
+ *	
+ * Selects the default layout for albums with descriptions.
+ *
+ * If you want the same layout for both kind of albums (with or without
+ * descriptions), you can either use an empty string or use
+ * the same layout that for $pref_album_layout by writing:
+ *	$pref_album_with_description_layout = $pref_album_layout;
+ *
+ * For the various album layouts, please look at $pref_album_layout.
+ *
+ ***********************************************************/
+
+$pref_album_with_description_layout = 'vert';
 
 
 
@@ -482,9 +507,13 @@ $pref_nb_col		= 5;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/07/21 04:59:29  ralfoide
+//	Alternate album layout for description.
+//	Auto-swithc album layout on description presence.
+//
 //	Revision 1.12  2003/07/19 07:52:36  ralfoide
 //	Vertical layout for albums
-//
+//	
 //	Revision 1.11  2003/07/14 18:29:12  ralfoide
 //	Experimenting with better comments
 //	

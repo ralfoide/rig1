@@ -66,6 +66,18 @@ $pref_empty_album		= "empty_album.gif";
 
 $pref_global_gamma		= 1.0;	// use 1.0 for no-op
 
+
+// --- supported file types [RM 20030627 v0.6.3.4] ---
+
+// For matching pattern syntax, cf http://www.php.net/manual/en/function.preg-match.php
+// or http://www.perldoc.com/perl5.8.0/pod/perlre.html
+
+$pref_file_types		= array("/\.jpe?g$/i"					 => "image/jpeg",
+								"/\.(avi|wmv|as[fx])$/i"		 => "video/avi",
+								"/\.(mov|qt|sdp|rtsp)$/i"		 => "video/qt",
+								"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => "video/qt");
+								
+
 // --- admin viewing options ---
 
 $pref_admin_size		= 256;
@@ -144,10 +156,13 @@ $pref_image_layout = "1";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/06/30 06:10:00  ralfoide
+//	Introduced file-types (for video vs image support)
+//
 //	Revision 1.8  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.
-//
+//	
 //	Revision 1.7  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)

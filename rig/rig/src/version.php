@@ -8,18 +8,21 @@
 //**********************************************
 
 
-$rig_version = "0.6.4.4";
+$rig_version = "0.6.4.5";
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.19  2004/02/18 07:41:18  ralfoide
+//	Version 0.6.4.5/dev
+//
 //	Revision 1.18  2003/11/25 05:05:34  ralfoide
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.
 //	Isolated video display routines in new source file.
-//
+//	
 //	Revision 1.17  2003/08/23 18:32:46  ralfoide
 //	Uploaded 0.6.4.2 (sf, rig home page), moving on to 0.6.4.3
 //	

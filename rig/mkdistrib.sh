@@ -24,10 +24,25 @@ else
 	RIG=`date +rig_%Y-%m-%d | tr -d "\n"`
 	TAG=""
 
-	if [ -f ./rig/src/version.php ];
+	# keep only the directory portion of the calling program name
+	D="$0"
+	D=${D/`basename $D`/}
+
+	V1="./rig/src/version.php"
+	V=V1
+	if [ ! -f $V ];
 	then
-		A=`grep "\$rig_version = \"" ./rig/src/version.php | sed 's/.*"\([0-9i\.]*\)".*/\1/'`
+		V="$D/$V1"
+	fi;
+
+	if [ -f $V ];
+	then
+		A=`grep "\$rig_version = \"" $V | sed 's/.*"\([0-9i\.]*\)".*/\1/'`
 		echo $A
+	else
+		echo "*** ERROR *** ! Can't locate $V1 nor $V !!"
+		echo "Currently directory " `pwd` " is not suitable for 'today' mode"
+		exit 1;
 	fi
 	RIG="${RIG}_v${A}_tmp"
 fi

@@ -1,0 +1,922 @@
+<html>
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<title>RIG Install Manual</title>
+<style><!--
+.MsoToc1
+	{font-size:12.0pt;
+	font-family:"Times New Roman";}
+.MsoToc2
+	{font-size:12.0pt;
+	font-family:"Times New Roman";}
+.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+.Code
+	{font-family:"Courier New";
+	text-decoration:none;
+	text-line-through:none;
+	vertical-align:baseline;}
+.SpellE
+	{}
+.GramE
+	{}
+.Section1
+	{page:Section1;}
+-->
+</style>
+</head>
+<body link=blue vlink=purple class="Normal" lang=FR>
+<div class=Section1> 
+  <p align=center style='text-align:center'><b><span lang=EN-US style='font-size:18.0pt'>RIG 
+    Installation Manual</span></b></p>
+  <p><span class=Code-10><span lang=EN-US style='font-size:8.0pt;
+"Times New Roman"'>
+
+$Id$
+
+</span></span></p>
+  <p><span lang=EN-US style='font-size:8.0pt'>Important note: this file is delivered 
+    in both HTML format and TXT format. The TXT format is generated automatically 
+    from the HTML format, and thus may not be as readable. Please consult the 
+    HTML format if possible (should render neatly in links or lynx).</span></p>
+  <p class=MsoToc1> <span lang=EN-US><span
+class=MsoHyperlink><a href="#_Toc48812611">1-<span
+lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>Requirements</a></span></span></p>
+  <p class=MsoToc1><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812612">2-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>Presentation</a></span></span></p>
+  <p class=MsoToc1><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812613">3-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>Single album installation procedure</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812614">3.1-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Untar the archive</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812615">3.2-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Move the “<span lang=OR
+style='font-family:"Courier New";
+'>htdocs</span>” directory content</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812616">3.3-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Build the <span lang=OR
+style='font-family:"Courier New";
+'>rig_thumbnail</span> application:</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812617">3.4-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Settings files and directories access rights</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812618">3.5-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Update the <span lang=OR
+style='font-family:"Courier New";
+'>location.php</span> file</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812619">3.6-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Update the user and administrators lists</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812620">3.7-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Review the preference settings</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812621">3.8-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Upload your photos</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812622">3.9-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Test</a></span></span></p>
+  <p class=MsoToc1><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812623">4-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>Site vs. Album directories</a></span></span></p>
+  <p class=MsoToc1><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812624">5-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>Localization settings</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812625">5.1-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Libc “locale”</a></span></span></p>
+  <p class=MsoToc1><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812626">6-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>Basic Usage</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812627">6.1-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Description of user interface</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812628">6.2-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Albums and Images naming conventions</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812629">6.3-<span
+lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Albums and Images descriptions</a></span></span></p>
+  <p class=MsoToc1><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812630">7-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>Basic Administration</a></span></span></p>
+  <p class=MsoToc1><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812631">8-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>Building rig_thumbnail</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812632">8.1-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Un*x</a></span></span></p>
+  <p class=MsoToc2><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812633">8.2-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>      
+    </span>Windows</a></span></span></p>
+  <p class=MsoToc1><span
+class=MsoHyperlink><span lang=EN-US><a
+href="#_Toc48812634">9-<span lang=FR style='color:windowtext;text-decoration:none;text-underline:none'>     
+    </span>IIS Configuration</a></span></span></p>
+  <h1><a name="_Toc48812611"> <span lang=EN-US>1-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Requirements</span></a></h1>
+  <p><span lang=EN-US>RIG requires the following:</span></p>
+  <ul type=disc>
+    <li><span
+     lang=EN-US>PHP 4.1.2 minimum.</span></li>
+    <li><span
+     lang=EN-US>PHP 4.3.x recommended.</span></li>
+    <li><span
+     lang=EN-US>PHP 3.x won’t work. PHP 5 hasn’t been tested yet.</span></li>
+    <li><span
+     lang=EN-US>Apache 1.3.9 or IIS 5.0 web server minimum.</span></li>
+    <li><span
+     lang=EN-US>A descent C compiler suite for the thumbnail application.</span></li>
+  </ul>
+  <p><span lang=EN-US>Optionally, you may need this:</span></p>
+  <ul type=disc>
+    <li style='text-align:left;     '><span class=Code-10><span lang=EN-US
+     style='font-size:10.0pt;"Times New Roman"'>Jpeglib</span></span><span
+     lang=EN-US> to extract thumbnails and resize JPEG files:<br>
+      <a href="http://www.ijg.org/">http://www.ijg.org/</a></span></li>
+    <li style='text-align:left;     '><span class=Code-10><span lang=EN-US
+     style='font-size:10.0pt;"Times New Roman"'>Jhead</span></span><span
+     lang=EN-US> to extract EXIF headers form JPEG files:<br>
+      <a href="http://www.sentex.net/~mwandel/jhead/">http://www.sentex.net/~mwandel/jhead/</a></span></li>
+    <li style='text-align:left;     '><span class=Code-10><span lang=EN-US
+     style='font-size:10.0pt;"Times New Roman"'>Libavifile</span></span><span
+     lang=EN-US> to extract thumbnails from video movies:<br>
+      <a href="http://avifile.sourceforge.net/">http://avifile.sourceforge.net/</a></span></li>
+  </ul>
+  <p><span lang=EN-US>This document assumes that:</span></p>
+  <ul type=disc>
+    <li><span
+     lang=EN-US>You are familiar with the administration of your web server.</span></li>
+    <li><span
+     lang=EN-US>PHP is installed, enabled, working and **tested** on your web 
+      server.</span></li>
+    <li><span
+     lang=EN-US>You know how to use a shell and a makefile.</span></li>
+  </ul>
+  <p><span lang=EN-US>Most of this document will focus on a <span
+class=GramE>Un*</span>x installation model but should be easily applicable to 
+    other platforms (RIG is been tested on either Linux/Apache or Windows/IIS).</span></p>
+  <p><span lang=EN-US>The last two chapters of this document will cover the main 
+    specific points for Windows (building </span><span
+class=Code-10><span lang=EN-US style='font-size:10.0pt;"Times New Roman"'>rig_thumbnail</span></span><span lang=EN-US> 
+    and IIS configuration).</span></p>
+  <h1><a name="_Toc48812612"> <span lang=EN-US>2-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Presentation</span></a></h1>
+  <p><span lang=EN-US>RIG is a web-based JPEG image album viewer, especially useful 
+    for digital camera albums; provides automatic image resizing, preview &amp; 
+    thumbnail caching, user authentication; composed of a PHP web interface and 
+    a C++ thumbnail engine.</span></p>
+  <p><span lang=EN-US>For more information, please read the file accompanying 
+    README.txt.</span></p>
+  <h1><a name="_Toc48812613"> <span lang=EN-US>3-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Single album installation procedure</span></a></h1>
+  <p><span lang=EN-US>If you are too busy to read this entire document, please 
+    at least try this:</span></p>
+  <p align=left style='text-align:left;
+'> <span
+lang=EN-US style='"Times New Roman"'>1-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Untar the archive.</span></p>
+  <p align=left style='text-align:left;
+'> <span
+lang=EN-US style='"Times New Roman"'>2-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Move the “</span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>htdocs</span></span><span lang=EN-US>” 
+    directory content to a location accessible to the web server.</span></p>
+  <p align=left style='text-align:left;
+'> <span
+lang=EN-US style='"Times New Roman"'>3-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Build the </span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>rig_thumbnail</span></span><span
+lang=EN-US> application.</span></p>
+  <p align=left style='text-align:left;
+'> <span
+lang=EN-US style='"Times New Roman"'>4-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Make the directories accessible to your web 
+    server.</span></p>
+  <p align=left style='text-align:left;
+'> <span
+lang=EN-US style='"Times New Roman"'>5-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Update the </span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>location.php</span></span><span
+lang=EN-US> file.</span></p>
+  <p> <span lang=EN-US style='"Times New Roman"'>6-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Update the user and administrators lists</span></p>
+  <p> <span lang=EN-US style='"Times New Roman"'>7-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Review the preference settings.</span></p>
+  <p> <span lang=EN-US style='"Times New Roman"'>8-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Upload your photos</span></p>
+  <p> <span lang=EN-US style='"Times New Roman"'>9-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Test</span></p>
+  <p><span lang=EN-US>Now relax a bit and please patiently continue reading.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>The precise details of 
+    these steps will follow.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>These steps use default 
+    filenames and default directory paths that you will need to adjust to your 
+    needs.</span></p>
+  <h2><a name="_Toc48812614"> <span lang=EN-US>3.1-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Untar the archive</span></a></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>In a shell, enter the 
+    following commands:</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ cd /home/user</span></span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ tar xfzv rig_version.tgz</span></span><span lang=EN-US> 
+    (for GNU/Linux distribs)</span></p>
+  <p align=left style='text-align:left'><span class=GramE><span
+lang=EN-US>or</span></span><span lang=EN-US> (for non-GNU unixes):</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ gunzip -c rig_version.tgz 
+    | tar xvf -</span></span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>The name <b>“</b></span><span class=Code><b><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>rig_version</span></b></span><b><span lang=EN-US>”</span></b><span
+lang=EN-US> used here is a <b>placeholder</b>.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Please replace by the 
+    exact name of the file that you downloaded, typically something like “</span><span class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>rig_v0.6.4.0</span></span><span
+lang=EN-US>” or “</span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>rig_v0.6.3.5_2003-06-22</span></span><span
+lang=EN-US>”.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>This will create a directory 
+    named “</span><span class=Code><span lang=OR
+style='font-size:10.0pt;"Times New Roman"'>rig_version</span></span><span
+lang=EN-US>” and containing the various information files as well as the following 
+    directories:</span></p>
+  <ul type=disc>
+    <li><span
+     lang=EN-US>“</span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>rig</span></span><span
+     lang=EN-US>” contains the sources and settings</span></li>
+    <li><span
+     lang=EN-US>“</span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>htdocs</span></span><span
+     lang=EN-US>” contains the directories that must be published by your web 
+      server.</span></li>
+  </ul>
+  <p align=left style='text-align:left'><span lang=EN-US>This directory </span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>/home/user/rig_version</span></span><span
+lang=EN-US> will be referred to as the “site directory”.</span></p>
+  <h2><a name="_Toc48812615"> <span lang=EN-US>3.2-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Move the “</span></a><span
+class=Code-15><span lang=OR>htdocs</span></span><span
+lang=EN-US>” directory content</span></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>In the shell, enter the 
+    following commands:</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ cd rig_version</span></span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ mv htdocs/album-sample /home/user/public_html/myalbum</span></span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ mv htdocs/images /home/user/public_html/myablum/rig-images</span></span></p>
+  <p align=left style='text-align:left'><span lang=EN-US> [TBDL: in CVS rename 
+    </span><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>images</span></span><span lang=EN-US> 
+    as </span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>rig-images</span></span><span
+lang=EN-US>, move </span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>album-sample</span></span><span
+lang=OR> </span><span class=GramE><span lang=EN-US>to  </span><span class=Code><span lang=OR
+style='font-size:10.0pt;"Times New Roman"'>htdocs</span></span></span><span
+lang=EN-US>]</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>This directory </span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>/home/user/public_html/myalbum</span></span><span
+lang=EN-US> will be referred to as the “album directory”.</span></p>
+  <h2><a name="_Toc48812616"> <span lang=EN-US>3.3-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Build the </span></a><span
+class=Code-15><span lang=OR>rig_thumbnail</span></span><span
+lang=EN-US> application:</span></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>In the shell, enter the 
+    following commands:</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ cd rig/thumbnail</span></span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ make no-video</span></span><span lang=EN-US><br>
+    <br>
+    </span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>This will download the 
+    </span><span class=Code-10><span lang=EN-US style='font-size:
+10.0pt;"Times New Roman"'>libjpeg 6.b</span></span><span
+lang=EN-US> automatically and compile it, support for video will not be provided.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Note: if you do not have 
+    “</span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>wget</span></span><span
+lang=EN-US>”, download the </span><span class=Code-10><span lang=EN-US
+style='font-size:10.0pt;"Times New Roman"'>libjpeg</span></span><span
+lang=EN-US> manually (f.ex: <a
+href="ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz">ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz</a> 
+    ) and store it in the directory </span><span class=Code><span lang=OR
+style='font-size:10.0pt;"Times New Roman"'>rig/thumbnail/jpegsrc</span></span><span
+lang=EN-US>. Then run “</span><span class=Code><span lang=OR style='font-size:
+10.0pt;"Times New Roman"'>make no-video</span></span><span lang=EN-US>” which 
+    will unpack the archive, build the jpeg library and build </span><span class=Code><span lang=OR
+style='font-size:10.0pt;"Times New Roman"'>rig_thumbnail.exe</span></span><span
+lang=EN-US>.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>If no errors occurred, 
+    you should now have a file</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>/home/user/rig_version/rig/thumbnail/rig_thumbnail.exe</span></span></p>
+  <h2><a name="_Toc48812617"> <span lang=EN-US>3.4-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Settings files and directories access rights</span></a></h2>
+  <div style='border:solid windowtext 1.0pt;padding:1.0pt 4.0pt 1.0pt 4.0pt'> 
+    <p align=left style='text-align:left;border:none;padding:0in;'><span
+lang=EN-US>This step is <b>EXTREMELY IMPORTANT</b>.</span></p>
+  </div>
+  <p align=left style='text-align:left'><span lang=EN-US>Although this depends 
+    on the specific characteristics of your system, it is probable that the various 
+    directories extracted from the archive have access rights that do not allow 
+    your web server to write into these various folders. The web server will most 
+    likely access RIG’s folder using different user rights than yours. The web 
+    server must be able to read from the various folders, and at least be able 
+    to write to a subset of them.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Look into your album 
+    directory, </span><span class=Code><span lang=OR
+style='font-size:10.0pt;"Times New Roman"'>/home/user/public_html/myalbum</span></span><span
+lang=EN-US>:</span></p>
+  <ul type=disc>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>my-photos</span></span><span lang=EN-US>” 
+      is where you will store the photos that will be served by RIG. For security 
+      issues, it is generally preferable that your web server cannot write to 
+      this directory.</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>The web server needs read 
+      access to the following files and directories: </span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>LICENSE.html</span></span><span lang=EN-US>, 
+      </span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>admin_list.txt</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>browser_detect.js</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>index.html</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>index.php</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>location.php</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>my-photos</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>prefs.php</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>user_list.txt</span></span><span
+     lang=EN-US>.</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>The web server needs read/write 
+      access to the following directories: </span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>rig-cache</span></span><span lang=EN-US>, 
+      </span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>rig-options</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>upload_photos</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>upload_src</span></span><span
+     lang=EN-US>.</span></li>
+  </ul>
+  <p align=left style='text-align:left'><span lang=EN-US>These commands will take 
+    care of setting the appropriate rights for you:</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ cd /home/user/public_html/myalbum</span></span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ chmod 0644 LICENSE.html admin_list.txt 
+    browser_detect.js index.html index.php location.php prefs.php user_list.txt</span></span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ chmod 0755 my-photos</span></span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ chmod 0777 rig-cache rig-options 
+    upload_photos upload_src</span></span></p>
+  <p><span lang=EN-US>Last but not least, the rig_thumbnail.exe must be executable 
+    by PHP:</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ cd /home/user/rig_version/rig/thumbnail/</span></span></p>
+  <p><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>$ chmod 0777 rig_thumbnail.exe</span></span></p>
+  <h2><a name="_Toc48812618"> <span lang=EN-US>3.5-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Update the </span></a><span
+class=Code-15><span lang=OR>location.php</span></span><span
+lang=EN-US> file</span></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>Edit the file </span><span class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>/home/user/public_html/myalbum/location.php</span></span><span
+lang=EN-US>:</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Change the line</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>      $dir_install = &quot;/home/ralf/rig/&quot;;</span></span></p>
+  <p align=left style='text-align:left'><span class=GramE><span
+lang=EN-US>to</span></span><span lang=EN-US> reflect the location of the site 
+    directory where the “rig” directory from the archive is located. If you used 
+    the paths presented above, this should be </span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>      $dir_install = &quot;/home/user/rig_version/rig/&quot;;</span></span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Note that the directory 
+    path MUST end with a slash “/”.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>The other directories 
+    defined in </span><span class=Code><span lang=OR
+style='font-size:10.0pt;"Times New Roman"'>location.php</span></span><span
+lang=EN-US> are relative to the base directory above or the album directory. Unless 
+    you renamed any of these default folders present in the archive, you need 
+    not change those.</span></p>
+  <h2><a name="_Toc48812619"> <span lang=EN-US>3.6-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Update the user and administrators lists</span></a></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>Edit /</span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>home/user/public_html/myalbum/user_list.txt</span></span><span
+lang=EN-US>.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Edit </span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>/home/user/public_html/myalbum/admin_list.txt</span></span><span
+lang=EN-US>.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>In </span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>admin_list.txt</span></span><span
+lang=EN-US>, change the admin name to something not too obvious.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>In </span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>user_list.txt</span></span><span
+lang=EN-US>, the default &quot;guest&quot; MUST be kept.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Each file is a simple 
+    text file, with the following syntax:</span></p>
+  <ul type=disc>
+    <li><span
+     lang=EN-US>Lines starting by # are comment, empty lines are ignored</span></li>
+    <li><span
+     lang=EN-US>Each line is in the format  &quot;</span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>user:type:password:[display name]</span></span><span lang=EN-US>&quot;</span></li>
+    <li><span
+     lang=EN-US>The type is one of these letters:</span></li>
+  </ul>
+  <ul type=disc>
+    <ul type=circle>
+      <li style='text-align:left;      '><span class=Code><span lang=OR style='font-size:
+      10.0pt;"Times New Roman"'>empty</span></span><span
+      lang=EN-US>: there is no password, _anything_ is accepted</span></li>
+    </ul>
+  </ul>
+  <ul type=disc>
+    <ul type=circle>
+      <li style='text-align:left;      '><span class=Code><span lang=OR style='font-size:
+      10.0pt;"Times New Roman"'>t</span></span><span
+      lang=EN-US>:         plain-text password</span></li>
+      <li style='text-align:left;      '><span class=Code><span lang=OR style='font-size:
+      10.0pt;"Times New Roman"'>c</span></span><span
+      lang=EN-US>:         crypt(3) password – c.f. </span><span class=Code><span lang=OR style='font-size:10.0pt;
+      "Times New Roman"'>mkpasswd</span></span><span
+      lang=EN-US>(1)</span></li>
+      <li style='text-align:left;      '><span class=Code><span lang=OR style='font-size:
+      10.0pt;"Times New Roman"'>m</span></span><span
+      lang=EN-US>:         md5 password -- not implemented yet, c.f. </span><span class=Code><span lang=OR
+      style='font-size:10.0pt;"Times New Roman"'>md5sum</span></span><span lang=EN-US>(1) 
+        and echo -n</span></li>
+      <li style='text-align:left;      '><span class=Code><span lang=OR style='font-size:
+      10.0pt;"Times New Roman"'>i</span></span><span
+      lang=EN-US>:         invalid user, cannot log in</span></li>
+    </ul>
+  </ul>
+  <ul type=disc>
+    <li style='text-align:left;     '><span lang=EN-US>A wrong type will invalid 
+      the user</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>The display name is everything 
+      after the third colon till the end of the line and is optional</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>Colons are accepted in 
+      the display name</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>Colons are NOT accepted 
+      in user name, type or any form of password!</span></li>
+  </ul>
+  <p align=left style='text-align:left'><span lang=EN-US>Samples:</span></p>
+  <ul type=disc>
+    <li><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>empty::no-password:No 
+      Password</span></span></li>
+    <li><span
+     class=Code><span lang=EN-US style='font-size:10.0pt;'>user</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>:t:default:Plain 
+      Password</span></span></li>
+    <li><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>md5</span></span><span class=Code><span
+     lang=EN-US style='font-size:10.0pt;"Times New Roman";'>user</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>:m:c21f969b5f03d33d43e04f8f136e7682:MD5:Sum 
+      Password</span></span></li>
+    <li><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>crypt</span></span><span
+     class=Code><span lang=EN-US style='font-size:10.0pt;'>ofreak</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>:c:zxnQ9wTEcM7pE:Crypt 
+      Password</span></span></li>
+    <li><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>invalid:i:whatever:Invalid 
+      User</span></span></li>
+  </ul>
+  <h2><a name="_Toc48812620"> <span lang=EN-US>3.7-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Review the preference settings</span></a></h2>
+  <p><span lang=EN-US>The site settings are located in the site directory, in 
+    </span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>settings/prefs.php</span></span><span
+lang=EN-US>:</span></p>
+  <p><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>/home/user/rig_version/rig/settings/prefs.php</span></span></p>
+  <p><span lang=EN-US>All the settings are located there. This file is included 
+    first and then overridden by the settings from the album directory:</span></p>
+  <p><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>/home/user/public_html/myalbum/prefs.php</span></span></p>
+  <p><span lang=EN-US>It is recommended to modify the settings in the album’s 
+    preference file (simply copy a line from the site’s preference file and change 
+    the setting). This allows you to update the site directory later without loosing 
+    your customized settings.</span></p>
+  <h2><a name="_Toc48812621"> <span lang=EN-US>3.8-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Upload your photos</span></a></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>Place your photos in 
+    “</span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>my-photos</span></span><span
+lang=EN-US>” directory:</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>/home/user/public_html/myalbum/my-photos/</span></span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>You can create as many 
+    sub-directories in this folder.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Make sure the files and 
+    directories are accessible by your web-server (i.e. having other’s readable 
+    for files and other’s executable and readable for directories.)</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>You should read the chapter 
+    “Albums and Images naming conventions” to learn how automatic sort is done 
+    by RIG based on index numbers or dates extracted from the images or directories 
+    filenames.</span></p>
+  <h2><a name="_Toc48812622"> <span lang=EN-US>3.9-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Test</span></a></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>Try to access &quot;</span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>http://localhost/~user/myalbum/index.php</span></span><span
+lang=EN-US>&quot; via a web browser.</span></p>
+  <p><span lang=EN-US>If you </span></p>
+  <p><span lang=EN-US>You should see your photos.</span></p>
+  <h1><a name="_Toc48812623"> <span lang=EN-US>4-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Site vs. Album directories</span></a></h1>
+  <p><span lang=EN-US>RIG uses a concept of “site” versus “albums” installation 
+    directories.</span></p>
+  <p><span lang=EN-US>A “site” is typically one of your servers, where you will 
+    store files that do not need to be duplicated. On the other hand, an “album” 
+    is a collection of pictures, which can be stored in several directories (“sub-albums”).</span></p>
+  <p><span lang=EN-US>The server may host several virtual hosts. Each virtual 
+    host may contain one or more album. Each album can have its own settings, 
+    which override the “global” site settings.</span></p>
+  <p><span lang=EN-US>To make it more obvious, here’s a typical installation layout:</span></p>
+  <ul type=disc>
+    <li><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>/home/rig</span></span><span
+     lang=EN-US>: contains the main rig files (</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>src</span></span><span lang=EN-US>, 
+      </span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>settings</span></span><span
+     lang=EN-US>, </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>rig-images</span></span><span
+     lang=EN-US>)</span></li>
+    <ul type=circle>
+      <li><span
+      lang=EN-US>/</span><span class=Code><span lang=OR style='font-size:10.0pt;
+      "Times New Roman"'>home/rig/src</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/rig/settings/prefs.php</span></span><span
+      lang=EN-US>, user list, admin list</span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/rig/rig-images</span></span></li>
+    </ul>
+    <li><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>/home/user/public_html/private</span></span><span
+     lang=EN-US> : contains your private album</span></li>
+    <ul type=circle>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/private/index.html</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/private/index.php</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/private/location.php</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/private/prefs.php</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/private/</span></span><span
+      class=Code><span lang=EN-US style='font-size:10.0pt;'>my-</span></span><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>photos</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/private/rig-cache</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/private/rig-options</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/private/rig-images</span></span></li>
+    </ul>
+    <li><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>/home/user/public_html/public</span></span><span
+     lang=EN-US> : contains your public album</span></li>
+    <ul type=circle>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/public/index.html</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/public/index.php</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/public/location.php</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/public/prefs.php</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/public/</span></span><span
+      class=Code><span lang=EN-US style='font-size:10.0pt;'>my-</span></span><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>photos</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/public/rig-cache</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/public/rig-options</span></span></li>
+      <li><span
+      class=Code><span lang=OR style='font-size:10.0pt;      "Times New Roman"'>/home/user/public_html/public/rig-images</span></span></li>
+    </ul>
+  </ul>
+  <p><span lang=EN-US>In this scheme, you can see there’s a global </span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>/home/rig/settings/prefs.php</span></span><span
+lang=EN-US>, which will be overridden by the albums’ settings. In each album, 
+    the “</span><span class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>location.php</span></span><span
+lang=EN-US>” file plays the crucial role of indicating where the main files are 
+    located.</span></p>
+  <p><span lang=EN-US>This architecture has several advantages:</span></p>
+  <ul type=disc>
+    <li><span
+     lang=EN-US>The main sources files and settings can be a directory not served 
+      by your web server. This is inherently more secure.</span></li>
+    <li><span
+     lang=EN-US>By keeping sources and main preferences at one specific location, 
+      it is easier to upgrade RIG to a next version.</span></li>
+    <li><span
+     lang=EN-US>The album’s </span><span class=Code><span lang=OR
+     style='font-size:10.0pt;"Times New Roman"'>prefs.php</span></span><span lang=EN-US> 
+      need only contain those parameters that you want to change. When you will 
+      update the main </span><span class=Code><span lang=OR style='font-size:10.0pt;
+     "Times New Roman"'>prefs.php</span></span><span
+     lang=EN-US>, your album’s parameters won’t be modified.</span></li>
+  </ul>
+  <p><span lang=EN-US>[<span class=GramE>more</span> TBDL]</span></p>
+  <h1><a name="_Toc48812624"> <span lang=EN-US>5-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Localization settings</span></a></h1>
+  <h2><a name="_Toc48812625"> <span lang=EN-US>5.1-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> </a><span
+class=SpellE><span lang=EN-US>Libc</span></span><span lang=EN-US> “locale”</span></h2>
+  <p><span lang=EN-US>TBDL</span></p>
+  <h1><a name="_Toc48812626"> <span lang=EN-US>6-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Basic Usage</span></a></h1>
+  <h2><a name="_Toc48812627"> <span lang=EN-US>6.1-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Description of user interface</span></a></h2>
+  <p><span lang=EN-US>TBDL</span></p>
+  <h2><a name="_Toc48812628"> <span lang=EN-US>6.2-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Albums and Images naming conventions</span></a></h2>
+  <p><span lang=EN-US>RIG automatically sorts albums content depending on the 
+    filename.</span></p>
+  <p><span lang=EN-US>The filename is used as a pattern and is automatically transformed 
+    according to the following rules:</span></p>
+  <ul type=disc>
+    <li><span
+     lang=EN-US>All underscores are replaced by spaces before display.</span></li>
+    <li><span
+     lang=EN-US>Dates located at the beginning of the filename are interpreted.</span></li>
+    <li><span
+     lang=EN-US>Indexes located at the beginning of the filename are interpreted.</span></li>
+    <li><span
+     lang=EN-US>There is no limit to the length of a directory or filename other 
+      than your system’s path limit (typically 255 characters under <span
+     class=GramE>Un*</span>x or Windows).</span></li>
+    <li><span
+     lang=EN-US>RIG accepts any characters in filenames, except directory separators 
+      (i.e. ‘/’ and ‘\’ under Windows). Your file system may have more drastic 
+      limitations anyway!</span></li>
+    <li><span
+     lang=EN-US>File extensions are required: “.jpg” or “.JPG” for example must 
+      be present at the end of an image in order for RIG to recognize the file. 
+      The case is not important.</span></li>
+    <li><span
+     lang=EN-US>When displaying an image title, the extension will be removed 
+      automatically.</span></li>
+  </ul>
+  <p><span lang=EN-US>Starting a filename by a date or an index is a good way 
+    to influence RIG’s automatic sorting of an album content.</span></p>
+  <p><span lang=EN-US>Dates formats can be read as follows:</span></p>
+  <ul type=disc>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>YYYY-MM-DD</span></span><span lang=EN-US>” 
+      or</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>YYYY/MM/DD</span></span><span lang=EN-US>” 
+      or</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>YYYMMDD</span></span><span
+     lang=EN-US>” or</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>YYYY-MM-DD</span></span><span class=Code><span
+     lang=EN-US style='font-size:10.0pt;"Times New Roman";'>_name</span></span><span
+     lang=EN-US>” or “</span><span class=Code><span lang=OR style='font-size:
+     10.0pt;"Times New Roman"'>YYYY-MM-DD</span></span><span
+     class=Code><span lang=EN-US style='font-size:10.0pt;'> - name</span></span><span lang=EN-US>” 
+      or </span></li>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>YYYY</span></span><span class=Code><span lang=OR
+     style='font-size:10.0pt;"Times New Roman";'>/</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>MM</span></span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman";'>/</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>DD</span></span><span class=Code><span
+     lang=EN-US style='font-size:10.0pt;"Times New Roman";'>_name</span></span><span
+     lang=EN-US>” or “</span><span class=Code><span lang=OR style='font-size:
+     10.0pt;"Times New Roman"'>YYYY</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     '>/</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>MM</span></span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman";'>/</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>DD</span></span><span class=Code><span
+     lang=EN-US style='font-size:10.0pt;"Times New Roman";'> - name</span></span><span
+     lang=EN-US>”</span><span lang=EN-US> or</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>YYYYMMDD</span></span><span class=Code><span
+     lang=EN-US style='font-size:10.0pt;"Times New Roman";'>_name</span></span><span
+     lang=EN-US>” or “</span><span class=Code><span lang=OR style='font-size:
+     10.0pt;"Times New Roman"'>YYYYMMDD</span></span><span
+     class=Code><span lang=EN-US style='font-size:10.0pt;'> name</span></span><span lang=EN-US>”</span></li>
+    <ul type=circle>
+      <li style='text-align:left;      '><span lang=EN-US>The date will be used 
+        for sorting. It will be also displayed according to the current display 
+        language.</span></li>
+      <li style='text-align:left;      '><span lang=EN-US>The date must be in 
+        Y/M/D order and be formatted with all the necessary digits, i.e. the month 
+        of August must be “08”, not just “8”.</span></li>
+      <li style='text-align:left;      '><span lang=EN-US>The date’s component 
+        separator may be a dash, a slash or nothing.</span></li>
+      <li style='text-align:left;      '><span lang=EN-US>The separation between 
+        the date and the optional filename can be any combination of space, dash 
+        and underlines characters or simply nothing!</span></li>
+    </ul>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>YYYY-MM</span></span><span lang=EN-US>” 
+      or “</span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>YYYY/MM</span></span><span
+     lang=EN-US>”</span><span lang=EN-US> or</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>YYYY-MM</span></span><span class=Code><span lang=EN-US
+     style='font-size:10.0pt;"Times New Roman";'>_name</span></span><span
+     lang=EN-US>” or “</span><span class=Code><span lang=OR style='font-size:
+     10.0pt;"Times New Roman"'>YYYY/MM</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     '> - name</span></span><span
+     lang=EN-US>”</span><span lang=EN-US> or “</span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>YYYYMM</span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     '> </span></span><span
+     class=Code><span lang=OR style='font-size:10.0pt;     "Times New Roman"'>name</span></span><span
+     lang=EN-US>”</span></li>
+    <ul type=circle>
+      <li style='text-align:left;      '><span lang=EN-US>This </span><span lang=EN-US>is 
+        similar to the above format, except no day number is provided.</span></li>
+    </ul>
+  </ul>
+  <p><span lang=EN-US>Indexes:</span></p>
+  <ul type=disc>
+    <li><span
+     lang=EN-US>“</span><span class=Code><span
+     lang=OR style='font-size:10.0pt;"Times New Roman"'>12_name</span></span><span lang=EN-US>”</span></li>
+    <li><span
+     lang=EN-US> “</span><span class=Code><span lang=OR
+     style='font-size:10.0pt;"Times New Roman"'>1234–name</span></span><span lang=EN-US>”</span></li>
+    <li><span
+     lang=EN-US> “</span><span class=Code><span lang=OR
+     style='font-size:10.0pt;"Times New Roman"'>12345_name</span></span><span lang=EN-US>”</span></li>
+    <li><span
+     lang=EN-US>The index number may contain between 1 and 5 digits.</span></li>
+    <li><span
+     lang=EN-US>Although not required, it is best to all indexes the same length 
+      within the same list.</span></li>
+    <li style='text-align:left;     '><span lang=EN-US>The separation between 
+      the </span><span
+     lang=EN-US>index </span><span lang=EN-US>and the </span><span lang=EN-US>mandatory 
+      </span><span
+     lang=EN-US>name </span><span lang=EN-US>must be one space, one dash or one 
+      underline. One and only one of these characters must be present.</span></li>
+  </ul>
+  <h2><a name="_Toc48812629"> <span lang=EN-US>6.3-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; 
+    </span></span> <span lang=EN-US>Albums and Images descriptio</span></a><span lang=EN-US>ns</span></h2>
+  <p><span lang=EN-US>Each album and sub-albums directories can contain a file 
+    that gives a short description of the directory content. The description can 
+    be applied to either images of an album or sub-albums of a given album.</span></p>
+  <p><span lang=EN-US>The file must be called either “</span><span
+class=Code><span lang=OR style='font-size:10.0pt;"Times New Roman"'>descript.ion</span></span><span
+lang=EN-US>” or “</span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>file_info.diz</span></span><span
+lang=EN-US>”.</span></p>
+  <p><span lang=EN-US>The text file must have the following format:</span></p>
+  <ul type=disc>
+    <li><span
+     lang=EN-US>Lines starting with # are ignored. So are empty lines.</span></li>
+    <li><span
+     lang=EN-US>Line format is:</span></li>
+    <ul type=circle>
+      <li><span
+      lang=EN-US>&lt;image or directory name&gt;[ \t]+&lt;description&gt;\n</span></li>
+      <li><span
+      lang=EN-US>[ \t]+&lt;continuation of previous description&gt;\n</span></li>
+    </ul>
+    <li><span
+     lang=EN-US>In more common syntax, that means each description line must start 
+      by the EXACT file or directory name, one or more space or tabulation and 
+      the description.</span></li>
+    <li><span
+     lang=EN-US>The description can be continued on following lines if it starts 
+      by one ore more space or tabulation.</span></li>
+  </ul>
+  <p><span lang=EN-US>Description lines can have any length and contain any characters.</span></p>
+  <p><span lang=EN-US>RIG currently allows any kind of HTML to be present in the 
+    description line. Future version may limit HTML tags to simple non-active 
+    ones, removing scripting or anything typically considered harmful.</span></p>
+  <h1><a name="_Toc48812630"> <span lang=EN-US>7-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Basic Administration</span></a></h1>
+  <p><span class=GramE><span lang=EN-US>Blah <span class=SpellE>blah</span>, TBDL.</span></span></p>
+  <h1><a name="_Toc48812631"> <span lang=EN-US>8-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Building </span></a><span class=SpellE><span lang=EN-US>rig_thumbnail</span></span></h1>
+  <h2><a name="_Toc48812632"> <span lang=EN-US>8.1-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> </a><span
+class=GramE><span lang=EN-US>Un*</span></span><span lang=EN-US>x</span></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>[TBDL]</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>In the shell, enter the 
+    following commands:</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ cd rig/thumbnail</span></span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>$ make no-video</span></span><span lang=EN-US><br>
+    <br>
+    </span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Note the &quot;no-video&quot; 
+    after make. The new thumbnail app can extract thumbnail from videos, but you 
+    need to install the <span class=SpellE>devel</span> package for lib &quot;<span class=SpellE>avifile</span>&quot; 
+    first. As you probably not care about video support, &quot;make no-video&quot; 
+    is the best solution.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>This will download the 
+    <span class=SpellE>libjpeg</span> 6.b automatically and compile it, support 
+    for video will not be provided.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>Note: if you do not have 
+    “</span><span class=Code><span lang=OR style='font-size:10.0pt;
+"Times New Roman"'>wget</span></span><span
+lang=EN-US>”, download the <span class=SpellE>libjpeg</span> manually (f.ex: <a
+href="ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz">ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz</a> 
+    ) and store it in the directory </span><span class=Code><span lang=OR
+style='font-size:10.0pt;"Times New Roman"'>rig/thumbnail/jpegsrc</span></span><span
+lang=EN-US>. Then run “</span><span class=Code><span lang=OR style='font-size:
+10.0pt;"Times New Roman"'>make no-video</span></span><span lang=EN-US>” which 
+    will unpack the archive, build the jpeg library and build </span><span class=Code><span lang=OR
+style='font-size:10.0pt;"Times New Roman"'>rig_thumbnail.exe</span></span><span
+lang=EN-US>.</span></p>
+  <p align=left style='text-align:left'><span lang=EN-US>If no errors occurred, 
+    you should now have a file</span></p>
+  <p align=left style='text-align:left'><span class=Code><span
+lang=OR style='font-size:10.0pt;"Times New Roman"'>/home/user/rig_version/rig/thumbnail/rig_thumbnail.exe</span></span></p>
+  <h2><a name="_Toc48812633"> <span lang=EN-US>8.2-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp; </span></span> <span
+lang=EN-US>Windows</span></a></h2>
+  <p align=left style='text-align:left'><span lang=EN-US>[TBDL]</span></p>
+  <h1><a name="_Toc48812634"> <span lang=EN-US>9-<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span> <span
+lang=EN-US>IIS Configuration</span></a></h1>
+  <p align=left style='text-align:left'><span lang=EN-US>[TBDL]</span></p>
+  <div style='border:none;border-top:solid windowtext 1.0pt;padding:1.0pt 0in 0in 0in'> 
+    <p style='border:none;padding:0in;'><span class=Code-10><span
+lang=EN-US style='font-size:10.0pt;"Times New Roman"'>End</span></span></p>
+  </div>
+  <p><span class=Code-10><span lang=EN-US style='font-size:10.0pt;"Times New Roman"'>
+<br>$Log$
+<br>Revision 1.2  2003/08/16 23:18:26  ralfoide
+<br>Fixed markup for log
+<br>
+<br>Revision 1.1  2003/08/16 23:15:26  ralfoide
+<br>New install doc, txt & html
+<br></span></span></p>
+</div>
+</body>
+</html>

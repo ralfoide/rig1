@@ -1,0 +1,386 @@
+// vim: set tabstop=4 shiftwidth=4: //
+//**********************************************
+// RIG version 1.0
+// Copyright (c) 2001-2002 Ralf
+//**********************************************
+
+// Japanese Language Strings for RIG
+
+// This file is a text "data" file for the string in Japanese
+// The file is UTF-8 encoded.
+
+// Format of the file:
+// - entries are composed of 2 lines:
+//	1- the variable to set (with the $ like in PHP)
+//	2- the string value for the variable
+// The scanner looks for lines starting with $ or @ and use the first word as the variable name
+// If the line was starting with @$, the second word will be the named index in an array
+// It then reads the *next* line, whatever it's content being, except the ending linefeed
+//
+// As a side effect, empty lines or lines starting with // or # will be ignored.
+//
+// The prefered line separator is the Unix mode, i.e. only LF (/n) as linefeed.
+
+
+
+// HTML encoding
+//--------------
+
+// Encoding for HTML web pages. Cannot be empty.
+
+$html_encoding
+UTF-8
+
+
+
+
+// Languages available
+//--------------------
+
+$html_language
+言語:
+// Language:
+
+@$html_desc_lang en
+English
+
+@$html_desc_lang fr
+Fran&ccedil;ais
+
+@$html_desc_lang sp
+Espa&ntilde;ol
+
+@$html_desc_lang jp
+日本語
+
+
+// Themes available
+//-----------------
+
+$html_theme
+ページの色:
+// Color Theme:
+
+@$html_desc_theme gray
+グレー
+// Gray
+
+@$html_desc_theme blue
+青
+// Blue
+
+@$html_desc_theme sand
+茶色
+// Sand
+
+@$html_desc_theme khaki
+カーキ
+// Khaki 
+
+@$html_desc_theme egg
+黄色
+// Egg
+
+@$html_desc_theme none
+無色
+// None
+
+
+
+
+// HTML content
+//-------------
+
+$html_current_album
+現在のアルバム
+// Current Album
+
+$html_albums
+アルバム一覧
+// Available Albums
+
+$html_images
+画像
+// Images
+
+$html_options
+オプション
+// Options
+
+$html_generated
+[date] - [rig-version]にて作成: 所要時間[time]秒
+
+$html_admin_intrfce
+管理画面
+// Administration Interface
+
+$html_rig_admin
+RIG 管理画面
+// RIG Administration Interface
+
+$html_comment_stats
+このアルバムおよび下層アルバムについての情報
+// Stats for album and sub-albums
+
+$html_album_stat
+<table><tr><td>ファイル数：</td><td>[files] (計 [bytes]バイト)</td></tr><tr><td>フォルダ数：</td><td>[folders]</td></tr></table>
+// [bytes] bytes occupied by [files] files in [folders] folders
+
+$html_actions
+アクション
+// Actions
+
+$html_act_create
+作　成: 
+// Create All: [RM 20030526 new]
+
+$html_act_delete
+削　除: 
+// Delete All: [RM 20030526 new]
+
+$html_act_previews
+全てのプレビュー
+// Previews [RM 20030526 new]
+
+$html_act_images
+全ての画像
+// Images [RM 20030526 new]
+
+$html_act_prev_img
+全てのプレビューと画像
+// Previews &amp; Images [RM 20030526 new]
+
+$html_act_rnd_prev
+このアルバムのアイコンをランダムに変更
+// Change Album Random Icon [RM 20030526 renamed]
+
+$html_act_canon
+キャノン製カメラのデフォルトファイル名をつけ変える
+// Rename Canon 100-1234_img.jpg files [RM 20030526 renamed]
+
+$html_use_as_icon
+アルバムアイコンとして使用
+// Use as album icon
+
+$html_avail_albums
+閲覧できるアルバム
+// Available Albums
+
+$html_avail_prevws
+閲覧できる画像のプレビュー
+// Available Previews
+
+$html_comment
+実際の画像を見るにはこのページのリロードが必要な場合があります
+// You may need to reload this page to see the real images
+
+$html_back_to
+[name]へ戻る
+// Back to [name]
+
+$html_back_album
+アルバムへ
+// Back to album
+
+$html_back_previous
+前のアルバムへ
+// Back to previous album
+
+$html_vis_on
+表示する
+// Show
+
+$html_vis_off
+隠す
+// Hide
+
+$html_credits
+クレジット
+// Credits
+
+$html_show_credits
+RIG および PHP のクレジット
+// Display RIG & PHP Credits
+
+$html_hide_credits
+クレジットを隠す
+// Hide Credits
+
+$html_text_credits
+R'alf Image Gallery ([rig-name-url]) &copy; 2001-2003 by R'alf<br>Japanese Translation by <a href="mailto:et_cogito@mac.com">INOUE Tatsuo</a><br>RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a> (<a href="http://www.opensource.org/licenses/">OSL</a>).<br>Based on <a href="http://www.php.net">PHP</a> and the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>
+
+$html_phpinfo
+PHP サーバー情報 
+// PHP Server Information
+
+$html_show_phpinfo
+PHP サーバー情報
+// Display PHP Server Information
+
+$html_hide_phpinfo
+PHP サーバー情報を隠す
+// Hide PHP Server Information
+
+
+$html_login
+ログイン
+// Login
+
+$html_validate
+ログイン
+// Enter
+
+$html_remember
+ユーザー名／パスワードを記憶
+// Remember me
+
+$html_username
+ユーザー名
+// Username
+
+$html_password
+パスワード
+// Password
+
+$html_welcome
+ようこそ、<b>[name]</b>さん! ([change-link])
+// Welcome <b>[name]</b>! ([change-link])
+
+$html_welcome_guest
+ようこそ ! ([change-link])
+// Welcome! ([change-link])
+
+$html_chg_user
+ユーザー変更
+// change user
+
+$html_guest_login
+ゲスト モード
+// 'Guest' Mode
+
+
+// --------------------
+// RM 20030119 - v0.6.3
+
+$html_album_copyrt
+&copy; [year] [name]
+// All images &copy; [year] [name]
+
+$html_image_copyrt
+&copy; [year] [name]
+// Image &copy; [year] [name]
+
+$html_album_count
+[count] 冊のアルバム
+// [count] albums
+
+$html_image_count
+[count] 枚の画像
+// [count] images
+
+// ----------------------
+// RM 20040222 - v0.6.4.5
+
+$html_video_codec_detail
+ビデオのフォーマット: <i>[codec_name]</i>
+// Video format: <i>[codec_name]</i>
+
+$html_video_install_named_player
+[&nbsp;<a href="[url]">[name]をインストール</a>&nbsp;] 
+// [&nbsp;<a href=\"[url]\">Install&nbsp;[name]</a>&nbsp;] (<- extra space at the end)
+
+$html_video_install_unnamed_player
+[&nbsp;<a href="[url]">プレーヤーをインストール</a>&nbsp;]
+// [&nbsp;<a href=\"[url]\">Install&nbsp;the&nbsp;player</a>&nbsp;]
+
+$html_video_download
+[&nbsp;<a title="ビデオをダウンロードして再生" href="[url]">ダウンロード</a>&nbsp;]
+// [&nbsp;<a title=\"Download video and play on your computer\" href=\"[url]\">Download</a>&nbsp;]
+
+
+// Script Content
+//---------------
+
+
+
+// Album Title
+
+$html_album_title
+RIGのアルバム
+// Album
+
+$html_album
+アルバム
+// Album
+
+$html_admin
+管理
+// Admin
+
+$html_none
+ホーム
+// Start
+
+
+// Current Album
+
+$html_root
+ホーム
+// Start
+
+// Images
+
+$html_image_title
+RIGの画像
+// Image
+
+$html_image
+画像
+// Image
+
+$html_prev
+前の画像へ
+// Previous
+
+$html_next
+次の画像へ
+// Next
+
+$html_image2
+画像
+// image
+
+$html_pixels
+ピクセル
+// pixels
+
+$html_ok
+変更
+// Change
+
+$html_img_size
+画像のサイズ
+// Image Size
+
+$html_original
+原寸
+// Original
+
+
+// -- Tooltips ---
+
+$html_image_tooltip
+[type]: [name]
+
+$html_album_tooltip
+[type]: [name]; 最終更新: [date]
+// [type]: [name]; Last Updated: [date]
+
+$html_last_update
+最終更新: [date]
+// Last Updated: [date]
+
+
+
+
+// end

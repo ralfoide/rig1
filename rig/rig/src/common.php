@@ -551,9 +551,15 @@ function rig_decode_argument($arg)
 		$arg = str_replace("../", "", $arg);
 
 		// remove these stange characters if present at the beginning of the string
-		$n = strspn($arg, "./\\&^%!\$");
-		if ($n)
-			return substr($arg, $n);
+		// RM 20040731 should be a loop...
+		while(1)
+		{
+			$n = strspn($arg, "./\\&^%!\$");
+			if ($n)
+				return substr($arg, $n);
+			else
+				break;
+		}
 	}
 
 	return $arg;
@@ -574,9 +580,15 @@ function rig_encode_argument($arg)
 		$arg = str_replace(SEP2, SEP, $arg);
 
 	// remove these strange characters if present at the beginning of the string
-	$n = strspn($arg, "./\\&^%!\$");
-	if ($n)
-		$arg = substr($arg, $n);
+	// RM 20040731 should be a loop...
+	while(1)
+	{
+		$n = strspn($arg, "./\\&^%!\$");
+		if ($n)
+			$arg = substr($arg, $n);
+		else
+			break;
+	}
 
 	// Now protect characters that have a meaning in HTTP URLs.
 	// cf Section 3.2 of RFC 2068 HTTP 1.1
@@ -3557,9 +3569,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.47  2004/08/12 21:52:41  ralfoide
+//	Fix to remove all unfriendly characters even if not at beginning
+//
 //	Revision 1.46  2004/07/17 07:52:31  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.45  2004/07/16 08:14:31  ralfoide
 //	Fixes for HTML cache
 //	

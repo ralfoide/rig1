@@ -20,7 +20,13 @@ Summary of features for RIG:
 Generic:
 - in 0.6.4:
 [1.N] Drop DB support and dump 0.6.3-exp
+- in 0.6.3.1:
 - in 0.6.3:
+[1.F] Display copyright in image page, display number of images/albums in tables
+[1.F] Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+[1.F] Using rig_options directory
+[1.F] Renamed src function with rig_ prefix everywhere
+[1.F] Only display phpinfo if _debug_ enabled or admin mode
 - in 0.6.2.4:
 [1.F] Stable enough to become 0.6.3 (need file package on SourceForge)
 [3.F] URL-Rewrite support (cf site/prefs.php)
@@ -115,9 +121,10 @@ Admin:
 [0.6.4]
 
 [0.6.3.1]
-20030215 [1.F] Bumped to version 0.6.3.1, updating sourceforge CVS
+20030215 [1.F] Bumped to version 0.6.3.1
 
 [0.6.3]
+20030215 [1.F] Updating sourceforge CVS, make CVS tag_2003-02-15_v0630
 20030125 [1.F] Admin: create-previews also fix album_icon.jpg when possible (update, resize)
 20030125 [1.F] Admin: fix_options to convert options.txt from 0.6.2 into 0.6.3
 20030124 [3.F] Added a rig_mkdir to build full paths (vs mkdir that only adds one terminal directory)
@@ -394,9 +401,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/02/16 20:23:56  ralfoide
+//	Version 0.6.3 updated to CVS, going on with 0.6.3.1
+//
 //	Revision 1.7  2003/02/16 20:08:57  ralfoide
 //	Update. Version 0.6.3.1
-//
+//	
 //	Revision 1.6  2003/01/20 12:39:50  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.

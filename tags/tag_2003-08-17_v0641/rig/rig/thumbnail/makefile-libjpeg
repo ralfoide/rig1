@@ -1,0 +1,55 @@
+# Simplified makefile for RIG Thumbnail for Linux
+# Downloads and builds the jpeg library
+
+# ----- jpeglib supprot -------
+
+JPEG_TGZ = jpegsrc.v6b.tar.gz
+DIRJPEG1 = ./jpegsrc
+DIRJPEG2 = $(DIRJPEG1)/jpeg-6b
+DIRJPEG3 = $(DIRJPEG1)/ralf_patch
+LIBJPEG  = $(DIRJPEG2)/libjpeg.a
+
+INCDIR   = -I. -I$(DIRJPEG2)
+
+# -----------------------------
+
+all: $(LIBJPEG)
+	cd $(DIRJPEG2) ; make libjpeg.a
+
+
+$(LIBJPEG):
+	if [ ! -f $(DIRJPEG1)/$(JPEG_TGZ) ]; \
+	then \
+		cd $(DIRJPEG1) ; \
+		wget --passive-ftp ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz ; \
+	fi
+	if [ ! -d $(DIRJPEG2) ]; \
+	then \
+		( cd $(DIRJPEG1) ; gunzip -c $(JPEG_TGZ) | tar xvf - ) ; \
+		cp $(DIRJPEG3)/*.h $(DIRJPEG3)/*.ds* $(DIRJPEG2)/ ; \
+	fi
+	if [ ! -f $(LIBJPEG) ]; \
+	then \
+		cd $(DIRJPEG2) ; \
+		./configure ; \
+	fi
+
+# -----------------------------
+
+clean:
+	if [ -d $(DIRJPEG2) ]; then make -C $(DIRJPEG2) clean ; fi;
+
+# -----------------------------
+
+#
+# $Log$
+# Revision 1.3  2003/08/18 02:06:52  ralfoide
+# Update
+#
+# Revision 1.2  2003/08/16 22:04:02  ralfoide
+# Always compile its own libjpeg.
+#
+# Revision 1.1  2003/07/16 07:04:59  ralfoide
+# Separating with-video/no-video makefiles
+#
+#

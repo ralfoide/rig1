@@ -1,0 +1,336 @@
+RIG Installation Manual
+
+$Id$
+
+Important note: this file is delivered in both HTML format and TXT format. The TXT format is generated automatically from the HTML format, and thus may not be as readable. Please consult the HTML format if possible (should render neatly in links or lynx).
+
+1-	Requirements
+2-	Presentation
+3-	Single album installation procedure
+3.1-	Untar the archive
+3.2-	Move the "htdocs" directory content
+3.3-	Build the rig_thumbnail application:
+3.4-	Settings files and directories access rights
+3.5-	Update the location.php file
+3.6-	Update the user and administrators lists
+3.7-	Review the preference settings
+3.8-	Upload your photos
+3.9-	Test
+4-	Site vs. Album directories
+5-	Localization settings
+5.1-	Libc "locale"
+6-	Basic Usage
+6.1-	Description of user interface
+6.2-	Albums and Images naming conventions
+6.3-	Albums and Images descriptions
+7-	Basic Administration
+8-	Building rig_thumbnail
+8.1-	Un*x
+8.2-	Windows
+9-	IIS Configuration
+
+1- Requirements
+RIG requires the following:
+* PHP 4.1.2 minimum.
+* PHP 4.3.x recommended.
+* PHP 3.x won't work. PHP 5 hasn't been tested yet.
+* Apache 1.3.9 or IIS 5.0 web server minimum.
+* A descent C compiler suite for the thumbnail application.
+
+Optionally, you may need this:
+* Jpeglib to extract thumbnails and resize JPEG files:
+http://www.ijg.org/
+* Jhead to extract EXIF headers form JPEG files:
+http://www.sentex.net/~mwandel/jhead/
+* Libavifile to extract thumbnails from video movies:
+http://avifile.sourceforge.net/
+
+This document assumes that:
+* You are familiar with the administration of your web server.
+* PHP is installed, enabled, working and **tested** on your web server.
+* You know how to use a shell and a makefile.
+
+Most of this document will focus on a Un*x installation model but should be easily applicable to other platforms (RIG is been tested on either Linux/Apache or Windows/IIS).
+The last two chapters of this document will cover the main specific points for Windows (building rig_thumbnail and IIS configuration).
+
+2- Presentation
+RIG is a web-based JPEG image album viewer, especially useful for digital camera albums; provides automatic image resizing, preview & thumbnail caching, user authentication; composed of a PHP web interface and a C++ thumbnail engine.
+
+For more information, please read the file accompanying README.txt.
+
+3- Single album installation procedure
+If you are too busy to read this entire document, please at least try this:
+1- Untar the archive.
+2- Move the "htdocs" directory content to a location accessible to the web server.
+3- Build the rig_thumbnail application.
+4- Make the directories accessible to your web server.
+5- Update the location.php file.
+6- Update the user and administrators lists
+7- Review the preference settings.
+8- Upload your photos
+9- Test
+
+Now relax a bit and please patiently continue reading.
+
+The precise details of these steps will follow.
+These steps use default filenames and default directory paths that you will need to adjust to your needs.
+
+3.1- Untar the archive
+In a shell, enter the following commands:
+$ cd /home/user
+$ tar xfzv rig_version.tgz (for GNU/Linux distribs)
+or (for non-GNU unixes):
+$ gunzip -c rig_version.tgz | tar xvf -
+
+The name "rig_version" used here is a placeholder.
+Please replace by the exact name of the file that you downloaded, typically something like "rig_v0.6.4.0" or "rig_v0.6.3.5_2003-06-22".
+
+This will create a directory named "rig_version" and containing the various information files as well as the following directories:
+* "rig" contains the sources and settings
+* "htdocs" contains the directories that must be published by your web server.
+
+This directory /home/user/rig_version will be referred to as the "site directory".
+
+3.2- Move the "htdocs" directory content
+In the shell, enter the following commands:
+$ cd rig_version
+$ mv htdocs/album-sample /home/user/public_html/myalbum
+$ mv htdocs/images /home/user/public_html/myablum/rig-images
+
+ [TBDL: in CVS rename images as rig-images, move album-sample to  htdocs]
+
+This directory /home/user/public_html/myalbum will be referred to as the "album directory".
+
+3.3- Build the rig_thumbnail application:
+In the shell, enter the following commands:
+$ cd rig/thumbnail
+$ make no-video
+
+This will download the libjpeg 6.b automatically and compile it, support for video will not be provided.
+
+Note: if you do not have "wget", download the libjpeg manually (f.ex: ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz ) and store it in the directory rig/thumbnail/jpegsrc. Then run "make no-video" which will unpack the archive, build the jpeg library and build rig_thumbnail.exe.
+
+If no errors occurred, you should now have a file
+/home/user/rig_version/rig/thumbnail/rig_thumbnail.exe
+
+3.4- Settings files and directories access rights
+
+This step is EXTREMELY IMPORTANT.
+
+Although this depends on the specific characteristics of your system, it is probable that the various directories extracted from the archive have access rights that do not allow your web server to write into these various folders. The web server will most likely access RIG's folder using different user rights than yours. The web server must be able to read from the various folders, and at least be able to write to a subset of them.
+
+Look into your album directory, /home/user/public_html/myalbum:
+* "my-photos" is where you will store the photos that will be served by RIG. For security issues, it is generally preferable that your web server cannot write to this directory.
+* The web server needs read access to the following files and directories: LICENSE.html, admin_list.txt, browser_detect.js, index.html, index.php, location.php, my-photos, prefs.php, user_list.txt.
+* The web server needs read/write access to the following directories: rig-cache, rig-options, upload_photos, upload_src.
+
+These commands will take care of setting the appropriate rights for you:
+
+$ cd /home/user/public_html/myalbum
+$ chmod 0644 LICENSE.html admin_list.txt browser_detect.js index.html index.php location.php prefs.php user_list.txt
+$ chmod 0755 my-photos
+$ chmod 0777 rig-cache rig-options upload_photos upload_src
+
+Last but not least, the rig_thumbnail.exe must be executable by PHP:
+
+$ cd /home/user/rig_version/rig/thumbnail/
+$ chmod 0777 rig_thumbnail.exe
+
+3.5- Update the location.php file
+Edit the file /home/user/public_html/myalbum/location.php:
+
+Change the line
+	$dir_install = "/home/ralf/rig/";
+to reflect the location of the site directory where the "rig" directory from the archive is located. If you used the paths presented above, this should be 
+	$dir_install = "/home/user/rig_version/rig/";
+
+Note that the directory path MUST end with a slash "/".
+The other directories defined in location.php are relative to the base directory above or the album directory. Unless you renamed any of these default folders present in the archive, you need not change those.
+
+3.6- Update the user and administrators lists
+Edit /home/user/public_html/myalbum/user_list.txt.
+Edit /home/user/public_html/myalbum/admin_list.txt.
+
+In admin_list.txt, change the admin name to something not too obvious.
+In user_list.txt, the default "guest" MUST be kept.
+
+Each file is a simple text file, with the following syntax:
+* Lines starting by # are comment, empty lines are ignored
+* Each line is in the format  "user:type:password:[display name]"
+* The type is one of these letters:
+o empty:	there is no password, _anything_ is accepted
+o t:	plain-text password
+o c:	crypt(3) password - c.f. mkpasswd(1)
+o m:	md5 password -- not implemented yet, c.f. md5sum(1) and echo -n
+o i:	invalid user, cannot log in
+* A wrong type will invalid the user
+* The display name is everything after the third colon till the end of the line and is optional
+* Colons are accepted in the display name
+* Colons are NOT accepted in user name, type or any form of password!
+
+Samples:
+* empty::no-password:No Password
+* user:t:default:Plain Password
+* md5user:m:c21f969b5f03d33d43e04f8f136e7682:MD5:Sum Password
+* cryptofreak:c:zxnQ9wTEcM7pE:Crypt Password
+* invalid:i:whatever:Invalid User
+
+3.7- Review the preference settings
+The site settings are located in the site directory, in settings/prefs.php:
+/home/user/rig_version/rig/settings/prefs.php
+
+All the settings are located there. This file is included first and then overridden by the settings from the album directory:
+/home/user/public_html/myalbum/prefs.php
+
+It is recommended to modify the settings in the album's preference file (simply copy a line from the site's preference file and change the setting). This allows you to update the site directory later without loosing your customized settings.
+
+3.8- Upload your photos
+Place your photos in "my-photos" directory:
+/home/user/public_html/myalbum/my-photos/
+
+You can create as many sub-directories in this folder.
+Make sure the files and directories are accessible by your web-server (i.e. having other's readable for files and other's executable and readable for directories.)
+
+You should read the chapter "Albums and Images naming conventions" to learn how automatic sort is done by RIG based on index numbers or dates extracted from the images or directories filenames.
+
+3.9- Test
+Try to access "http://localhost/~user/myalbum/index.php" via a web browser.
+If you 
+
+You should see your photos.
+
+4- Site vs. Album directories
+RIG uses a concept of "site" versus "albums" installation directories.
+A "site" is typically one of your servers, where you will store files that do not need to be duplicated. On the other hand, an "album" is a collection of pictures, which can be stored in several directories ("sub-albums").
+
+The server may host several virtual hosts. Each virtual host may contain one or more album. Each album can have its own settings, which override the "global" site settings.
+
+To make it more obvious, here's a typical installation layout:
+* /home/rig: contains the main rig files (src, settings, rig-images)
+o /home/rig/src
+o /home/rig/settings/prefs.php, user list, admin list
+o /home/rig/rig-images
+* /home/user/public_html/private : contains your private album
+o /home/user/public_html/private/index.html
+o /home/user/public_html/private/index.php
+o /home/user/public_html/private/location.php
+o /home/user/public_html/private/prefs.php
+o /home/user/public_html/private/my-photos
+o /home/user/public_html/private/rig-cache
+o /home/user/public_html/private/rig-options
+o /home/user/public_html/private/rig-images
+* /home/user/public_html/public : contains your public album
+o /home/user/public_html/public/index.html
+o /home/user/public_html/public/index.php
+o /home/user/public_html/public/location.php
+o /home/user/public_html/public/prefs.php
+o /home/user/public_html/public/my-photos
+o /home/user/public_html/public/rig-cache
+o /home/user/public_html/public/rig-options
+o /home/user/public_html/public/rig-images
+
+In this scheme, you can see there's a global /home/rig/settings/prefs.php, which will be overridden by the albums' settings. In each album, the "location.php" file plays the crucial role of indicating where the main files are located.
+
+This architecture has several advantages:
+* The main sources files and settings can be a directory not served by your web server. This is inherently more secure.
+* By keeping sources and main preferences at one specific location, it is easier to upgrade RIG to a next version.
+* The album's prefs.php need only contain those parameters that you want to change. When you will update the main prefs.php, your album's parameters won't be modified.
+
+[more TBDL]
+
+5- Localization settings
+5.1- Libc "locale"
+TBDL
+
+6- Basic Usage
+6.1- Description of user interface
+TBDL
+
+6.2- Albums and Images naming conventions
+RIG automatically sorts albums content depending on the filename.
+The filename is used as a pattern and is automatically transformed according to the following rules:
+* All underscores are replaced by spaces before display.
+* Dates located at the beginning of the filename are interpreted.
+* Indexes located at the beginning of the filename are interpreted.
+* There is no limit to the length of a directory or filename other than your system's path limit (typically 255 characters under Un*x or Windows).
+* RIG accepts any characters in filenames, except directory separators (i.e. '/' and '\' under Windows). Your file system may have more drastic limitations anyway!
+* File extensions are required: ".jpg" or ".JPG" for example must be present at the end of an image in order for RIG to recognize the file. The case is not important.
+* When displaying an image title, the extension will be removed automatically.
+
+Starting a filename by a date or an index is a good way to influence RIG's automatic sorting of an album content.
+
+Dates formats can be read as follows:
+* "YYYY-MM-DD" or
+* "YYYY/MM/DD" or
+* "YYYMMDD" or
+* "YYYY-MM-DD_name" or "YYYY-MM-DD - name" or 
+* "YYYY/MM/DD_name" or "YYYY/MM/DD - name" or
+* "YYYYMMDD_name" or "YYYYMMDD name"
+o The date will be used for sorting. It will be also displayed according to the current display language.
+o The date must be in Y/M/D order and be formatted with all the necessary digits, i.e. the month of August must be "08", not just "8".
+o The date's component separator may be a dash, a slash or nothing.
+o The separation between the date and the optional filename can be any combination of space, dash and underlines characters or simply nothing!
+* "YYYY-MM" or "YYYY/MM" or
+* "YYYY-MM_name" or "YYYY/MM - name" or "YYYYMM name"
+o This is similar to the above format, except no day number is provided.
+
+Indexes:
+* "12_name"
+*  "1234-name"
+*  "12345_name"
+* The index number may contain between 1 and 5 digits.
+* Although not required, it is best to all indexes the same length within the same list.
+* The separation between the index and the mandatory name must be one space, one dash or one underline. One and only one of these characters must be present.
+
+6.3- Albums and Images descriptions
+Each album and sub-albums directories can contain a file that gives a short description of the directory content. The description can be applied to either images of an album or sub-albums of a given album.
+
+The file must be called either "descript.ion" or "file_info.diz".
+The text file must have the following format:
+* Lines starting with # are ignored. So are empty lines.
+* Line format is:
+o <image or directory name>[ \t]+<description>\n
+o [ \t]+<continuation of previous description>\n
+* In more common syntax, that means each description line must start by the EXACT file or directory name, one or more space or tabulation and the description.
+* The description can be continued on following lines if it starts by one ore more space or tabulation.
+
+Description lines can have any length and contain any characters.
+RIG currently allows any kind of HTML to be present in the description line. Future version may limit HTML tags to simple non-active ones, removing scripting or anything typically considered harmful.
+
+7- Basic Administration
+
+Blah blah, TBDL.
+
+8- Building rig_thumbnail
+8.1- Un*x
+[TBDL]
+In the shell, enter the following commands:
+$ cd rig/thumbnail
+$ make no-video
+
+Note the "no-video" after make. The new thumbnail app can extract thumbnail from videos, but you need to install the devel package for lib "avifile" first. As you probably not care about video support, "make no-video" is the best solution.
+This will download the libjpeg 6.b automatically and compile it, support for video will not be provided.
+
+Note: if you do not have "wget", download the libjpeg manually (f.ex: ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz ) and store it in the directory rig/thumbnail/jpegsrc. Then run "make no-video" which will unpack the archive, build the jpeg library and build rig_thumbnail.exe.
+
+If no errors occurred, you should now have a file
+/home/user/rig_version/rig/thumbnail/rig_thumbnail.exe
+
+8.2- Windows
+[TBDL]
+
+9- IIS Configuration
+[TBDL]
+
+
+End
+
+$Log$
+Revision 1.3  2003/08/16 23:15:26  ralfoide
+New install doc, txt & html
+
+
+
+
+
+

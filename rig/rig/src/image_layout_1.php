@@ -139,15 +139,22 @@
 
 	<p>
 
-	<!-- RM 20021014 moved image resize below image info -->
-	<form method="POST" action="<?= rig_self_url() ?>">
-		<?= "$html_img_size" ?>
-		<select size="1" name="img_size">
-		<?php rig_insert_size_popup() ?>
-		</select>
-		<input type="submit" value="<?= $html_ok ?>" name="ok">
-	</form>
-
+<?php
+	// RM 20021014 moved image resize below image info
+	// RM 20030713 only display image popup for image type
+	if ($current_type == "image")
+	{
+?>
+		<form method="POST" action="<?= rig_self_url() ?>">
+			<?= "$html_img_size" ?>
+			<select size="1" name="img_size">
+			<?php rig_insert_size_popup() ?>
+			</select>
+			<input type="submit" value="<?= $html_ok ?>" name="ok">
+		</form>
+<?php
+	}
+?>
 	
 	</center>
 </td><td width="33%" valign="bottom">
@@ -174,7 +181,8 @@
 </td>
 <?php
 	// If the use of jhead is enabled, output jhead's output here -- RM 20021020
-	if ($pref_use_jhead != "")
+	// Only use jhead for images -- RM 20030713
+	if ($pref_use_jhead != "" && $current_type == "image")
 	{
 ?>
 </tr><tr>
@@ -200,9 +208,12 @@
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/07/14 18:31:14  ralfoide
+//	Don't show image size popup for videos
+//
 //	Revision 1.1  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.
-//
+//	
 //-------------------------------------------------------------
 ?>

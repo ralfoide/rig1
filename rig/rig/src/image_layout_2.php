@@ -43,6 +43,11 @@
 </td><td width="34%" valign="top">
 	<center>
 
+<?php
+	// RM 20030713 only display image popup for image type
+	if ($current_type == "image")
+	{
+?>
 	<!-- image resize -->
 	<form method="POST" action="<?= rig_self_url() ?>">
 		<?= "$html_img_size" ?>
@@ -51,6 +56,9 @@
 		</select>
 		<input type="submit" value="<?= $html_ok ?>" name="ok">
 	</form>
+<?php
+	}
+?>
 		
 	<a href="<?= rig_self_url("") ?>"><?= $html_back_album ?></a>
 	
@@ -201,7 +209,8 @@
 </td>
 <?php
 	// If the use of jhead is enabled, output jhead's output here -- RM 20021020
-	if ($pref_use_jhead != "")
+	// Only use jhead for images -- RM 20030713
+	if ($pref_use_jhead != "" && $current_type == "image")
 	{
 ?>
 </tr><tr>
@@ -227,9 +236,12 @@
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/07/14 18:31:14  ralfoide
+//	Don't show image size popup for videos
+//
 //	Revision 1.1  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.
-//
+//	
 //-------------------------------------------------------------
 ?>

@@ -24,6 +24,21 @@
 
 $rig_is_image = (isset($image) && is_string($image) && $image);
 
+if ($_test_ == 1)
+{
+	require_once($dir_install . $dir_src . "common.php");
+	require_once(rig_require_once("RUser.php", $dir_src));
+	require_once(rig_require_once("RAlbum.php", $dir_src));
+
+	$rig_user = new RUser();
+	$rig_path = new RPath($dir_album, $abs_album_path, $album, $image);
+
+	$rig_album = new RAlbum($rig_path);
+	$rig_album->Load();
+	echo $rig_album->Render();
+	$rig_album->Sync();
+}
+else
 
 if ($admin)
 {
@@ -66,9 +81,12 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/06/30 06:08:11  ralfoide
+//	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
+//
 //	Revision 1.2  2003/05/26 17:52:30  ralfoide
 //	Disabled admin_image (not finished -- experimental)
-//
+//	
 //	Revision 1.1  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).

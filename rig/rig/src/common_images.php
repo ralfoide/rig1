@@ -42,7 +42,9 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 	// echo "<br> args = $args <br> exec = $abs_preview_exec <br>\n";
 
 	// create the preview now
-	$res = @system($abs_preview_exec . " " . $args, $retvar);
+	// RM 20030628 using exec instead of system (system's output goes directly in the HTML!)
+	// $res = @system($abs_preview_exec . " " . $args, $retvar);
+	$res = exec($abs_preview_exec . " " . $args, $output, $retvar);
 
 	// debug
 	// echo "<br> res = $res\n";
@@ -61,7 +63,7 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 
 
 //*********************************************************************
-function rig_build_preview_ex($album, $file,
+function rig_build_image_type($album, $file,
 							  $size = -1, $quality = -1,
 							  $auto_create = TRUE, $use_default = TRUE)
 //*********************************************************************
@@ -121,16 +123,94 @@ function rig_build_preview_ex($album, $file,
 		if (rig_make_image($abs_source, $abs_dest, $size, $quality) != 0)
 		{
 			// in case of error, use the default icon...
+			// RM 20030628 TBDL fix path (cf video)
 			if ($use_default)
-				return array("r" => $dir_abs_album,
-							 "a" => $dir_abs_album,
-							 "p" => $dir_images . $pref_empty_album);
+			{
+				// RM 20030628 fix: the fixed image in /images/ not in the album's root
+				return array("r" => $dir_images,
+							 "a" => $abs_images_path,
+							 "p" => $pref_empty_album);
+			}
 		}
 	}
 
 	return array("r" => $dir_preview,
 				 "a" => $abs_preview_path,
 				 "p" => $dest);
+}
+
+
+//*********************************************************************
+function rig_build_video_type($album, $file,
+							  $size = -1, $quality = -1,
+							  $auto_create = TRUE, $use_default = TRUE)
+//*********************************************************************
+// Builds a resized version of the original $album->$file image
+// Size and quality default to the preview size, unless specified
+// auto_create ask the image to be created if no existing
+// use_default ask the pref_empty_album name to be returned if the image cannot be build
+//
+// returns the name for the preview as an array { r:pref_path , a:abs_pref_path, p:image_path }
+// Caller should thus use [r]+[p] or [a]+[p]
+{
+	global $abs_album_path;
+	global $abs_preview_path;
+	global $abs_images_path;
+	global $dir_abs_album;
+	global $dir_album;
+	global $dir_preview;
+	global $dir_images;
+	global $pref_preview_size;
+	global $pref_empty_album;
+	global $current_img_info;
+
+	// debug
+	// echo "size = $size<br>\n";
+
+	// a size of 0 is a special argument: the original image size should be used
+	// this does not apply to video, so the preview size is used anyway
+	if ($size <= 0)
+		$size = $pref_preview_size;
+
+	$prev_prefix = "prev" . $size . "_";
+	$dest_file = $prev_prefix . rig_simplify_filename($file);
+
+	$dest		= $album . rig_prep_sep($dest_file);
+	$abs_dest	= $abs_preview_path . rig_prep_sep($dest);
+	$abs_source	= $abs_album_path   . rig_prep_sep($album) . rig_prep_sep($file);
+
+	if (rig_is_file($abs_source) && !rig_is_file($abs_dest) && $auto_create)
+	{
+		if (rig_make_image($abs_source, $abs_dest, $size, $quality) != 0)
+		{
+			// in case of error, use the default icon...
+			// RM 20030628 fix: the fixed image in /images/ not in the album's root
+			return array("r" => $dir_images,
+						 "a" => $abs_images_path,
+						 "p" => $pref_empty_album);
+		}
+	}
+
+	return array("r" => $dir_preview,
+				 "a" => $abs_preview_path,
+				 "p" => $dest);
+}
+
+
+//*********************************************************************
+function rig_build_preview_ex($album, $file,
+							  $size = -1, $quality = -1,
+							  $auto_create = TRUE, $use_default = TRUE)
+//*********************************************************************
+{
+	$type = rig_get_file_type($file);
+
+	if (strncmp($type, "image/", 6) == 0)
+		return rig_build_image_type($album, $file, $size, $quality, $auto_create, $use_default);
+	else if (strncmp($type, "video/", 6) == 0)
+		return rig_build_video_type($album, $file, $size, $quality, $auto_create, $use_default);		
+
+	return null;
 }
 
 
@@ -184,6 +264,7 @@ function rig_image_info($abs_file)
 {
 	global $html_img_date;
 	global $abs_preview_exec;
+	global $pref_preview_size;
 
 	$info = array();
 
@@ -194,35 +275,64 @@ function rig_image_info($abs_file)
 		$modified  = stat($abs_file);
 		$info["d"] = date($html_img_date, $modified[9]);
 
-		// --- use the thumbnail application to extract info ---
+		// get the file type -- RM 20030628
+		$type = rig_get_file_type($abs_file);
 
-		$args = "-i " . rig_shell_filename($abs_file) . "";
-
-		// get the info now
-		$res = exec($abs_preview_exec . " " . $args, $output, $retvar);
-
-		if ($retvar == 127)
+		if (strncmp($type, "image/", 6) == 0 || strncmp($type, "video/", 6) == 0)
 		{
-			rig_html_error("Get Image Information",
-						   "Error $retvar during image info: <em>file not found</em><p>" .
-						   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|",
-						   $abs_preview_exec,
-						   $php_errormsg);
-		}
-		else if ($retvar)
-		{
-			rig_html_error("Get Image Information",
-						   "Unexpected error $retvar during image info<p>" .
-						   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|",
-						   $abs_preview_exec,
-						   $php_errormsg);
+			// --- use the thumbnail application to extract info ---
+	
+			$args = "-i " . rig_shell_filename($abs_file) . "";
+	
+			// get the info now
+			$res = exec($abs_preview_exec . " " . $args, $output, $retvar);
+	
+			if ($retvar == 127)
+			{
+				rig_html_error("Get Image Information",
+							   "Error $retvar during image info: <em>file not found</em><p>" .
+							   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|",
+							   $abs_preview_exec,
+							   $php_errormsg);
+			}
+			else if ($retvar)
+			{
+				rig_html_error("Get Image Information",
+							   "Unexpected error $retvar during image info<p>" .
+							   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|",
+							   $abs_preview_exec,
+							   $php_errormsg);
+			}
+			else
+			{
+				// usually the output is the last line
+				// lib avifile tends to have a verbose output so filter starting by last line
+				$n = count($output);
+
+				for($i = $n-1; $i>=0; $i--)
+				{
+					if (preg_match("/\[rig-thumbnail-result\][ \t]+([a-z]+)[ \t]+([0-9]+)[ \t]+([0-9]+)/", $output[$i], $res) > 0)
+					{
+						// $res[0] contains the full line, 1/2/3 contain the several matches
+						$info["f"] = $res[1];
+						$info["w"] = $res[2];
+						$info["h"] = $res[3];
+
+						break;
+					}
+				}
+			}
 		}
 		else
 		{
-			$info["f"] = $output[0];
-			$info["w"] = $output[1];
-			$info["h"] = $output[2];
+			// Not a know file type.
+			// Return the default size of the previews
+
+			$info["f"] = "Unknown";
+			// $info["w"] = $pref_preview_size;
+			// $info["h"] = $pref_preview_size * 3 / 4;
 		}
+
 	}
 
 	return $info;
@@ -395,56 +505,63 @@ function rig_set_album_icon($dest_album, $prev_album, $prev_image, $update_optio
 	// get its preview
 	$preview = rig_build_preview($prev_album, $prev_image, -1, -1, TRUE, FALSE);
 
-	// if the preview actually exist...
+	// if the preview actually exist
 	if ($preview && rig_is_file($preview))
 	{
-		// copy it as the album icon
-		$abs_dest = $abs_preview_path . rig_prep_sep($dest_album) . rig_prep_sep(ALBUM_ICON);
-
-		rig_create_preview_dir($dest_album);
-
-		if (!copy($preview, $abs_dest))
+		// if preview is of a known type...
+		if (rig_get_file_type($preview) != "")
 		{
-			return rig_html_error( "Set Album Icon",
-								   "Can't copy preview '$preview' to album icon '$abs_dest'!",
-								   NULL,
-								   $php_errormsg);
-		}
+			// copy it as the album icon
+			$abs_dest = $abs_preview_path . rig_prep_sep($dest_album) . rig_prep_sep(ALBUM_ICON);
+	
+			rig_create_preview_dir($dest_album);
+	
+			if (!copy($preview, $abs_dest))
+			{
+				return rig_html_error( "Set Album Icon",
+									   "Can't copy preview '$preview' to album icon '$abs_dest'!",
+									   NULL,
+									   $php_errormsg);
+			}
+	
+			// now keep that in the album options
+			if ($update_options)
+			{
+				// make sure we have the correct album options
+				rig_read_album_options($dest_album);
+	
+	
+				// remove existing settings if any
+				// note the trick here -- in PHP4 unset will always delete the "local" variable
+				// cf http://www.php.net/manual/en/function.unset.php
+				unset($GLOBALS['list_album_icon']);
+	
+				// get prev_album relative to dest_album
+				$rel_album = str_replace($dest_album, "", $prev_album);
+	
+				// DEBUG
+				// echo "<p>SET ALBUM ICON:\n";
+				// echo "<br>dest_album = $dest_album\n";
+				// echo "<br>prev_album = $dest_album\n";
+				// echo "<br>rel_album = $rel_album\n";
+	
+				// create new info -- fill in global variable
+				global $list_album_icon;	// array of icon info { a:album(relative) , f:file, s:size }
+				global $pref_preview_size;
+				$list_album_icon = array('a' => $rel_album,
+										 'f' => $prev_image,
+										 's' => $pref_preview_size);
+	
+				// write the options back
+				return rig_write_album_options($dest_album, TRUE);	// use FALSE to debug
 
-		// now keep that in the album options
-		if ($update_options)
-		{
-			// make sure we have the correct album options
-			rig_read_album_options($dest_album);
+			} // update options
 
-
-			// remove existing settings if any
-			// note the trick here -- in PHP4 unset will always delete the "local" variable
-			// cf http://www.php.net/manual/en/function.unset.php
-			unset($GLOBALS['list_album_icon']);
-
-			// get prev_album relative to dest_album
-			$rel_album = str_replace($dest_album, "", $prev_album);
-
-			// DEBUG
-			// echo "<p>SET ALBUM ICON:\n";
-			// echo "<br>dest_album = $dest_album\n";
-			// echo "<br>prev_album = $dest_album\n";
-			// echo "<br>rel_album = $rel_album\n";
-
-			// create new info -- fill in global variable
-			global $list_album_icon;	// array of icon info { a:album(relative) , f:file, s:size }
-			global $pref_preview_size;
-			$list_album_icon = array('a' => $rel_album,
-									 'f' => $prev_image,
-									 's' => $pref_preview_size);
-
-			// write the options back
-			return rig_write_album_options($dest_album, TRUE);	// use FALSE to debug
-		}
+		} // check file type
 
 		return TRUE;
-	}
+
+	} // file exists
 
 	return FALSE;		// RM 20030215 fix: return FALSE on error, not TRUE!
 }
@@ -494,9 +611,12 @@ function rig_select_random_album_icon($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/06/30 06:08:11  ralfoide
+//	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
+//
 //	Revision 1.8  2003/02/17 07:47:04  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
-//
+//	
 //	Revision 1.7  2003/02/16 20:22:55  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

@@ -7,15 +7,18 @@
 // $Id$
 //**********************************************
 
-$rig_version = "0.6.3.3";
+$rig_version = "0.6.3.4";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/06/30 06:08:11  ralfoide
+//	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
+//
 //	Revision 1.10  2003/03/17 08:32:52  ralfoide
 //	Version 0.6.3.3 started...
-//
+//	
 //	Revision 1.9  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).

@@ -52,9 +52,11 @@
 	List of global access paths:
 	----------------------------
 	dir_abs_album
+	dir_images
 	dir_album
 	dir_preview
 	dir_option
+	abs_images_path
 	abs_album_path
 	abs_preview_path
 	abs_option_path
@@ -70,6 +72,7 @@
 */
 //-----------------------------------------------------------------------
 
+define("SEP_URL", "/");
 if (PHP_OS == 'WINNT')
 {
 	define("SEP", "\\");
@@ -83,7 +86,6 @@ else // Un*x
 
 
 define("CURRENT_ALBUM_ARROW",	"&nbsp;=&gt;&nbsp;");
-define("EXTLIST",				".jpg.jpeg");
 define("SOFT_NAME",				"Rig [Ralf Image Gallery]");
 define("ALBUM_ICON",			"album_icon.jpg");
 define("ALBUM_OPTIONS",			"options");
@@ -337,20 +339,43 @@ function rig_post_sep($str)
 }
 
 
+//*************************
+function rig_post_url($str)
+//*************************
+// RM 20030629 v0.6.3.4
+{
+	if ($str && $str[strlen($str)-1] != SEP_URL)
+		return $str . SEP_URL;
+	else
+		return $str;
+}
+
+
+//*******************************
+function rig_get_file_type($name)
+//*******************************
+// Returns the file type string ("image/jpeg" or "video/qt|avi") for the file.
+// Returns an empty string if the file is not supported.
+// RM 20030628 new v0.6.3.4
+{
+	global $pref_file_types;
+
+	foreach($pref_file_types as $filter => $type)
+	{
+		if (preg_match($filter, $name) > 0)
+			return $type;
+	}
+
+	return "";
+}
+
+
 //***************************
 function rig_valid_ext($name)
 //***************************
+// RM 20030628 changed the use file types
 {
-	// get the extension
-	$dot  = strrchr($name, '.');
-	$len = strlen($dot);
-
-	// if has extension, check we accept it
-	if ($dot && $len <= 4)
-		return (bool)stristr(EXTLIST, $dot);
-
-	// reject file
-	return FALSE;
+	return rig_get_file_type($name) != "";
 }
 
 
@@ -904,6 +929,21 @@ function rig_read_prefs_paths()
 	// make some paths absolute
 	// RM 20021021 check these absolute paths
 
+	// --- image directory (rig's own images) ---
+	// RM 20030628 added v0.6.3.4
+
+	global $dir_images, $abs_images_path;
+	$abs_images_path   = realpath($dir_abs_images . $dir_images);
+
+	if (!is_string($abs_images_path))
+	{
+		rig_html_error("Missing Image Directory",
+					   "Can't get absolute path for the images directory. <p>" .
+					   "<b>Base directory:</b> $dir_abs_images<br>" .
+					   "<b>Target directory:</b> $dir_images<br>" ,
+					   $dir_abs_images . $dir_images);
+	}
+
 	// --- album directory ---
 
 	global $dir_album, $abs_album_path;
@@ -947,6 +987,7 @@ function rig_read_prefs_paths()
 	}
 
 	// --- upload_src directory ---
+
 	global $dir_upload_src, $abs_upload_src_path;
 	$abs_upload_src_path = realpath($dir_abs_album . $dir_upload_src);
 
@@ -960,6 +1001,7 @@ function rig_read_prefs_paths()
 	}
 
 	// --- upload_album directory ---
+
 	global $dir_upload_album, $abs_upload_album_path;
 	$abs_upload_album_path = realpath($dir_abs_album . $dir_upload_album);
 
@@ -2063,10 +2105,13 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.22  2003/06/30 06:08:11  ralfoide
+//	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
+//
 //	Revision 1.21  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.
-//
+//	
 //	Revision 1.20  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)

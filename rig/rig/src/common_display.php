@@ -211,10 +211,21 @@ function rig_display_album_list()
 		if (!$res)
 		{
 			// if we can't have the preview icon, use a little album icon
+
+			$dx = $pref_preview_size;
+			$dy = $pref_preview_size;
+
 			?>
-			<a href="<?= $link ?>">
-				<img src="<?= $url_path ?>" alt="<? $pretty ?>" border=0>
-			</a>
+
+			<table width="<?= $dx ?>" height="<?= $dy ?>" border="0">
+				<tr>
+					<td align="center" valign="middle">
+						<a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<? $pretty ?>" border=0></a>
+
+					</td>
+				</tr>
+			</table>
+
 			<?php
 		}
 		else
@@ -381,10 +392,19 @@ function rig_display_image_list()
 
 		$info = rig_build_preview_info($current_album, $file);
 		$preview = $info["p"];
-		$width   = $info["w"];
-		$height  = $info["h"];
+		
+		if (isset($info["w"]))
+			$width = "width=\"" . $info["w"] . "\"";
+		else
+			$width = "";
+	
+		if (isset($info["h"]))
+			$height = "height=\"" . $info["h"] . "\"";
+		else
+			$height = "";
 
 		$preview = rig_encode_url_link($preview);
+
 
 		// RM 20021101 important: the <img> and the title must have the </td>
 		// immediately after without any new-line in between (most browsers would insert
@@ -407,7 +427,7 @@ function rig_display_image_list()
 					<tr><td align="center" valing="center" height="<?= $square_size ?>">
 						<table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
 						<tr><td>
-							<a href="<?= $link ?>"><img src="<?= $preview ?>" alt="<?= $pretty2 ?>" width="<?= $width ?>" height="<?= $height ?>" border="0" align="middle"></a></td>
+							<a href="<?= $link ?>"><img src="<?= $preview ?>" alt="<?= $pretty2 ?>" <?= $width ?> <?= $height ?> border="0" align="middle"></a></td>
 						</tr>
 						</table>
 	
@@ -485,6 +505,8 @@ function rig_display_image_count()
 function rig_display_image()
 //**************************
 {
+	global $dir_album;
+	global $abs_album_path;
 	global $current_album;
 	global $current_image;
 	global $pretty_image;
@@ -495,29 +517,199 @@ function rig_display_image()
 	if ($rig_img_size != -2 && $rig_img_size < 1)
 		$rig_img_size = $pref_image_size;
 
-	// get image (build resized preview if necessary)
-	$preview = rig_build_preview($current_album, $current_image, $rig_img_size, $pref_image_quality);
+	// get the file type
+	$type = rig_get_file_type($current_image);
 
-	// RM 110801 -- use size of image in img tag if available
-	// get actual size of image
-	$icon_info = rig_image_info($preview);
-
-	// url-encode filename
-	$preview = rig_encode_url_link($preview);
-
-	if (is_array($icon_info) && count($icon_info) > 2)
+	if (strncmp($type, "image/", 6) == 0)
 	{
-		// if we have the size, use it in the img tag
-		$sx = $icon_info["w"];
-		$sy = $icon_info["h"];
-
-		echo "<img src=\"$preview\" alt=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
+		// get image (build resized preview if necessary)
+		$preview = rig_build_preview($current_album, $current_image, $rig_img_size, $pref_image_quality);
+	
+		// RM 110801 -- use size of image in img tag if available
+		// get actual size of image
+		$icon_info = rig_image_info($preview);
+	
+		// url-encode filename
+		$preview = rig_encode_url_link($preview);
+	
+		if (is_array($icon_info) && count($icon_info) > 2)
+		{
+			// if we have the size, use it in the img tag
+			$sx = $icon_info["w"];
+			$sy = $icon_info["h"];
+	
+			echo "<img src=\"$preview\" alt=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
+		}
+		else
+		{
+			// there's no size (probably a problem when creating the preview)
+			// just use the img name anyway
+			echo "<img src=\"$preview\" alt=\"$pretty_image\" border=0>";
+		}
 	}
-	else
+	else if (strcmp($type, "video/avi") == 0)
 	{
-		// there's no size (probably a problem when creating the preview)
-		// just use the img name anyway
-		echo "<img src=\"$preview\" alt=\"$pretty_image\" border=0>";
+		// RM 20030628 v0.6.3.4
+
+		// get the full relative URL to the media file
+		$full = rig_post_sep($dir_album) . rig_post_sep($current_album) . $current_image;
+
+		// get actual size of media
+		$abs = rig_post_sep($abs_album_path) . rig_post_sep($current_album) . $current_image;
+		$info = rig_image_info($abs);
+		
+		if (isset($info["w"]))
+			$sx = $info["w"];
+		else
+			$sx = 320;
+
+		if (isset($info["h"]))
+			$sy = $info["h"];
+		else
+			$sy = 240;
+
+		// Link
+		// Windows Media Player <object>
+		// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/addwmwebpage.asp?frame=true&hidetoc=true
+		//
+		// WMV 7   class id: 6BF52A52-394A-11d3-B153-00C04F79FAA6
+		// WMV 6.4 class id: 22D6f312-B0F6-11D0-94AB-0080C74C7E95
+		
+		// Other random links:
+		// http://www.macromedia.com/support/dreamweaver/ts/documents/mediaplayer.htm
+		// http://www.webreference.com/js/column51/install.html
+		// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmp6sdk/htm/controlclsids.asp
+		//		MediaPlayer 22D6F312-B0F6-11D0-94AB-0080C74C7E95
+		//		NSPlay 2179C5D3-EBFF-11cf-B6FD-00AA00B4E220
+		//		ActiveMovie 05589FA1-C356-11CE-BF01-00AA0055595A
+		// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/6-4compat.asp
+		//		Windows Media Player 9 Series 6BF52A52-394A-11d3-B153-00C04F79FAA6
+		// http://home.maconstate.edu/dadams/Tutorials/AV/AV03/av03-03.htm
+
+		?>
+		<center>
+			<object 
+				classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6"
+				codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112"
+				id="mediaplayer1">
+				<!-- width="<?= $sx ?>" height="<?= $sy ?>" -->
+				<param name="URL" value="<?= $full ?>">
+				<param name="Filename" value="<?= $full ?>">
+				<param name="AutoStart" value="True">
+				<param name="ShowControls" value="True">
+				<param name="ShowStatusBar" value="True">
+				<param name="ShowDisplay" value="True">
+				<param name="AutoRewind" value="True">
+	
+			<embed 
+				type="application/x-mplayer2"
+				pluginspage="http://www.microsoft.com/Windows/Downloads/Contents/MediaPlayer/"
+				src="<?= $full ?>"
+				width="<?= $sx ?>" height="<?= $sy ?>"
+				filename="<?= $full ?>"
+				autostart="True" 
+				showcontrols="True"
+				showstatusbar="True" 
+				showdisplay="True"
+				autorewind="True">
+			</embed> 
+			</object>
+
+			<br>
+			
+			<font size="-1">
+			[ <a href="<?= $full ?>">External display</a> ]
+			<br>
+			Players: 
+				<a href="http://www.mplayerhq.hu/homepage/">Linux MPlayer</a>
+				|
+				<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
+			</font>
+		</center>
+		<?
+	}
+	else if (strcmp($type, "video/qt") == 0)
+	{
+		// RM 20030628 v0.6.3.4
+
+		// get the full relative URL to the media file
+		$full = rig_post_sep($dir_album) . rig_post_sep($current_album) . $current_image;
+
+		// get actual size of media
+		$abs = rig_post_sep($abs_album_path) . rig_post_sep($current_album) . $current_image;
+		$info = rig_image_info($abs);
+		
+
+		if (isset($info["w"]))
+			$sx = $info["w"];
+		else
+			$sx = 320;
+
+		if (isset($info["h"]))
+			$sy = $info["h"];
+		else
+			$sy = 240;
+
+	
+		// url-encode filename
+		$preview = rig_encode_url_link($preview);
+
+
+		// QuickTime EMBED attributed are described here:
+		// http://www.apple.com/quicktime/authoring/embed2.html
+		//
+		// QuickTime OBJECT tag:
+		// http://www.apple.com/quicktime/tools_tips/tutorials/activex.html
+
+		$sy2 = $sy+16;	// for QT, add 16 to the height to see the controls
+
+		/*
+			The following EMBED attributes are supposedly supported but break the QT player
+			when used:
+				type="video/quicktime"
+				qtsrc="<?= $full ?>"
+				qtsrcdontusebrowser
+
+			codebase="http://www.apple.com/qtactivex/qtplugin.cab">
+		*/
+
+		?>
+		<center>
+		
+			<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b"
+				codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"
+				width="<?= $sx ?>" height="<?= $sy ?>">
+				<param name="src" value="sample.mov">
+				<param name="autoplay" value="true">
+				<param name="controller" value="true">
+				<param name="autohref" value="true">
+				<param name="scale" value="aspect">
+			<embed
+				src="<?= $full ?>"
+				width="<?= $sx ?>" height="<?= $sy2 ?>"
+				controller="true"
+				scale="aspect"
+				autohref="yes"
+				autoplay="yes"
+				pluginspage="http://www.apple.com/quicktime/download/"
+			>
+			</embed>
+			</object>
+			
+			<br>
+			
+			<font size="-1">
+			[ <a href="<?= $full ?>">External display</a> ]
+			<br>
+			Players: 
+				<a href="http://www.mplayerhq.hu/homepage/">Linux MPlayer</a>
+				|
+				<a href="http://www.apple.com/quicktime/download/">Apple Quicktime</a>
+				|
+				<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
+			</font>
+		</center>
+		<?
 	}
 
     // debug
@@ -863,8 +1055,14 @@ function rig_display_image_copyright()
 
 	if ($pref_copyright_name <> "")
 	{
+		$str = $html_image_copyrt;
+
+		// RM 20030625 missing for [year] replacement for image
+		// replace "[year]" in the html string by the current's year date (aka. "2003")
+		$str = str_replace("[year]", date("Y"), $str);
+
 		// replace "[name]" in the $html by the $pref name
-		$str = str_replace("[name]", $pref_copyright_name, $html_image_copyrt);
+		$str = str_replace("[name]", $pref_copyright_name, $str);
 	
 		echo $str;
 	}
@@ -978,9 +1176,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.17  2003/06/30 06:08:11  ralfoide
+//	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
+//
 //	Revision 1.16  2003/05/26 17:52:55  ralfoide
 //	Removed unused language strings. Added new rig_display_back_to_album method
-//
+//	
 //	Revision 1.15  2003/03/17 08:24:43  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)

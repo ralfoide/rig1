@@ -20,8 +20,13 @@ Summary of features for RIG:
 Generic:
 - in 0.6.4:
 [1.N] Drop DB support and dump 0.6.3-exp
+- in 0.6.3.3:
 - in 0.6.3.2:
+[1.F] Album borders: ability to deactivate for Mozilla 1.0 users
+[1.F] Translate: deactivated by default
 [3.F] Translate: ability to update the language files from the web interface
+[3.F] Upload directories
+[1.F] Pref: can customize <meta name="robots" ...>
 [1.F] Admin: admin-image vs admin-album pages
 - in 0.6.3.1:
 [1.F] Login: plain vs crypt vs MD5 password in the password file
@@ -489,9 +494,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.18  2003/03/17 08:57:37  ralfoide
+//	new CHANGELOG.html
+//
 //	Revision 1.17  2003/03/17 08:32:41  ralfoide
 //	Version 0.6.3.3 started...
-//
+//	
 //	Revision 1.16  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)

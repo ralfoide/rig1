@@ -112,8 +112,8 @@ function build_preview_ex($album, $file,
 	$prev_prefix = "prev" . $size . "_";
 	$dest_file = $prev_prefix . simplify_filename($file);
 
-	$dest		= rig_prep_sep($album)  . rig_prep_sep($dest_file);
-	$abs_dest	= $abs_preview_path . $dest;
+	$dest		= $album . rig_prep_sep($dest_file);
+	$abs_dest	= $abs_preview_path . rig_prep_sep($dest);
 	$abs_source	= $abs_album_path   . rig_prep_sep($album) . rig_prep_sep($file);
 
 	if (rig_is_file($abs_source) && !rig_is_file($abs_dest) && $auto_create)
@@ -142,7 +142,7 @@ function build_preview($album, $file,
 {
 	$info = build_preview_ex($album, $file, $size, $quality, $auto_create, $use_default);
 
-	return $info["r"] . $info["p"];
+	return rig_post_sep($info["r"]) . $info["p"];
 }
 
 
@@ -160,11 +160,11 @@ function build_preview_info($album, $file,
 
 	// build the output array, fill in the first field, i.e. the URL path
 	$res = array();
-	$res["p"] = $info["r"] . $info["p"];
+	$res["p"] = rig_post_sep($info["r"]) . $info["p"];
 
 	// build the abs path
 	// get the info
-	$info = image_info($info["a"] . $info["p"]);
+	$info = image_info(rig_post_sep($info["a"]) . $info["p"]);
 
 	// set the info and return the array
 	$res["w"] = $info["w"];
@@ -377,9 +377,12 @@ function select_random_album_icon($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2002/10/22 22:32:52  ralfoide
+//	Fix to prevent dup slashes in preview links
+//
 //	Revision 1.4  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
-//
+//	
 //	Revision 1.3  2002/10/20 11:50:21  ralfoide
 //	Misc fixes
 //	

@@ -194,17 +194,14 @@ function show_album($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2002/10/16 04:48:37  ralfoide
+//	Version 0.6.2.1
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//
+//	
 //	Revision 1.1  2001/11/26 00:07:37  ralf
 //	Starting version 0.6: location and split of site vs album files
-//	
-//	Revision 1.3  2001/08/07 09:04:30  ralf
-//	Updated ID and VIM tag
-//	
-//	Revision 1.2  2001/08/07 08:04:17  ralf
-//	Added a cvs log entry
 //	
 //-------------------------------------------------------------
 ?>

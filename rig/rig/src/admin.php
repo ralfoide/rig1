@@ -167,46 +167,17 @@ admin_perform_before_header(self_url());
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2002/10/16 04:48:37  ralfoide
+//	Version 0.6.2.1
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//
+//	
 //	Revision 1.3  2001/11/26 06:40:50  ralf
 //	fix for diaply credits
 //	
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
-//	Revision 1.1  2001/11/26 00:07:37  ralf
-//	Starting version 0.6: location and split of site vs album files
-//	
-//	Revision 1.10  2001/10/20 02:06:56  ralf
-//	Marc's patch Sept-2001
-//	
-//	Revision 1.9  2001/08/28 07:12:59  ralf
-//	Made album/images list in admin a table with sub links
-//	
-//	Revision 1.8  2001/08/14 17:48:07  ralf
-//	Fixes: login can appear in both languages.
-//	Feature: added the guest mode in user login (not admin).
-//	
-//	Revision 1.7  2001/08/13 05:37:36  ralf
-//	Fixes in preview creation, added back album links, etc.
-//	
-//	Revision 1.6  2001/08/13 01:43:34  ralf
-//	Changed appareance of album table
-//	
-//	Revision 1.5  2001/08/07 18:28:03  ralf
-//	Rename Canon Images
-//	
-//	Revision 1.4  2001/08/07 09:04:30  ralf
-//	Updated ID and VIM tag
-//	
-//	Revision 1.3  2001/08/07 09:01:17  ralf
-//	Added globals for the html colors (in pref).
-//	Fixed &lang in the language change URL
-//	
-//	Revision 1.2  2001/08/07 08:04:17  ralf
-//	Added a cvs log entry
 //	
 //-------------------------------------------------------------
 ?>

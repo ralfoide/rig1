@@ -442,55 +442,20 @@ function insert_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2002/10/16 04:48:37  ralfoide
+//	Version 0.6.2.1
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//
+//	
 //	Revision 1.4  2001/11/28 11:52:48  ralf
 //	v0.6.1: display image last modification date
 //	
 //	Revision 1.3  2001/11/26 06:40:50  ralf
-//	fix for diaply credits
+//	fix for display credits
 //	
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
-//	Revision 1.1  2001/11/26 00:07:37  ralf
-//	Starting version 0.6: location and split of site vs album files
-//	
-//	Revision 1.11  2001/11/17 12:35:58  ralf
-//	Manage albums with dates YMD and display as MDY. Version 0.5.2
-//	
-//	Revision 1.10  2001/11/09 06:40:18  ralf
-//	rig 0.5.1: image mode: adds width/height attr in img tag. adds prev/next links below image too.
-//	
-//	Revision 1.9  2001/10/27 23:30:58  ralf
-//	distrib 0.5 ready to ship
-//	
-//	Revision 1.8  2001/09/05 07:19:02  ralf
-//	Encode URLs and links using % hex hex.
-//	Backslash special characters of filenames before running Thumbnail.
-//	
-//	Revision 1.7  2001/08/31 19:03:03  ralf
-//	display environment as well as variables in php debug
-//	
-//	Revision 1.6  2001/08/31 19:02:07  ralf
-//	bug fix in image size
-//	
-//	Revision 1.5  2001/08/31 02:53:24  ralf
-//	Debug
-//	
-//	Revision 1.4  2001/08/31 02:34:17  ralf
-//	Auto guest mode
-//	
-//	Revision 1.3  2001/08/27 23:57:59  ralf
-//	fix in cookie for image size
-//	
-//	Revision 1.2  2001/08/27 09:13:11  ralf
-//	fixed problem with original size
-//	
-//	Revision 1.1  2001/08/27 08:47:18  ralf
-//	splitted common in 3 parts
-//	
 //	
 //-------------------------------------------------------------
 ?>

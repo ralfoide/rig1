@@ -1200,101 +1200,14 @@ function get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2002/10/16 04:48:37  ralfoide
+//	Version 0.6.2.1
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//
+//	
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
-//	Revision 1.1  2001/11/26 00:07:37  ralf
-//	Starting version 0.6: location and split of site vs album files
-//	
-//	Revision 1.30  2001/11/17 12:35:58  ralf
-//	Manage albums with dates YMD and display as MDY. Version 0.5.2
-//	
-//	Revision 1.29  2001/10/24 07:13:14  ralf
-//	fix for backslashes
-//	
-//	Revision 1.28  2001/10/21 02:15:16  ralf
-//	debug
-//	
-//	Revision 1.27  2001/10/20 02:06:56  ralf
-//	Marc's patch Sept-2001
-//	
-//	Revision 1.26  2001/10/18 18:27:09  ralf
-//	cookie debug, changed default size, version 0.3
-//	
-//	Revision 1.25  2001/09/05 07:47:21  ralf
-//	fix: url link should not encode dot or slash!
-//	
-//	Revision 1.24  2001/09/05 07:42:25  ralf
-//	fix
-//	
-//	Revision 1.23  2001/09/05 07:19:02  ralf
-//	Encode URLs and links using % hex hex.
-//	Backslash special characters of filenames before running Thumbnail.
-//	
-//	Revision 1.22  2001/09/05 05:43:53  ralf
-//	fix for marc
-//	
-//	Revision 1.21  2001/08/31 08:40:10  ralf
-//	cookie mess
-//	
-//	Revision 1.20  2001/08/31 08:09:25  ralf
-//	try to make cookies work
-//	
-//	Revision 1.19  2001/08/31 07:10:46  ralf
-//	Cookie path
-//	
-//	Revision 1.18  2001/08/31 03:14:25  ralf
-//	added pref cookie host
-//	
-//	Revision 1.17  2001/08/31 02:34:17  ralf
-//	Auto guest mode
-//	
-//	Revision 1.16  2001/08/27 23:57:59  ralf
-//	fix in cookie for image size
-//	
-//	Revision 1.15  2001/08/27 09:21:16  ralf
-//	fix for cookie size when changed from original to something else
-//	
-//	Revision 1.14  2001/08/27 09:13:11  ralf
-//	fixed problem with original size
-//	
-//	Revision 1.13  2001/08/27 08:47:18  ralf
-//	splitted common in 3 parts
-//	
-//	Revision 1.12  2001/08/16 19:01:35  ralf
-//	store album icon in album options (need more debug)
-//	
-//	Revision 1.11  2001/08/14 17:48:07  ralf
-//	Fixes: login can appear in both languages.
-//	Feature: added the guest mode in user login (not admin).
-//	
-//	Revision 1.10  2001/08/14 08:06:57  ralf
-//	Fixes for login & redirection. Passwd entry no longer necessary in url
-//	
-//	Revision 1.9  2001/08/13 05:37:36  ralf
-//	Fixes in preview creation, added back album links, etc.
-//	
-//	Revision 1.8  2001/08/13 01:43:35  ralf
-//	Changed appareance of album table
-//	
-//	Revision 1.7  2001/08/10 03:55:43  ralf
-//	Fixed filter for images names in form number.jpg
-//	
-//	Revision 1.6  2001/08/07 18:28:03  ralf
-//	Rename Canon Images
-//	
-//	Revision 1.5  2001/08/07 09:04:30  ralf
-//	Updated ID and VIM tag
-//	
-//	Revision 1.4  2001/08/07 09:01:17  ralf
-//	Added globals for the html colors (in pref).
-//	Fixed &lang in the language change URL
-//	
-//	Revision 1.3  2001/08/07 08:04:17  ralf
-//	Added a cvs log entry
 //	
 //-------------------------------------------------------------
 ?>

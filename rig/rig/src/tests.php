@@ -103,13 +103,20 @@ $rig_suite->addTest(new TestSuite("RTest_InnerClass"));
 require_once $dir_abs_src . "test_str.php";
 $rig_suite->addTest(new TestSuite("RTest_I18l_Strings"));
 
-if ($rig_vernum >= 0.65)
+if (isset($dir_abs_mod) && rig_is_file($dir_abs_src . "RModuleManager.php"))
 {
 	require_once $dir_abs_src . "RTestModuleManager.php";
 	$rig_suite->addTest(new TestSuite("RTest_RModuleManager"));
 	
 	require_once $dir_abs_src . "RTestModule.php";
 	$rig_suite->addTest(new TestSuite("RTest_RModule"));
+}
+else
+{
+	if (!isset($dir_abs_mod))
+		echo 'Warning: <i>dir_abs_mod</i> is not set. Modules tests are not run.<p>';
+	else if (!rig_is_file($dir_abs_src . "RModuleManager.php"))
+		echo 'Warning: This version of RIG does not have <i>RModuleManager.php</i>. Modules tests are not run.<p>';
 }
 
 //---------------------------
@@ -127,9 +134,12 @@ $result->report();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2004/07/09 05:52:48  ralfoide
+//	Update
+//
 //	Revision 1.5  2004/07/06 04:57:04  ralfoide
 //	Preparing to tag 0.6.4.5
-//
+//	
 //	Revision 1.4  2004/06/03 14:16:25  ralfoide
 //	Experimenting with module classes
 //	

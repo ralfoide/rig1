@@ -99,7 +99,7 @@ function rig_enter_login($url, $admin = FALSE)
 		else
 			$force_login = "fail";
 
-		include($dir_abs_src . "login.php");
+		include(rig_post_sep($dir_abs_src) . "login.php");
 		exit;
 	}
 
@@ -166,7 +166,7 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 		$file = FALSE;
 		if (is_string($dir_abs_locset) && $dir_abs_locset != "")
 		{
-			$name = $dir_abs_locset;
+			$name = rig_post_sep($dir_abs_locset);
 			$name = $admin ? $name . "admin_list.txt" : $name . "user_list.txt";
 			$file = @fopen($name, "rt");
 		}
@@ -174,7 +174,7 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 		// if we cannot find it, look for a file in the global settings
 		if (!$file)
 		{
-			$name = $dir_abs_globset;
+			$name = rig_post_sep($dir_abs_globset);
 			$name = $admin ? $name . "admin_list.txt" : $name . "user_list.txt";
 			$file = @fopen($name, "rt");
 		}
@@ -345,9 +345,12 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2004/07/09 05:52:37  ralfoide
+//	Update
+//
 //	Revision 1.14  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.13  2004/02/27 08:46:39  ralfoide
 //	Don't print guest user name (avoid adding -san to guest in Japanese)
 //

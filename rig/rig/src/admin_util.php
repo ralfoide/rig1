@@ -121,6 +121,10 @@ function rig_admin_mk_preview($album,
 	global $pref_image_quality;
 	global $pref_preview_timeout;
 
+	global $pref_album_ignore_list;     // RM 20030813 - v0.6.3.5
+	global $pref_image_ignore_list;
+
+
 	$abs_dir = $abs_album_path . rig_prep_sep($album);
 
 	// echo "<hr width=\"50%\">\n";
@@ -157,10 +161,13 @@ function rig_admin_mk_preview($album,
 				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
-					// process directories after files
-					$dir_list[] = $file;
+					if (!rig_check_ignore_list($file, $pref_album_ignore_list))			// RM 20030814
+					{
+						// process directories after files
+						$dir_list[] = $file;
+					}
 				}
-				else if (rig_valid_ext($file))
+				else if (!rig_check_ignore_list($file, $pref_image_ignore_list) && rig_valid_ext($file))	// RM 20030814
 				{
 					// image exists, create an id if not done yet
 					// RM 20021021 not for rig 062
@@ -206,7 +213,7 @@ function rig_admin_mk_preview($album,
 					else
 						echo "&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;";
 					echo "\t&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;\t$file<br>\n";
-					flush();
+					rig_flush();
 			    } // if file
 			} // if not . or ..
 		} // while readdir
@@ -226,7 +233,7 @@ function rig_admin_mk_preview($album,
 	}
 
 	echo "<p>Done for <i>$album</i><hr></center><p>\n";
-	flush();
+	rig_flush();
 
 	// -3- process sub directories now
 
@@ -256,6 +263,11 @@ function rig_admin_rm_previews($album,
 {
 	global $pref_preview_size;
 	global $abs_preview_path;
+
+	global $pref_album_ignore_list;     // RM 20030813 - v0.6.3.5
+	global $pref_image_ignore_list;
+		
+
 	$abs_dir = $abs_preview_path . rig_prep_sep($album);
 
 	// tell php this may take a while...
@@ -282,10 +294,13 @@ function rig_admin_rm_previews($album,
 				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
-					$name = rig_post_sep($album) . $file;
-					echo "</code></center>\n";
-					rig_admin_rm_previews($name, $do_previews, $do_images);
-					echo "<center><code>\n";
+					if (!rig_check_ignore_list($file, $pref_album_ignore_list))            // RM 20030814
+					{
+						$name = rig_post_sep($album) . $file;
+						echo "</code></center>\n";
+						rig_admin_rm_previews($name, $do_previews, $do_images);
+						echo "<center><code>\n";
+					}
 				}
 				// the pattern for previews is "prevSize_SimplifiedFileName"
 				else if (eregi("^prev([0-9]+)_", $file, $regs)
@@ -300,7 +315,7 @@ function rig_admin_rm_previews($album,
 					}
 
 					echo "$file<br>\n";
-					flush();
+					rig_flush();
 					unlink($abs_file);
 			    }
 				else
@@ -324,7 +339,7 @@ function rig_admin_rm_previews($album,
 	}
 
 	echo "</code><p>Done<hr></center><p>\n";
-	flush();
+	rig_flush();
 }
 
 
@@ -334,6 +349,8 @@ function rig_admin_fix_all_options($album)
 // RM 20030120 old options.txt files are buggy
 {
 	global $abs_preview_path;
+	global $pref_album_ignore_list;
+
 	$abs_dir = $abs_preview_path . rig_prep_sep($album);
 
 	// get all files and dirs, recurse in dirs first
@@ -352,7 +369,7 @@ function rig_admin_fix_all_options($album)
 			if ($file != '.' && $file != '..')
 			{
 				$abs_file = $abs_dir . rig_prep_sep($file);
-				if (is_dir($abs_file))
+				if (is_dir($abs_file) && !rig_check_ignore_list($file, $pref_album_ignore_list))
 				{
 					$name = rig_post_sep($album) . $file;
 					rig_admin_fix_all_options($name);
@@ -524,7 +541,8 @@ function rig_admin_rename_canon($album)
 //*************************************
 {
 	global $abs_album_path;
-
+    global $pref_image_ignore_list;
+	
 	$abs_dir = $abs_album_path . rig_prep_sep($album);
 
 	echo "Renaming Canon 100-1234_IMG.JPG for <b>$album</b><p>\n";
@@ -543,7 +561,7 @@ function rig_admin_rename_canon($album)
 			{
 				$abs_file = $abs_dir . rig_prep_sep($file);
 
-				if (rig_is_file($abs_file))
+				if (!rig_check_ignore_list($file, $pref_image_ignore_list) && rig_is_file($abs_file))
 				{
 					if (eregi("^([0-9]+)[- _]([0-9]+)[- _]img\.jpg$", $file, $reg))
 					{
@@ -574,6 +592,10 @@ function rig_admin_recurse_previnfo($album, &$nb, &$nf, &$sz)
 //***********************************************************
 {
 	global $abs_preview_path;
+
+	global $pref_album_ignore_list;     // RM 20030813 - v0.6.3.5
+    global $pref_image_ignore_list;
+	
 	$abs_dir = $abs_preview_path . rig_prep_sep($album);
 
 	// we're processing one more directory
@@ -590,10 +612,13 @@ function rig_admin_recurse_previnfo($album, &$nb, &$nf, &$sz)
 				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
-					$name = rig_post_sep($album) . $file;
-					rig_admin_recurse_previnfo($name, &$nb, &$nf, &$sz);
+					if (!rig_check_ignore_list($file, $pref_album_ignore_list)) // RM 20030814
+					{
+						$name = rig_post_sep($album) . $file;
+						rig_admin_recurse_previnfo($name, &$nb, &$nf, &$sz);
+					}
 				}
-				else if (rig_valid_ext($file))
+				else if (!rig_check_ignore_list($file, $pref_image_ignore_list) && rig_valid_ext($file)) // RM 20030814
 				{
 					$nb++;
 					$sz += filesize($abs_file);
@@ -936,9 +961,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/08/15 07:11:49  ralfoide
+//	Album HTML cache generation, ignore lists
+//
 //	Revision 1.13  2003/07/21 04:55:11  ralfoide
 //	Customizable size for album previews
-//
+//	
 //	Revision 1.12  2003/05/26 17:52:55  ralfoide
 //	Removed unused language strings. Added new rig_display_back_to_album method
 //	

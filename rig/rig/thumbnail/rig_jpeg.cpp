@@ -199,10 +199,11 @@ RigRgb * rig_jpeg_read(const char* filename)
 
 		if (result == JPEG_HEADER_OK)
 		{
-			if (cinfo.jpeg_color_space == JCS_GRAYSCALE)
-			{
-				longjmp(jerr.setjmp_buffer, 1);
-			}
+			// RM 2002101 Fix: grayscale jpeg support
+			//
+			// The JPEG's color format can be tested via cinfo.jpeg_color_space
+			// Whatever the JPEG color format actually is, we ask the decompression
+			// routine to provide us with RGB data.
 
 			cinfo.out_color_space = JCS_RGB;
 			cinfo.dct_method = JDCT_FLOAT;	// choices are JDCT_FLOAT, JDCT_ISLOW, JDCT_IFAST
@@ -407,9 +408,12 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 /****************************************************************
 
 	$Log$
+	Revision 1.2  2002/10/20 09:04:10  ralfoide
+	Fix for non-RGB jpeg
+
 	Revision 1.1  2002/08/04 00:58:08  ralfoide
 	Uploading 0.6.2 on sourceforge.rig-thumbnail
-
+	
 	Revision 1.1  2001/11/26 00:07:40  ralf
 	Starting version 0.6: location and split of site vs album files
 	

@@ -141,10 +141,10 @@ Admin:
 [0.6.4]
 
 [0.6.3.3]
-20030316 [1.W] Version: Bumped to version 0.6.3.3
+20030316 [1.F] Version: Bumped to version 0.6.3.3
 
 [0.6.3.2]
-20030216 [1.W] CVS: tag_2003-02-22_v0633
+20030216 [1.F] CVS: tag_2003-02-22_v0633
 20030316 [1.F] Fix: added $pref_disable_web_translate_interface (disabled by default)
 20030316 [1.F] Fix: added $pref_disable_album_borders (enabled by default)
 20030316 [1.F] MM Fix: missing $pref_copyright_name in settings/prefs.php
@@ -489,12 +489,15 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.17  2003/03/17 08:32:41  ralfoide
+//	Version 0.6.3.3 started...
+//
 //	Revision 1.16  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)
 //	Fix: missing pref_copyright_name in settings/prefs.php
 //	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//
+//	
 //	Revision 1.15  2003/03/12 07:25:36  ralfoide
 //	update
 //	

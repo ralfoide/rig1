@@ -9,7 +9,7 @@
 
 // Administration Routines
 
-require_once($dir_install . $dir_src . "common.php");
+require_once($dir_abs_src . "common.php");
 
 //-------------------------------------------------------------
 
@@ -265,13 +265,13 @@ function rig_admin_rm_previews($album,
 // size then this is a thumbnail preview and it is erase by do_previews.
 {
 	global $pref_preview_size;
-	global $abs_preview_path;
+	global $abs_image_cache_path;
 
 	global $pref_album_ignore_list;     // RM 20030813 - v0.6.3.5
 	global $pref_image_ignore_list;
 		
 
-	$abs_dir = $abs_preview_path . rig_prep_sep($album);
+	$abs_dir = $abs_image_cache_path . rig_prep_sep($album);
 
 	// tell php this may take a while...
 	// (30 s is php's default for the script processing. I allow 30s
@@ -351,10 +351,10 @@ function rig_admin_fix_all_options($album)
 //****************************************
 // RM 20030120 old options.txt files are buggy
 {
-	global $abs_preview_path;
+	global $abs_image_cache_path;
 	global $pref_album_ignore_list;
 
-	$abs_dir = $abs_preview_path . rig_prep_sep($album);
+	$abs_dir = $abs_image_cache_path . rig_prep_sep($album);
 
 	// get all files and dirs, recurse in dirs first
 	$handle = @opendir($abs_dir);
@@ -504,8 +504,8 @@ function rig_admin_fix_options($album)
 		}
 
 		// try to get the size of the _existing_ album icon
-		global $abs_preview_path;
-		$info = rig_image_info($abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_ICON));
+		global $abs_image_cache_path;
+		$info = rig_image_info($abs_image_cache_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_ICON));
 		if (is_array($info) && isset($info['w']) && isset($info['h']))
 		{
 			// get the max size
@@ -594,12 +594,12 @@ function rig_admin_rename_canon($album)
 function rig_admin_recurse_previnfo($album, &$nb, &$nf, &$sz)
 //***********************************************************
 {
-	global $abs_preview_path;
+	global $abs_image_cache_path;
 
 	global $pref_album_ignore_list;     // RM 20030813 - v0.6.3.5
     global $pref_image_ignore_list;
 	
-	$abs_dir = $abs_preview_path . rig_prep_sep($album);
+	$abs_dir = $abs_image_cache_path . rig_prep_sep($album);
 
 	// we're processing one more directory
 	$nf++;
@@ -964,9 +964,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.1  2003/08/21 20:15:32  ralfoide
+//	Moved admin src into separate folder
+//
 //	Revision 1.15  2003/08/18 03:07:14  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
-//
+//	
 //	Revision 1.14  2003/08/15 07:11:49  ralfoide
 //	Album HTML cache generation, ignore lists
 //	

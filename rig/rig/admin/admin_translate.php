@@ -11,8 +11,8 @@
 // album	- string
 // image	- string
 
-require_once($dir_install . $dir_src . "common.php");
-require_once($dir_install . $dir_src . "admin_util.php");
+require_once($dir_abs_src       . "common.php");
+require_once($dir_abs_admin_src . "admin_util.php");
 
 rig_enter_login(rig_self_url(), TRUE);
 rig_nocache_headers();
@@ -53,7 +53,7 @@ rig_display_body();
 
 	foreach($filelist as $filename)
 	{
-		$absfile1 = rig_post_sep($dir_install . $dir_src) . $filename;
+		$absfile1 = rig_post_sep($dir_abs_src) . $filename;
 		$absfile2 = rig_post_sep($abs_upload_src_path)    . $filename;
 		$nodot = str_replace('.', '_', $filename);
 
@@ -181,9 +181,12 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.1  2003/08/21 20:15:32  ralfoide
+//	Moved admin src into separate folder
+//
 //	Revision 1.4  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//
+//	
 //	Revision 1.3  2003/08/15 07:11:27  ralfoide
 //	Album HTML cache generation
 //	

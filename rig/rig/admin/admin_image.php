@@ -9,8 +9,8 @@
 //**********************************************
 
 
-require_once($dir_install . $dir_src . "common.php");
-require_once($dir_install . $dir_src . "admin_util.php");
+require_once($dir_abs_src       . "common.php");
+require_once($dir_abs_admin_src . "admin_util.php");
 
 rig_enter_login(rig_self_url(), TRUE);
 rig_nocache_headers();
@@ -350,9 +350,12 @@ if (rig_is_visible())
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.1  2003/08/21 20:15:32  ralfoide
+//	Moved admin src into separate folder
+//
 //	Revision 1.3  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//
+//	
 //	Revision 1.2  2003/05/26 17:52:56  ralfoide
 //	Removed unused language strings. Added new rig_display_back_to_album method
 //	

@@ -377,6 +377,7 @@ function rig_display_album_list()
 			$dy = $preview_size;
 
 			$icon_info = rig_image_info($abs_path);
+			
 			if (is_array($icon_info) && count($icon_info) > 2)
 			{
 				$sx = $icon_info["w"];
@@ -1460,9 +1461,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.37  2004/07/14 06:20:59  ralfoide
+//	Layout
+//
 //	Revision 1.36  2004/07/09 05:51:35  ralfoide
 //	Fixes for pagination
-//
+//	
 //	Revision 1.35  2004/06/03 14:14:47  ralfoide
 //	Fixes to support PHP 4.3.6
 //	

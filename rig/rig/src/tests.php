@@ -103,11 +103,14 @@ $rig_suite->addTest(new TestSuite("RTest_InnerClass"));
 require_once $dir_abs_src . "test_str.php";
 $rig_suite->addTest(new TestSuite("RTest_I18l_Strings"));
 
-require_once $dir_abs_src . "RTestModuleManager.php";
-$rig_suite->addTest(new TestSuite("RTest_RModuleManager"));
-
-require_once $dir_abs_src . "RTestModule.php";
-$rig_suite->addTest(new TestSuite("RTest_RModule"));
+if ($rig_vernum >= 0.65)
+{
+	require_once $dir_abs_src . "RTestModuleManager.php";
+	$rig_suite->addTest(new TestSuite("RTest_RModuleManager"));
+	
+	require_once $dir_abs_src . "RTestModule.php";
+	$rig_suite->addTest(new TestSuite("RTest_RModule"));
+}
 
 //---------------------------
 
@@ -124,9 +127,12 @@ $result->report();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2004/07/06 04:57:04  ralfoide
+//	Preparing to tag 0.6.4.5
+//
 //	Revision 1.4  2004/06/03 14:16:25  ralfoide
 //	Experimenting with module classes
-//
+//	
 //	Revision 1.3  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

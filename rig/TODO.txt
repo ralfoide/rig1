@@ -19,12 +19,15 @@ Summary of features for RIG:
 
 Generic:
 - in 0.7:
-[2.N] Feature: Implement default UI language based on html-accept-language (and don't store default cookies)
-[2.N] Feature: Integrate album overview
+...
+- in 0.6.5:
+...
 - in 0.6.4.5:
-[1.W] Fix: Translated strings
-[1.N] Fix: Can't handle album name with é accent in it
-[1.N] Fix: Disable pagination display if there's only one page
+[1.F] Fix for broken browser which interpret &image= in URLs
+[1.F] Fixes for PHP 4.3.6
+[1.F] Fix: Translated/fixed tooltips international strings
+[1.F] Fix: Changed web page title to start by "RIG"
+[2.F] Fix: Minor fixes in phpUnit
 - in 0.6.4.4:
 [1.F] Fix: invalidate html cache if image data cache modified
 [2.F] Video: Use JavaScript browser & OS detection to customize html tag and display proper install codec links
@@ -207,9 +210,13 @@ Admin:
 
 -- done -- (sorted by finish date)
 
+[0.6.5]
+
+20040705 [1.F] CVS: Moving on to 0.6.5
 
 [0.6.4.5]
 
+20040705 [1.F] CVS: Tagged as tag_2004-07-05_v0645
 20040703 [1.F] Fix: using "img" query param instead of "image" (for broken browser which interpret &image= in URLs)
 20040516 [1.F] Fix: Use rig_get to access $_SERVER['PHP_SELF'] in rig_self_url().
 20040308 [3.F] Source: Cleanup of extraneous CVS logs and unused <script> test code
@@ -225,7 +232,7 @@ Admin:
 20040212 [9.F] Idea: Use http-accept-language to set initial UI language (nothing coded yet)
 20040201 [9.F] Idea: HTML overview, redesigned using CSS and no frames (prototype only)
 20040201 [9.F] Idea: HTML overview using recursive <iframe> (prototype only)
-20031207 [1.W] CVS: Moving on to 0.6.4.5
+20031207 [1.F] CVS: Moving on to 0.6.4.5
 
 [0.6.4.4]
 
@@ -703,9 +710,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.52  2004/07/06 04:56:46  ralfoide
+//	Preparing to tag 0.6.4.5
+//
 //	Revision 1.51  2004/07/06 04:37:42  ralfoide
 //	Fix
-//
+//	
 //	Revision 1.50  2004/06/03 14:18:17  ralfoide
 //	Update
 //	

@@ -175,9 +175,11 @@ DPRINTF(("\n end rg = %p\n", rgb));
 /****************************************************************
 
 	$Log$
+	Revision 1.2  2003/07/11 15:56:38  ralfoide
+	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
+
 	Revision 1.1  2003/06/30 06:05:59  ralfoide
 	Avifile support (get info and thumbnail for videos)
-
 	
 ****************************************************************/
 

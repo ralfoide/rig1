@@ -65,6 +65,7 @@ function rig_display_header($title)
  	<title>
 		<?= $title ?>
 	</title>
+	<script language="JavaScript" type="text/javascript" src="browser_detect.js"></script>
 	<?= $theme_css_head ?>
 </head>
 <?php
@@ -547,7 +548,7 @@ function rig_display_image()
 			echo "<img src=\"$preview\" alt=\"$pretty_image\" border=0>";
 		}
 	}
-	else if (strcmp($type, "video/avi") == 0)
+	else if (strncmp($type, "video/", 6) == 0)
 	{
 		// RM 20030628 v0.6.3.4
 
@@ -568,149 +569,262 @@ function rig_display_image()
 		else
 			$sy = 240;
 
-		// Link
-		// Windows Media Player <object>
-		// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/addwmwebpage.asp?frame=true&hidetoc=true
-		//
-		// WMV 7   class id: 6BF52A52-394A-11d3-B153-00C04F79FAA6
-		// WMV 6.4 class id: 22D6f312-B0F6-11D0-94AB-0080C74C7E95
-		
-		// Other random links:
-		// http://www.macromedia.com/support/dreamweaver/ts/documents/mediaplayer.htm
-		// http://www.webreference.com/js/column51/install.html
-		// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmp6sdk/htm/controlclsids.asp
-		//		MediaPlayer 22D6F312-B0F6-11D0-94AB-0080C74C7E95
-		//		NSPlay 2179C5D3-EBFF-11cf-B6FD-00AA00B4E220
-		//		ActiveMovie 05589FA1-C356-11CE-BF01-00AA0055595A
-		// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/6-4compat.asp
-		//		Windows Media Player 9 Series 6BF52A52-394A-11d3-B153-00C04F79FAA6
-		// http://home.maconstate.edu/dadams/Tutorials/AV/AV03/av03-03.htm
+		$subtype = substr($type, 6);
 
-		?>
-		<center>
-			<object 
-				classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6"
-				codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112"
-				id="mediaplayer1">
-				<!-- width="<?= $sx ?>" height="<?= $sy ?>" -->
-				<param name="URL" value="<?= $full ?>">
-				<param name="Filename" value="<?= $full ?>">
-				<param name="AutoStart" value="True">
-				<param name="ShowControls" value="True">
-				<param name="ShowStatusBar" value="True">
-				<param name="ShowDisplay" value="True">
-				<param name="AutoRewind" value="True">
-	
-			<embed 
-				type="application/x-mplayer2"
-				pluginspage="http://www.microsoft.com/Windows/Downloads/Contents/MediaPlayer/"
-				src="<?= $full ?>"
-				width="<?= $sx ?>" height="<?= $sy ?>"
-				filename="<?= $full ?>"
-				autostart="True" 
-				showcontrols="True"
-				showstatusbar="True" 
-				showdisplay="True"
-				autorewind="True">
-			</embed> 
-			</object>
+global $_test_;
+var_dump($subtype);
+var_dump($_test_);
 
-			<br>
+		if ($subtype == "avi")
+		{
+			// Link
+			// Windows Media Player <object>
+			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/addwmwebpage.asp?frame=true&hidetoc=true
+			//
+			// WMV 7   class id: 6BF52A52-394A-11d3-B153-00C04F79FAA6
+			// WMV 6.4 class id: 22D6f312-B0F6-11D0-94AB-0080C74C7E95
 			
-			<font size="-1">
-			[ <a href="<?= $full ?>">External display</a> ]
-			<br>
-			Players: 
-				<a href="http://www.mplayerhq.hu/homepage/">Linux MPlayer</a>
-				|
-				<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
-			</font>
-		</center>
+			// Other random links:
+			// http://www.macromedia.com/support/dreamweaver/ts/documents/mediaplayer.htm
+			// http://www.webreference.com/js/column51/install.html
+			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmp6sdk/htm/controlclsids.asp
+			//		MediaPlayer 22D6F312-B0F6-11D0-94AB-0080C74C7E95
+			//		NSPlay 2179C5D3-EBFF-11cf-B6FD-00AA00B4E220
+			//		ActiveMovie 05589FA1-C356-11CE-BF01-00AA0055595A
+			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/6-4compat.asp
+			//		Windows Media Player 9 Series 6BF52A52-394A-11d3-B153-00C04F79FAA6
+			// http://home.maconstate.edu/dadams/Tutorials/AV/AV03/av03-03.htm
+
+	if ($_test_==4)
+	{
+		?>
+	
+		<object data="<?= $full ?>" type="video/x-msvideo" />
+	
 		<?
 	}
-	else if (strcmp($type, "video/qt") == 0)
+	else if ($_test_==3)
 	{
-		// RM 20030628 v0.6.3.4
-
-		// get the full relative URL to the media file
-		$full = rig_post_sep($dir_album) . rig_post_sep($current_album) . $current_image;
-
-		// get actual size of media
-		$abs = rig_post_sep($abs_album_path) . rig_post_sep($current_album) . $current_image;
-		$info = rig_image_info($abs);
-		
-
-		if (isset($info["w"]))
-			$sx = $info["w"];
-		else
-			$sx = 320;
-
-		if (isset($info["h"]))
-			$sy = $info["h"];
-		else
-			$sy = 240;
-
-	
-		// url-encode filename
-		$preview = rig_encode_url_link($preview);
-
-
-		// QuickTime EMBED attributed are described here:
-		// http://www.apple.com/quicktime/authoring/embed2.html
-		//
-		// QuickTime OBJECT tag:
-		// http://www.apple.com/quicktime/tools_tips/tutorials/activex.html
-
-		$sy2 = $sy+16;	// for QT, add 16 to the height to see the controls
-
-		/*
-			The following EMBED attributes are supposedly supported but break the QT player
-			when used:
-				type="video/quicktime"
-				qtsrc="<?= $full ?>"
-				qtsrcdontusebrowser
-
-			codebase="http://www.apple.com/qtactivex/qtplugin.cab">
-		*/
-
 		?>
-		<center>
-		
-			<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b"
-				codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"
-				width="<?= $sx ?>" height="<?= $sy ?>">
-				<param name="src" value="sample.mov">
-				<param name="autoplay" value="true">
-				<param name="controller" value="true">
-				<param name="autohref" value="true">
-				<param name="scale" value="aspect">
 			<embed
 				src="<?= $full ?>"
-				width="<?= $sx ?>" height="<?= $sy2 ?>"
-				controller="true"
-				scale="aspect"
-				autohref="yes"
-				autoplay="yes"
-				pluginspage="http://www.apple.com/quicktime/download/"
+				width="<?= $sx ?>" height="<?= $sy ?>"
 			>
 			</embed>
-			</object>
-			
-			<br>
-			
-			<font size="-1">
-			[ <a href="<?= $full ?>">External display</a> ]
-			<br>
-			Players: 
-				<a href="http://www.mplayerhq.hu/homepage/">Linux MPlayer</a>
-				|
-				<a href="http://www.apple.com/quicktime/download/">Apple Quicktime</a>
-				|
-				<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
-			</font>
-		</center>
 		<?
 	}
+	else
+	{		?>
+				<object 
+					classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6"
+					codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112"
+					id="mediaplayer1">
+					<!-- width="<?= $sx ?>" height="<?= $sy ?>" -->
+					<param name="URL" value="<?= $full ?>">
+					<param name="Filename" value="<?= $full ?>">
+					<param name="AutoStart" value="True">
+					<param name="ShowControls" value="True">
+					<param name="ShowStatusBar" value="True">
+					<param name="ShowDisplay" value="True">
+					<param name="AutoRewind" value="True">
+		
+				<embed 
+					type="application/x-mplayer2"
+					pluginspage="http://www.microsoft.com/Windows/Downloads/Contents/MediaPlayer/"
+					src="<?= $full ?>"
+					width="<?= $sx ?>" height="<?= $sy ?>"
+					filename="<?= $full ?>"
+					autostart="True" 
+					showcontrols="True"
+					showstatusbar="True" 
+					showdisplay="True"
+					autorewind="True">
+				</embed> 
+				</object>
+	
+				<br>
+				
+				<font size="-1">
+				[ <a href="<?= $full ?>">External display</a> ]
+				<br>
+				Players: 
+					<a href="http://www.mplayerhq.hu/homepage/">Linux MPlayer</a>
+					|
+					<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
+				</font>
+			<?
+	}
+		}
+		else if ($subtype == "mpeg")
+		{
+	
+			if ($_test_==4)
+			{
+				?>
+			
+				<object data="<?= $full ?>" type="video/mpeg" />
+			
+				<?
+			}
+			else
+			{
+				?>
+					<embed
+						src="<?= $full ?>"
+						width="<?= $sx ?>" height="<?= $sy ?>"
+					>
+					</embed>
+				<?
+			}
+		}
+		else if ($subtype == "quicktime")
+		{
+		
+			// url-encode filename
+			// $preview = rig_encode_url_link($preview);
+	
+	
+			// QuickTime EMBED attributed are described here:
+			// http://www.apple.com/quicktime/authoring/embed2.html
+			//
+			// QuickTime OBJECT tag:
+			// http://www.apple.com/quicktime/tools_tips/tutorials/activex.html
+	
+			$sy2 = $sy+16;	// for QT, add 16 to the height to see the controls
+	
+			/*
+				The following EMBED attributes are supposedly supported but break the QT player
+				when used:
+					type="video/quicktime"
+					qtsrc="<?= $full ?>"
+					qtsrcdontusebrowser
+	
+				codebase="http://www.apple.com/qtactivex/qtplugin.cab">
+			*/
+	
+	if ($_test_==4)
+	{
+		?>
+	
+		<object data="<?= $full ?>" type="video/quicktime" />
+	
+		<?
+	}
+	else if ($_test_==3)
+	{
+	
+			?>
+				<embed
+					src="<?= $full ?>"
+					width="<?= $sx ?>" height="<?= $sy2 ?>"
+					controller="true"
+					scale="aspect"
+					autohref="yes"
+					autoplay="yes"
+				>
+				</embed>
+				
+				<br>
+				
+				<font size="-1">
+				[ <a href="<?= $full ?>">External display</a> ]
+				<br>
+				Players: 
+					<a href="http://www.mplayerhq.hu/homepage/">Linux MPlayer</a>
+					|
+					<a href="http://www.apple.com/quicktime/download/">Apple Quicktime</a>
+					|
+					<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
+				</font>
+			<?
+	}
+	else if ($_test_==2)
+	{
+//	<script language="JavaScript" type="text/javascript" src="browser_detect.js"></script>
+
+	    ?>
+	
+	
+	<script type="text/javascript" language="JavaScript">
+
+alert("here");
+document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>");
+	
+	document.write("BROWSER: ")
+	document.write(navigator.appName + "<br>")
+	document.write("BROWSERVERSION: ")
+	document.write(navigator.appVersion + "<br>")
+	document.write("CODE: ")
+	document.write(navigator.appCodeName + "<br>")
+	document.write("PLATFORM: ")
+	document.write(navigator.platform + "<br>")
+	
+		document.write('<embed')
+		document.write('src="<?= $full ?>"')
+		document.write('width="<?= $sx ?>" height="<?= $sy2 ?>"')
+		document.write('controller="true"')
+		document.write('scale="aspect"')
+		document.write('autohref="yes"')
+		document.write('autoplay="yes"')
+		document.write('pluginspage="http://www.apple.com/quicktime/download/">')
+		document.write('</embed>')
+	
+	
+	<noscript>
+				<embed
+					src="<?= $full ?>"
+					width="<?= $sx ?>" height="<?= $sy2 ?>"
+					controller="true"
+					scale="aspect"
+					autohref="yes"
+					autoplay="yes"
+					pluginspage="http://www.apple.com/quicktime/download/"
+				>
+				</embed>
+	</noscript>
+	</script>
+	
+	    <?php
+	}
+	else
+	{
+			?>
+				<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b"
+					codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"
+					width="<?= $sx ?>" height="<?= $sy ?>">
+					<param name="src" value="sample.mov">
+					<param name="autoplay" value="true">
+					<param name="controller" value="true">
+					<param name="autohref" value="true">
+					<param name="scale" value="aspect">
+				<embed
+					src="<?= $full ?>"
+					width="<?= $sx ?>" height="<?= $sy2 ?>"
+					controller="true"
+					scale="aspect"
+					autohref="yes"
+					autoplay="yes"
+					pluginspage="http://www.apple.com/quicktime/download/"
+				>
+				</embed>
+				</object>
+				
+				<br>
+				
+				<font size="-1">
+				[ <a href="<?= $full ?>">External display</a> ]
+				<br>
+				Players: 
+					<a href="http://www.mplayerhq.hu/homepage/">Linux MPlayer</a>
+					|
+					<a href="http://www.apple.com/quicktime/download/">Apple Quicktime</a>
+					|
+					<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
+				</font>
+			<?
+		}
+	} // non-javascript test
+	} // if video
 
     // debug
     // echo "<br>rig_img_size = '$rig_img_size'<br>\n";
@@ -1176,9 +1290,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.18  2003/07/11 15:56:38  ralfoide
+//	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
+//
 //	Revision 1.17  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
-//
+//	
 //	Revision 1.16  2003/05/26 17:52:55  ralfoide
 //	Removed unused language strings. Added new rig_display_back_to_album method
 //	

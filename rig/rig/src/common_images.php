@@ -150,6 +150,8 @@ function rig_build_video_type($album, $file,
 // auto_create ask the image to be created if no existing
 // use_default ask the pref_empty_album name to be returned if the image cannot be build
 //
+// If size -1 is given, a thumbnail is created. The thumbnail is always a JPEG file as of today.
+//
 // returns the name for the preview as an array { r:pref_path , a:abs_pref_path, p:image_path }
 // Caller should thus use [r]+[p] or [a]+[p]
 {
@@ -167,6 +169,11 @@ function rig_build_video_type($album, $file,
 	// debug
 	// echo "size = $size<br>\n";
 
+	// If size -1 is given, a thumbnail is created. The thumbnail is always a JPEG file as of today.
+	$ext = "";
+	if ($size == -1)
+		$ext = ".jpg";
+
 	// a size of 0 is a special argument: the original image size should be used
 	// this does not apply to video, so the preview size is used anyway
 	if ($size <= 0)
@@ -175,7 +182,9 @@ function rig_build_video_type($album, $file,
 	$prev_prefix = "prev" . $size . "_";
 	$dest_file = $prev_prefix . rig_simplify_filename($file);
 
-	$dest		= $album . rig_prep_sep($dest_file);
+	// the destination is appended a .jpg extension if a thumbnail is requested
+
+	$dest		= $album . rig_prep_sep($dest_file) . $ext;
 	$abs_dest	= $abs_preview_path . rig_prep_sep($dest);
 	$abs_source	= $abs_album_path   . rig_prep_sep($album) . rig_prep_sep($file);
 
@@ -611,9 +620,12 @@ function rig_select_random_album_icon($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/07/11 15:56:38  ralfoide
+//	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
+//
 //	Revision 1.9  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
-//
+//	
 //	Revision 1.8  2003/02/17 07:47:04  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
 //	

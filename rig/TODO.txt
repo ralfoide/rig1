@@ -149,6 +149,7 @@ Admin:
 20030629 [3.F] OO-Exp: Test implementation: RContentBase, RAlbum, RPrefBase, RPrefAlbum, RUser, RPath
 20030629 [3.F] OO-Exp: Class layout
 
+20030703 [2.F] Video-Exp: Thumbnails created for videos must have .jpg extension
 20030628 [2.F] Video-Exp: Create thumbnails for video using ffmpeg
 20030628 [2.F] Video-Exp: Depending on the media handler, change the image output (for video support)
 20030628 [2.F] Video-Exp: Create an array of "extension/media handlers" (images vs video)
@@ -520,9 +521,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.23  2003/07/11 15:56:38  ralfoide
+//	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
+//
 //	Revision 1.22  2003/06/30 06:13:41  ralfoide
 //	Video support, OO class test
-//
+//	
 //	Revision 1.21  2003/06/15 19:09:48  ralfoide
 //	Version 0.6.3.3: Japanese translation completed
 //	

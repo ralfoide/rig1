@@ -74,8 +74,8 @@ $pref_global_gamma		= 1.0;	// use 1.0 for no-op
 
 $pref_file_types		= array("/\.jpe?g$/i"					 => "image/jpeg",
 								"/\.(avi|wmv|as[fx])$/i"		 => "video/avi",
-								"/\.(mov|qt|sdp|rtsp)$/i"		 => "video/qt",
-								"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => "video/qt");
+								"/\.(mov|qt|sdp|rtsp)$/i"		 => "video/quicktime",
+								"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => "video/mpeg");
 								
 
 // --- admin viewing options ---
@@ -156,9 +156,12 @@ $pref_image_layout = "1";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/07/11 15:56:38  ralfoide
+//	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
+//
 //	Revision 1.9  2003/06/30 06:10:00  ralfoide
 //	Introduced file-types (for video vs image support)
-//
+//	
 //	Revision 1.8  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.

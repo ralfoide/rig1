@@ -66,7 +66,7 @@ function build_preview_ex($album, $file,
 // use_default ask the pref_empty_album name to be returned if the image cannot be build
 //
 // returns the name for the preview as an array { r:pref_path , a:abs_pref_path, p:image_path }
-// Caller should thus use [0]+[2] or [1]+[2]
+// Caller should thus use [r]+[p] or [a]+[p]
 {
 	global $abs_album_path;
 	global $abs_preview_path;
@@ -219,7 +219,7 @@ function image_info($abs_file)
 function build_info($album, $file)
 //********************************
 // Returns an array of strings:
-// { format, width, height, date }
+// { f:format, w:width, h:height, d:date }
 {
 	global $abs_album_path;
 
@@ -283,6 +283,7 @@ function build_album_preview($album, &$abs_path, &$url_path, $use_default = TRUE
 	// otherwise, use the default icon...
 	$abs_path = realpath($dir_abs_album . $dir_images . $pref_empty_album);
 	$url_path = $pref_empty_album;
+	return FALSE;
 }
 
 
@@ -344,7 +345,7 @@ function select_random_album_icon($album)
 	}
 	else
 	{
-		// if the list is empty, there's no much we can do
+		// if the list is empty, there's not much we can do
 		return;
 	}
 
@@ -361,9 +362,12 @@ function select_random_album_icon($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/20 11:50:21  ralfoide
+//	Misc fixes
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

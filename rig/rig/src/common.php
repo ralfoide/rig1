@@ -118,6 +118,10 @@ rig_check_src_file($dir_install . $dir_src . "str_en.php");
 require_once($dir_install . $dir_src . "str_en.php");
 
 // and override with other language if not english
+
+// DEBUG
+// rig_check_src_file($dir_install . $dir_src . "str_$current_language.php");
+
 // Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
 if (!isset($current_language) || !rig_is_file($dir_install . $dir_src . "str_$current_language.php"))
 	$current_language = $pref_default_lang;
@@ -130,6 +134,9 @@ if ($current_language != 'en')
 
 // include theme strings
 //----------------------
+
+// DEBUG
+// rig_check_src_file($dir_install . $dir_src . "theme_$current_theme.php");
 
 if (!isset($current_theme) || !rig_is_file($dir_install . $dir_src . "theme_$current_theme.php"))
 	$current_theme = $pref_default_theme;
@@ -1505,9 +1512,12 @@ function get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2002/10/21 07:33:33  ralfoide
+//	debug stuff
+//
 //	Revision 1.6  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
-//
+//	
 //	Revision 1.5  2002/10/20 11:49:37  ralfoide
 //	Added shell_filename2
 //	

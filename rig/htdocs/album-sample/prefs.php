@@ -12,6 +12,8 @@
 // Defaults are in rig/settings/prefs.php and can
 // be overrided here.
 
+// ---- Access/Misc Prefs ----
+
 
 // login options
 $pref_allow_guest		= TRUE;				// can be TRUE (default) or FALSE
@@ -21,13 +23,42 @@ $pref_auto_guest		= TRUE;				// should guest authentificate? TRUE (default) or F
 $pref_global_gamma		= 1.0;	            // use 1.0 for no-op
 
 
+// ---- URL-Rewrite support ---
+
+// If non empty, URLs will be rewritten using this rule.
+// %A is the URL-encoded album name, %I is the URL-encoded image name.
+// There are 3 kind of urls: main index, album URL and image URL.
+
+// Example:
+// If you define something like this in your Apache's httpd.conf file
+//
+// LoadModule rewrite_module /usr/lib/apache/1.3/mod_rewrite.so
+// <VirtualHost 192.168.0.0>
+//     ServerName www.example.com
+//     DocumentRoot /home/user/rig/
+//     RewriteEngine On
+//     RewriteRule ^/i=([^/]+)/(.*)$   http://www.example.com/index.php?image=$1&album=$2
+//     RewriteRule ^/a=(.*)$           http://www.example.com/index.php?album=$1
+//     RewriteRule ^/$                 http://www.example.com/index.php
+// </VirtualHost>
+//
+// Then you can use an URL-rewrite like this:
+// 
+// $pref_url_rewrite = array('index' => "http://www.example.com/",
+// 							 'album' => "http://www.example.com/a=%A",
+// 							 'image' => "http://www.example.com/i=%I/%A");
+
+
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/01/07 17:52:50  ralfoide
+//	URL-Rewrite conf array moved in the album-specific pref file
+//
 //	Revision 1.3  2002/10/22 22:32:03  ralfoide
 //	Global gamma can be changed in the site-specific pref file
-//
+//	
 //	Revision 1.2  2002/10/21 01:56:53  ralfoide
 //	Added local override of gamma
 //	

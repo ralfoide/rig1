@@ -27,6 +27,8 @@
 	#include <ctype.h>
 	#include <time.h>
 	#include <sys/times.h>	// for times under Linux
+	#include <signal.h>		// for signal/sighandler
+	#include <unistd.h>		// for _exit & alarm
 #endif
 
 
@@ -420,7 +422,7 @@ void rig_resize_image(const char * in_filename,
 			wdst = (int32)((double)target_size*aspect);
 		}
 
-		DPRINTF(("\n*** Resize [%dx%d] -> [%dx%d]\n\n", wsrc, hsrc, wdst, hdst));
+		DPRINTF(("[rig] Resize [%dx%d] -> [%dx%d]\n\n", wsrc, hsrc, wdst, hdst));
 
 		// resize image
 
@@ -476,6 +478,7 @@ void rig_test(void)
 	const int32 nmax =  20;
 
 	printf("Starting test... please wait\n");
+	fflush(stdout);
 
 	// Resize image with Gamma 1.0 (no-op) or 1.6 (normal op)
 
@@ -507,6 +510,7 @@ void rig_test(void)
 	if (rgb)
 	{
 		printf("Video Frame\n");
+		fflush(stdout);
 
 		double start = rig_system_time() / 1e6;
 
@@ -533,6 +537,54 @@ void rig_test(void)
 //---------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------
 //
+// Signal Handler
+//
+//---------------------------------------------------------------------------------
+
+
+#ifndef WIN32
+
+//***********************
+void rig_sig_alarm(int s)
+//***********************
+{
+	DPRINTF(("\n[rig] timeout: signal %d **\n", s));
+	// timeout... let's give up without notice but as nicely as possible
+	_exit(3);
+}
+
+#endif
+
+
+//---------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
+//
+// Usage
+//
+//---------------------------------------------------------------------------------
+
+
+//******************************
+int rig_usage(const char *argv0)
+//******************************
+{
+	printf( "Usage:\n"
+			"\t%s [-v] [-f] [-i if] [-r if of [q [g]]]\n"
+			"\t-v : verbose output (debug)\n"
+			"\t-i in-file : prints out information on file (format, width & height)\n"
+			"\t-r in-file out-file out-size [quality=80 [gamma=1.0]] : build jpeg thumbnail\n"
+			"\t-f file types' regexp list\n"
+			"\t-t debug test\n"
+			"\nReturns: 0=no error, 1=processing error, 2=not enough arguments, 3=timeout\n",
+			(argv0 != NULL ? argv0 : "rig-thumbnail.exe"));
+
+	return 2;
+}
+
+
+//---------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
+//
 // *   *  ***  *** *   *
 // ** ** *   *  *  **  *
 // * * * *****  *  * * *
@@ -543,48 +595,74 @@ void rig_test(void)
 
 
 
-
-
 //******************************
 int main(int argc, char *argv[])
 //******************************
 {
 	time_t _now = time(NULL);
-	DPRINTF(("Running app_main: %s\n", ctime(&_now)));
-	DPRINTF(("Argc: %d\n",argc));
+	DPRINTF(("[rig] Running app_main: %s\n", ctime(&_now)));
+	DPRINTF(("[rig] Argc: %d\n",argc));
 
-	if (argc == 1)
+	if (argc <= 1)
 	{
-		printf( "Usage:\n"
-				"\t%s [-v] [-i ...] [-r ...]\n"
-				"\t-v : verbose output (debug)\n"
-				"\t-i in-file : prints out information on file (format\\nwidth\\nheight\\n)\n"
-				"\t-r in-file out-file out-size [quality=80] : resize image\n"
-				"\t-t debug test\n"
-				"\nReturns: 0=no error, 1=processing error, 2=no arguments\n",
-				argv[0]);
-		return 2;
+		return rig_usage(argv[0]);
 	}
+
 	
 	try
 	{
-		// Parse arguments
-		// we start at 1 cause the first one is the app name
+		#ifndef WIN32
+			// Let's abort if processing is longuer than say 20 seconds
+			// (which is a huge amount of time to get a thumbnail since it's generally
+			// less than a second or two on modern hardware). 20 seconds also happens
+			// to be the time PHP's call will wait.
+			signal(SIGALRM, rig_sig_alarm);
+			alarm(20);
+		#endif
+
+		// Check for verbose flag anywhere in the command line
 		for (int32 i = 1 ; i < argc ; i++)
 		{
 			if (!strcmp(argv[i], "-v"))
 			{
 				// operation: verbose
 				rig_dprintf_verbose = true;
+				DPRINTF(("[rig] build " __DATE__ " " __TIME__ "\n"));
+				DPRINTF(("[rig] verbose mode on\n"));
+				break;
 			}
-			else if (!strcmp(argv[i], "-i") && i<argc-1)
+		}
+
+		// Parse arguments (all except -v)
+		for (int32 i = 1 ; i < argc ; i++)
+		{
+			if (!strcmp(argv[i], "-i"))
 			{
-				// operation: report image info
+				// operation: report image info on file name
+
+				if (i >= argc-1)
+				{
+					DPRINTF(("[rig] missing file name for option -i\n"));
+					return rig_usage(argv[0]);
+				}
+
 				rig_print_info(argv[++i]);
 			}
-			else if (!strcmp(argv[i], "-r") && i<argc-3)
+			else if (!strcmp(argv[i], "-r"))
 			{
 				// operation: resize image
+				// arg 2 = in  file name
+				// arg 3 = out file name
+				// arg 4 = largest width/height size in pixels
+				// arg 5 = jpeg quality (default is 80)
+				// arg 6 = gamma (default is 1.0 for a no-op)
+
+				if (i >= argc-3)
+				{
+					DPRINTF(("[rig] not enough arguments for option -r\n"));
+					return rig_usage(argv[0]);
+				}
+
 				rig_resize_image(argv[i+1], argv[i+2],
 							 atol(argv[i+3]),
 							 (i+4<argc && isdigit(argv[i+4][0])) ? atol(argv[i+4]) : 80,
@@ -605,17 +683,22 @@ int main(int argc, char *argv[])
 	}
 	catch(const char * s)
 	{
-		DPRINTF(("%s: Catched string exception... -- result 1 --\n", argv[0]));
-		DPRINTF((s));
+		DPRINTF(("[rig] Catched string exception... -- result 1 --\n[rig]   Exception: %s\n", s));
 		return 1;
 	}
 	catch(...)
 	{
-		DPRINTF(("%s: Catched unknown exception... -- result 1 --\n", argv[0]));
+		DPRINTF(("[rig] Catched unknown exception... -- result 1 --\n"));
 		return 1;
 	}
 
-	DPRINTF(("%s: Closing normally -- result 0 --\n", argv[0]));
+	#ifndef WIN32
+		// Remove the alarm timeout
+		alarm(0);
+		signal(SIGALRM, SIG_DFL);
+	#endif
+
+	DPRINTF(("[rig] Closing normally -- result 0 --\n"));
 	return 0;
 
 }
@@ -628,9 +711,12 @@ int main(int argc, char *argv[])
 /*****************************************************************************
 
 	$Log$
+	Revision 1.7  2004/07/09 05:54:33  ralfoide
+	Better command line processing. Added timeout alarm signal.
+
 	Revision 1.6  2003/11/25 05:02:04  ralfoide
 	Video: report the video codec
-
+	
 	Revision 1.5  2003/08/18 02:06:16  ralfoide
 	New filetype support
 	

@@ -735,33 +735,61 @@ $pref_follow_image_symlinks = TRUE;
 
 /***********************************************************
  *
- *	Setting: 		$pref_file_types
+ *	Setting: 		$pref_internal_file_types
  *	Type:			Array of (key/value) strings
  *	Default:		NULL
  *	
- *	This array describes which filename maps to which filetype.
+ *	This array describes which filename maps to which filetype
+ *	but *ONLY* for file types handled by the rig_thumbnail.exe
+ *	application.
  *
  *	When the variable is set to NULL (the default), the help application
  *	rig_thumbnail.exe is queried to get the set of actually supported
  *	filetypes and the associated filename patterns.
+ *	Use "rig_thumbnail.exe -f" on a command-line to see the list of
+ *	file types supported by the application.
  *
  *	Unless you are really familliar with the internals of RIG, you do not
  *	want to change this array.
+ *
  *	If you're stubborn or in case you really need to override the file type
  *	array and you really know what you are doing, here is a sample of what it
  *	should currently contain:
  *	 
- *	$pref_file_types= array("/\.jpe?g$/i"					 => 'image/jpeg',
- *							"/\.(avi|wmv|as[fx])$/i"		 => 'video/avi',
- *							"/\.(mov|qt|sdp|rtsp)$/i"		 => 'video/quicktime',
- *							"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => 'video/mpeg');
+ *	$pref_internal_file_types= array("/\.jpe?g$/i"					  => 'image/jpeg',
+ *									 "/\.(avi|wmv|as[fx])$/i"		  => 'video/avi',
+ *									 "/\.(mov|qt|sdp|rtsp)$/i"		  => 'video/quicktime',
+ *									 "/\.(mpe?g[124]?|m[12]v|mp4)$/i" => 'video/mpeg');
  *
  *	For matching pattern syntax, cf http://www.php.net/manual/en/function.preg-match.php
  *	or http://www.perldoc.com/perl5.8.0/pod/perlre.html
  *
  ***********************************************************/
 
-$pref_file_types		= NULL;
+$pref_internal_file_types	= NULL;
+
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_extra_file_types
+ *	Type:			Array of (key/value) strings
+ *	Default:		NULL
+ *	
+ *	This array describes *EXTRA* filename to filetype mapping information.
+ *	This is not currently used (as of rig 0.6.4.3).
+ *	It will be used later to add extra media type processors, for example
+ *	to support Synthetic Plan files, Izumi files or Zip archives.
+ *
+ *	Unless you are really familliar with the internals of RIG, you do not
+ *	want to change this array.
+ *
+ ***********************************************************/
+
+
+$pref_extra_file_types	= NULL;
+
+//--RM 20031021 test-- $pref_extra_file_types	= array("/\.izu$/i" => 'text/x-izumi');
 
 
 
@@ -769,10 +797,13 @@ $pref_file_types		= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.20  2003/11/09 20:50:58  ralfoide
+//	Added pref_internal_file_types
+//
 //	Revision 1.19  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)
-//
+//	
 //	Revision 1.18  2003/09/01 20:54:24  ralfoide
 //	More variable descriptions.
 //	Added pref_follow_album/image_symlinks

@@ -632,10 +632,13 @@ function rig_video_javascript_testline($test, $line)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/11/29 22:44:23  ralfoide
+//	Fixed line endings (some lines in dos mode converted to unix mode)
+//
 //	Revision 1.2  2003/11/29 22:35:42  ralfoide
 //	Video: JavaScript browser & OS detection, customize install codec links, etc.
 //	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)
-//
+//	
 //	Revision 1.1  2003/11/25 05:05:34  ralfoide
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.

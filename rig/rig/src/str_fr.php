@@ -79,10 +79,10 @@ $html_vis_off		= 'Masquer';
 $html_credits		= 'Cr&eacute;dits';
 $html_show_credits	= 'Afficher les cr&eacute;dits de RIG et PHP';
 $html_hide_credits	= 'Masquer les cr&eacute;dits';
-$html_text_credits	= '<a href=\"http://rig.powerpulsar.com\">RIG</a> &copy; 2001 par R\'alf<br>';
-$html_text_credits .= 'RIG est diffus&eacute; sous les conditions de la <a href=\"LICENSE.html\">license RIG</a>.<br>';
-$html_text_credits .= 'Bas&eacute; sur <a href=\"http://www.php.net\">PHP</a> et ';
-$html_text_credits .= 'la <a href=\"ftp://ftp.uu.net/graphics/jpeg\">JpegLib</a>.<br>';
+$html_text_credits	= '<a href="http://rig.powerpulsar.com">RIG</a> &copy; 2001 par R\'alf<br>';
+$html_text_credits .= 'RIG est diffus&eacute; sous les conditions de la <a href="LICENSE.html">license RIG</a>.<br>';
+$html_text_credits .= 'Bas&eacute; sur <a href="http://www.php.net">PHP</a> et ';
+$html_text_credits .= 'la <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>';
 
 $html_phpinfo		= 'Informations sur le serveur PHP';
 $html_show_phpinfo	= 'Afficher les informations sur le serveur PHP';
@@ -144,9 +144,12 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2002/11/02 04:09:32  ralfoide
+//	Fixes for URLs in international strings
+//
 //	Revision 1.6  2002/10/24 21:32:46  ralfoide
 //	dos2unix fix
-//
+//	
 //	Revision 1.5  2002/10/23 16:01:00  ralfoide
 //	Added <html lang>; now transmitting charset via http headers.
 //	

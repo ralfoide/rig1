@@ -80,10 +80,10 @@ $html_vis_off		= 'Hide';
 $html_credits		= 'Credits';
 $html_show_credits	= 'Display RIG & PHP Credits';
 $html_hide_credits	= 'Hide Credits';
-$html_text_credits	= '<a href=\"http://rig.powerpulsar.com\">RIG</a> &copy; 2001 by R\'alf<br>';
-$html_text_credits .= 'RIG is diffused under the terms of the <a href=\"LICENSE.html\">RIG license</a>.<br>';
-$html_text_credits .= 'Based on <a href=\"http://www.php.net\">PHP</a> and ';
-$html_text_credits .= 'the <a href=\"ftp://ftp.uu.net/graphics/jpeg\">JpegLib</a>.<br>';
+$html_text_credits	= '<a href="http://rig.powerpulsar.com">RIG</a> &copy; 2001 by R\'alf<br>';
+$html_text_credits .= 'RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a>.<br>';
+$html_text_credits .= 'Based on <a href="http://www.php.net">PHP</a> and ';
+$html_text_credits .= 'the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>';
 
 $html_phpinfo		= 'PHP Server Information';
 $html_show_phpinfo	= 'Display PHP Server Information';
@@ -136,9 +136,12 @@ $html_img_date		= 'l\, F d\, Y\, g:m A';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2002/11/02 04:09:32  ralfoide
+//	Fixes for URLs in international strings
+//
 //	Revision 1.5  2002/10/23 16:01:01  ralfoide
 //	Added <html lang>; now transmitting charset via http headers.
-//
+//	
 //	Revision 1.4  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
 //	

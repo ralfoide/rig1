@@ -211,6 +211,8 @@ Admin:
 
 [0.6.5]
 
+20040715 [1.F] Fix: Remove temporary HTML cache if PHP processing aborted before completion
+20040715 [1.F] Fix: HTML cache hash must also include Query vars: credits, phpinfo, _debug_
 20040712 [1.F] Themes: Red title block for admin mode [Request: AR]
 20040711 [1.F] Feature: Remove all HTML caches action in Admin album page
 20040711 [1.F] Exp: Detect palm-size devices screen size in the HTTP User Agent
@@ -715,9 +717,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.55  2004/07/16 08:14:18  ralfoide
+//	Fixes for HTML cache
+//
 //	Revision 1.54  2004/07/14 06:25:02  ralfoide
 //	Palm-size test, html cache admin option, red title in admin mode
-//
+//	
 //	Revision 1.53  2004/07/09 05:58:32  ralfoide
 //	Fixes for pagination, etc.
 //	

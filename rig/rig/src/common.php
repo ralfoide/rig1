@@ -3248,10 +3248,11 @@ function rig_begin_buffering()
 	// - current loggued user name (different users have different visibilities)
 	// - color theme name
 	// - language name
-	// - current preference image layout
-	// - current preference album layout
-	// - current preference album nb col
-	// - current preference image nb col
+	// - preference image layout
+	// - preference album layout
+	// - preference album nb col
+	// - preference image nb col
+	// - self url (in order to get the extra fields: credits, phpinfo, _debug_, etc.) [RM 20040715 v 0.6.5]
 
 	$hash =  ($current_album_page > 1 ? rig_simplify_filename($current_album_page) . 'a_' : '')
 			. ($current_image_page > 1 ? rig_simplify_filename($current_image_page) . 'i_' : '')
@@ -3261,7 +3262,8 @@ function rig_begin_buffering()
 			. $pref_image_layout . "-"
 			. $pref_album_layout . "-"
 			. $pref_album_nb_col . "-"
-			. $pref_image_nb_col;
+			. $pref_image_nb_col . "|"
+			. rig_self_url();
 
 	$hash = md5($hash);
 
@@ -3346,6 +3348,10 @@ function rig_begin_buffering()
 		if (rig_is_file($rig_tmp_cache))
 			unlink($rig_tmp_cache);
 
+		// RM 20040715 [v0.6.5] register a cleanup function to remove the
+		// tmp cache if the script is aborted before the buffering ends
+		register_shutdown_function(rig_clean_buffering);
+
 		ob_implicit_flush(0);
 		ob_start();
 
@@ -3405,11 +3411,13 @@ function rig_end_buffering()
 			{
 				// remove the temp cache, no longuer needed
 				unlink($rig_tmp_cache);
+				$rig_tmp_cache = '';
 			}
 			else
 			{
 				// move the temp cache to the destination cache
 				rename($rig_tmp_cache, $rig_abs_cache);
+				$rig_tmp_cache = '';
 			}
 
 		}
@@ -3475,6 +3483,38 @@ function rig_flush()
 }
 
 
+
+
+
+//****************************
+function rig_clean_buffering()
+//****************************
+// RM 20040715 [v0.6.5] responds to register_shutdown_function()
+// to remove the tmp cache if the script is aborted before
+// the buffering ends
+{
+	global $rig_abs_cache;
+	global $rig_tmp_cache;
+
+	// if cache buffering is activated...
+	// if a tmp cache was in use...
+	if (   is_string($rig_tmp_cache) && $rig_tmp_cache != ''
+		&& is_string($rig_abs_cache) && $rig_abs_cache != '')
+	{
+		ob_end_flush();
+
+		// remove the temp cache, no longuer needed
+		unlink($rig_tmp_cache);
+
+		// disable buffering
+		$rig_abs_cache = FALSE;
+		$rig_tmp_cache = FALSE;
+	}
+
+}
+
+
+
 //-----------------------------------------------------------------------
 
 
@@ -3500,9 +3540,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.45  2004/07/16 08:14:31  ralfoide
+//	Fixes for HTML cache
+//
 //	Revision 1.44  2004/07/14 06:09:41  ralfoide
 //	Renamed html caches. Minor fixes for Win32/PHP 4.3.7 support
-//
+//	
 //	Revision 1.43  2004/07/09 05:51:10  ralfoide
 //	Fixes: don't add useless parameters in URL, no pagination when only one page, etc.
 //	

@@ -49,15 +49,26 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 	// debug
 	// echo "<br> res = $res\n";
 
+	// There was an error if the return code was != 0
 	if ($retvar)
+	{
+		$desc = "(unknown)";
+		if ($retvar == 3)
+			$desc = "(timeout)";
+		else if ($retvar == 2)
+			$desc = "(invalid arguments)";
+		else if ($retvar == 1)
+			$desc = "(processing error)";
+		
 		rig_html_error("Create Thumbnail",
-					   "Error $retvar during image creation<p>" .
+					   "Error $retvar $desc during image creation<p>" .
 					   "<b>Source:</b> $abs_source<br>" .
 					   "<b>Dest:</b> $abs_dest<br>" .
 					   "<b>Size:</b> $size, <b>Quality:</b> $quality<br>" .
 					   "<b>CWD:</b> " . getcwd() . "<br>" .
 					   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|", 
 					   $php_errormsg);
+	}
 
 	return $retvar;
 }
@@ -121,8 +132,25 @@ function rig_build_image_type($album, $file,
 
 	if (rig_is_file($abs_source) && !rig_is_file($abs_dest) && $auto_create)
 	{
-		if (rig_make_image($abs_source, $abs_dest, $size, $quality) != 0)
+		$retvar = rig_make_image($abs_source, $abs_dest, $size, $quality);
+		
+		if ($retvar != 0)
 		{
+			// The return code is 3 for a timeout, which means the next request
+			// for the same thumbnail will generate one more timeout... so instead
+			// in this very specific case we actually *copy* the default N/A icon
+			// as the generated thumbnail
+			if ($retvar == 3)
+			{
+				@copy(rig_post_sep($abs_images_path) . $pref_empty_album, $abs_dest);
+
+				rig_html_error("Timeout Warning!",
+							   "A timeout occured whilst generating the thumbnail." .
+							   "<br>A default thumbnail will be used instead." .
+							   "<br>This error should not occur again unless you erase all preview thumbnails from the cache."
+							   );
+			}
+
 			// in case of error, use the default icon...
 			// RM 20030628 TBDL fix path (cf video)
 			if ($use_default)
@@ -191,13 +219,49 @@ function rig_build_video_type($album, $file,
 
 	if (rig_is_file($abs_source) && !rig_is_file($abs_dest) && $auto_create)
 	{
-		if (rig_make_image($abs_source, $abs_dest, $size, $quality) != 0)
+		$retvar = rig_make_image($abs_source, $abs_dest, $size, $quality);
+		
+		if ($retvar != 0)
 		{
+			// The return code is 3 for a timeout, which means the next request
+			// for the same thumbnail will generate one more timeout... so instead
+			// in this very specific case we actually *copy* the default N/A icon
+			// as the generated thumbnail
+			if ($retvar == 3)
+			{
+				$timeout_image = "timeout.jpg";
+				$source = rig_post_sep($abs_images_path) . $timeout_image;
+				
+				$copyok = copy($source, $abs_dest);
+
+				if ($copyok)
+				{
+					rig_html_error("Timeout Warning!",
+								   "A timeout occured whilst generating the thumbnail." .
+								   "<br>A default thumbnail will be used instead." .
+								   "<br>This error should not occur again unless you erase all preview thumbnails from the cache."
+								   );
+				}
+				else
+				{
+					rig_html_error("Error accessing $timeout_image",
+								   "Error whilst trying to copy a file:<p>" .
+								   "<b>Source:</b>$source<br>" .
+								   "<b>Dest:</b>$abs_dest<br>",
+								   $source,
+								   $php_errormsg);
+				}
+			}
+
 			// in case of error, use the default icon...
 			// RM 20030628 fix: the fixed image in /images/ not in the album's root
-			return array("r" => $dir_images,
-						 "a" => $abs_images_path,
-						 "p" => $pref_empty_album);
+			if ($use_default)
+			{
+				// RM 20030628 fix: the fixed image in /images/ not in the album's root
+				return array("r" => $dir_images,
+							 "a" => $abs_images_path,
+							 "p" => $pref_empty_album);
+			}
 		}
 	}
 
@@ -764,9 +828,12 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.18  2004/07/09 05:52:06  ralfoide
+//	Handling of timeout in thumbnail creation
+//
 //	Revision 1.17  2004/06/03 14:14:47  ralfoide
 //	Fixes to support PHP 4.3.6
-//
+//	
 //	Revision 1.16  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

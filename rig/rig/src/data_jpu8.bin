@@ -214,7 +214,7 @@ $html_hide_credits
 // Hide Credits
 
 $html_text_credits
-R'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 by R'alf<br>Japanese Translation by <a href="mailto:et_cogito@mac.com">INOUE Tatsuo</a><br>RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a> (<a href="http://www.opensource.org/licenses/">OSL</a>).<br>Based on <a href="http://www.php.net">PHP</a> and the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>
+R'alf Image Gallery ([rig-name-url]) &copy; 2001-2003 by R'alf<br>Japanese Translation by <a href="mailto:et_cogito@mac.com">INOUE Tatsuo</a><br>RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a> (<a href="http://www.opensource.org/licenses/">OSL</a>).<br>Based on <a href="http://www.php.net">PHP</a> and the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>
 
 $html_phpinfo
 PHP サーバー情報 

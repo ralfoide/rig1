@@ -93,7 +93,7 @@ $html_vis_off		= 'Masquer';
 $html_credits		= 'Cr&eacute;dits';
 $html_show_credits	= 'Afficher les cr&eacute;dits de RIG et PHP';
 $html_hide_credits	= 'Masquer les cr&eacute;dits';
-$html_text_credits	= 'R\'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 par R\'alf<br>';
+$html_text_credits	= 'R\'alf Image Gallery ([rig-name-url]) &copy; 2001-2003 par R\'alf<br>';
 $html_text_credits .= 'RIG est diffus&eacute; sous les conditions de la <a href="LICENSE.html">license RIG</a> (<a href="http://www.opensource.org/licenses/">OSL</a>).<br>';
 $html_text_credits .= 'Bas&eacute; sur <a href="http://www.php.net">PHP</a> et ';
 $html_text_credits .= 'la <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>';
@@ -174,9 +174,17 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2003/11/09 20:52:12  ralfoide
+//	Fix: image resize popup broken (img_size value not memorized?)
+//	Feature: Comments (edit page, organizing workflow)
+//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
+//	Fix: Changed credit line
+//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
+//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
+//
 //	Revision 1.14  2003/07/23 01:19:13  ralfoide
 //	Language: strings for tooltip details
-//
+//	
 //	Revision 1.13  2003/07/21 04:54:45  ralfoide
 //	Added date format for album display; changed dates format to strftime (localizable); setting locale
 //	

@@ -162,9 +162,14 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 	if ($user)
 	{
 		// look for a file in the local settings
-		$name = $dir_abs_locset;
-		$name = $admin ? $name . "admin_list.txt" : $name . "user_list.txt";
-		$file = @fopen($name, "rt");
+		// $dir_abs_locset is optional: it is either an empty string or an absolute path -- RM 20030919 fixed
+		$file = FALSE;
+		if (is_string($dir_abs_locset) && $dir_abs_locset != "")
+		{
+			$name = $dir_abs_locset;
+			$name = $admin ? $name . "admin_list.txt" : $name . "user_list.txt";
+			$file = @fopen($name, "rt");
+		}
 
 		// if we cannot find it, look for a file in the global settings
 		if (!$file)
@@ -324,9 +329,17 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/11/09 20:52:12  ralfoide
+//	Fix: image resize popup broken (img_size value not memorized?)
+//	Feature: Comments (edit page, organizing workflow)
+//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
+//	Fix: Changed credit line
+//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
+//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
+//
 //	Revision 1.10  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//
+//	
 //	Revision 1.9  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

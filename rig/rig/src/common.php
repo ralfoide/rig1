@@ -42,6 +42,7 @@
 	current_type			- string 'image' or 'video' -- RM 20030713
 	current_album_page		- integer (-1, 0, 1..N: cf rig_prepare_album for comments -- RM 20030908) 
 	current_image_page		- integer (-1, 0, 1..N: cf rig_prepare_album for comments -- RM 20030908) 
+	rig_file_types			- array of {string, string} tuples
 	list_albums				- array of string
 	list_images				- array of filename
 	display_title			- string
@@ -93,16 +94,17 @@ else // Un*x
 
 
 define("CURRENT_ALBUM_ARROW",	"&nbsp;=&gt;&nbsp;");
-define("SOFT_NAME",				"Rig [Ralf Image Gallery]");
+define("RIG_SOFT_NAME",			"RIG");							// RM 20030918 removed "Ralf Image Gallery"
+define("RIG_SOFT_URL",			"http://rig.powerpulsar.com");
 define("ALBUM_ICON",			"album_icon.jpg");
-// -- RM 20030809 obsolete -- define("ALBUM_OPTIONS",			"options");
+// define("ALBUM_OPTIONS",		"options");						// RM 20030809 obsolete
 define("ALBUM_OPTIONS_TXT",		"options.txt");
 define("ALBUM_OPTIONS_XML",		"options.xml");
 
-define("DESCRIPTION_TXT",		"descript.ion");		// RM 20030713
+define("DESCRIPTION_TXT",		"descript.ion");				// RM 20030713
 define("FILEINFODIZ_TXT",		"file_info.diz");
 
-define("ALBUM_CACHE_NAME",		"cache_album_");			// RM 20030809
+define("ALBUM_CACHE_NAME",		"cache_album_");				// RM 20030809
 define("ALBUM_CACHE_EXT",		".html");
 
 // start timing...
@@ -111,7 +113,8 @@ $time_start = rig_getmicrotime();
 // read site-prefs and then override with local prefs, if any
 require_once(rig_require_once("prefs.php", $dir_abs_globset));
 
-if (rig_is_file ($dir_abs_locset . "prefs.php"))
+// $dir_abs_locset is optional: it is either an empty string or an absolute path -- RM 20030919 fixed
+if (is_string($dir_abs_locset) && $dir_abs_locset != "" && rig_is_file($dir_abs_locset . "prefs.php"))
 	require_once($dir_abs_locset . "prefs.php");
 
 // setup...
@@ -165,6 +168,7 @@ require_once(rig_require_once("theme_$current_theme.php", $dir_abs_src, $abs_upl
 require_once(rig_require_once("common_display.php"));
 require_once(rig_require_once("common_images.php"));
 require_once(rig_require_once("common_xml.php"));			// RM 20030216
+require_once(rig_require_once("common_comment.php"));		// RM 20030928
 
 rig_setup();
 rig_create_option_dir("");
@@ -176,7 +180,7 @@ rig_setup_db();
 
 
 //-----------------------------------------------------------------------
-
+//-----------------------------------------------------------------------
 
 //***************************************
 function rig_html_error($title_str,
@@ -405,6 +409,17 @@ function rig_print_array_str($str)
 
 
 //*************************
+function rig_var_dump($str)
+//*************************
+// For debug purposes -- RM 20030928
+{
+	global $$str;
+	echo "<br><b>$str =</b> ";
+	var_dump($$str);
+}
+
+
+//*************************
 function rig_prep_sep($str)
 //*************************
 {
@@ -444,12 +459,14 @@ function rig_get_file_type($name)
 // Returns the file type string ("image/jpeg" or "video/qt|avi") for the file.
 // Returns an empty string if the file is not supported.
 // RM 20030628 new v0.6.3.4
+// RM 20030928 using rig_file_types which combines pref_internal_file_types
+// and pref_extra_file_types
 {
-	global $pref_file_types;
+	global $rig_file_types;
 
-	if (is_array($pref_file_types) && count($pref_file_types) > 0)
+	if (is_array($rig_file_types) && count($rig_file_types) > 0)
 	{
-		foreach($pref_file_types as $filter => $type)
+		foreach($rig_file_types as $filter => $type)
 		{
 			if (preg_match($filter, $name) > 0)
 				return $type;
@@ -1224,8 +1241,9 @@ function rig_read_album_options($album)
 		$abs_options = $abs_image_cache_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS_TXT);
 	
 		// silently abort if the file does not exist
+		// RM 20030919 bug fix: lack of existing option file is NOT a failure. Nothing to read is OK.
 		if (!rig_is_file($abs_options))
-			return FALSE;
+			return TRUE;
 	}
 
 	// DEBUG
@@ -1690,17 +1708,21 @@ function rig_handle_cookies()
 	global $admpwd,		$rig_adm_passwd;
 	global $force_login;
 
+	// Vars that are transmitted thru the GET url
 	$lang			= rig_get($_GET,'lang'			);
 	$theme			= rig_get($_GET,'theme'			);
-	$img_size		= rig_get($_GET,'img_size'		);
 	$force_login	= rig_get($_GET,'force_login'	);
 	$keep			= rig_get($_GET,'keep'			);
+
+	// Vars that are transmitted thru a GET url or a form POST
+	$img_size		= rig_get($_GET,'img_size', rig_get($_POST,'img_size'));
 
 	$user			= rig_get($_GET,'user',   rig_get($_POST,'user'  ));
 	$passwd			= rig_get($_GET,'passwd', rig_get($_POST,'passwd'));
 	$admusr			= rig_get($_GET,'admusr', rig_get($_POST,'admusr'));
 	$admpwd			= rig_get($_GET,'admpwd', rig_get($_POST,'admpwd'));
 
+	// Cookie vars
 	$rig_lang		= rig_get($_COOKIE,'rig_lang'	);
 	$rig_theme		= rig_get($_COOKIE,'rig_theme'	);
 	$rig_img_size	= rig_get($_COOKIE,'rig_img_size');
@@ -1708,7 +1730,6 @@ function rig_handle_cookies()
 	$rig_passwd		= rig_get($_COOKIE,'rig_passwd'	);
 	$rig_adm_user	= rig_get($_COOKIE,'rig_adm_user');
 	$rig_adm_passwd	= rig_get($_COOKIE,'rig_adm_passwd');
-
 
 	if ($lang)
 	{
@@ -1839,7 +1860,9 @@ function rig_setup()
 	global $pref_use_db;
 	global $pref_use_db_id;
 	global $pref_use_id_in_url;
-	global $pref_file_types;		// RM 20030807
+	global $pref_internal_file_types;		// RM 20030807
+	global $pref_extra_file_types;			// RM 20030928
+	global $rig_file_types;					// RM 20030928
 	global $current_language;
 	global $display_exec_date;
 	global $display_softname;
@@ -1884,7 +1907,7 @@ function rig_setup()
 
 	// -- setup date & soft name
 	$display_exec_date = strftime($html_footer_date);	// RM 20030719 using strftime
-	$display_softname  = SOFT_NAME;
+	$display_softname  = "<a href=\"" . RIG_SOFT_URL . "\">" . RIG_SOFT_NAME . "</a>";
 
 
 	// -- keep track of php errors with $php_errormsg (cf html_error)
@@ -1900,20 +1923,29 @@ function rig_setup()
 
 	// -- setup filetypes --
 	
-	// If global $pref_file_types is not defined, request file type support
+	// If global $pref_internal_file_types is not defined, request file type support
 	// information from the rig_thumbnail.exe application. [RM 20030807]
 	
-	if ($pref_file_types == NULL || !is_array($pref_file_types) || count($pref_file_types) == 0)
+	if (!is_array($pref_internal_file_types) || count($pref_internal_file_types) == 0)
 	{
-		$pref_file_types = rig_runtime_filetype_support();
+		$pref_internal_file_types = rig_runtime_filetype_support();
 
-		if ($pref_file_types == NULL || !is_array($pref_file_types) || count($pref_file_types) == 0)
+		if (!is_array($pref_internal_file_types) || count($pref_internal_file_types) == 0)
 			rig_html_error("Runtime File Type Array Error",
 						   "Runtime File Type Array is not valid<p>" .
-						   "<b>Is array?</b> " . ($pref_file_types == NULL || !is_array($pref_file_types) ? "No" : "Yes") . "<br>" .
-						   "<b>Is empty?</b> " . (is_array($pref_file_types) && count($pref_file_types) >= 0 ? "No" : "Yes"),
-						   $pref_file_types);
+						   "<b>Is array?</b> " . ($pref_internal_file_types == NULL || !is_array($pref_internal_file_types) ? "No" : "Yes") . "<br>" .
+						   "<b>Is empty?</b> " . (is_array($pref_internal_file_types) && count($pref_internal_file_types) >= 0 ? "No" : "Yes"),
+						   $pref_internal_file_types);
 	}
+
+	// rig_file_types combines pref_internal_file_types and pref_extra_file_types
+	// [RM 20030928]
+	
+	
+	if (is_array($pref_extra_file_types) && count($pref_extra_file_types) > 0)
+		$rig_file_types = $pref_internal_file_types + $pref_extra_file_types;
+	else
+		$rig_file_types = $pref_internal_file_types;
 
 }
 
@@ -3274,10 +3306,18 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.35  2003/11/09 20:52:12  ralfoide
+//	Fix: image resize popup broken (img_size value not memorized?)
+//	Feature: Comments (edit page, organizing workflow)
+//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
+//	Fix: Changed credit line
+//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
+//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
+//
 //	Revision 1.34  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)
-//
+//	
 //	Revision 1.33  2003/09/08 03:54:35  ralfoide
 //	Re-implemented follow-album-symlink the proper way, by separating
 //	current_album (the symlink source) from current_real_album (the symlink dest)

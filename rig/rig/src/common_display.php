@@ -1635,6 +1635,7 @@ function rig_display_image_copyright()
 function rig_display_credits($has_credits = -1, $has_phpinfo = -1)
 //****************************************************************
 {
+	global $display_softname;
 	global $html_text_credits;
 	global $html_hide_credits;
 	global $html_show_credits;
@@ -1673,11 +1674,13 @@ function rig_display_credits($has_credits = -1, $has_phpinfo = -1)
 	// actually display the credits if activated
 	if ($has_credits == "on")
 	{
+		$credits = str_replace("[rig-name-url]", $display_softname, $html_text_credits);
+
 		?>
 			<p>
 				<?php rig_display_section("<b>$html_credits<b>") ?>
 			<p>
-				<?php echo "$html_text_credits" ?>
+				<?php echo "$credits" ?>
 			<p>
 		<?php
 	
@@ -2033,10 +2036,18 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.28  2003/11/09 20:52:12  ralfoide
+//	Fix: image resize popup broken (img_size value not memorized?)
+//	Feature: Comments (edit page, organizing workflow)
+//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
+//	Fix: Changed credit line
+//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
+//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
+//
 //	Revision 1.27  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)
-//
+//	
 //	Revision 1.26  2003/09/08 03:54:35  ralfoide
 //	Re-implemented follow-album-symlink the proper way, by separating
 //	current_album (the symlink source) from current_real_album (the symlink dest)

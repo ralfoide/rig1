@@ -10,43 +10,56 @@
 
 //-----------------------------------------------------------------------
 
-//****************************
-function rig_xml_dom_enabled()
-//****************************
-// indicates if this PHP version supports the new DOM XML we need here
-// we check two functions here:
-// - xmldocfile : old DOM XML API... just avoid it right now
-// - domxml_open_file() : new DOM XML API... let's use it
+
+//********************************
+function rig_comment_has_preview()
+//********************************
 {
-	$old_api = function_exists('xmldocfile');
-	$new_api = function_exists('domxml_open_file');
-
-	global $_debug_;
-	if ($_debug_)
-	{
-		echo "<p>";
-		if ( $new_api) echo "New DOM XML API is available<br>";
-		if ( $old_api) echo "Old DOM XML API is available<br>";
-		if (!$new_api) echo "New DOM XML API is <font color=red>NOT</font> available<br>";
-		if (!$old_api) echo "Old DOM XML API is <font color=red>NOT</font> available<br>";
-	}
-
-	return $new_api;
+	return TRUE;
 }
 
 
 //-----------------------------------------------------------------------
 
+//********************************
+function rig_comment_insert_icon()
+//********************************
+// Insert the html for the current icon
+{
+	global $dir_images;
+	global $pref_empty_album;
+	
+	
+	$link = $dir_images . $pref_empty_album;
+	echo "<img src=\"$link\">";
+}
+
+
+//********************************
+function rig_comment_insert_name()
+//********************************
+{
+	echo "image name";
+}
+
+
 //***********************************
-function rig_xml_read_options($album)
+function rig_comment_insert_comment()
 //***********************************
 {
-	if (!rig_xml_dom_enabled())
-		return FALSE;
-
-	// TBDL -- return false since does nothing
-	return FALSE;
+	echo "blah blah<br>blah <b>lbah blha</b> lbhas fv <i>dfbhd bhdfk</i> vbdfhbvdgf bydgbudi budibue rguwgfu hvudfvwiuvh bv e veuiv v!";
 }
+
+
+//********************************
+function rig_comment_insert_text()
+//********************************
+{
+	echo "blah blah\nblah __lbah blha__ lbhas fv ''dfbhd bhdfk'' vbdfhbvdgf bydgbudi budibue rguwgfu hvudfvwiuvh bv e veuiv v!";
+}
+
+
+//-----------------------------------------------------------------------
 
 
 //-----------------------------------------------------------------------
@@ -54,7 +67,7 @@ function rig_xml_read_options($album)
 
 //-------------------------------------------------------------
 //	$Log$
-//	Revision 1.2  2003/11/09 20:52:12  ralfoide
+//	Revision 1.1  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)
 //	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
@@ -62,8 +75,5 @@ function rig_xml_read_options($album)
 //	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
 //	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
 //
-//	Revision 1.1  2003/02/17 10:03:00  ralfoide
-//	Toying with XML
-//	
 //-------------------------------------------------------------
 ?>

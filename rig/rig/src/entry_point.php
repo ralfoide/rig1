@@ -47,7 +47,11 @@ if (isset($_GET['admin']) && $_GET['admin'])
 }
 else
 {
-	if ($rig_is_image)
+	if (isset($_GET['comment']) && $_GET['comment'])
+	{
+		require_once(rig_check_src_file($dir_abs_src . "comment.php"));
+	}
+	else if ($rig_is_image)
 	{
 		require_once(rig_check_src_file($dir_abs_src . "image.php"));
 	}
@@ -61,9 +65,17 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/11/09 20:52:12  ralfoide
+//	Fix: image resize popup broken (img_size value not memorized?)
+//	Feature: Comments (edit page, organizing workflow)
+//	Fix: Album check code fails if no options.txt -- reading options.txt must not fail if absent.
+//	Fix: Changed credit line
+//	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
+//	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
+//
 //	Revision 1.5  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//
+//	
 //	Revision 1.4  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

@@ -8,16 +8,19 @@
 //**********************************************
 
 
-$rig_vernum  =  0.645;
-$rig_version = "0.6.4.5";
+$rig_vernum  =  0.65;
+$rig_version = "0.6.5";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.22  2004/07/09 05:53:33  ralfoide
+//	Started version 0.6.5. Now discarding the useless sub sub version numbers.
+//
 //	Revision 1.21  2004/07/06 04:57:04  ralfoide
 //	Preparing to tag 0.6.4.5
-//
+//	
 //	Revision 1.20  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

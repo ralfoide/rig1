@@ -92,6 +92,10 @@ Admin:
 
 [future]
 
+20030819 [1.N] Feature: Template system [sum] [RM Note: make non-OO, worse is better]
+20030819 [1.N] Feature: Comments system (image+albums, text files) [sum]
+20030819 [2.N] Feature: Voting system [sum]
+20030819 [2.N] Fix: Cache name has no theme/lang (cookie var empty?)
 
 20030807 [1.N] Japanese: Should '-san' be added to "Guest" user name? [Tatsuo->No]
 20030802 [4.N] Images: Slideshow using HTML DOM to replace image in container (need browser detection)
@@ -101,7 +105,6 @@ Admin:
 20030713 [2.N] rig_thumbnail: Should try to use autoconf or something
 20030316 [1.N] RSS-Exp: Need a pure-text RSS feed (updates, comments with links on jpg) and another one with direct inclusiong of thumbnails
 20030316 [1.N] RSS-Exp: Syndicate an RSS feed. (Of course, how come I haven't though of that before?!)
-20030316 [2.N] Manual: INSTALL.txt is obsolete and misleading
 20030316 [2.N] Manual: README.txt is obsolete and misleading
 20030311 [2.N] Themes: Make a specific subdir (other than src) for color themes
 20030311 [2.N] Templates: Make a specific subdir (other than src) for layout templates
@@ -152,11 +155,26 @@ Admin:
 20020713 [9.N] Non-persistent cache for punchy/non overloaded servers
                i.e.: no cache at all or session-based cache + expiration (per album option?)
 
+-- in progress 00
+
+20030808 [2.W] Manual: INSTALL.txt is obsolete and misleading
+
 
 -- done --
 
-[0.6.4.1]
+[0.6.4.2]
 
+20030821 [1.W] CVS: Updating SourceForge, tagging as tag_2003-08-21_v06042 and ready to move on 0.6.4.3
+20030821 [3.F] Feature: Pref to en/disable album descriptions
+20030821 [3.F] Feature: Pref to en/disable album cache [sum]
+20030821 [3.F] Feature: Pref to en/disable view hidden album/image via query string hack [sum]
+20030821 [2.F] Fix: Album cache not recomputed when src/*.php changed [sum] [RM cf rig_check_expired comments]
+20030820 [2.F] Feature: Split admin in different src dir (with location setting) [sum]
+20030820 [1.F] Source: Moved admin php files into the new admin source folder
+20030820 [2.F] Source: Restructured rig_require_once() and rig_check_src_file()
+20030820 [2.F] Htdocs: New check_entry.php (can be symlinked into index.php in album's web folder)
+20030819 [2.F] Location: dir_src, dir_globset and new dir_admin_src renamed to dir_abs_xxx (are now absolute paths)
+20030819 [2.F] Location: New dir_album_cache, renamed dir_preview to dir_image_cache
 20030817 [1.F] Fix: Added color_table_desc in themes for description and dates in album view.
 20030817 [1.F] CVS: Moving on to 0.6.4.2
 
@@ -595,10 +613,13 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.33  2003/08/21 20:22:46  ralfoide
+//	Updating SourceForge, tagging as tag_2003-08-21_v06042 and ready to move on 0.6.4.3
+//
 //	Revision 1.32  2003/08/18 06:09:59  ralfoide
 //	Moving on to 0.6.4.2
 //	Added color_table_desc in themes for description and dates in album view.
-//
+//	
 //	Revision 1.31  2003/08/18 04:33:47  ralfoide
 //	Tagging 0.6.4.0 and 0.6.4.1, ready to move on 0.6.4.2
 //	

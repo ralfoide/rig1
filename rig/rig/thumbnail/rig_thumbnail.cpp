@@ -13,6 +13,7 @@
 #include "rig_thumbnail.h"
 #include "rig_rgb.h"
 #include "rig_jpeg.h"
+#include "rig_avifile.h"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -228,13 +229,19 @@ void rig_print_info(const char * in_filename)
 {
 	int32 width, height;
 
-	if (rig_jpeg_info(rig_unslash(in_filename), width, height))
+	char *name = rig_unslash(in_filename);
+
+	if (rig_jpeg_info(name, width, height))
 	{
-		printf("jpeg\n%ld\n%ld\n", width, height);
+		printf("[rig-thumbnail-result] jpeg %ld %ld\n", width, height);
+	}
+	else if (rig_avifile_info(name, width, height))
+	{
+		printf("[rig-thumbnail-result] video %ld %ld\n", width, height);
 	}
 	else
 	{
-		printf("unknown\n0\n0\n");
+		printf("[rig-thumbnail-result] unknown 0 0\n");
 	}
 }
 
@@ -258,7 +265,15 @@ void rig_resize_image(const char * in_filename,
 	{
 		// read input image
 
-		in_rgb = rig_jpeg_read(rig_unslash(in_filename));
+		char *name = rig_unslash(in_filename);
+
+		in_rgb = rig_jpeg_read(name);
+
+		if (!in_rgb)
+			in_rgb = rig_avifile_read(name);
+
+		if (!in_rgb)
+			throw("rig_resize_image: could not read image.\n");
 		rig_throwifnot(in_rgb);
 
 		// determine the correct output size
@@ -417,8 +432,8 @@ int main(int argc, char *argv[])
 	}
 	catch(const char * s)
 	{
+		DPRINTF(("%s: Catched string exception... -- result 1 --\n", argv[0]));
 		DPRINTF((s));
-
 		return 1;
 	}
 	catch(...)
@@ -440,9 +455,12 @@ int main(int argc, char *argv[])
 /*****************************************************************************
 
 	$Log$
+	Revision 1.2  2003/06/30 06:05:59  ralfoide
+	Avifile support (get info and thumbnail for videos)
+
 	Revision 1.1  2002/08/04 00:58:08  ralfoide
 	Uploading 0.6.2 on sourceforge.rig-thumbnail
-
+	
 	Revision 1.1  2001/11/26 00:07:40  ralf
 	Starting version 0.6: location and split of site vs album files
 	

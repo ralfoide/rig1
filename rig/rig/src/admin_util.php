@@ -73,9 +73,10 @@ function rig_admin_perform_defer()
 	{
 		rig_admin_set_album_visible($item, ($show_album == 'on'));
 	}
-	else if ($admin == "show_image" && $show_image && $current_image)
+	else if ($admin == "show_image" && $show_image && $item)
 	{
-		rig_admin_set_image_visible($current_image, ($show_image == 'on'));
+		// RM 20021022 fix for changing image visibility
+		rig_admin_set_image_visible($item, ($show_image == 'on'));
 	}
 }
 
@@ -630,7 +631,8 @@ function rig_admin_display_image()
 		}
 
 		// link to change image visibility
-		$vis_link = self_url(-1, -1, TRUE, "admin=show_image&item=$dir&show_image=$vis_val#$key");
+		// RM 20021022 fix for changing image visibility
+		$vis_link = self_url(-1, -1, TRUE, "admin=show_image&item=$file&show_image=$vis_val#$key");
 
 		?>
 			<td <?= $w ?>>
@@ -709,9 +711,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2002/10/22 08:37:47  ralfoide
+//	Fix for chaning image visibility
+//
 //	Revision 1.4  2002/10/21 07:34:16  ralfoide
 //	Comment about end-of-file
-//
+//	
 //	Revision 1.3  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
 //	

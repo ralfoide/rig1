@@ -9,6 +9,37 @@
 
 <h3>RIG Notes</h3>
 
+<p>Notes for 0.6.4.2:
+<ul>
+  <li>This is an intermediary dev release, with some minor but useful features.</li>
+  <li>Some preferences have been added to enable or disable features (album descriptions,
+  		album cache, viewing of hidden items.)</li>
+  <li>The location.php and htdocs have been updated to be more flexible.</li>
+  <li>A new folder is used to move admin sources out of the normal sources.</li>
+  <li>Although considered non-stable (low testing and new features to be added soon), this
+  		release seems to perform very well.</li>
+</ul>
+<p>Notes for 0.6.4.1:
+<ul>
+  <li>This is a stable version.</li>
+  <li>This version does not technically add any feature, but it fixes a bunch of small and
+  		annoying details.</li>
+  <li>The code has been updated to comply with PHP 4.3.2 installation defaults: 
+  		it works with register_globals=off and allow_call_time_pass_reference=off.</li>
+  <li>This version also has been tested with IIS 5 and PHP 4.3.2 on a Windows box.</li>
+</ul>
+<p>Notes for 0.6.4.0:
+<ul>
+  <li>This version features a completly rewritten installation guide.
+  		Altough I consider the installation guide to be always obsolete (since it is always
+  		updated <em>after</em> features are posted online), its reading should help a lot
+  		people who are new to RIG. It covers how to compile the thumbnail application and
+  		how to configure a basic site, including tricky parts like directories access rights.</li>
+  <li>This version features a brand new album HTML cache generation: each time an album page
+  		is rendered, RIG keeps a cache of it and serves the cached version next time the
+  		same unchanged album is viewed. This greatly reduces the load of the server.</li>
+  <li>This version was supposed to be the next stable one but further testing showed this was premature</li>
+</ul>
 <p>Notes for 0.6.3.5:
 <ul>
   <li>This version introduces some new (minor but useful) features.
@@ -51,6 +82,29 @@
 
 <h3>RIG Change Log</h3>
 
+<p>New in 0.6.4.2:
+<ul>
+  <li>Feature: Pref to en/disable album descriptions</li>
+  <li>Feature: Pref to en/disable album cache</li>
+  <li>Feature: Pref to en/disable view hidden album/image via query string hack</li>
+  <li>Fix: Album cache not recomputed when src/*.php changed</li>
+  <li>Feature: Split admin in different src dir (with location setting)</li>
+  <li>Htdocs: New check_entry.php (can be symlinked into index.php in album's web folder)</li>
+  <li>Location: New dir_album_cache, using more absolute paths, renamed path variables to be more logical</li>
+  <li>Fix: Added color_table_desc in themes for description and dates in album view.</li>
+</ul>
+<p>New in 0.6.4.1:
+<ul>
+  <li>Checking code to run with IIS 5 + PHP 4.3.2</li>
+  <li>Rewrote access to globals to comply with PHP 4.3.2 installation defaults</li>
+  <li>Many small fixes</li>
+</ul>
+<p>New in 0.6.4.0:
+<ul>
+  <li>New INSTALL.html and INSTALL.txt (already obsolete --sigh-- )</li>
+  <li>New album HTML cache generation</li>
+  <li>New fancy border for image thumbnails in album view</li>
+</ul>
 <p>New in 0.6.3.5:
 <ul>
   <li>Translation of dates in web pages</li>

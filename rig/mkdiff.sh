@@ -4,7 +4,7 @@ usage()
 {
 	echo
 	echo "Usage: $0 A.tgz B.tgz"
-	echo "Filenames *must* end with .tgz"
+	echo "Filenames *must* be in form rig_YYYY-MM-DD_v1234.tgz"
 	echo
 	exit 1;
 }
@@ -26,27 +26,54 @@ then
 	usage
 fi
 
+# get filename component
+
 FA=`basename "$1"`
 FB=`basename "$2"`
+
+# remove extension
 
 DA=${FA/.tgz/}
 DB=${FB/.tgz/}
 
-if [ "$DA" == "" ]
+if [ "${DA}.tgz" != "$FA" ]
 then
-	echo "File $1 does not end with .tgz"
+	echo "File $FA does not end with .tgz"
 	usage
 fi
 
-if [ "$DB" == "" ]
+if [ "${DB}.tgz" != "$FB" ]
 then
-    echo "File $2 does not end with .tgz"
+    echo "File $FB does not end with .tgz"
     usage
 fi
-		
+
+# get version number
+
+VA=${DA/rig_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_/}
+VB=${DB/rig_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_/}
+
+# get date from filename
+
+TA=${DA/rig_/} ; TA=${TA/_v[0-9]*/}
+TB=${DB/rig_/} ; TB=${TB/_v[0-9]*/}
+
+if [ "rig_${TA}_${VA}" != "$DA" ]
+then
+	echo "Error: $DA is not in the form rig_YYYY-MM-DD_v1234"
+	usage
+fi
+
+if [ "rig_${TB}_${VB}" != "$DB" ]
+then
+	echo "Error: $DB is not in the form rig_YYYY-MM-DD_v1234"
+	usage
+fi
+
+
 
 echo
-echo "########## Extracting $DA / $D2 ################"
+echo "########## Extracting $DA / $DB ################"
 echo
 
 # create the temp dir
@@ -67,7 +94,7 @@ echo
 
 pushd $DIR > /dev/null
 
-DEST="${DB}-diff.txt"
+DEST="rig_${TB}_${VA}-${VB}_diff.txt"
 diff -ur "$DA" "$DB" > "$DEST"
 
 if [ -e "$DEST" ]

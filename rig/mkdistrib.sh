@@ -1,12 +1,41 @@
 #!/bin/bash
 
+# keep only the directory portion of the calling program name
+D="$0"
+if [ -L "$D" ];
+then
+    # dereference link
+    D=`ls -l "$D" | sed 's/^.*-> //'`
+fi
+D=${D/`basename $D`/}
+
+V1="./rig/src/version.php"
+V=V1
+if [ ! -f $V ];
+then
+    V="$D/$V1"
+fi;
+
+
+if [ -f $V ];
+then
+    VERS=`grep "\$rig_version = \"" $V | sed 's/.*"\([0-9i\.]*\)".*/\1/' | sed 's/\.//g'`
+else
+    VERS="tag_YYYY-MM-DD_v1234"
+fi
+
+DATE=`date +%Y-%m-%d | tr -d "\n"`
+
+RTAG="tag_${DATE}_v$VERS"
+
+
 usage()
 {
 	echo
 	echo "Usage: $0 cvs_tag"
 	echo "where cvs_tag must be:"
 	echo "  - \"today\""
-	echo "  - a date in the form 'tag_YYYY-MM-DD_vVVVV' (f.ex tag_2002-11-04_v0623)"
+	echo "  - a date in the form 'tag_YYYY-MM-DD_vVVVV' (f.ex $RTAG)"
 	echo
 	exit 1;
 }
@@ -43,7 +72,7 @@ else
 
 	if [ -f $V ];
 	then
-		A=`grep "\$rig_version = \"" $V | sed 's/.*"\([0-9i\.]*\)".*/\1/'`
+		A=`grep "\$rig_version = \"" $V | sed 's/.*"\([0-9i\.]*\)".*/\1/' | sed 's/\.//g'`
 		echo $A
 	else
 		echo "*** ERROR *** ! Can't locate $V1 nor $V !!"

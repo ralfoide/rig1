@@ -19,6 +19,14 @@ Summary of features for RIG:
 
 Generic:
 - in 0.6.4.2:
+[3.F] Feature: Pref to en/disable album descriptions
+[3.F] Feature: Pref to en/disable album cache [sum]
+[3.F] Feature: Pref to en/disable view hidden album/image via query string hack [sum]
+[2.F] Fix: Album cache not recomputed when src/*.php changed [sum] [RM cf rig_check_expired comments]
+[2.F] Feature: Split admin in different src dir (with location setting) [sum]
+[2.F] Htdocs: New check_entry.php (can be symlinked into index.php in album's web folder)
+[2.F] Location: New dir_album_cache, using more absolute paths, renamed path variables to be more logical
+[1.F] Fix: Added color_table_desc in themes for description and dates in album view.
 - in 0.6.4.1:
 [1.F] Checking code to run with IIS 5 + PHP 4.3.2
 [1.F] Rewrote access to globals to comply with PHP 4.3.2 installation defaults
@@ -155,16 +163,21 @@ Admin:
 20020713 [9.N] Non-persistent cache for punchy/non overloaded servers
                i.e.: no cache at all or session-based cache + expiration (per album option?)
 
--- in progress 00
+
+-- in progress --
 
 20030808 [2.W] Manual: INSTALL.txt is obsolete and misleading
 
 
 -- done --
 
+[0.6.4.3]
+
+20030823 [1.F] CVS: Moving on to 0.6.4.3
+
 [0.6.4.2]
 
-20030821 [1.W] CVS: Updating SourceForge, tagging as tag_2003-08-21_v06042 and ready to move on 0.6.4.3
+20030821 [1.F] CVS: Updating SourceForge, tagging as tag_2003-08-21_v06042 and ready to move on 0.6.4.3
 20030821 [3.F] Feature: Pref to en/disable album descriptions
 20030821 [3.F] Feature: Pref to en/disable album cache [sum]
 20030821 [3.F] Feature: Pref to en/disable view hidden album/image via query string hack [sum]
@@ -613,9 +626,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.34  2003/08/23 18:32:45  ralfoide
+//	Uploaded 0.6.4.2 (sf, rig home page), moving on to 0.6.4.3
+//
 //	Revision 1.33  2003/08/21 20:22:46  ralfoide
 //	Updating SourceForge, tagging as tag_2003-08-21_v06042 and ready to move on 0.6.4.3
-//
+//	
 //	Revision 1.32  2003/08/18 06:09:59  ralfoide
 //	Moving on to 0.6.4.2
 //	Added color_table_desc in themes for description and dates in album view.

@@ -8,17 +8,20 @@
 //**********************************************
 
 
-$rig_version = "0.6.4.2";
+$rig_version = "0.6.4.3";
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.17  2003/08/23 18:32:46  ralfoide
+//	Uploaded 0.6.4.2 (sf, rig home page), moving on to 0.6.4.3
+//
 //	Revision 1.16  2003/08/18 06:10:03  ralfoide
 //	Moving on to 0.6.4.2
 //	Added color_table_desc in themes for description and dates in album view.
-//
+//	
 //	Revision 1.15  2003/08/18 04:24:02  ralfoide
 //	Bumped to 0.6.4.1 (PHP 4.3, album HTML cache, fixes)
 //	

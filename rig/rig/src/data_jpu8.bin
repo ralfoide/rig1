@@ -108,7 +108,7 @@ $html_options
 // Options
 
 $html_generated
-<i>[date]</i>- <i>[rig-version]</i>にて作成: 所要時間[time]秒
+[date] - [rig-version]にて作成: 所要時間[time]秒
 
 $html_admin_intrfce
 管理画面

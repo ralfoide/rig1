@@ -13,12 +13,13 @@ require_once($dir_abs_src . "common.php");
 // Important: this page can only display an image.
 // If there is no image parameter, redirect to the album
 // RM 20020714 disabled since this test is already performed by location/index.php
-// if (!((isset($_GET['image']) && $_GET['image']) || (isset($_GET['id']) && rig_db_is_image_id($_GET['id']))))
+// RM 20040703 using "img" query param instead of "image"
+// if (!((isset($_GET['img']) && $_GET['img']) || (isset($_GET['id']) && rig_db_is_image_id($_GET['id']))))
 // 	header("Location: " . rig_self_url(""));
 
 rig_enter_login(rig_self_url());
 
-rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'image'));
+rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'img'));
 rig_display_header($display_title);
 rig_display_body();
 
@@ -78,9 +79,13 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2004/07/06 04:10:58  ralfoide
+//	Fix: using "img" query param instead of "image"
+//	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.
+//
 //	Revision 1.14  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.13  2003/09/13 21:55:55  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)

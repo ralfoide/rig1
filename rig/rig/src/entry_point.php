@@ -22,7 +22,8 @@
 // 5- !admin 	&  image -> image.php
 // 6- !admin 	& !image -> album.php
 
-$rig_is_image = (isset($_GET['image']) && is_string($_GET['image']) && $_GET['image']);
+// RM 20040703 using "img" query param instead of "image"
+$rig_is_image = (isset($_GET['img']) && is_string($_GET['img']) && $_GET['img']);
 
 if (isset($_GET['admin']) && $_GET['admin'])
 {
@@ -75,9 +76,13 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2004/07/06 04:10:58  ralfoide
+//	Fix: using "img" query param instead of "image"
+//	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.
+//
 //	Revision 1.9  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.8  2004/02/23 04:09:00  ralfoide
 //	Entry point for overview test and for phpUnit testing
 //

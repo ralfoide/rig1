@@ -12,7 +12,7 @@
 	----------------------
 	idn						- integers album or image indexes
 	album					- string
-	image					- string
+	img						- string
 	credits					- boolean string 'on' or nothing
 	login					- boolean string 'force' or nothing
 	keep					- boolean string 'on' or nothing
@@ -23,6 +23,11 @@
 	apage					- integer (-1: disable, 0: default, 1..N: select page, cf rig_prepare_album for comments)
 	ipage					- integer (-1: disable, 0: default, 1..N: select page, cf rig_prepare_album for comments)
 
+	IMPORTANT [RM 20040702] As of RIG 0.6.4.5, the "image" URL-Query variable is being
+	renamed "img" to avoid a conflict with lesser browsers that interpret "&image" incorrectly
+	as the HTML Entity "&image;" (namely I'm refering to Pocket Internet Explorer here.)
+
+
 	List of cookies:
 	----------------
 	rig_lang				- string 'fr' or 'en'
@@ -32,6 +37,7 @@
 	rig_adm_user			- string
 	rig_adm_passwd			- string (crypt)
 
+
 	List of globals:
 	----------------
 	rig_version				- string
@@ -39,7 +45,7 @@
 	current_album			- string
 	current_real_album		= sttring					-- RM 20030907
 	current_image			- string
-	current_type			- string 'image' or 'video' -- RM 20030713
+	current_type			- string 'img' or 'video' -- RM 20030713
 	current_album_page		- integer (-1, 0, 1..N: cf rig_prepare_album for comments -- RM 20030908) 
 	current_image_page		- integer (-1, 0, 1..N: cf rig_prepare_album for comments -- RM 20030908) 
 	rig_file_types			- array of {string, string} tuples
@@ -54,6 +60,7 @@
 	display_prev_img		- string
 	display_next_link		- string
 	display_next_img		- string
+
 
 	List of global access paths:
 	----------------------------
@@ -70,6 +77,7 @@
 	abs_preview_exec
 	abs_upload_src_path
 	abs_upload_album_path
+
 
 	List of globals (from album options):
 	-------------------------------------
@@ -893,7 +901,9 @@ function rig_self_url($in_image = -1,
 	global $pref_url_rewrite;		// RM 20030107
 
 
-	$image		= rig_get($_GET,'image'		);
+	// RM 20040703 using "img" query param instead of "image"
+
+	$image		= rig_get($_GET,'img'		);
 	$album		= rig_get($_GET,'album'		);
 	$admin		= rig_get($_GET,'admin'		);
 	$translate	= rig_get($_GET,'translate'	);
@@ -986,12 +996,12 @@ function rig_self_url($in_image = -1,
 	{
 		if ($use_rewrite)
 		{
-			$url = $pref_url_rewrite['image'];
+			$url = $pref_url_rewrite['img'];
 			$param_concat_char = "&";
 		}
 		else
 		{
-			rig_url_add_param($params, 'image', $in_image);
+			rig_url_add_param($params, 'img', $in_image);
 		}
 	}
 
@@ -1057,6 +1067,7 @@ function rig_url_add_param(&$inout_url, $in_param, $in_value)
 //***********************************************************
 // RM 20030308 utility function to add one parameter in rig_self_url()
 {
+	
 	// param can't be empty
 	if (!is_string($in_param) || $in_param == '')
 		return;
@@ -2154,7 +2165,7 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 	$can_access			= FALSE;
 	$current_album_page	= -1;
 	$current_image_page	= -1;
-	$abs_dir			= '';					// RM 20040601 - v0.6.4.5
+	$abs_dir			= '';					// RM 20040601 - v0.6.4.5 - fix: declare vars
 	
 
 	// first try the index argument
@@ -3138,7 +3149,7 @@ function rig_begin_buffering()
 	global $abs_album_cache_path;
 	global $abs_option_path;
 	global $dir_abs_src;
-	global $dir_abs_admin_src;			// RM 20040601 v0.6.4.5
+	global $dir_abs_admin_src;			// RM 20040601 v0.6.4.5 - fix: missing globals
 	global $dir_abs_globset;
 	global $dir_abs_locset;
 
@@ -3191,7 +3202,7 @@ function rig_begin_buffering()
 		if ($dir_abs_src != $dir_abs_locset)
 			$check_list[] = $dir_abs_locset;
 
-		// RM 20040601 v.0.6.4.5
+		// RM 20040601 v.0.6.4.5 - fix image=>album var name
 		$check_list[] = $abs_album_cache_path . rig_prep_sep($current_real_album);
 
 		// cache is valid if not expired
@@ -3391,9 +3402,13 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.42  2004/07/06 04:10:58  ralfoide
+//	Fix: using "img" query param instead of "image"
+//	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.
+//
 //	Revision 1.41  2004/06/03 14:14:47  ralfoide
 //	Fixes to support PHP 4.3.6
-//
+//	
 //	Revision 1.40  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

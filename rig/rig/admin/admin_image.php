@@ -15,7 +15,8 @@ require_once($dir_abs_admin_src . "admin_util.php");
 rig_enter_login(rig_self_url(), TRUE);
 rig_nocache_headers();
 
-rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'image'), $html_admin);
+// RM 20040703 using "img" query param instead of "image"
+rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'img'), $html_admin);
 
 rig_admin_perform_before_header(rig_self_url());
 
@@ -350,9 +351,13 @@ if (rig_is_visible())
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2004/07/06 04:10:57  ralfoide
+//	Fix: using "img" query param instead of "image"
+//	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.
+//
 //	Revision 1.3  2004/03/09 06:22:29  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.2  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)

@@ -18,8 +18,57 @@
  *
  ***********************************************************/
 
-if (PHP_OS == 'WINNT')
+
+if (PHP_OS != 'WINNT')
 {
+	/***********************************************************
+	 *
+	 *	Section:	Un*x specific settings.
+	 *
+	 *	For new installations: most likely, you will not need to
+	 *	change anything in this section.
+	 *
+	 ***********************************************************/
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_preview_exec
+	 *	Type:			File-system relative path with / separators
+	 *	Relative to:	$dir_abs_install
+	 *	Default:		thumbnail/rig_thumbnail.exe
+	 *	
+	 *	This path indicates where the rig_thumbnail.exe application
+	 *	can be find. It has to be relative to the installation
+	 *	directory. For a Unix path, use / as directory separator.
+	 *	The path must NOT start by /. 
+	 ***********************************************************/
+
+	$pref_preview_exec		= "thumbnail/rig_thumbnail.exe";
+
+
+
+	/***********************************************************
+	 *
+	 *	Setting: 		$pref_use_jhead
+	 *	Type:			String
+	 *	Default:		exec('which jhead')
+	 *	
+	 *	The path were jhead is located.
+	 *	Use either exec('which jhead') or a path like '/usr/bin/jhead'
+	 *	To disable jhead, use an empty string ''.
+	 *
+	 *	JHead is a nice tool to extract EXIF information from digital camera images.
+	 *	Home page: http://www.sentex.net/~mwandel/jhead/
+	 *
+	 ***********************************************************/
+
+	$pref_use_jhead			= exec('which jhead');
+
+}
+else // WINNT
+{
+
 	/***********************************************************
 	 *
 	 *	Section:	Windows (Win32) specific settings.
@@ -32,13 +81,11 @@ if (PHP_OS == 'WINNT')
 	 ***********************************************************/
 
 
-	// --- rig-thumbnail.exe options ---
-
 	/***********************************************************
 	 *
 	 *	Setting: 		$pref_preview_exec
 	 *	Type:			File-system relative path with \ separators
-	 *	Relative to:	$dir_install
+	 *	Relative to:	$dir_abs_install
 	 *	Default:		thumbnail\Release\rig_thumbnail.exe
 	 *	
 	 *	This path indicates where the rig_thumbnail.exe application
@@ -48,58 +95,6 @@ if (PHP_OS == 'WINNT')
 	 ***********************************************************/
 
 	$pref_preview_exec		= 'thumbnail\release\rig_thumbnail.exe';
-
-
-	/***********************************************************
-	 *
-	 *	Setting: 		$pref_mkdir_mask
-	 *	Type:			Octal mask
-	 *	Default:		0777
-	 *	
-	 *	The mask used to create the various cache and option directories
-	 *	for rig. Consult "man mkdir" on a Unix box or Cygwin for more info.
-	 *	The default is 0777: "0" to make it an octal number. Then each 7
-	 *	indicates full access rights for user/group/others.
-	 *
-	 ***********************************************************/
-
-	$pref_mkdir_mask		= 0777;
-
-
-	/***********************************************************
-	 *
-	 *	Setting: 		$pref_umask
-	 *	Type:			Octal mask
-	 *	Default:		0022
-	 *	
-	 *	The global mask for creating files (previews, thumbnails, options, etc.)
-	 *	for rig. Consult "man umask" on a Unix box or Cygwin for more info which
-	 *	mainly says "umask sets the umask to mask & 0777".
-	 *	The default is 0022: "0" to make it an octal number. Then 022
-	 *	to make it accessible only by the current user, not by group/others.
-	 *
-	 ***********************************************************/
-
-	$pref_umask				= 0022;
-
-	// --- customization of cookies ---
-
-
-	/***********************************************************
-	 *
-	 *	Setting: 		$pref_cookie_host
-	 *	Type:			File-system relative path with \\ separators
-	 *	Default:		Empty string ''
-	 *	
-	 *	The host used for cookies.
-	 *	It is best to leave empty, in which case the host will be
-	 *	figured out automatically.
-	 *
-	 ***********************************************************/
-
-    $pref_cookie_host       = '';
-
-	// --- pages rendering options ---
 
 
 	/***********************************************************
@@ -120,105 +115,57 @@ if (PHP_OS == 'WINNT')
 	$pref_use_jhead			= '';
 
 }
-else // Un*x
-{
-	/***********************************************************
-	 *
-	 *	Section:	Un*x specific settings.
-	 *
-	 *	For new installations: most likely, you will not need to
-	 *	change anything in this section.
-	 *
-	 ***********************************************************/
-
-	// --- rig-thumbnail.exe options ---
-
-	/***********************************************************
-	 *
-	 *	Setting: 		$pref_preview_exec
-	 *	Type:			File-system relative path with / separators
-	 *	Relative to:	$dir_install
-	 *	Default:		thumbnail/rig_thumbnail.exe
-	 *	
-	 *	This path indicates where the rig_thumbnail.exe application
-	 *	can be find. It has to be relative to the installation
-	 *	directory. For a Unix path, use / as directory separator.
-	 *	The path must NOT start by /. 
-	 ***********************************************************/
-
-	$pref_preview_exec		= "thumbnail/rig_thumbnail.exe";
 
 
-	/***********************************************************
-	 *
-	 *	Setting: 		$pref_mkdir_mask
-	 *	Type:			Octal mask
-	 *	Default:		0777
-	 *	
-	 *	The mask used to create the various cache and option directories
-	 *	for rig. Consult "man mkdir" for more info.
-	 *	The default is 0777: "0" to make it an octal number. Then each 7
-	 *	indicates full access rights for user/group/others.
-	 *
-	 ***********************************************************/
+/***********************************************************
+ *
+ *	Setting: 		$pref_mkdir_mask
+ *	Type:			Octal mask
+ *	Default:		0777
+ *	
+ *	The mask used to create the various cache and option directories
+ *	for rig. Consult "man mkdir" for more info.
+ *	The default is 0777: "0" to make it an octal number. Then each 7
+ *	indicates full access rights for user/group/others.
+ *
+ ***********************************************************/
 
-	$pref_mkdir_mask		= 0777;
-
-
-	/***********************************************************
-	 *
-	 *	Setting: 		$pref_umask
-	 *	Type:			Octal mask
-	 *	Default:		0022
-	 *	
-	 *	The global mask for creating files (previews, thumbnails, options, etc.)
-	 *	for rig. Consult "man umask" which mainly says 
-	 *	"umask sets the umask to mask & 0777".
-	 *	The default is 0022: "0" to make it an octal number. Then 022
-	 *	to make it accessible only by the current user, not by group/others.
-	 *
-	 ***********************************************************/
-
-	$pref_umask				= 0022;
+$pref_mkdir_mask		= 0777;
 
 
-	// --- customization of cookies ---
+/***********************************************************
+ *
+ *	Setting: 		$pref_umask
+ *	Type:			Octal mask
+ *	Default:		0022
+ *	
+ *	The global mask for creating files (previews, thumbnails, options, etc.)
+ *	for rig. Consult "man umask" which mainly says 
+ *	"umask sets the umask to mask & 0777".
+ *	The default is 0022: "0" to make it an octal number. Then 022
+ *	to make it accessible only by the current user, not by group/others.
+ *
+ ***********************************************************/
+
+$pref_umask				= 0022;
 
 
-	/***********************************************************
-	 *
-	 *	Setting: 		$pref_cookie_host
-	 *	Type:			String
-	 *	Default:		Empty string ''
-	 *	
-	 *	The host used for cookies.
-	 *	It is best to leave empty, in which case the host will be
-	 *	figured out automatically.
-	 *
-	 ***********************************************************/
-
-    $pref_cookie_host       = '';
+// --- customization of cookies ---
 
 
-	// --- page rendering options ---
+/***********************************************************
+ *
+ *	Setting: 		$pref_cookie_host
+ *	Type:			String
+ *	Default:		Empty string ''
+ *	
+ *	The host used for cookies.
+ *	It is best to leave empty, in which case the host will be
+ *	figured out automatically.
+ *
+ ***********************************************************/
 
-
-	/***********************************************************
-	 *
-	 *	Setting: 		$pref_use_jhead
-	 *	Type:			String
-	 *	Default:		exec('which jhead')
-	 *	
-	 *	The path were jhead is located.
-	 *	Use either exec('which jhead') or a path like '/usr/bin/jhead'
-	 *
-	 *	JHead is a nice tool to extract EXIF information from digital camera images.
-	 *	Home page: http://www.sentex.net/~mwandel/jhead/
-	 *
-	 ***********************************************************/
-
-	$pref_use_jhead			= exec('which jhead');
-}
+$pref_cookie_host       = '';
 
 
 
@@ -285,11 +232,11 @@ $pref_global_gamma		= 1.0;	// use 1.0 for no-op
 
 // Note: these are default settings and should not be modified. They will be
 // overriden by settings reported by rig_thumbnail.exe at runtime.
-// Note: In most cases, the variable should be set to null, in which case
+// Note: In most cases, the variable should be set to NULL, in which case
 // the real settings reported by rig_thumbnail.exe at runtime will be used.
 // If this array is defined, rig_thumbnail.exe report will not be used.
 
-$pref_file_types		= null;
+$pref_file_types		= NULL;
 
 // In case you really want to override the file type array and you really know
 // what you are doing, here is a sample of what it should contain:
@@ -317,11 +264,11 @@ $pref_file_types		= array("/\.jpe?g$/i"					 => 'image/jpeg',
 // disable the feature.
 //
 // Typical pattenrs:
-// - "/^foo$/" matched a filename being _exactly_ "foo"
-// - "/^foo.*/" matches any filename starting by "foo".
+// - "/^foo$/"   matches a filename being _exactly_ "foo"
+// - "/^foo/"    matches any filename starting by "foo".
 // - "/\bfoo\b/" matches any filename with the word "foo" (word-boundary check)
-// - "/foo/i" matches any filename containing "foo" or "FOO" or "FoO" anywhere in the name
-//   (i means case-insenstive)
+// - "/foo/i"    matches any filename containing "foo" or "FOO" or "FoO" anywhere
+//				 in the name (i means case-insenstive)
 
 $pref_album_ignore_list	= NULL;
 $pref_image_ignore_list	= NULL;
@@ -338,6 +285,8 @@ $pref_image_ignore_list	= array("/fuzzy/",
 
 
 // --- admin viewing options ---
+
+// RM 20030821: not currently used -- for future admin_image.php page
 
 $pref_admin_size		= 256;
 
@@ -404,6 +353,7 @@ $pref_copyright_name = '';
  *	The <meta> tag that appears on top of every html page.
  *	
  *	Each album's pref can override this. The default is here.
+ *	Use an empty string '' to disable.
  *
  ***********************************************************/
 
@@ -562,14 +512,93 @@ $pref_use_image_border	= TRUE;
 
 
 
+// --- Global features preferences ---
+
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_enable_descriptions
+ *	Type:			Boolean (TRUE or FALSE)
+ *	Default:		TRUE
+ *	
+ * When set to true, 'descript.ion' and 'file_info.diz' files are read
+ * in every album folders to extract description strings for albums.
+ *
+ * Note that albums that have description will automatically show
+ * up using $pref_album_with_description_layout.
+ *
+ ***********************************************************/
+
+$pref_enable_descriptions = TRUE;
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_enable_album_html_cache
+ *	Type:			Boolean (TRUE or FALSE)
+ *	Default:		TRUE
+ *	
+ * When set to true, the HTML generated for each album page is
+ * cached in the $dir_album_cache folder. The HTML is automatically
+ * expired whenever one of these folders is modified:
+ * - The album folder
+ * - The album's option folder
+ * - The $dir_abs_src or $dir_abs_admin_src folders
+ * - The $dir_abs_globset or $dir_abs_locset folders
+ * - The current template folder
+ *
+ ***********************************************************/
+
+$pref_enable_album_html_cache = TRUE;
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_enable_access_hidden_albums
+ *	Type:			Boolean (TRUE or FALSE)
+ *	Default:		FALSE
+ *	
+ * When set to true, it possible to view hidden albums by
+ * giving their exact name in the web browser's query string.
+ *
+ * Note that albums matched by $pref_album_ignore_list can
+ * NEVER be accessed, even if this preference is TRUE.
+ *
+ ***********************************************************/
+
+$pref_enable_access_hidden_albums = FALSE;
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_enable_access_hidden_images
+ *	Type:			Boolean (TRUE or FALSE)
+ *	Default:		FALSE
+ *	
+ * When set to true, it possible to view hidden images by
+ * giving their exact name in the web browser's query string.
+ *
+ * Note that albums matched by $pref_image_ignore_list can
+ * NEVER be accessed, even if this preference is TRUE.
+ *
+ ***********************************************************/
+
+$pref_enable_access_hidden_images = TRUE;
+
+
+
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.17  2003/08/21 20:20:52  ralfoide
+//	New enable prefs (album/image hidden, descriptions, album cache)
+//
 //	Revision 1.16  2003/08/18 02:14:35  ralfoide
 //	Updated, new filetype support
-//
+//	
 //	Revision 1.15  2003/08/15 07:15:03  ralfoide
 //	Album/image border usage flags
 //	

@@ -131,7 +131,7 @@ else // WINNT
 	 *	The path must NOT start by \. 
 	 ***********************************************************/
 
-	$pref_preview_exec		= 'thumbnail\release\rig_thumbnail.exe';
+	$pref_preview_exec		= 'rig\thumbnail\release\rig_thumbnail.exe';
 
 
 	/***********************************************************
@@ -281,7 +281,7 @@ $pref_global_gamma		= 1.0;	// use 1.0 for no-op
  *	Type:			Array of regexp strings
  *	Default:		NULL
  *	
- *	This array list reg-exp patterns of names to avoid for albums.
+ *	This array lists reg-exp patterns of names to avoid for albums.
  *	The ignore list is taken into account when reading the filesystem's
  *	content. That means that filenames ignored here are never seen *ever*
  *	(not even in admin mode!) and are never accessed by RIG.
@@ -316,7 +316,7 @@ $pref_album_ignore_list	= NULL;
  *	Type:			Array of regexp strings
  *	Default:		NULL
  *	
- *	This array list reg-exp patterns of names to avoid for images.
+ *	This array lists reg-exp patterns of names to avoid for images.
  *	The ignore list is taken into account when reading the filesystem's
  *	content. That means that filenames ignored here are never seen *ever*
  *	(not even in admin mode!) and are never accessed by RIG.
@@ -377,7 +377,7 @@ $pref_default_theme		= 'blue';			// choices are blue, gray, khaki, egg, sand
 $pref_date_YM						= 'M/Y';	// format for short dates. M & Y must appear.
 /* American */ $pref_date_YMD		= 'M/D/Y';	// format for long dates. D & M & Y must appear.
 /* Japanese */ // $pref_date_YMD	= 'Y/M/D';	// format for long dates. D & M & Y must appear.
-/* French   */ // $pref_date_YMD	= 'D/N/Y';	// format for long dates. D & M & Y must appear.
+/* French   */ // $pref_date_YMD	= 'D/M/Y';	// format for long dates. D & M & Y must appear.
 $pref_date_sep						= ' - ';	// separator between date and description
 
 
@@ -847,9 +847,12 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.25  2004/12/25 09:46:46  ralfoide
+//	Fixes and cleanup
+//
 //	Revision 1.24  2004/07/17 07:52:30  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.23  2004/07/14 06:08:16  ralfoide
 //	Experimental small pda screen support
 //	

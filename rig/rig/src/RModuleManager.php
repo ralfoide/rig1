@@ -315,9 +315,12 @@ class RModuleManager
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2004/12/25 09:46:46  ralfoide
+//	Fixes and cleanup
+//
 //	Revision 1.3  2004/07/07 03:26:04  ralfoide
 //	Experimental modules
-//
+//	
 //	Revision 1.1  2004/06/03 14:16:24  ralfoide
 //	Experimenting with module classes
 //	

@@ -26,8 +26,8 @@
 //
 // phpUnit testing for RIG -- "http://phpunit.sourceforge.net/" for more information
 
-require_once $dir_abs_src . "common.php";
-require_once $dir_abs_src . "phpunit.php";
+require_once($dir_abs_src . "common.php");
+require_once(rig_require_once("phpunit.php"));
 
 ?>
 <html>
@@ -39,7 +39,6 @@ require_once $dir_abs_src . "phpunit.php";
 
 
 <?php
-
 
 //**********************************
 class RTest_phpUnit extends TestCase
@@ -87,7 +86,7 @@ class RTest_InnerClass extends TestCase
 		// $this->assertEquals(class_exists("RModule"), FALSE, "RModule already defined before require_once!");
 		
 		global $dir_abs_src;
-		require_once $dir_abs_src . "RModule.php";
+		require_once(rig_require_once("RModule.php"));
 
 		$this->assertEquals(class_exists("RModule"), TRUE, "RModule not defined after require_once!");
 		
@@ -117,15 +116,17 @@ $rig_suite = new TestSuite();
 // $rig_suite->addTest(new TestSuite("RTest_phpUnit")); // -- self-test boot
 $rig_suite->addTest(new TestSuite("RTest_InnerClass"));
 
-require_once $dir_abs_src . "test_str.php";
+require_once(rig_require_once("test_str.php"));
 $rig_suite->addTest(new TestSuite("RTest_I18l_Strings"));
 
 if (isset($dir_abs_mod) && rig_is_file($dir_abs_src . "RModuleManager.php"))
 {
-	require_once $dir_abs_src . "RTestModuleManager.php";
+	require_once(rig_require_once("RModuleManager.php"));
+
+	require_once(rig_require_once("RTestModuleManager.php"));
 	$rig_suite->addTest(new TestSuite("RTest_RModuleManager"));
 	
-	require_once $dir_abs_src . "RTestModule.php";
+	require_once(rig_require_once("RTestModule.php"));
 	$rig_suite->addTest(new TestSuite("RTest_RModule"));
 }
 else
@@ -151,9 +152,12 @@ $result->report();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2004/12/25 09:46:47  ralfoide
+//	Fixes and cleanup
+//
 //	Revision 1.7  2004/07/17 07:52:31  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.6  2004/07/09 05:52:48  ralfoide
 //	Update
 //	

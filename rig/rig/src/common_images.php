@@ -657,7 +657,7 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 	} // album <> ''
 
 	// otherwise, use the default icon...
-	$abs_path = realpath($dir_abs_album . $dir_images . $pref_empty_album);
+	$abs_path = realpath(rig_post_sep($dir_abs_album) . $dir_images . $pref_empty_album);
 	$url_path = $dir_images . $pref_empty_album;	// RM 20020713 fix missing dir_images
 
 	return FALSE;
@@ -848,9 +848,12 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.21  2004/12/25 09:46:46  ralfoide
+//	Fixes and cleanup
+//
 //	Revision 1.20  2004/07/17 07:52:31  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.19  2004/07/14 06:19:13  ralfoide
 //	Minor fixes for Win32/PHP 4.3.7 support
 //	

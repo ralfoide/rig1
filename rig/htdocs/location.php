@@ -24,9 +24,12 @@
 */
 //************************************************************************
 
-define("S", "/");
-
 // --- album & system-dependent locations ---
+
+if (PHP_OS == 'WINNT')
+	define("S", "\\");
+else // Un*x
+	define("S", "/");
 
 // ---- global settings ---
   
@@ -59,8 +62,9 @@ $dir_info_album			= pathinfo($_SERVER['PATH_TRANSLATED']);
 $dir_abs_album			= $dir_info_album["dirname"];
 
 // local settings
-// $dir_abs_locset is optional: it is either an empty string or an absolute path -- RM 20030919 fixed
+// $dir_abs_locset is optional: it is either an empty string or an absolute path
 // RM 20040601: when dir_abs_locset is empty, it is *ignored*.
+// RM 20040603: set to the current album absolute directory by default.
 $dir_abs_locset				= $dir_abs_album;
 
 // ---- URL settings ---
@@ -92,9 +96,12 @@ $dir_upload_album       = "upload-photos/";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2004/12/25 09:46:46  ralfoide
+//	Fixes and cleanup
+//
 //	Revision 1.5  2004/07/17 07:52:30  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.4  2004/07/09 05:47:21  ralfoide
 //	Updated.
 //	

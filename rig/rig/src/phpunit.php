@@ -457,7 +457,7 @@ class TestCase extends Assert /* implements Test */
 	
 		if (phpversion() >= '4') 
 		{
-			// RM 20040226: fix to avoid "et_error_handler() expects argument 1 blah blah" error in output
+			// RM 20040226: fix to avoid "set_error_handler() expects argument 1 blah blah" error in output
 			if ($old_handler != NULL)
 				set_error_handler($old_handler); // revert to prior error handler
 			else
@@ -490,6 +490,7 @@ class TestCase extends Assert /* implements Test */
 		//printf("TestCase::fail(%s)<br>\n", ($message) ? $message : '');
 		/* JUnit throws AssertionFailedError here.  We just record the
 		failure and carry on */
+
 		$this->fExceptions[] = new Exception($message, 'FAILURE');	// RM 20040602 reference passing for PHP 4.3.6
 	}
 	
@@ -518,7 +519,7 @@ class TestCase extends Assert /* implements Test */
 		while (list($key, $exception) = each($this->fExceptions)) 
 		{
 			if ($exception->type == 'ERROR')
-			return true;
+				return true;
 		}
 		return false;
 	}
@@ -930,9 +931,12 @@ class TestRunner
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2004/12/25 09:46:47  ralfoide
+//	Fixes and cleanup
+//
 //	Revision 1.6  2004/07/17 07:52:31  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.5  2004/07/09 05:50:00  ralfoide
 //	Fixes and improvements to look
 //	

@@ -166,17 +166,31 @@ function rig_display_album_list()
 	global $list_albums;
 	global $current_album;
 	global $list_description;				// RM 20030713
+	global $pref_album_layout;				// RM 20030718 'grid' or 'vert'
 	global $pref_disable_album_borders;
 
 	$i = 0;
-	$n = $pref_nb_col;
-	$m = count($list_albums);
-	if ($m < $n)
-		$n = $m;
 
-	$p = (int)(100/$n);
-	$w = " width=\"$p%\" valign=\"top\" align=\"center\"";
+	// only one item per line if not in grid layout
+	if ($pref_album_layout != 'grid')
+	{
+		$n = 1;
+		$p = $pref_preview_size;
+		$w_td = " width=\"$p\" valign=\"top\" align=\"center\"";
+	}
+	else
+	{
+		$n = $pref_nb_col;
 
+		$m = count($list_albums);
+		if ($m < $n)
+			$n = $m;
+	
+		$p = (int)(100/$n);
+		$w_td = " width=\"$p%\" valign=\"top\" align=\"center\"";
+	}
+
+	
 	echo "<tr>\n";
 
 	foreach($list_albums as $dir)
@@ -191,7 +205,7 @@ function rig_display_album_list()
 		$link = rig_self_url("", $name);
 
 		// prepare title
-		$title = "<center><a href=\"$link\">$pretty</a></center>\n";
+		$title = "<a href=\"$link\">$pretty</a>\n";
 
 
 		// prepare description, if any
@@ -202,10 +216,19 @@ function rig_display_album_list()
 
 
 		$square_size = $pref_preview_size + 12;
-		echo "<td $w>\n";
-		echo "<table border=\"0\">\n";
-		// echo "<tr><td align=\"center\" height=\"$square_size\">\n";
-		echo "<tr><td align=\"center\">\n";
+
+		if ($pref_album_layout == 'vert')
+		{
+			// no header per item in vert layout
+			echo "<td width=\"20\">&nbsp;&nbsp;&nbsp;</td>";
+			echo "<td $w_td>\n";
+		}
+		else // default: 'grid' mode
+		{
+		echo "<td $w_td>\n";
+			echo "<table border=\"0\">\n";
+			echo "<tr><td align=\"center\">\n";
+		}
 
 		// get the relative and absolute path to the preview icon
 		$abs_path = "";
@@ -283,67 +306,6 @@ function rig_display_album_list()
 				</table>
 				<?php
 			}
-/*
-			else if (0)
-			{
-				// Semi-New layout. Still not perfect but will do right now.
-				// This is broken under Mozilla 1.0
-
-				// name of album-border images
-				// old names
-				$box_tr = $dir_images . "box_tr.gif";
-				$box_br = $dir_images . "box_br.gif";
-				$line_b = $dir_images . "line_b.gif";
-				$line_r = $dir_images . "line_r.gif";
-
-				?>
-				<table border="0" cellspacing="0" cellpadding="0">
-					<!-- top row -->
-					<tr>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-					</tr>
-					<!-- center rows -->
-					<tr>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
-						<td><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
-						    <tr>
-							    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
-						    </tr>
-						</table></td>
-						<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
-						<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
-					</tr>
-					<tr>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-						<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
-						<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-						<td><img src="<?= $line_r ?>" width="3" height="3"></td>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-					</tr>
-					<tr>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-						<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
-						<td><img src="<?= $line_b ?>" width="3" height="3"></td>
-						<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-					</tr>
-					<!-- bottom row -->
-					<tr>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-						<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-					</tr>
-				</table>
-				<?php
-			}
-*/
 			else
 			{
 				// RM 20030713 -- better layout that almost works with Mozilla 1.0
@@ -399,24 +361,45 @@ function rig_display_album_list()
 				<?php
 
 			}
- 	   }
-
-		echo "</td></tr>\n";
-		echo "<tr><td>$title</td></tr>\n";
-		echo "<tr><td><center>$desc</center></td></tr>\n";
-		echo "</table>";
-	
-
-		$i++;
-		if ($i >= $n)
-		{
-			echo "</td></tr><tr>\n";
-			$i = 0;
 		}
-		else
+
+		if ($pref_album_layout == 'vert')
 		{
+			echo "</td><td width=\"20\">&nbsp;&nbsp;&nbsp;</td><td width=\"100%\">\n";
+			echo "$title<br>\n";
+			
+			// get the album's date
+			echo rig_get_album_date($name) . "<br>\n";
+			
+			// get the album's image count
+			// TBDL when the RAlbum class will be coded
+			// (right now since albums are managed thru global lists and variables
+			//  recursing to read an album is a bad idea).
+			
+			echo "$desc\n";
 			echo "</td>\n";
+			echo "<td width=\"20\">&nbsp;&nbsp;&nbsp;</td>";
+			echo "</tr><tr $w_tr>\n";
 		}
+		else // default: 'grid' mode
+		{
+			echo "</td></tr>\n";
+			echo "<tr><td><center>$title</center></td></tr>\n";
+			echo "<tr><td><center>$desc</center></td></tr>\n";
+			echo "</table>";
+
+			$i++;
+			if ($i >= $n)
+			{
+				echo "</td></tr><tr $w_tr>\n";
+				$i = 0;
+			}
+			else
+			{
+				echo "</td>\n";
+			}
+		}
+		
 
 		flush();
 	}
@@ -1686,9 +1669,12 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.20  2003/07/19 07:52:36  ralfoide
+//	Vertical layout for albums
+//
 //	Revision 1.19  2003/07/14 18:32:23  ralfoide
 //	New album frame table, support for descriptions, javascript testing
-//
+//	
 //	Revision 1.18  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
 //	

@@ -87,7 +87,7 @@ if (PHP_OS == 'WINNT')
 	 *
 	 *	Setting: 		$pref_cookie_host
 	 *	Type:			File-system relative path with \\ separators
-	 *	Default:		Empty string ""
+	 *	Default:		Empty string ''
 	 *	
 	 *	The host used for cookies.
 	 *	It is best to leave empty, in which case the host will be
@@ -95,7 +95,7 @@ if (PHP_OS == 'WINNT')
 	 *
 	 ***********************************************************/
 
-    $pref_cookie_host       = "";
+    $pref_cookie_host       = '';
 
 	// --- pages rendering options ---
 
@@ -104,7 +104,7 @@ if (PHP_OS == 'WINNT')
 	 *
 	 *	Setting: 		$pref_use_jhead
 	 *	Type:			String
-	 *	Default:		Empty string ""
+	 *	Default:		Empty string ''
 	 *	
 	 *	The path were jhead is located.
 	 *	JHead is a nice tool to extract EXIF information from digital camera images.
@@ -115,7 +115,8 @@ if (PHP_OS == 'WINNT')
 	 *
 	 ***********************************************************/
 
-	$pref_use_jhead			= "";
+	$pref_use_jhead			= '';
+
 }
 else // Un*x
 {
@@ -178,6 +179,7 @@ else // Un*x
 
 	$pref_umask				= 0022;
 
+
 	// --- customization of cookies ---
 
 
@@ -185,7 +187,7 @@ else // Un*x
 	 *
 	 *	Setting: 		$pref_cookie_host
 	 *	Type:			String
-	 *	Default:		Empty string ""
+	 *	Default:		Empty string ''
 	 *	
 	 *	The host used for cookies.
 	 *	It is best to leave empty, in which case the host will be
@@ -193,7 +195,8 @@ else // Un*x
 	 *
 	 ***********************************************************/
 
-    $pref_cookie_host       = "";
+    $pref_cookie_host       = '';
+
 
 	// --- page rendering options ---
 
@@ -202,18 +205,17 @@ else // Un*x
 	 *
 	 *	Setting: 		$pref_use_jhead
 	 *	Type:			String
-	 *	Default:		exec("which jhead")
+	 *	Default:		exec('which jhead')
 	 *	
 	 *	The path were jhead is located.
-	 *	Use either exec("which jhead") or a path like "/usr/bin/jhead"
+	 *	Use either exec('which jhead') or a path like '/usr/bin/jhead'
 	 *
 	 *	JHead is a nice tool to extract EXIF information from digital camera images.
 	 *	Home page: http://www.sentex.net/~mwandel/jhead/
 	 *
 	 ***********************************************************/
 
-	// The path to jhead or an empty string to disable it's usage.
-	$pref_use_jhead			= exec("which jhead");
+	$pref_use_jhead			= exec('which jhead');
 }
 
 
@@ -250,7 +252,6 @@ $pref_use_id_in_url		= $pref_use_db_id;	// use numeric ids in URLs rather than a
 $pref_preview_size		= 80;
 $pref_preview_quality	= 70;
 $pref_preview_timeout	= 10;
-$pref_nb_col			= 5;
 
 
 
@@ -268,7 +269,7 @@ $pref_nb_col			= 5;
 $pref_image_size		= 512;
 $pref_image_quality		= 75;
 $pref_size_popup		= array(256, 300, 384, 400, 512, 640, 800, 1024, 1280, 1600);
-$pref_empty_album		= "empty_album.gif";
+$pref_empty_album		= 'empty_album.gif';
 
 $pref_global_gamma		= 1.0;	// use 1.0 for no-op
 
@@ -278,10 +279,10 @@ $pref_global_gamma		= 1.0;	// use 1.0 for no-op
 // For matching pattern syntax, cf http://www.php.net/manual/en/function.preg-match.php
 // or http://www.perldoc.com/perl5.8.0/pod/perlre.html
 
-$pref_file_types		= array("/\.jpe?g$/i"					 => "image/jpeg",
-								"/\.(avi|wmv|as[fx])$/i"		 => "video/avi",
-								"/\.(mov|qt|sdp|rtsp)$/i"		 => "video/quicktime",
-								"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => "video/mpeg");
+$pref_file_types		= array("/\.jpe?g$/i"					 => 'image/jpeg',
+								"/\.(avi|wmv|as[fx])$/i"		 => 'video/avi',
+								"/\.(mov|qt|sdp|rtsp)$/i"		 => 'video/quicktime',
+								"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => 'video/mpeg');
 								
 
 // --- admin viewing options ---
@@ -303,7 +304,7 @@ $pref_admin_size		= 256;
 
 $pref_allow_guest		= TRUE;				// can be TRUE (default) or FALSE
 $pref_auto_guest		= FALSE;			// FALSE will force login, TRUE will auto-log as guest
-$pref_guest_username	= "guest";			// must be in the user_list.txt file
+$pref_guest_username	= 'guest';			// must be in the user_list.txt file
 
 
 // --- default language & theme ---
@@ -320,50 +321,160 @@ $pref_date_YM						= 'M/Y';	// format for short dates. M & Y must appear.
 /* French   */ // $pref_date_YMD	= 'D/N/Y';	// format for long dates. D & M & Y must appear.
 $pref_date_sep						= ' - ';	// separator between date and description
 
-// ---- Copyright Name for albums & images ----
 
-// Format is HTML. Use HTML-compliant characters (like &eacute; or &#129;)
-// Important: if you want to insert Japanese here, add a line in data_jpu8.bin
-// or use UTF-8 bytes directly in hexa.
-// This should ideally be overriden by album-specific prefs.php files
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_copyright_name
+ *	Type:			String
+ *	Default:		Empty string ''
+ *	
+ *	The copyright name that appears under albums or images.
+ *	
+ *	Format is HTML. Use HTML-compliant characters (like &eacute; or &#129;)
+ *	Important: if you want to insert Japanese here, add a line in data_jpu8.bin
+ *	or use UTF-8 bytes directly in hexa.
+ *
+ *	This should ideally be overriden by album-specific prefs.php files
+ *
+ ***********************************************************/
 
 $pref_copyright_name = '';
 
 
-// --- meta tags for album/image pages ---
-// Each album's pref can override this. The default is here.
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_html_meta
+ *	Type:			String
+ *	Default:		"<meta name=\"robots\" content=\"noindex, nofollow\">"
+ *	
+ *	The <meta> tag that appears on top of every html page.
+ *	
+ *	Each album's pref can override this. The default is here.
+ *
+ ***********************************************************/
 
 $pref_html_meta = "<meta name=\"robots\" content=\"noindex, nofollow\">";
 
 
-// --- Global display preferences ---
-// WARNING: these are mostly development hacks that will be removed later!!!
 
-// -------------
-// Disable album thumbnails borders. Necessary for Mozilla 1.0 lovers, since it doesn't render the
-// actualy table correctly. Will be fixed later (Note that Mozilla 1.2 works just fine!)
-// -------------
-// Default: line commented or value 0. Uncomment and set to 1 to disable image border.
+// --- Global display preferences ---
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_disable_album_borders
+ *	Type:			Boolean (0 or 1)
+ *	Default:		0
+ *	
+ * When set to 1, disables album thumbnails borders.
+ * Necessary for Mozilla 1.0 lovers, since it doesn't render the actual table correctly.
+ * Will be fixed later (Note that Mozilla 1.2 and above works just fine!)
+ *
+ * Default: line commented or value 0. Uncomment and set to 1 to disable image border.
+ *
+ ***********************************************************/
+
 
 $pref_disable_album_borders = 0;
 
 
-// -------------
-// Disable web-interface for translating language.
-// This is the site-wide setting. If you want to enable it, please do so in the album prefs.php!
-// -------------
-// Default: line with value 1. Set to 0 to enable language translation by admins directly in the web interface.
+/***********************************************************
+ *
+ *	Setting: 		$pref_disable_web_translate_interface
+ *	Type:			Boolean (0 or 1)
+ *	Default:		1
+ *	
+ * When set to 1, disables web-interface for translating language.
+ * This is the site-wide setting.
+ * If you want to enable it, please do so in the album prefs.php!
+ *
+ * There are security issues with the translation interface.
+ * The feature currently does not check for cross-scripting exploits in the
+ * language strings. This will be fixed later, in the meantime it is strongly
+ * recommanded that you keep the feature disabled unless you strongly trust
+ * your admin editors. You have been warned.
+ *
+ * Default: line with value 1. Set to 0 to enable language translation
+ * by admins directly in the web interface.
+ *
+ ***********************************************************/
 
 $pref_disable_web_translate_interface = 1;
 
 
-// -------------
-// Select the default image page layout.
-// Default is "1". Current choices are "1" ro "2".
-// WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
-// -------------
-$pref_image_layout = "1";
+/***********************************************************
+ *
+ *	Setting: 		$pref_image_layout
+ *	Type:			String ('1' or '2')
+ *	Default:		'1'
+ *	
+ * Selects the default image layout.
+ *
+ * There are currently two image layouts:
+ *
+ * 1: The image is on the top of the page, with the prev/next previews on each side.
+ *    The image size popup and all other options are *below* the image.
+ *    This is an ideal layout if you hate to scroll down to see an image on a small screen
+ *    (1024x768 or less) and rarely use the image size popup anyway.
+ *
+ * 2: The image size popup and the prev/next previews are on *top* of the image.
+ *    There is nothing to left/right of the image. This is ideal if you like to see big
+ *    sizes for images.
+ *
+ * I like 1 now. Most others like 2 with was RIG's original layout.
+ *
+ * WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
+ * This is the reason why you cannot choose the layout in live. I'll add that later.
+ *
+ ***********************************************************/
 
+$pref_image_layout = '1';
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_album_layout
+ *	Type:			String (either 'grid' or 'vert' only)
+ *	Default:		'grid'
+ *	
+ * Selects the default album layout.
+ *
+ * There are currently two album layouts:
+ *
+ * 'grid': This is default layout.
+ *         Album lists are presented in a N-per-row grid.
+ *         Image lists are presented in a N-per-row grid.
+ *         There are as many row as necessary to display all the visible items.
+ *         N is defined by $pref_nb_col, described below (default: 5)
+ *
+ * 'vert': An alternate vertical layout for albums.
+ *         Album lists are presented one per line, vertically.
+ *         Image lists are presented in a N-per-row grid like in 'grid' layout.
+ *         There are as many row as necessary to display all the visible items.
+ *         N is defined by $pref_nb_col, described below (default: 5)
+ *
+ * WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
+ * This is the reason why you cannot choose the layout in live. I'll add that later.
+ *
+ ***********************************************************/
+
+$pref_album_layout = 'vert'; //'grid';
+
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_nb_col
+ *	Type:			Integer >= 1
+ *	Default:		5
+ *	
+ * Selects the number of album or images per line/row in grid layout.
+ *
+ ***********************************************************/
+
+$pref_nb_col		= 5;
 
 
 
@@ -371,9 +482,12 @@ $pref_image_layout = "1";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2003/07/19 07:52:36  ralfoide
+//	Vertical layout for albums
+//
 //	Revision 1.11  2003/07/14 18:29:12  ralfoide
 //	Experimenting with better comments
-//
+//	
 //	Revision 1.10  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
 //	

@@ -1179,13 +1179,29 @@ function rig_read_album_options($album)
 }
 
 
+//*********************************
+function rig_get_album_date($album)
+//*********************************
+// RM 20030719 v0.3.6.5
+{
+	global $abs_album_path;
+	global $html_date;
+
+	$abs_dir = $abs_album_path . rig_prep_sep($album);
+
+	// read the timestamp on the file "." in the directory (aka the directory itself)
+	$tm = filemtime(rig_post_sep($abs_dir) . ".");
+	return date($html_date, $tm);	
+}
+
+
 //******************************************
 function rig_read_album_descriptions($album)
 //******************************************
 // Reloads the content of $list_description
 //	list_description		- array of [filename] => description (text and/or html) -- RM 20030713
 {
-	global $abs_album_path;	// descriptions
+	global $abs_album_path;		// descriptions
 	global $abs_option_path;	// new options have their own base directory (may be shared with previews anyway)
 
 
@@ -2284,9 +2300,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.24  2003/07/19 07:52:36  ralfoide
+//	Vertical layout for albums
+//
 //	Revision 1.23  2003/07/14 18:30:14  ralfoide
 //	Support for descript.ion and file_info.diz
-//
+//	
 //	Revision 1.22  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
 //	

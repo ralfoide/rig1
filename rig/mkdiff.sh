@@ -4,7 +4,7 @@ usage()
 {
 	echo
 	echo "Usage: $0 A.tgz B.tgz"
-	echo "Filenames *must* be in form rig_YYYY-MM-DD_v1234.tgz"
+	echo "Filenames *must* be in form rig_YYYY-MM-DD_v1234.tgz with A <= B."
 	echo
 	exit 1;
 }
@@ -38,12 +38,14 @@ DB=${FB/.tgz/}
 
 if [ "${DA}.tgz" != "$FA" ]
 then
+	echo
 	echo "File $FA does not end with .tgz"
 	usage
 fi
 
 if [ "${DB}.tgz" != "$FB" ]
 then
+	echo
     echo "File $FB does not end with .tgz"
     usage
 fi
@@ -58,14 +60,25 @@ VB=${DB/rig_[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]_/}
 TA=${DA/rig_/} ; TA=${TA/_v[0-9]*/}
 TB=${DB/rig_/} ; TB=${TB/_v[0-9]*/}
 
+# check versions & dates
+
+if [ "$VA" > "$VB" ]
+then
+	echo
+	echo "Error: $VA is greater than $VB. Are you sure?"
+	usage
+fi
+
 if [ "rig_${TA}_${VA}" != "$DA" ]
 then
+	echo
 	echo "Error: $DA is not in the form rig_YYYY-MM-DD_v1234"
 	usage
 fi
 
 if [ "rig_${TB}_${VB}" != "$DB" ]
 then
+	echo
 	echo "Error: $DB is not in the form rig_YYYY-MM-DD_v1234"
 	usage
 fi

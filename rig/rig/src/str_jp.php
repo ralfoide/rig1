@@ -7,7 +7,7 @@
 // $Id$
 //**********************************************
 
-// English Language Strings for RIG
+// Japanese Language Strings for RIG
 
 
 
@@ -16,17 +16,19 @@
 
 // Encoding for HTML web pages. Cannot be empty.
 
-$html_encoding		= 'ISO-8859-1';
+$html_encoding		= 'Shift_JIS';
 
 
-// Languages availables
-//---------------------
+// Languages available
+//--------------------
 
 $html_language		= 'Language:';
 $html_desc_lang		= array('en' => 'English',
 							'fr' => 'Fran&ccedil;ais',
 							'sp' => 'Espa&ntilde;ol',
-							'jp' => '&#26085;&#26412;&#35486;');
+							'jp' => '“ú–{Œê');	// Shift-JIS
+//							'jp' => '$BF|K\8l(B');	// ISO-2022-JP
+//							'jp' => 'æ—¥æœ¬èªž');		// UTF-8
 
 // Themes available
 //-----------------
@@ -39,11 +41,12 @@ $html_desc_theme	= array('blue'  => 'Blue',
 							'none'	=> 'None');
 
 
+
 // HTML content
 //-------------
 
 $html_current_album	= "Current Album";
-$html_albums		= "Available Albums";
+$html_albums		= "Available ‚Ð‚ç‚ª‚È Albums";
 $html_images		= "Images";
 $html_options		= "Options";
 
@@ -105,7 +108,7 @@ $html_guest_login	= "'Guest' Mode";
 // Date formatiing
 // Date formating for $html_date and $html_img_date uses
 // the PHP's date() notation, cf http://www.php.net/manual/en/function.date.php
-$html_date			= "m/d/Y \at h:i a";
+$html_date			= "h:i a m/d/Y";
 
 // Album Title
 $html_album			= "Album";
@@ -128,27 +131,26 @@ $html_original		= "Original";
 // Image date displayed
 $html_img_date		= "l\, F d\, Y\, g:m A";
 
+
+// Modifications de prefs.php
+//---------------------------
+
+// affichage de la date au debut des noms d'albums
+
+$pref_date_YM		= "M-Y";            // format court. Doit contenir M & Y.
+$pref_date_YMD      = "Y-M-D";          // format long.  Doit contenir D & M & Y.
+
+
 // end
 
 //-------------------------------------------------------------
 //	$Log$
-//	Revision 1.3  2002/10/21 01:52:48  ralfoide
+//	Revision 1.1  2002/10/21 01:52:48  ralfoide
 //	Multiple language and theme support
 //
-//	Revision 1.2  2002/10/16 04:48:37  ralfoide
-//	Version 0.6.2.1
+//	Revision 1.1  2002/10/14 07:05:17  ralf
+//	Update 0.6.3 build 1
 //	
-//	Revision 1.1  2002/08/04 00:58:08  ralfoide
-//	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//	
-//	Revision 1.4  2001/11/28 11:52:48  ralf
-//	v0.6.1: display image last modification date
-//	
-//	Revision 1.3  2001/11/26 07:27:59  ralf
-//	links from credits to license
-//	
-//	Revision 1.2  2001/11/26 04:35:20  ralf
-//	version 0.6 with location.php
 //	
 //-------------------------------------------------------------
 ?>

@@ -9,8 +9,33 @@
 
 // Affichage en Francais pour RIG
 
-// Le format de la date pour $html_date et $html_img_date utilise
-// la notation de PHP pour date(), cf http://www.php.net/manual/en/function.date.php
+
+// HTML encoding
+//--------------
+
+// Encoding for HTML web pages. Cannot be empty.
+
+$html_encoding		= 'ISO-8859-1';
+
+
+// Languages available
+//--------------------
+
+$html_language		= 'Langue:';
+$html_desc_lang		= array('en' => 'English',
+							'fr' => 'Fran&ccedil;ais',
+							'sp' => 'Espa&ntilde;ol',
+							'jp' => '&#26085;&#26412;&#35486;');
+
+// Themes available
+//-----------------
+
+$html_theme			= 'Couleur de page:';
+$html_desc_theme	= array('blue'  => 'Bleue',
+							'sand'  => 'Sable',
+							'khaki' => 'Khaki',
+							'egg'	=> 'Oeuf',
+							'none'	=> 'Aucune');
 
 
 // Contenu HTML
@@ -26,8 +51,6 @@ $html_seconds		= "secondes";
 $html_the			= "le";
 $html_by			= "par";
 
-$html_symb_lang		= "en";				    // 'en' ou 'fr'
-$html_desc_lang		= "English";
 $html_admin_intrfce	= "Maintenance";		// Interface d'administration
 
 $html_rig_admin		= "Maintenance de RIG";	// Interface d'administration 
@@ -55,11 +78,16 @@ $html_vis_on		= "Afficher";
 $html_vis_off		= "Masquer";
 
 $html_credits		= "Cr&eacute;dits";
-$html_show_credits	= "Afficher les cr&eacute;dits";
+$html_show_credits	= "Afficher les cr&eacute;dits de RIG et PHP";
+$html_hide_credits	= "Masquer les cr&eacute;dits";
 $html_text_credits	= "<a href=\"http://rig.powerpulsar.com\">RIG</a> &copy; 2001 par R'alf<br>";
 $html_text_credits .= "RIG est diffus&eacute; sous les conditions de la <a href=\"LICENSE.html\">license RIG</a>.<br>";
 $html_text_credits .= "Bas&eacute; sur <a href=\"http://www.php.net\">PHP</a> et ";
 $html_text_credits .= "la <a href=\"ftp://ftp.uu.net/graphics/jpeg\">JpegLib</a>.<br>";
+
+$html_phpinfo		= "Informations sur le serveur PHP";
+$html_show_phpinfo	= "Afficher les informations sur le serveur PHP";
+$html_hide_phpinfo	= "Masquer les informations sur le serveur PHP";
 
 $html_login			= "Login"; // "Entr&eacute;e";
 $html_validate		= "Valider";
@@ -74,6 +102,8 @@ $html_guest_login	= "Mode 'invit&eacute;'";
 //--------------------
 
 // Format de la date (dans le bas de page)
+// Le format de la date pour $html_date et $html_img_date utilise
+// la notation de PHP pour date(), cf http://www.php.net/manual/en/function.date.php
 $html_date			= "d/m/Y H:m:s";
 
 // Titres pour les albums
@@ -103,17 +133,20 @@ $html_img_date		= "d/m/Y H:m:s";
 
 // affichage de la date au debut des noms d'albums
 
-$pref_date_YM           = "M-Y";            // format court. Doit contenir M & Y.
-$pref_date_YMD          = "D-M-Y";          // format long. Doit contenir D & M & Y.
+$pref_date_YM		= "M-Y";            // format court. Doit contenir M & Y.
+$pref_date_YMD      = "D-M-Y";          // format long.  Doit contenir D & M & Y.
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/21 01:52:48  ralfoide
+//	Multiple language and theme support
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

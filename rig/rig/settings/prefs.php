@@ -45,6 +45,12 @@ else // Un*x
 }
 
 
+// --- DB-links options ---
+
+$pref_use_db			= FALSE;			// not for rig062 yet
+$pref_use_db_id			= $pref_use_db;		// use ids rather than names internally
+$pref_use_id_in_url		= $pref_use_db_id;	// use numeric ids in URLs rather than album/image names
+
 // --- thumbnails creation ---
 
 $pref_preview_size		= 80;
@@ -69,32 +75,30 @@ $pref_auto_guest		= FALSE;			// FALSE will force login, TRUE will auto-log as gu
 $pref_guest_username	= "guest";			// must be in the user_list.txt file
 
 
-// --- page colors ---
+// --- default language & theme ---
 
-$color_body_bg			= "#99CCFF";
-$color_body_text		= "#000000";
-$color_table_border		= "#000000";
-$color_table_bg			= "#FFFFFF";
-$color_header_bg		= "#3399FF";
-$color_header_text		= "#FFFFCC";
-$color_index_text		= "#800000";
-$color_error_bg			= "#FFFF33";
-$color_warning_bg		= "#00CC66";
+$pref_default_lang		= 'en';				// choices are en, fr, sp, jp
+$pref_default_theme		= 'blue';			// choices are blue, sand
 
 
 // --- dates at beginning of album names ---
 
-$pref_date_YM           = "M/Y";            // format for short dates. M & Y must appear.
-$pref_date_YMD          = "M/D/Y";          // format for long dates. D & M & Y must appear.
-$pref_date_sep          = " - ";            // separator between date and description
+$pref_date_YM						= 'M/Y';	// format for short dates. M & Y must appear.
+/* American */ $pref_date_YMD		= 'M/D/Y';	// format for long dates. D & M & Y must appear.
+/* Japanese */ // $pref_date_YMD	= 'Y/M/D';	// format for long dates. D & M & Y must appear.
+/* French   */ // $pref_date_YMD	= 'D/N/Y';	// format for long dates. D & M & Y must appear.
+$pref_date_sep						= ' - ';	// separator between date and description
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/21 01:51:36  ralfoide
+//	Multiple language and theme support
+//
 //	Revision 1.2  2002/10/20 11:48:42  ralfoide
 //	jhead support
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

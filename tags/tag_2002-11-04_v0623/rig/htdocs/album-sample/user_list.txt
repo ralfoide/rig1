@@ -1,0 +1,5 @@
+#format: #=comment, otherwise user:password:[display name]
+#(guest is needed to log as guest)
+guest::Guest
+user1::User 1
+foobar::John Foo Bar

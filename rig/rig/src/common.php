@@ -315,6 +315,7 @@ function rig_require_once($filename, $abs_main_dir = "", $abs_override_dir = "")
 
 //-----------------------------------------------------------------------
 
+
 //**********************************************
 function rig_get($array, $name, $default = NULL)
 //**********************************************
@@ -323,6 +324,23 @@ function rig_get($array, $name, $default = NULL)
 		return $array[$name];
 	
 	return $default;
+}
+
+
+//**********************************
+function rig_unset_global($var_name)
+//**********************************
+{
+	// RM 20040204 IMPORTANT! There's a very weird behavior in PHP
+	// when using unset() on a global variable from within a function:
+	// It does not unset the global but instead of the "local" view of
+	// global from the function's scope.
+	//
+	// I personnally consider this a bug. This method does the Right
+	// Thing [tm] and really unsets a global as indicated by the PHP.net
+	// page on unset.
+	
+	unset($GLOBALS[$var_name]);
 }
 
 //-----------------------------------------------------------------------
@@ -1204,9 +1222,9 @@ function rig_clear_album_options()
 	// DEBUG
 	// echo "<h1>Clear options</h1>";
 
-	unset($list_hide);
-	unset($list_album_icon);
-	unset($list_description);
+	rig_unset_global('list_hide');			// RM 20040204 fix see rig_unset_global description
+	rig_unset_global('list_album_icon');	// RM 20040204 fix see rig_unset_global description
+	rig_unset_global('list_description');	// RM 20040204 fix see rig_unset_global description
 }
 
 
@@ -1475,7 +1493,7 @@ function rig_read_album_descriptions($album)
 
 	// first clear current options
 	global $list_description;
-	unset($list_description);
+	rig_unset_global('list_description');	// RM 20040204 fix see rig_unset_global description
 
 		
 	// then grab new ones
@@ -2295,6 +2313,62 @@ function rig_build_recursive_list($album)
 }
 
 
+//*********************************
+function rig_get_album_info($album)
+//*********************************
+// returns a tuple { a: number of albums, i: number of images }
+{
+	global $abs_album_path;
+	global $current_album;
+	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
+	global $pref_image_ignore_list;
+
+	$album_count = 0;
+	$image_count = 0;
+
+	// make sure we have the options for this album
+	if ($album != $current_album)
+		rig_read_album_options($album);
+
+	// get the absolute album path
+	$abs_dir = $abs_album_path . rig_prep_sep($album);
+
+	// get all files and dirs, don't recurse
+	$result = array();
+	$handle = @opendir($abs_dir);
+	if ($handle)
+	{
+		while (($file = readdir($handle)) !== FALSE)
+		{
+			if ($file != '.' && $file != '..' && rig_is_visible(-1, $album, $file))
+			{
+				$abs_file = $abs_dir . rig_prep_sep($file);
+				if (rig_is_dir($abs_file))
+				{
+					// it is a directory
+					if (!rig_check_ignore_list($file, $pref_album_ignore_list))
+						$album_count++;
+				}
+				else
+				{
+					// it is a file
+					if (!rig_check_ignore_list($file, $pref_image_ignore_list))
+						if (rig_valid_ext($file))
+							$image_count++;
+				}
+			}
+		}
+		closedir($handle);
+	}
+
+	// restore options
+	if ($album != $current_album)
+		rig_read_album_options($current_real_album);
+
+	return array('a' => $album_count, 'i' => $image_count);
+}
+
+
 
 //**********************************
 function rig_cmp_pretty_name($a, $b)
@@ -2331,6 +2405,7 @@ function rig_load_album_list($show_all = FALSE)
 
 	// get all files and dirs, recurse in dirs first
 	// display sub albums if any
+	$list_albums = array(); // RM 20040204 fix: reset album list
 	$list_images = array();
 	$handle = @opendir($abs_dir);
 	if (!$handle)
@@ -3310,9 +3385,13 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.38  2004/02/18 07:38:03  ralfoide
+//	Added rig_unset_global.
+//	Fixed resetting global arrays when parsing album options.
+//
 //	Revision 1.37  2003/12/07 19:41:41  ralfoide
 //	Fix: invalidate html cache if image data cache modified
-//
+//	
 //	Revision 1.36  2003/11/25 05:05:33  ralfoide
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.

@@ -111,8 +111,13 @@ echo
 
 pushd $DIR > /dev/null
 
+# diff options:
+# u: universal diff
+# r: recursive
+# N: treat missing files as empty (both in source and dest)
+
 DEST="rig_${TB}_${VA}-${VB}_diff.txt"
-diff -ur "$DA" "$DB" > "$DEST"
+diff -urN "$DA" "$DB" > "$DEST"
 
 if [ -e "$DEST" ]
 then

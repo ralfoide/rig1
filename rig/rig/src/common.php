@@ -913,7 +913,8 @@ function rig_read_album_options($album)
 			return FALSE;
 	}
 
-// echo "<p>Reading abs_options '$abs_options'<br>";
+global $_debug_;
+if ($_debug_)  echo "<p>Reading abs_options '$abs_options'<br>";
 	$file = @fopen($abs_options, "rt");
 
 	if (!$file)
@@ -949,10 +950,10 @@ function rig_read_album_options($album)
 		{
 			$key = -1;
 			$c = substr($line, 0, 1);
-// echo "<br>Read line; '$line'";
+if ($_debug_) echo "<br>Read line; '$line'";
 			if ($c == '[')
 			{
-// echo "<br>----- format is [key]value";
+if ($_debug_) echo "<br>----- format is [key]value";
 				// format is "[key]value"
 				if (ereg("^\[(.*)\](.*)", $line, $reg) && is_string($reg[1]))
 				{
@@ -966,26 +967,26 @@ function rig_read_album_options($album)
 			}
 			else if ($c == '_')
 			{
-// echo "<br>----- format is _value";
+if ($_debug_) echo "<br>----- format is _value";
 				// format is "_value"
 				$line = substr($line, 1);		// RM 20030215 bug fix (..., 1, -1) => (..., 1);
 			}
-// echo "<br>----- key = '$key'";
-// echo "<br>----- value = '$value'";
-// echo "<br>----- line = '$line'";
+if ($_debug_) echo "<br>----- key = '$key'";
+if ($_debug_) echo "<br>----- value = '$value'";
+if ($_debug_) echo "<br>----- line = '$line'";
 
 			if ($key == -1)
 				$local[] = $line;
 			else
 				$local[$key] = $value;
 
-// echo "<p>local: "; var_dump($local);
+if ($_debug_) { echo "<p>local: "; var_dump($local); }
 		}
 	}
 
-// global $list_hide;
-// global $list_album_icon;
-// echo "<p>Reading list_hide: "; var_dump($list_hide);
+if ($_debug_) global $list_hide;
+if ($_debug_) global $list_album_icon;
+if ($_debug_) { echo "<p>Reading list_hide: "; var_dump($list_hide);}
 
 	fclose($file);		// RM 20020713 fix
 	return TRUE;
@@ -1821,9 +1822,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/02/17 07:34:54  ralfoide
+//	Conditional debuggin
+//
 //	Revision 1.13  2003/02/16 22:42:27  ralfoide
 //	Report mkdir failure. Misc fix.
-//
+//	
 //	Revision 1.12  2003/02/16 21:30:32  ralfoide
 //	fix reading _value lines in options.txt
 //	

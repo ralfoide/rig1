@@ -77,6 +77,7 @@ $html_act_delete	= 'Delete All:';
 $html_act_previews	= 'Previews';
 $html_act_images	= 'Images';
 $html_act_prev_img	= 'Previews &amp; Images';
+$html_act_htmlcache	= 'HTML Caches';	// RM 20040711 TBT
 $html_act_rnd_prev	= 'Change Album Random Icon';
 $html_act_canon		= 'Rename Canon 100-1234_img.jpg files';
 
@@ -180,9 +181,12 @@ $html_album_date	= '%B %Y';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.19  2004/07/14 06:19:50  ralfoide
+//	Admin option to clean HTML caches
+//
 //	Revision 1.18  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.17  2004/03/02 10:38:01  ralfoide
 //	Translation of tooltip string.
 //	New page title strings.

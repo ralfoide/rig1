@@ -1,0 +1,346 @@
+// vim: set tabstop=4 shiftwidth=4: //
+//**********************************************
+// RIG version 1.0
+// Copyright (c) 2001-2002 Ralf
+//**********************************************
+
+// Japanese Language Strings for RIG
+
+// This file is a text "data" file for the string in Japanese
+// The file is UTF-8 encoded.
+
+// Format of the file:
+// - entries are composed of 2 lines:
+//	1- the variable to set (with the $ like in PHP)
+//	2- the string value for the variable
+// The scanner looks for lines starting with $ or @ and use the first word as the variable name
+// If the line was starting with @$, the second word will be the named index in an array
+// It then reads the *next* line, whatever it's content being, except the ending linefeed
+//
+// As a side effect, empty lines or lines starting with // or # will be ignored.
+//
+// The prefered line separator is the Unix mode, i.e. only LF (/n) as linefeed.
+
+
+
+// HTML encoding
+//--------------
+
+// Encoding for HTML web pages. Cannot be empty.
+
+$html_encoding
+UTF-8
+
+
+
+
+// Languages available
+//--------------------
+
+$html_language
+言語:
+// Language:
+
+@$html_desc_lang en
+English
+
+@$html_desc_lang fr
+Fran�ais
+
+@$html_desc_lang sp
+Espa�ol
+
+@$html_desc_lang jp
+日本語
+
+
+// Themes available
+//-----------------
+
+$html_theme
+ページの色:
+// 色の主題:
+// Color Theme:
+
+@$html_desc_theme gray
+グレー
+// 灰色 
+// Gray
+
+@$html_desc_theme blue
+青
+// 青い 
+// Blue
+
+@$html_desc_theme sand
+茶色
+// 砂 
+// Sand
+
+@$html_desc_theme khaki
+カーキ
+// Khaki 
+
+@$html_desc_theme egg
+黄色
+// 卵 
+// Egg
+
+@$html_desc_theme none
+無色
+// どれも 
+// None
+
+
+
+
+// HTML content
+//-------------
+
+$html_current_album
+現在のアルバム
+// Current Album
+
+$html_albums
+閲覧できるアルバム
+// Available Albums
+
+$html_images
+画像
+// Images
+
+$html_options
+オプション
+// Options
+
+$html_generated
+<i>[date]</i>- <i>[rig-version]</i>にて作成: 所要時間[time]秒
+//発生させる [time] 秒 - <i>[date]</i> によって <i>[rig-version]</i>
+
+$html_admin_intrfce
+管理画面
+// Administration Interface
+
+$html_rig_admin
+RIG 管理画面
+// RIG Administration Interface
+
+$html_comment_stats
+このアルバムおよび下層アルバムについての情報
+// Stats for album and sub-albums
+
+$html_album_stat
+<table><tr><td>ファイル数：</td><td>[files] (計 [bytes]バイト)</td></tr><tr><td>フォルダ数：</td><td>[folders]</td></tr></table>
+// [bytes] bytes occupied by [files] files in [folders] folders
+
+$html_actions
+アクション
+// Actions
+
+$html_act_create
+作　成: 
+// [1]Create All: [RM 20030526 new]
+
+$html_act_delete
+削　除: 
+// [2]Delete All: [RM 20030526 new]
+
+$html_act_previews
+全てのプレビュー
+// [3]Previews [RM 20030526 new]
+
+$html_act_images
+全ての画像
+// [4]Images [RM 20030526 new]
+
+$html_act_prev_img
+全てのプレビューと画像
+// [5]Previews &amp; Images [RM 20030526 new]
+
+$html_act_rnd_prev
+このアルバムのアイコンをランダムに変更
+// [6]Change Album Random Icon [RM 20030526 renamed]
+
+$html_act_canon
+キャノン製カメラのデフォルトファイル名をつけ変える
+// [7]Rename Canon 100-1234_img.jpg files [RM 20030526 renamed]
+
+$html_use_as_icon
+アルバムアイコンとして使用
+// Use as album icon
+
+$html_avail_albums
+閲覧できるアルバム
+// Available Albums
+
+$html_avail_prevws
+閲覧できる画像のプレビュー
+// Available Previews
+
+$html_comment
+実際の画像を見るにはこのページのリロードが必要な場合があります
+// You may need to reload this page to see the real images
+
+$html_back_to
+[name]へ戻る
+// Back to [name]
+
+$html_back_album
+アルバムへ
+// Back to album
+
+$html_back_previous
+前のアルバムへ
+// Back to previous album
+
+$html_vis_on
+表示する
+// Show
+
+$html_vis_off
+隠す
+// Hide
+
+$html_credits
+クレジット
+// Credits
+
+$html_show_credits
+RIG および PHP のクレジット
+// Display RIG & PHP Credits
+
+$html_hide_credits
+クレジットを隠す
+// Hide Credits
+
+$html_text_credits
+R'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 by R'alf<br>Japanese Translation by <a href="mailto:et_cogito@mac.com">INOUE Tatsuo</a><br>RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a> (<a href="http://www.opensource.org/licenses/">OSL</a>).<br>Based on <a href="http://www.php.net">PHP</a> and the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>
+
+$html_phpinfo
+PHP サーバー情報 
+// PHP Server Information
+
+$html_show_phpinfo
+PHP サーバー情報
+// Display PHP Server Information
+
+$html_hide_phpinfo
+PHP サーバー情報を隠す
+// Hide PHP Server Information
+
+
+$html_login
+ログイン
+// Login
+
+$html_validate
+ログイン
+// Enter
+
+$html_remember
+ユーザー名／パスワードを記憶
+// Remember me
+
+$html_username
+ユーザー名
+// Username
+
+$html_password
+パスワード
+// Password
+
+$html_welcome
+ようこそ、<b>[name]</b>さん! ([change-link])
+// Welcome <b>[name]</b>! ([change-link])
+
+$html_chg_user
+ユーザー変更
+// change user
+
+$html_guest_login
+ゲスト モード
+// 'Guest' Mode
+
+
+// RM 20030119 - v0.6.3
+
+$html_album_copyrt
+&copy; [year] [name]
+// All images &copy; [year] [name]
+
+$html_image_copyrt
+&copy; [year] [name]
+// Image &copy; [year] [name]
+
+$html_album_count
+[count] 冊のアルバム
+// [count] albums
+
+$html_image_count
+[count] 枚の画像
+// [count] images
+
+
+// Script Content
+//---------------
+
+
+// Album Title
+
+$html_album
+アルバム
+// Album
+
+$html_admin
+管理
+// Admin
+
+$html_none
+スタート
+// Start
+
+
+// Current Album
+
+$html_root
+スタート
+// Start
+
+// Images
+
+$html_image
+画像
+// Image
+
+$html_prev
+前の画像へ
+// Previous
+
+$html_next
+次の画像へ
+// Next
+
+$html_image2
+画像
+// image
+
+$html_pixels
+ピクセル
+// pixels
+
+$html_ok
+変更
+// Change
+
+$html_img_size
+画像のサイズ
+// Image Size
+
+$html_original
+原寸
+// Original
+
+
+
+
+// end

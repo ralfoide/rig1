@@ -1,13 +1,145 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 //**********************************************
-// RIG version 1.0
-// Copyright (c) 2001 Ralf
+// RIG version 0.6.x
+// Copyright (c) 2001-2002 Ralf
 //**********************************************
 // $Id$
 //**********************************************
 
 RIG To Do List
 --------------
+
+This live document describes tasks and priorities.
+The file's format is described at the end.
+
+
+==== RIG :: Features ========================================
+
+Summary of features for RIG:
+
+Generic:
+[1.F] Better error reporting
+[1.F] Multiple languages support (SP+JP on top of EN+FR)
+[2.F] Theme pages support
+[2.F] jhead support
+[3.F] Grayscale JPEG support
+
+
+Admin:
+[2.N] Page to edit/reset passowrds
+[2.N] Admin detail page: display details + options for one image
+[3.N] Make preview buttons: Previews only, Images only, images+previews
+[4.N] Rename album
+[4.N] Rename image
+[4.N] Create albums
+[4.N] Upload images
+[5.N] Move albums
+[5.N] Delete albums
+
+
+Database:
+Not in 0.6.2, introduced in 0.6.3
+
+
+==== RIG :: Generic ========================================
+
+20021020 [1.F] jhead support for un*x
+20021020 [1.F] Grayscale JPEG support in rig_thumbnail
+
+20021012 [4.F] Do mockup Spanish -- ask father
+
+20020717 [1.F] Feedback: album.php loads all album/image names and then at display time
+               check if it is visible. Combined with a flush of http, gives better feedback
+               for long-to-load albums.
+
+20020715 [3.F] Color theme support
+20020715 [3.F] Added 3 color themes: sand, khaki and egg.
+
+20020713 [3.F] Remove frame admin code
+
+20020712 [3.F] Language: make more flexible (manage N >= 2)
+20020713 [3.F] Added str_sp and str_jp
+20020713 [3.F] Using ISO-8859-1 for fr/sp/en and Shift-JIS for jp
+20020713 [0.F] Noticed that file name encoding will conflict with html encoding, can't fix right now
+               (ex: Shift-JIS file displaying using ISO-8859-1 or reverse).
+20020713 [0.F] Unicode file names are not supported under Windows (need Unicode thumbnail app)
+
+20020713 [3.F] Provide better error reporting (especially for files access rights)
+    20020713 [1.F] Better overall error reporting
+    20020713 [1.F] Prettier html for error reporting
+
+20020712 [1.W] Rename functions using a constant rig_section_method naming
+    20020712 [1.F] Renaming functions in admin_util.php
+    20020712 [1.W] Renaming functions in common_display.php
+    20020713 [1.W] Renaming functions in common.php
+
+20020712 [1.F] Fixed date display in album name in admin mode & back from admin mode
+20020712 [1.F] Disabled frame admin mode
+20020712 [1.F] Display phpinfo(ALL) on top of credits
+
+-- todo --
+
+20020712 [4.N] Ask Pascal about Japanese
+
+20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
+20020712 [2.N] Detect browser capability for DHTML
+
+20020712 [3.N] Add HTML descriptions for images and albums
+20020712 [3.N] Store HTML descriptions in DB
+20020712 [3.N] Edit HTML descriptions in Admin
+
+20020713 [4.N] Gamma flags: overall, album override, image override
+20020713 [4.N] Flags per album: guest-allowed, album gamma
+
+20020713 [4.N] Logging
+20020713 [5.N] Reference counting for images
+20020713 [6.N] Cache expiration based on time and reference count
+20020713 [9.N] Non-persistent cache for punchy/non overloaded servers
+               i.e.: no cache at all or session-based cache + expiration (per album option?)
+
+
+==== RIG :: Database =======================================
+
+Not in release 0.6.2
+
+
+
+==== RIG :: Admin ==========================================
+
+
+-- todo --
+
+20020915 [1.N] Check compatible with port redirectors (aka http://localhost:8080/...)
+
+20020712 [2.N] Page to edit/reset passowrds
+20020712 [2.N] Use crypt passwords
+
+20020712 [2.N] Add an admin detail page: display details + options for one image
+
+20020712 [3.N] Make preview buttons: Previews only, Images only, images+previews
+
+20020712 [4.N] Rename album (using db or ondisk?)
+20020712 [4.N] Rename image (using db or ondisk?)
+20020712 [4.N] Create albums
+20020712 [4.N] Upload images
+20020712 [5.N] Move albums
+20020712 [5.N] Delete albums
+
+
+
+*********************************************************************
+*********************************************************************
+------------ old todo/log -------------------------------------------
+*********************************************************************
+*********************************************************************
+
+
+[20020711 - v0.6.2]
+
+x Updated to Artistice License
+- Merge 0.6.2.1 updated in 0.6.2
+- Upload 0.6.2 to SourceForge
+
 
 [112601 - v0.6.1]
 
@@ -139,11 +271,46 @@ x find something more pretty for "-->"
 n Grab Berkeley License, then update credits information regarding availability
 
 
+*********************************************************************
+*********************************************************************
+
+Format:
+-------
+
+Each line is in the form "Date [P.S] Feature [T]" where:
+- P is a priority index (1:urgent, 9:later, 0:prototype)
+- S is a status letter
+- P is the optional target tag, as follows:
+
+[N] "Not available yet", i.e. not started
+[W] "Work", Work in progress, i.e. non testable feature
+[T] "Test", feature can be tested but is not finished
+[F] "Finished", feature is supposedly finished, thus has to be tested
+
+[M] MacOS
+[W] Windows (default)
+
+Most recent actions go first.
+Dates are in YYYYMMDD. Dates for N actions are when action is created.
+Dates for W/F actions are date when action is actually started.
+No tabs, use spaces for alignment (for viewcvs)
+
+*********************************************************************
+
+
+--- end ---
+
+
+
+
 //-------------------------------------------------------------
 //	$Log$
-//	Revision 1.1  2002/06/21 20:41:46  ralfoide
-//	Initial revision
+//	Revision 1.2  2002/10/21 01:56:14  ralfoide
+//	Added summary of features
 //
+//	Revision 1.1.1.1  2002/06/21 20:41:46  ralfoide
+//	Initial revision, based on rig 0.6
+//	
 //	Revision 1.13  2001/11/28 11:52:47  ralf
 //	v0.6.1: display image last modification date
 //	

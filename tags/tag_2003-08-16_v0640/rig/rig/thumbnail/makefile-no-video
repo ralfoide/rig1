@@ -1,0 +1,57 @@
+#simplified makefile for Thumbnail for Linux
+#creates ./thumbnail.exe
+
+CC     = gcc
+CFLAGS = -O -DRIG_EXCLUDE_AVIFILE
+LDFLAGS= 
+LDLIBS = -lstdc++ -lm -lc
+LN     = $(CC)
+
+# ----- jpeglib supprot -------
+
+JPEG_TGZ = jpegsrc.v6b.tar.gz
+DIRJPEG1 = ./jpegsrc
+DIRJPEG2 = $(DIRJPEG1)/jpeg-6b
+DIRJPEG3 = $(DIRJPEG1)/ralf_patch
+LIBJPEG  = $(DIRJPEG2)/libjpeg.a
+
+INCDIR   = -I. -I$(DIRJPEG2)
+
+# -----------------------------
+
+CFILES = rig_thumbnail.cpp rig_rgb.cpp rig_jpeg.cpp rig_avifile.cpp
+
+OFILES = $(patsubst %.cpp,%.o,$(CFILES))
+
+TARGET = rig_thumbnail.exe
+
+# -----------------------------
+
+all: libjpeg $(TARGET)
+
+$(TARGET): libjpeg $(OFILES)
+	$(LN) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LIBJPEG) $(LDLIBS)
+
+$(OFILES): %.o: %.cpp
+	$(CC) -c $(CFLAGS) $(INCDIR) $< -o $@
+
+# -----------------------------
+
+libjpeg:
+	make -f makefile-libjpeg
+
+# -----------------------------
+
+clean:
+	rm -fv $(OFILES)
+	make -f makefile-libjpeg clean
+
+# -----------------------------
+
+#
+# $Log$
+# Revision 1.1  2003/07/16 07:04:59  ralfoide
+# Separating with-video/no-video makefiles
+#
+# Revision 1.1  2003/06/30 06:06:32  ralfoide
+#

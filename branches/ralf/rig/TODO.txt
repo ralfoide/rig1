@@ -1,0 +1,184 @@
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
+//**********************************************
+// RIG version 1.0
+// Copyright (c) 2001 Ralf
+//**********************************************
+// $Id$
+//**********************************************
+
+RIG To Do List
+--------------
+
+[112601 - v0.6.1]
+
+x Display file's Last Modification date in image mode
+x Using associative arrays for internal information array (cf image_info())
+
+[112501 - v0.6]
+
+x finished the location.php and redirectors, bumped to v 0.6
+x updated my 3 albums accordingly (i.e. location test is ok)
+x fixed the bug in the admin cookie (was reset after set)
+x created redirector http://rig.powerpulsar.com (official web site)
+- need to create a main web page for rig for the distribs
+
+[111901]
+
+x received modified archive from Drew
+- play with Drew's archive
+
+[111801]
+
+x selected the Artistic License from http://opensource.org/licenses/
+  and adapted to my requirements
+
+[111601]
+
+x handle album names in format "YYYY-MM-DD_name" and "YYYY-MM_name"
+x pref to display such dates as DD-MM-YYYY or MM/DD/YYYY depending on language
+x merged in Marc's path to handle dates in beginning of album names
+x changed thumbnail/jpeglib makefile to download jpeglib instead of
+  adding it to the distrib archive
+
+[110801]
+
+- display albums on several pages, with a max (N rows, M columns)
+- set a default of 5 rows, 5 columns (25 img/page)
+x let user override the number of rows (like for img size)
+
+[110301]
+
+x create a location.php that will let the site place different files
+  in different locations. Dirs: photos, img-cache, img-options, prefs,
+  user lists, php code, helper images.
+  By default: user lists and php code are out of the DocumentRoot,
+			  photos, img-cache and prefs are local to album,
+			  all other images are under the DocumentRoot
+
+[102701 - v0.5]
+
+- use feedback to create public archive
+x send beta archive to Marc Merlin and Drew Bertola
+x choose and add license information
+- add password creation page in admin mode
+- enable password usage
+- add html description for albums and images
+- use frame/dhtml/separate window to view/edit image options in admin mode
+
+[102501]
+
+x feature: global gammma perf (1.0 is default for none)
+x finished rewriting the thumbnail app
+
+[083101]
+
+x fix: image size cookies
+x fix: gamma 1.6 for previews
+- feature: per-album gamma choice (0 for none)
+
+[082801]
+
+x fix: now display admin list of album/image as a 5xN table, with links for actions below each
+       image and a #name tag to find the same image after exec
+x fix: there are bugs in thumbnail generation (size incorrect, image too dark)
+x feature: need to gamma-enhance the image during thumbnail/display [from 1.5->2.4]
+
+[082101]
+- feature: options can be in the options dir / one file per album, indexed by a number in
+		   a special index file.
+
+[081501]
+
+x fix: improve the quality of the thumbnails
+- feature: when creating an album icon, keep the original file name in the album options
+	(this allows the same album icon to be reused even after all previews have been rebuild
+     or the site is moved to another site)
+- keep album options in a global file rather than per directory
+  (alternate: have a special directory with each album name as file name)
+
+[081401]
+
+x fix: login page in french-english
+x feature: default to guest access (pref's choice)
+- feature: set thumbnail for parent albums
+- feature: comments for albums/images must be HTML and both french-english
+- fix: space characters are not supported in names under Netscape 4.7
+x fix: parenthesis and plus signs are not supported in names (every browser)
+
+[081201]
+
+x feature: in admin, display hidden files with different header color
+- make use of ImageMagik under linux, if available (what about jpeg info?)
+
+[081001]
+
+x feature: use small images to create a border for album thumbnails, to differenciate from image thumbnails
+x change list tables for 1-pixel border, add border to thumbnails
+
+[080401]
+
+x feature: attrib.txt with [:hide\nimg1\nimg2...:section2\n...]
+    [partial: wrote generic routine to handle the options.txt file,
+              and use it for show/hide albums/images]
+- feature: access log
+
+[080301]
+
+x fix: last row of filenames forgotten
+x feature: in admin, display images table vertically, with direct options
+x fix: shield album/image from magic characters './\' at beginning
+x feature: set thumbnail for album, or choose one random
+	[status: can set for album, but not for parents]
+x feature: in admin, code image options
+x find something more pretty for "-->"
+	[using '=>' currently]
+- feature: image upload
+- feature: move image between directories
+- feature: add comments to image
+- feature: set user/passwd
+n Grab Berkeley License, then update credits information regarding availability
+
+
+//-------------------------------------------------------------
+//	$Log$
+//	Revision 1.1  2002/06/21 20:41:46  ralfoide
+//	Initial revision
+//
+//	Revision 1.13  2001/11/28 11:52:47  ralf
+//	v0.6.1: display image last modification date
+//	
+//	Revision 1.12  2001/11/26 04:34:54  ralf
+//	version 0.6 with location.php
+//	
+//	Revision 1.11  2001/11/17 23:25:09  ralf
+//	update
+//	
+//	Revision 1.10  2001/10/27 22:41:14  ralf
+//	distrib 0.5
+//	
+//	Revision 1.9  2001/08/31 21:18:39  ralf
+//	stuff
+//	
+//	Revision 1.8  2001/08/28 07:17:05  ralf
+//	more comments, one fix
+//	
+//	Revision 1.7  2001/08/27 08:47:43  ralf
+//	more comments
+//	
+//	Revision 1.6  2001/08/16 21:53:04  ralf
+//	Updated list
+//	
+//	Revision 1.5  2001/08/16 19:01:09  ralf
+//	some ideas
+//	
+//	Revision 1.4  2001/08/14 17:50:48  ralf
+//	Update todo notes
+//	
+//	Revision 1.3  2001/08/14 08:05:44  ralf
+//	New to do things.
+//	Added some install note for later usage
+//	
+//	Revision 1.2  2001/08/07 08:04:17  ralf
+//	Added a cvs log entry
+//	
+//-------------------------------------------------------------

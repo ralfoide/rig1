@@ -22,12 +22,22 @@ ifneq ($(GCC33),)
 	CC=gcc-3.3
 endif
 
-CFLAGS= -O
-LDFLAGS= 
-LDLIBS:= -lstdc++ -lm -lc -ljpeg
-LN= $(CC)
+CFLAGS  = -O
+LDFLAGS = 
+LDLIBS  = -lstdc++ -lm -lc
+LN      = $(CC)
 
-INCDIR:= -I. 
+INCDIR  = -I. 
+
+# ----- jpeglib supprot -------
+
+JPEG_TGZ = jpegsrc.v6b.tar.gz
+DIRJPEG1 = ./jpegsrc
+DIRJPEG2 = $(DIRJPEG1)/jpeg-6b
+DIRJPEG3 = $(DIRJPEG1)/ralf_patch
+LIBJPEG  = $(DIRJPEG2)/libjpeg.a
+
+INCDIR   = -I. -I$(DIRJPEG2)
 
 # ----- avifile support -------
 
@@ -44,18 +54,24 @@ TARGET=rig_thumbnail.exe
 
 # -----------------------------
 
-all: $(TARGET)
+all: libjpeg $(TARGET)
+
+# -----------------------------
+
+libjpeg:
+	make -f makefile-libjpeg
 
 # -----------------------------
 
 $(TARGET): info $(OFILES)
-	$(LN) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LDLIBS)
+	$(LN) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LIBJPEG) $(LDLIBS)
 
 $(OFILES): %.o: %.cpp
 	$(CC) -c $(CFLAGS) $(INCDIR) $< -o $@
 
 clean:
 	rm -fv $(OFILES)
+	make -f makefile-libjpeg clean
 
 # -----------------------------
 
@@ -64,6 +80,9 @@ info:
 	@echo "# RIG: with video support (libavifile)"
 	@echo "# GCC:" `$(CC) --version | head -n 1`
 	@echo "#-----------------------"
+	@echo
+	@echo "# IMPORTANT: GCC-3.3 is required to compile with the latest libavifile 0.7.33"
+	@echo
 
 
 
@@ -71,6 +90,9 @@ info:
 
 #
 # $Log$
+# Revision 1.3  2003/08/16 22:04:02  ralfoide
+# Always compile its own libjpeg.
+#
 # Revision 1.2  2003/07/21 21:45:45  ralfoide
 # Detects and uses GCC-3.3 (required for latest libavifile 0.7.33)
 #

@@ -37,13 +37,15 @@ $(LIBJPEG):
 # -----------------------------
 
 clean:
-	rm -fv $(OFILES)
-	make -C $(DIRJPEG) clean
+	if [ -d $(DIRJPEG2) ]; then make -C $(DIRJPEG2) clean ; fi;
 
 # -----------------------------
 
 #
 # $Log$
+# Revision 1.2  2003/08/16 22:04:02  ralfoide
+# Always compile its own libjpeg.
+#
 # Revision 1.1  2003/07/16 07:04:59  ralfoide
 # Separating with-video/no-video makefiles
 #

@@ -10,6 +10,16 @@
 // Japanese Language Strings for RIG
 
 
+// HTML encoding
+//--------------
+
+// Encoding for HTML web pages. Cannot be empty.
+
+// Note that $html_encoding is defined in the data file (see below)
+// For the content of $html_encoding, 	   cf http://www.w3.org/TR/REC-html40/charset.html#h-5.2.2
+$html_language_code	= 'ja';				// cf http://www.w3.org/TR/REC-html40/struct/dirlang.html#h-8.1.1
+
+
 
 // Script Content
 //---------------
@@ -39,20 +49,26 @@ $pref_date_YMD      = 'Y-M-D';          // Long format.  Must contain D & M & Y.
 // Parsing of the external data file
 //----------------------------------
 
+// At the site level you can decide which encoding you want to use for Japanse.
+// Each data file describes its own encoding, uncomment the correct one. UTF-8
+// is the preferred one.
 
-rig_parse_string_data('data_jpjis.bin');
+rig_parse_string_data('data_jpu8.bin');
+// rig_parse_string_data('data_jpjis.bin');
 // rig_parse_string_data('data_jpsjis.bin');
 // rig_parse_string_data('data_jpeuc.bin');
-// rig_parse_string_data('data_jpu8.bin');
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/23 16:01:00  ralfoide
+//	Added <html lang>; now transmitting charset via http headers.
+//
 //	Revision 1.2  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
-//
+//	
 //	Revision 1.1  2002/10/21 01:52:48  ralfoide
 //	Multiple language and theme support
 //	

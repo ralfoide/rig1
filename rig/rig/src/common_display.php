@@ -16,19 +16,51 @@ function rig_display_header($title)
 //*********************************
 {
 	global $html_encoding;
+	global $html_language_code;
 	global $theme_css_head;
 
-	?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+	// Online reference:
+
+	// For the DocType, consult the W3C HTML 4.0:
+	// http://www.w3.org/TR/REC-html40/struct/global.html#h-7.2
+
+	// For the Meta Content-Type, consult the W3C HTML 4.0
+	// http://www.w3.org/TR/REC-html40/charset.html#h-5.2.2
+	//
+	// This list of charset is available here:
+	// http://www.iana.org/assignments/character-sets
+
+	// For the Robots Meta Tag, consult robotstxt.org:
+	// http://www.robotstxt.org/wc/exclusion.html#meta
+
+	// The HTML language code is described by the W3C HTML 4.0 here:
+	// http://www.w3.org/TR/REC-html40/struct/dirlang.html#h-8.1
+	// http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
+
+	// Setup the language information for the HTML tag -- RM 20021023
+	if ($html_language_code)
+		$lang = "lang=\"$html_language_code\"";
+	else
+		$lang = "";
+
+	// Provide the web server with a HTTP Header describing the right charset -- RM 20021023
+	// This is the one step that will make the browser switch to the right encoding...
+	if ($html_encoding)
+		header("Content-Type: text/html; charset=$html_encoding");
+
+// The indentation below is made on purpose, to make sure there's nothing before doctype
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html <?= $lang ?>>
 <head>
-	<meta HTTP-EQUIV="Content-type" CONTENT="text/html; charset=<?= $html_encoding ?>">
-	<title>
+	<meta http-equiv="Content-Type" content="text/html; charset=<?= $html_encoding ?>">
+	<meta name="robots" content="noindex, nofollow"> 
+ 	<title>
 		<?= $title ?>
 	</title>
 	<?= $theme_css_head ?>
 </head>
-	<?php
+<?php
+
 }
 
 //*************************
@@ -720,9 +752,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2002/10/23 16:01:01  ralfoide
+//	Added <html lang>; now transmitting charset via http headers.
+//
 //	Revision 1.5  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
-//
+//	
 //	Revision 1.4  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
 //	

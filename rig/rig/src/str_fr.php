@@ -15,7 +15,8 @@
 
 // Encoding for HTML web pages. Cannot be empty.
 
-$html_encoding		= 'ISO-8859-1';
+$html_encoding		= 'ISO-8859-1';		// cf http://www.w3.org/TR/REC-html40/charset.html#h-5.2.2
+$html_language_code	= 'fr';				// cf http://www.w3.org/TR/REC-html40/struct/dirlang.html#h-8.1.1
 
 
 // Languages available
@@ -143,9 +144,12 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2002/10/23 16:01:00  ralfoide
+//	Added <html lang>; now transmitting charset via http headers.
+//
 //	Revision 1.4  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
-//
+//	
 //	Revision 1.3  2002/10/21 01:52:48  ralfoide
 //	Multiple language and theme support
 //	

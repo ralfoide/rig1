@@ -1,0 +1,351 @@
+/* vim: set expandtab tabstop=4 shiftwidth=4: */
+//**********************************************
+// RIG version 0.6.x
+// Copyright (c) 2001-2002 Ralf
+//**********************************************
+// $Id$
+//**********************************************
+
+RIG To Do List
+--------------
+
+This live document describes tasks and priorities.
+The file's format is described at the end.
+
+
+==== RIG :: Features ========================================
+
+Summary of features for RIG:
+
+Generic:
+[1.F] Better error reporting
+[1.F] Multiple languages support (SP+JP on top of EN+FR)
+[2.F] Theme pages support
+[2.F] jhead support
+[3.F] Grayscale JPEG support
+
+
+Admin:
+[2.N] Page to edit/reset passowrds
+[2.N] Admin detail page: display details + options for one image
+[3.N] Make preview buttons: Previews only, Images only, images+previews
+[4.N] Rename album
+[4.N] Rename image
+[4.N] Create albums
+[4.N] Upload images
+[5.N] Move albums
+[5.N] Delete albums
+
+
+Database:
+Not in 0.6.2, introduced in 0.6.3
+
+
+==== RIG :: Generic ========================================
+
+20021020 [1.F] jhead support for un*x
+20021020 [1.F] Grayscale JPEG support in rig_thumbnail
+
+20021012 [4.F] Do mockup Spanish -- ask father
+
+20020717 [1.F] Feedback: album.php loads all album/image names and then at display time
+               check if it is visible. Combined with a flush of http, gives better feedback
+               for long-to-load albums.
+
+20020715 [3.F] Color theme support
+20020715 [3.F] Added 3 color themes: sand, khaki and egg.
+
+20020713 [3.F] Remove frame admin code
+
+20020712 [3.F] Language: make more flexible (manage N >= 2)
+20020713 [3.F] Added str_sp and str_jp
+20020713 [3.F] Using ISO-8859-1 for fr/sp/en and Shift-JIS for jp
+20020713 [0.F] Noticed that file name encoding will conflict with html encoding, can't fix right now
+               (ex: Shift-JIS file displaying using ISO-8859-1 or reverse).
+20020713 [0.F] Unicode file names are not supported under Windows (need Unicode thumbnail app)
+
+20020713 [3.F] Provide better error reporting (especially for files access rights)
+    20020713 [1.F] Better overall error reporting
+    20020713 [1.F] Prettier html for error reporting
+
+20020712 [1.W] Rename functions using a constant rig_section_method naming
+    20020712 [1.F] Renaming functions in admin_util.php
+    20020712 [1.W] Renaming functions in common_display.php
+    20020713 [1.W] Renaming functions in common.php
+
+20020712 [1.F] Fixed date display in album name in admin mode & back from admin mode
+20020712 [1.F] Disabled frame admin mode
+20020712 [1.F] Display phpinfo(ALL) on top of credits
+
+-- todo --
+
+20020712 [4.N] Ask Pascal about Japanese
+
+20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
+20020712 [2.N] Detect browser capability for DHTML
+
+20020712 [3.N] Add HTML descriptions for images and albums
+20020712 [3.N] Store HTML descriptions in DB
+20020712 [3.N] Edit HTML descriptions in Admin
+
+20020713 [4.N] Gamma flags: overall, album override, image override
+20020713 [4.N] Flags per album: guest-allowed, album gamma
+
+20020713 [4.N] Logging
+20020713 [5.N] Reference counting for images
+20020713 [6.N] Cache expiration based on time and reference count
+20020713 [9.N] Non-persistent cache for punchy/non overloaded servers
+               i.e.: no cache at all or session-based cache + expiration (per album option?)
+
+
+==== RIG :: Database =======================================
+
+Not in release 0.6.2
+
+
+
+==== RIG :: Admin ==========================================
+
+
+-- todo --
+
+20020915 [1.N] Check compatible with port redirectors (aka http://localhost:8080/...)
+
+20020712 [2.N] Page to edit/reset passowrds
+20020712 [2.N] Use crypt passwords
+
+20020712 [2.N] Add an admin detail page: display details + options for one image
+
+20020712 [3.N] Make preview buttons: Previews only, Images only, images+previews
+
+20020712 [4.N] Rename album (using db or ondisk?)
+20020712 [4.N] Rename image (using db or ondisk?)
+20020712 [4.N] Create albums
+20020712 [4.N] Upload images
+20020712 [5.N] Move albums
+20020712 [5.N] Delete albums
+
+
+
+*********************************************************************
+*********************************************************************
+------------ old todo/log -------------------------------------------
+*********************************************************************
+*********************************************************************
+
+
+[20020711 - v0.6.2]
+
+x Updated to Artistice License
+- Merge 0.6.2.1 updated in 0.6.2
+- Upload 0.6.2 to SourceForge
+
+
+[112601 - v0.6.1]
+
+x Display file's Last Modification date in image mode
+x Using associative arrays for internal information array (cf image_info())
+
+[112501 - v0.6]
+
+x finished the location.php and redirectors, bumped to v 0.6
+x updated my 3 albums accordingly (i.e. location test is ok)
+x fixed the bug in the admin cookie (was reset after set)
+x created redirector http://rig.powerpulsar.com (official web site)
+- need to create a main web page for rig for the distribs
+
+[111901]
+
+x received modified archive from Drew
+- play with Drew's archive
+
+[111801]
+
+x selected the Artistic License from http://opensource.org/licenses/
+  and adapted to my requirements
+
+[111601]
+
+x handle album names in format "YYYY-MM-DD_name" and "YYYY-MM_name"
+x pref to display such dates as DD-MM-YYYY or MM/DD/YYYY depending on language
+x merged in Marc's path to handle dates in beginning of album names
+x changed thumbnail/jpeglib makefile to download jpeglib instead of
+  adding it to the distrib archive
+
+[110801]
+
+- display albums on several pages, with a max (N rows, M columns)
+- set a default of 5 rows, 5 columns (25 img/page)
+x let user override the number of rows (like for img size)
+
+[110301]
+
+x create a location.php that will let the site place different files
+  in different locations. Dirs: photos, img-cache, img-options, prefs,
+  user lists, php code, helper images.
+  By default: user lists and php code are out of the DocumentRoot,
+			  photos, img-cache and prefs are local to album,
+			  all other images are under the DocumentRoot
+
+[102701 - v0.5]
+
+- use feedback to create public archive
+x send beta archive to Marc Merlin and Drew Bertola
+x choose and add license information
+- add password creation page in admin mode
+- enable password usage
+- add html description for albums and images
+- use frame/dhtml/separate window to view/edit image options in admin mode
+
+[102501]
+
+x feature: global gammma perf (1.0 is default for none)
+x finished rewriting the thumbnail app
+
+[083101]
+
+x fix: image size cookies
+x fix: gamma 1.6 for previews
+- feature: per-album gamma choice (0 for none)
+
+[082801]
+
+x fix: now display admin list of album/image as a 5xN table, with links for actions below each
+       image and a #name tag to find the same image after exec
+x fix: there are bugs in thumbnail generation (size incorrect, image too dark)
+x feature: need to gamma-enhance the image during thumbnail/display [from 1.5->2.4]
+
+[082101]
+- feature: options can be in the options dir / one file per album, indexed by a number in
+		   a special index file.
+
+[081501]
+
+x fix: improve the quality of the thumbnails
+- feature: when creating an album icon, keep the original file name in the album options
+	(this allows the same album icon to be reused even after all previews have been rebuild
+     or the site is moved to another site)
+- keep album options in a global file rather than per directory
+  (alternate: have a special directory with each album name as file name)
+
+[081401]
+
+x fix: login page in french-english
+x feature: default to guest access (pref's choice)
+- feature: set thumbnail for parent albums
+- feature: comments for albums/images must be HTML and both french-english
+- fix: space characters are not supported in names under Netscape 4.7
+x fix: parenthesis and plus signs are not supported in names (every browser)
+
+[081201]
+
+x feature: in admin, display hidden files with different header color
+- make use of ImageMagik under linux, if available (what about jpeg info?)
+
+[081001]
+
+x feature: use small images to create a border for album thumbnails, to differenciate from image thumbnails
+x change list tables for 1-pixel border, add border to thumbnails
+
+[080401]
+
+x feature: attrib.txt with [:hide\nimg1\nimg2...:section2\n...]
+    [partial: wrote generic routine to handle the options.txt file,
+              and use it for show/hide albums/images]
+- feature: access log
+
+[080301]
+
+x fix: last row of filenames forgotten
+x feature: in admin, display images table vertically, with direct options
+x fix: shield album/image from magic characters './\' at beginning
+x feature: set thumbnail for album, or choose one random
+	[status: can set for album, but not for parents]
+x feature: in admin, code image options
+x find something more pretty for "-->"
+	[using '=>' currently]
+- feature: image upload
+- feature: move image between directories
+- feature: add comments to image
+- feature: set user/passwd
+n Grab Berkeley License, then update credits information regarding availability
+
+
+*********************************************************************
+*********************************************************************
+
+Format:
+-------
+
+Each line is in the form "Date [P.S] Feature [T]" where:
+- P is a priority index (1:urgent, 9:later, 0:prototype)
+- S is a status letter
+- P is the optional target tag, as follows:
+
+[N] "Not available yet", i.e. not started
+[W] "Work", Work in progress, i.e. non testable feature
+[T] "Test", feature can be tested but is not finished
+[F] "Finished", feature is supposedly finished, thus has to be tested
+
+[M] MacOS
+[W] Windows (default)
+
+Most recent actions go first.
+Dates are in YYYYMMDD. Dates for N actions are when action is created.
+Dates for W/F actions are date when action is actually started.
+No tabs, use spaces for alignment (for viewcvs)
+
+*********************************************************************
+
+
+--- end ---
+
+
+
+
+//-------------------------------------------------------------
+//	$Log$
+//	Revision 1.2  2002/10/21 01:56:14  ralfoide
+//	Added summary of features
+//
+//	Revision 1.1.1.1  2002/06/21 20:41:46  ralfoide
+//	Initial revision, based on rig 0.6
+//	
+//	Revision 1.13  2001/11/28 11:52:47  ralf
+//	v0.6.1: display image last modification date
+//	
+//	Revision 1.12  2001/11/26 04:34:54  ralf
+//	version 0.6 with location.php
+//	
+//	Revision 1.11  2001/11/17 23:25:09  ralf
+//	update
+//	
+//	Revision 1.10  2001/10/27 22:41:14  ralf
+//	distrib 0.5
+//	
+//	Revision 1.9  2001/08/31 21:18:39  ralf
+//	stuff
+//	
+//	Revision 1.8  2001/08/28 07:17:05  ralf
+//	more comments, one fix
+//	
+//	Revision 1.7  2001/08/27 08:47:43  ralf
+//	more comments
+//	
+//	Revision 1.6  2001/08/16 21:53:04  ralf
+//	Updated list
+//	
+//	Revision 1.5  2001/08/16 19:01:09  ralf
+//	some ideas
+//	
+//	Revision 1.4  2001/08/14 17:50:48  ralf
+//	Update todo notes
+//	
+//	Revision 1.3  2001/08/14 08:05:44  ralf
+//	New to do things.
+//	Added some install note for later usage
+//	
+//	Revision 1.2  2001/08/07 08:04:17  ralf
+//	Added a cvs log entry
+//	
+//-------------------------------------------------------------

@@ -1,8 +1,8 @@
 /* phpunit stylesheet for RIG -- "http://phpunit.sourceforge.net/" for more information */
 /* $Id$ */
 
-body 					{ font:normal 68% verdana,arial,helvetica; color:#000000; }
-table tr td, table tr th{ font-size: 68%; }
+body 					{ font:normal verdana,arial,helvetica; color:#000000; }
+table tr td, table tr th{ font-size:; }
 table.details tr th		{ font-weight: bold; text-align:left; background:#a6caf0; }
 table.details tr		{ background:#eeeee0; }
 p						{ line-height:1.5em; margin-top:0.5em; margin-bottom:1.0em; }
@@ -17,6 +17,6 @@ h6						{ margin-bottom: 0.5em; font: bold 100% verdana,arial,helvetica }
 .Unknown				{ background:#ffff00; font-weight:bold; color:black; }
 .Pass, .Expected 		{ background:#00ff00; font-weight:bold; color:black; }
 .Properties				{ text-align:right; }
-CODE.expected			{ color: green; background: none; font-weight: normal; }
-CODE.actual				{ color: red; background: none; font-weight: normal; }
+CODE.expected			{ color: green; background: none; font-weight: bold; }
+CODE.actual				{ color: red; background: none; font-weight: bold; }
 .typeinfo				{ color: gray; }

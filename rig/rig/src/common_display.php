@@ -162,21 +162,42 @@ function rig_display_album_list()
 	global $dir_images;
 	global $pref_nb_col;
 	global $pref_preview_size;
+	global $pref_preview_quality;
+	global $pref_small_preview_size;		// RM 20030720 for 'vert' layout
+	global $pref_small_preview_quality;
 	global $abs_preview_path;
+	global $html_images;
 	global $list_albums;
+	global $html_album;
 	global $current_album;
 	global $list_description;				// RM 20030713
 	global $pref_album_layout;				// RM 20030718 'grid' or 'vert'
+	global $pref_album_with_description_layout;	// RM 20030720 auto-switch
 	global $pref_disable_album_borders;
 
 	$i = 0;
 
+	// select the layout
+	// - by default, $pref_album_layout is used
+	// - if this album as descriptiom, $pref_album_with_description_layout
+	//   is used if defined and not empty
+
+	$layout = $pref_album_layout;
+	if (is_array($list_description)
+		&& count($list_description) > 0
+		&& is_string($pref_album_with_description_layout)
+		&& $pref_album_with_description_layout != '')
+	{
+		$layout = $pref_album_with_description_layout;
+	}
+
 	// only one item per line if not in grid layout
-	if ($pref_album_layout != 'grid')
+	if ($layout != 'grid')
 	{
 		$n = 1;
 		$p = $pref_preview_size;
 		$w_td = " width=\"$p\" valign=\"top\" align=\"center\"";
+
 	}
 	else
 	{
@@ -188,6 +209,20 @@ function rig_display_album_list()
 	
 		$p = (int)(100/$n);
 		$w_td = " width=\"$p%\" valign=\"top\" align=\"center\"";
+		
+	}
+
+	if ($layout == 'vert')
+	{
+		// for vertical layout, use small previews [RM 20030720]
+		$preview_size    = $pref_small_preview_size;
+		$preview_quality = $pref_small_preview_quality;
+	}
+	else
+	{
+		// for non-vertical layout, use normal previews
+		$preview_size    = $pref_preview_size;
+		$preview_quality = $pref_preview_quality;
 	}
 
 	
@@ -204,23 +239,47 @@ function rig_display_album_list()
 
 		$link = rig_self_url("", $name);
 
+		// ---- collect information on the album ----
+
 		// prepare title
+
 		$title = "<a href=\"$link\">$pretty</a>\n";
 
-
+		
 		// prepare description, if any
+
 		if (is_string($list_description[$dir]))
 			$desc = $list_description[$dir];
 		else
 			$desc = "";
 
+			
+		// get the album's date
 
-		$square_size = $pref_preview_size + 12;
+		$album_date = rig_get_album_date($name);
+		
 
-		if ($pref_album_layout == 'vert')
+		// get the album's image count
+		// TBDL when the RAlbum class will be coded
+		// (right now since albums are managed thru global lists and variables
+		//  recursing to read an album is a bad idea).
+
+		$sub_count = 0;
+
+		// prepare image tooltip and alt attributes
+		
+		$alt     = "$html_album: $pretty";
+		$tooltip = "$html_album: $pretty; Last updated: $album_date";
+
+
+		// --------------------------------------------
+		
+		$square_size = $preview_size + 12;
+
+		if ($layout == 'vert')
 		{
 			// no header per item in vert layout
-			echo "<td width=\"20\">&nbsp;&nbsp;&nbsp;</td>";
+			echo "<td>&nbsp;&nbsp;&nbsp;</td>";
 			echo "<td $w_td>\n";
 		}
 		else // default: 'grid' mode
@@ -233,21 +292,21 @@ function rig_display_album_list()
 		// get the relative and absolute path to the preview icon
 		$abs_path = "";
 		$url_path = "";
-		$res = rig_build_album_preview($name, &$abs_path, &$url_path);
+		$res = rig_build_album_preview($name, &$abs_path, &$url_path, $preview_size, $preview_quality);
 		$url_path = rig_encode_url_link($url_path);
 		if (!$res)
 		{
 			// if we can't have the preview icon, use a little album icon
 
-			$dx = $pref_preview_size;
-			$dy = $pref_preview_size;
+			$dx = $preview_size;
+			$dy = $preview_size;
 
 			?>
 
 			<table width="<?= $dx ?>" height="<?= $dy ?>" border="0">
 				<tr>
 					<td align="center" valign="middle">
-						<a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<? $pretty ?>" border=0></a>
+						<a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<? $alt ?>" title="<?= $tooltip ?>" border=0></a>
 
 					</td>
 				</tr>
@@ -259,8 +318,8 @@ function rig_display_album_list()
 		{
 			// otherwise get the size of the icon and display it with a nice fancy table
 
-			$dx = $pref_preview_size;
-			$dy = $pref_preview_size;
+			$dx = $preview_size;
+			$dy = $preview_size;
 
 			$icon_info = rig_image_info($abs_path);
 			if (is_array($icon_info) && count($icon_info) > 2)
@@ -301,7 +360,7 @@ function rig_display_album_list()
 				?>
 				<table width="<?= $dx ?>" height="<?= $dy ?>" border="0">
 					<tr>
-						<td align="center" valign="middle"><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="1"></a></td>
+						<td align="center" valign="middle"><a href="<?= $link ?>" title="<?= $tooltip ?>"><img src="<?= $url_path ?>" alt="<?= $alt ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="1"></a></td>
 					</tr>
 				</table>
 				<?php
@@ -338,7 +397,7 @@ function rig_display_album_list()
 				    <td width="<?= $sx2 ?>" height="<?= $sy2 ?>" colspan="2" rowspan="2" align="center">
 					    <table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
 						    <tr>
-							    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
+							    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $alt ?>" title="<?= $tooltip ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
 						    </tr>
 						</table></td>
 				    <td width="6"           height="9"           background="<?= $box_tr ?>"></td>
@@ -363,28 +422,31 @@ function rig_display_album_list()
 			}
 		}
 
-		if ($pref_album_layout == 'vert')
+		if ($layout == 'vert')
 		{
-			echo "</td><td width=\"20\">&nbsp;&nbsp;&nbsp;</td><td width=\"100%\">\n";
-			echo "$title<br>\n";
-			
-			// get the album's date
-			echo rig_get_album_date($name) . "<br>\n";
-			
-			// get the album's image count
-			// TBDL when the RAlbum class will be coded
-			// (right now since albums are managed thru global lists and variables
-			//  recursing to read an album is a bad idea).
-			
+			?>
+			</td>
+			<td>&nbsp;&nbsp;&nbsp;</td>
+			<td width="100%" align="left">
+				<table width="100%" border="0">
+				<td align="left"><?= $title ?></td>
+				<td align="right"><font size="-1"><?= $album_date ?></font></td>
+				</table>
+			<?php
+			if ($sub_count > 0)
+				echo "$sub_count $html_images<br>\n";
 			echo "$desc\n";
-			echo "</td>\n";
-			echo "<td width=\"20\">&nbsp;&nbsp;&nbsp;</td>";
-			echo "</tr><tr $w_tr>\n";
+			?>
+				</td>
+				<td>&nbsp;&nbsp;&nbsp;</td>
+				</tr><tr <?= $w_tr ?> >
+			<?php
 		}
 		else // default: 'grid' mode
 		{
 			echo "</td></tr>\n";
 			echo "<tr><td><center>$title</center></td></tr>\n";
+			echo "<tr><td title=\"Last updated: $album_date\"><center><font size=\"-1\"><span>$album_date</span></font></center></td></tr>\n";
 			echo "<tr><td><center>$desc</center></td></tr>\n";
 			echo "</table>";
 
@@ -419,6 +481,7 @@ function rig_display_image_list()
 
 	global $pref_nb_col;
 	global $list_images;
+	global $html_image;
 	global $current_album;
 	global $list_description;				// RM 20030713
 	global $pref_preview_size;
@@ -470,6 +533,7 @@ function rig_display_image_list()
 		$link = rig_self_url($file);
 		$title = "<center><a href=\"$link\">$pretty1</a></center>";
 
+		$tooltip = "$html_image: $pretty2";
 
 		// prepare description, if any
 		if (is_string($list_description[$file]))
@@ -490,7 +554,7 @@ function rig_display_image_list()
 					<tr><td align="center" valing="center" height="<?= $square_size ?>">
 						<table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
 						<tr><td>
-							<a href="<?= $link ?>"><img src="<?= $preview ?>" alt="<?= $pretty2 ?>" <?= $width ?> <?= $height ?> border="0" align="middle"></a></td>
+							<a href="<?= $link ?>"><img src="<?= $preview ?>" alt="<?= $pretty2 ?>" title="<?= $tooltip ?>" <?= $width ?> <?= $height ?> border="0" align="middle"></a></td>
 						</tr>
 						</table>
 	
@@ -607,13 +671,13 @@ function rig_display_image()
 			$sx = $icon_info["w"];
 			$sy = $icon_info["h"];
 	
-			echo "<img src=\"$preview\" alt=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
+			echo "<img src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
 		}
 		else
 		{
 			// there's no size (probably a problem when creating the preview)
 			// just use the img name anyway
-			echo "<img src=\"$preview\" alt=\"$pretty_image\" border=0>";
+			echo "<img src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0>";
 		}
 	}
 	else if (strncmp($type, "video/", 6) == 0)
@@ -1342,7 +1406,7 @@ function rig_display_footer()
 {
     global $_debug_;
 	global $rig_version;
-	global $display_date;
+	global $display_exec_date;
 	global $display_softname;
 	global $html_generated;
 	global $html_seconds;
@@ -1352,7 +1416,7 @@ function rig_display_footer()
 	global $color_section_text;
 
 	$sgen = str_replace("[time]", rig_time_elapsed(), $html_generated);
-	$sgen = str_replace("[date]", $display_date, $sgen);
+	$sgen = str_replace("[date]", $display_exec_date, $sgen);
 	$sgen = str_replace("[rig-version]", $display_softname . " " . $rig_version, $sgen);
 
 
@@ -1669,9 +1733,12 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.21  2003/07/21 04:58:26  ralfoide
+//	Tooltips that work with Mozilla (using title attribute); Date description in grid albums and tooltips; Small preview for vertical album layout; Auto-switch album layout on description presence.
+//
 //	Revision 1.20  2003/07/19 07:52:36  ralfoide
 //	Vertical layout for albums
-//
+//	
 //	Revision 1.19  2003/07/14 18:32:23  ralfoide
 //	New album frame table, support for descriptions, javascript testing
 //	

@@ -65,6 +65,7 @@ Admin:
 -- todo --
 
 [0.6.4]
+20030311 [1.N] Groups: define behavior groups to grant users priviledges (guest, view, admin, translate)
 20030220 [7.N] Manual: write real CODINGRULES.TXT
 20030220 [6.N] Manual: write real INSTALL.TXT explaining site vs. album locations
 20030220 [6.N] Manual: write real INSTALL.TXT based on CVS checkout
@@ -75,7 +76,7 @@ Admin:
 20030208 [1.N] PNG: browse PNG files in dirs / simulate jhead-like info for display
 20030208 [1.N] rig_thumbnail: add PNG support. use "libpng" (Debian packages libpng3 and libpng2-dev)
 20030208 [1.N] rig_thumbnail: use "libjpeg62" (Debian packages libjpeg62 and libjpeg62-dev)
-20030119 [4.N] Experiment: can the PHP code get the browser's window size via JavaScript? (for a full screen view)
+20030119 [4.N] Test: can the PHP code get the browser's window size via JavaScript? (for a full screen view)
 20030119 [4.N] Templates: second display image template, with no link images and tiny header line (good for a full screen view)
 20030119 [3.N] Templates: create HTML templates, using keywords instead of PHP code
 20030119 [2.N] Templates: move structural html in template, not in rig code! (cf album/image tables)
@@ -88,8 +89,7 @@ Admin:
                will be used to manipulate files. Also classify parts of the source code if useful.
 20030112 [1.N] Document album/image workflow (i.e. when and how names are used)
 20030112 [1.N] Class RigItem (struct mAlbum + mImage + helper accessors like is_image/is_album)
-20030112 [1.N] Implement the freaking password page for once!
-20030112 [2.W] Make sure options can be stored with images (rig-option link) or folders created.
+20030112 [1.N] Admin: Implement the freaking groups/users/password page for once!
 20030112 [2.N] Make options XML files.
 20030112 [3.N] Admin-album page vs Admin-image page (use these from 0.6.3-exp)
 20030112 [5.N] Revise the TODO file structure -- separating Generic/Admin/DB doesn't really work for me.
@@ -108,7 +108,7 @@ Admin:
 
 
 [for 0.6.2]
-20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
+20020712 [2.N] Test: display admin image detail in overlapped DHTML window
 20020712 [2.N] Detect browser capability for DHTML
 
 20020712 [3.N] Add HTML descriptions for images and albums
@@ -133,12 +133,13 @@ Admin:
 [0.6.4]
 
 [0.6.3.2]
-20030311 [1.F] Updated SF CVS (meta, translate, admin image vs album) -- this is all alpha-dev stuff
-20030311 [1.F] Album pref to customize the <meta name="robots" content="noindex, nofollow">
+20030311 [1.F] CVS: Updated SF CVS (meta, translate, admin image vs album) -- this is all alpha-dev stuff
+20030311 [1.F] Display: Album pref to customize the <meta name="robots" content="noindex, nofollow">
+20030309 [2.W] Home page: 
 20030308 [3.F] Japanese: made a separate dev/demo web site for Tatsuo
 20030308 [3.F] Translate: Added Edit/Reload language links in admin+translate page's options
 20030308 [3.F] Translate: Lang/theme sources are now searched in upload_src before the main src dir
-20030308 [3.F] Added upload_src and upload_photos directories to the site
+20030308 [3.F] Upload: Added upload_src and upload_photos directories to the site
 20030307 [3.F] Translate: when submitted, upload new text in upload_src and backup previous file
 20030307 [3.F] Translate: reads the str_XX or the dataXX file and display in a textfield
 20030307 [3.F] Test: created an admin-translate page, to translate language files on the fly
@@ -161,26 +162,27 @@ Admin:
 20030216 [1.F] Bug fix: visibility values not correctly read from options.txt
 
 [0.6.3]
-20030215 [1.F] Updating sourceforge CVS, make CVS tag_2003-02-15_v0630
+20030215 [1.F] CVS: Updating sourceforge CVS, make CVS tag_2003-02-15_v0630
 20030125 [1.F] Admin: create-previews also fix album_icon.jpg when possible (update, resize)
 20030125 [1.F] Admin: fix_options to convert options.txt from 0.6.2 into 0.6.3
-20030124 [3.F] Added a rig_mkdir to build full paths (vs mkdir that only adds one terminal directory)
-20030122 [3.F] Changed rig_create_options_dir to mirror hierarchy in rig-options directory
-20030122 [3.F] Experimenting with a "fix options" admin item
-20020712 [1.F] Rename functions using a constant rig_section_method naming (-> 20030120)
-    20020712 [1.F] Renaming functions in admin_util.php
-    20020712 [1.F] Renaming functions in common_display.php (-> 20030120)
-    20020713 [1.F] Renaming functions in common.php (-> 20030120)
+20030124 [3.F] Source: Added a rig_mkdir to build full paths (vs mkdir that only adds one terminal directory)
+20030122 [3.F] Admin: Changed rig_create_options_dir to mirror hierarchy in rig-options directory
+20030122 [3.F] Test: Experimenting with a "fix options" admin item
+20030112 [2.X] Make sure options can be stored with images (rig-option link) or folders created (obsolete -> 20030122)
+20020712 [1.F] Source: Rename functions using a constant rig_section_method naming (-> 20030120)
+    20020712 [1.F] Source: Renaming functions in admin_util.php
+    20020712 [1.F] Source: Renaming functions in common_display.php (-> 20030120)
+    20020713 [1.F] Source: Renaming functions in common.php (-> 20030120)
 20030119 [1.F] Display: show number of albums or images in table view.
 20030119 [1.F] Display: *must* display credits in images or album mode (aka "All images (c) Ralf"). Language dependant.
-20021101 [1.F] Only display phpinfo if _debug_ enabled or admin mode
-20021012 [4.F] Ask Pascal about Japanese -> [20030112] gave up getting help
+20021101 [1.F] Display: Only display phpinfo if _debug_ enabled or admin mode
+20021012 [4.F] Japanese: Ask Pascal about Japanese -> [20030112] gave up getting help
 
 [0.6.2.4]
-20030118 [1.F] 0.6.2.4 considered stable enough to become 0.6.3
-20030118 [1.F] Make CVS tag_2003-01-18_v0624
-20030107 [4.F] Bumped to version 0.6.2.4 and updated SourceForge
-20030107 [3.F] URL-Rewrite support (cf site/prefs.php)
+20030118 [1.F] CVS: 0.6.2.4 considered stable enough to become 0.6.3
+20030118 [1.F] CVS: Make CVS tag_2003-01-18_v0624
+20030107 [4.F] CVS: Bumped to version 0.6.2.4 and updated SourceForge
+20030107 [3.F] Test: URL-Rewrite support (cf site/prefs.php)
 
 [0.6.2.3]
 20021104 [4.F] Bumped to version 0.6.2.3
@@ -470,9 +472,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2003/03/12 07:25:36  ralfoide
+//	update
+//
 //	Revision 1.14  2003/03/12 07:16:41  ralfoide
 //	Updated SF CVS (meta, translate, admin image vs album) -- this is all alpha-dev stuff
-//
+//	
 //	Revision 1.13  2003/02/23 10:18:35  ralfoide
 //	plain vs crypt vs MD5 password in the password file
 //	

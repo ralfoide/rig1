@@ -269,7 +269,7 @@ function rig_build_preview_info($album, $file,
 function rig_image_info($abs_file)
 //********************************
 // Returns an array of strings:
-// { f:format, w:width, h:height, d:date }
+// { f:format, w:width, h:height, d:date, e:extra }
 // Returns an empty array if file does not exists
 {
 	global $html_img_date;
@@ -321,12 +321,29 @@ function rig_image_info($abs_file)
 
 				for($i = $n-1; $i>=0; $i--)
 				{
-					if (preg_match("/\[rig-thumbnail-result\][ \t]+([a-z]+)[ \t]+([0-9]+)[ \t]+([0-9]+)/", $output[$i], $res) > 0)
+					// The line we're looking for as the following format:
+					//
+					// [rig-thumbnail-result] type width height @extra@\n
+					//
+					// - type is a string: current accepted values are "jpeg", "video" and "unknown".
+					// - width & height are decimal integer pixel size.
+					// - @...@: everything between a pair of @ is taken as an extra string [RM 20031109 v0.6.4.4]
+					// The meaning of the extra string depends on the type:
+					// - for images: not currently used
+					// - for video: FourCC codec type
+					// The extra string is optional and it can be empty.
+					
+					if (preg_match("/\[rig-thumbnail-result\][ \t]+([a-z]+)[ \t]+([0-9]+)[ \t]+([0-9]+)[ \t]*(@[^@]*@)?/", $output[$i], $res) > 0)
 					{
-						// $res[0] contains the full line, 1/2/3 contain the several matches
+						// $res[0] contains the full line, 1/2/3/4 contain the several matches
 						$info["f"] = $res[1];
 						$info["w"] = $res[2];
 						$info["h"] = $res[3];
+						
+						if (is_string($res[4]) && preg_match("/@([^@]*)@/", $res[4], $extra) > 0)
+							$info["e"] = $extra[1];
+						else
+							$info["e"] = '';
 
 						break;
 					}
@@ -746,10 +763,15 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2003/11/25 05:05:34  ralfoide
+//	Version 0.6.4.4 started.
+//	Added video install codec/player link & codec info.
+//	Isolated video display routines in new source file.
+//
 //	Revision 1.14  2003/09/08 03:54:35  ralfoide
 //	Re-implemented follow-album-symlink the proper way, by separating
 //	current_album (the symlink source) from current_real_album (the symlink dest)
-//
+//	
 //	Revision 1.13  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
 //	

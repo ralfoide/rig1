@@ -169,6 +169,7 @@ require_once(rig_require_once("common_display.php"));
 require_once(rig_require_once("common_images.php"));
 require_once(rig_require_once("common_xml.php"));			// RM 20030216
 require_once(rig_require_once("common_comment.php"));		// RM 20030928
+require_once(rig_require_once("common_video.php"));		// RM 20030928
 
 rig_setup();
 rig_create_option_dir("");
@@ -3306,6 +3307,11 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.36  2003/11/25 05:05:33  ralfoide
+//	Version 0.6.4.4 started.
+//	Added video install codec/player link & codec info.
+//	Isolated video display routines in new source file.
+//
 //	Revision 1.35  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)
@@ -3313,7 +3319,7 @@ function rig_check_ignore_list($name, $ignore_list)
 //	Fix: Changed credit line
 //	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
 //	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//
+//	
 //	Revision 1.34  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)

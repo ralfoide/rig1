@@ -8,16 +8,21 @@
 //**********************************************
 
 
-$rig_version = "0.6.4.3";
+$rig_version = "0.6.4.4";
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.18  2003/11/25 05:05:34  ralfoide
+//	Version 0.6.4.4 started.
+//	Added video install codec/player link & codec info.
+//	Isolated video display routines in new source file.
+//
 //	Revision 1.17  2003/08/23 18:32:46  ralfoide
 //	Uploaded 0.6.4.2 (sf, rig home page), moving on to 0.6.4.3
-//
+//	
 //	Revision 1.16  2003/08/18 06:10:03  ralfoide
 //	Moving on to 0.6.4.2
 //	Added color_table_desc in themes for description and dates in album view.

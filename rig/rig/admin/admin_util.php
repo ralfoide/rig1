@@ -120,10 +120,14 @@ function rig_admin_perform_defer()
 	}
 	else if ($admin == "show_album" && $show_album && $item)
 	{
+		// RM 20041005 url-decode item
+		$item = rig_decode_argument($item);
 		rig_admin_set_album_visible($item, ($show_album == 'on'));
 	}
 	else if ($admin == "show_image" && $show_image && $item)
 	{
+		// RM 20041005 url-decode item
+		$item = rig_decode_argument($item);
 		// RM 20021022 fix for changing image visibility
 		rig_admin_set_image_visible($item, ($show_image == 'on'));
 	}
@@ -981,8 +985,10 @@ function rig_admin_display_image()
 		}
 
 		// link to change image visibility
+		// RM 20041005 url-encode the item name
+		$item = rig_encode_url_link($file);
 		// RM 20021022 fix for changing image visibility
-		$vis_link = rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "admin=show_image&item=$file&show_image=$vis_val#$key");
+		$vis_link = rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "admin=show_image&item=$item&show_image=$vis_val#$key");
 
 		?>
 			<td <?= $w ?>>
@@ -1063,9 +1069,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2004/10/07 01:20:01  ralfoide
+//	Fix for encoding in admin url
+//
 //	Revision 1.5  2004/07/17 07:52:30  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.4  2004/07/14 06:08:34  ralfoide
 //	Clean html caches
 //	

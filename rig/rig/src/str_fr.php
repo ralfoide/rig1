@@ -19,6 +19,18 @@ $html_encoding		= 'ISO-8859-1';		// cf http://www.w3.org/TR/REC-html40/charset.h
 $html_language_code	= 'fr';				// cf http://www.w3.org/TR/REC-html40/struct/dirlang.html#h-8.1.1
 
 
+// Locale courrante
+//-----------------
+
+// Lib-C locale, utilisee principalement pour l'affichage de la date et l'heure.
+// Sous Debian, utiliser 'dpkg-reconfigure locales' en tant que root pour verifier
+// que les locales necessaires sont installees.
+// Les locales doivent etre de type ISO-8859 et non pas UTF-8
+// Utiliser la locale C en tant que defaut.
+
+$lang_locale        = array('fr_FR', 'fr', 'C');
+
+
 // Languages available
 //--------------------
 
@@ -109,9 +121,10 @@ $html_image_count	= '[count] images';
 //--------------------
 
 // Format de la date (dans le bas de page)
-// Le format de la date pour $html_date et $html_img_date utilise
+// Le format de la date pour $html_footer_date, $html_img_date et $html_album_date utilise
 // la notation de PHP pour date(), cf http://www.php.net/manual/en/function.date.php
-$html_date			= 'd/m/Y H:m:s';
+// Now using notation from http://www.php.net/manual/en/function.strftime.php
+$html_footer_date	= '%d/%m/%Y %H:%M:%S';
 
 // Titres pour les albums
 $html_album			= 'Album';
@@ -135,8 +148,13 @@ $html_original		= 'Originale';
 $html_num_dec_sep	= ',';		// separateur des decimales (ex 25,00)
 $html_num_th_sep	= ' ';		// separateur des milliers  (ex 1 000)
 
-// Affichage de la date d'image date
-$html_img_date		= 'd/m/Y H:m:s';
+// Affichage de la date d'image
+// Now using notation from http://www.php.net/manual/en/function.strftime.php
+$html_img_date		= '%A %d %B %Y %H:%M:%S';
+
+// Affichage de la date d'album
+// cf http://www.php.net/manual/en/function.strftime.php
+$html_album_date	= '%B %Y';
 
 
 // Modifications de prefs.php
@@ -152,9 +170,12 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/07/21 04:54:45  ralfoide
+//	Added date format for album display; changed dates format to strftime (localizable); setting locale
+//
 //	Revision 1.12  2003/06/15 19:09:49  ralfoide
 //	Version 0.6.3.3: Japanese translation completed
-//
+//	
 //	Revision 1.11  2003/05/26 17:51:08  ralfoide
 //	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
 //	

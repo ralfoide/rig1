@@ -30,6 +30,17 @@ $html_encoding		= 'ISO-8859-1';		// cf http://www.w3.org/TR/REC-html40/charset.h
 $html_language_code	= 'es';				// cf http://www.w3.org/TR/REC-html40/struct/dirlang.html#h-8.1.1
 
 
+// Current Locale
+//---------------
+
+// Lib-C locale, mainly used to generate dates and time with the correct language.
+// On Debian, run 'dpkg-reconfigure locales' as root and make sure the locale is installed.
+// Locales are expected to be ISO-8859 not UTF-8
+// Using the C locale as a fallback.
+
+$lang_locale        = array('es_ES', 'es', 'C');
+
+
 // Languages available
 //--------------------
 
@@ -120,9 +131,10 @@ $html_image_count	= '[count] im&aacute;genes';
 //---------------
 
 // Date formatiing
-// Date formating for $html_date and $html_img_date uses
+// Date formating for $html_footer_date, $html_img_date and $html_album_date uses
 // the PHP's date() notation, cf http://www.php.net/manual/en/function.date.php
-$html_date			= 'd/m/Y H:m:s';
+// Now using notation from http://www.php.net/manual/en/function.strftime.php
+$html_footer_date	= '%d/%m/%Y %H:%M:%S';
 
 // Album Title
 $html_album			= 'Album';
@@ -148,7 +160,12 @@ $html_num_th_sep	= ',';		// separator for thousand (ex 1,000 in English)
 
 
 // Image date displayed
-$html_img_date		= 'd/m/Y H:m:s';
+// Now using notation from http://www.php.net/manual/en/function.strftime.php
+$html_img_date		= '%A %d %B %Y %H:%M:%S';
+
+// Album date displayed
+// cf http://www.php.net/manual/en/function.strftime.php
+$html_album_date	= '%B %Y';
 
 
 // Overriding prefs.php
@@ -164,9 +181,12 @@ $pref_date_YMD      = 'D-M-Y';          // Long format.  Must contain D & M & Y.
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/07/21 04:54:45  ralfoide
+//	Added date format for album display; changed dates format to strftime (localizable); setting locale
+//
 //	Revision 1.9  2003/06/15 19:09:49  ralfoide
 //	Version 0.6.3.3: Japanese translation completed
-//
+//	
 //	Revision 1.8  2003/05/26 17:51:08  ralfoide
 //	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
 //	

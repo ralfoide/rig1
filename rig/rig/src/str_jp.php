@@ -20,21 +20,42 @@
 $html_language_code	= 'ja';				// cf http://www.w3.org/TR/REC-html40/struct/dirlang.html#h-8.1.1
 
 
+// Current Locale
+//---------------
+
+// Lib-C locale, mainly used to generate dates and time with the correct language.
+// On Debian, run 'dpkg-reconfigure locales' as root and make sure the locale is installed.
+//
+// 'ja_JP' doesn't really work for me but 'ja_JP.UTF-8' does.
+// This is expected to be UTF-8 not ISO-8859 anyway.
+// Better use the 'C' locale as a fallback in case everything else fails.
+
+
+$lang_locale        = array('ja_JP.UTF-8', 'ja_JP', 'ja', 'C');
+
+
 
 // Script Content
 //---------------
 
 // Date formatiing
-// Date formating for $html_date and $html_img_date uses
+// Date formating for $html_footer_date, $html_img_date and $html_album_date uses
 // the PHP's date() notation, cf http://www.php.net/manual/en/function.date.php
-$html_date			= 'h:i - m/d/Y';
+// Now using notation from http://www.php.net/manual/en/function.strftime.php
+$html_footer_date	= '%c';
 
 // Number formating
 $html_num_dec_sep	= '.';		// separator for decimals (ex 25.00 in English)
 $html_num_th_sep	= ',';		// separator for thousand (ex 1,000 in English)
 
 // Image date displayed
-$html_img_date		= 'l\, F d\, Y\, g:m A';
+// Now using notation from http://www.php.net/manual/en/function.strftime.php
+// $html_img_date		= '%c';
+$html_img_date		= '%Y&#x5e74;%m&#x6708;%d&#x65e5; %A %H&#x6642;%M&#x5206;%S&#x79d2;';
+
+// Album date displayed
+// cf http://www.php.net/manual/en/function.strftime.php
+$html_album_date	= '%Y&#24180; %B';
 
 
 // Overriding prefs.php
@@ -63,6 +84,9 @@ rig_parse_string_data('data_jpu8.bin');
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2003/07/21 04:54:45  ralfoide
+//	Added date format for album display; changed dates format to strftime (localizable); setting locale
+//
 //	Revision 1.4  2003/02/16 20:22:58  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -70,7 +94,7 @@ rig_parse_string_data('data_jpu8.bin');
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.3  2002/10/23 16:01:00  ralfoide
 //	Added <html lang>; now transmitting charset via http headers.
 //	

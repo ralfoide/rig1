@@ -20,6 +20,18 @@ $html_encoding		= 'ISO-8859-1';		// cf http://www.w3.org/TR/REC-html40/charset.h
 $html_language_code	= 'en-US';			// cf http://www.w3.org/TR/REC-html40/struct/dirlang.html#h-8.1.1
 
 
+// Current Locale
+//---------------
+
+// Lib-C locale, mainly used to generate dates and time with the correct language.
+// On Debian, run 'dpkg-reconfigure locales' as root and make sure the locale is installed.
+//
+// Neither 'en' nor 'en_EN' work for me in English. Using 'C' instead as fallback.
+// This is expected to be be ISO-8859 not UTF-8
+
+$lang_locale        = array('en_US', 'en_EN', 'en', 'C');
+
+
 // Languages availables
 //---------------------
 
@@ -111,9 +123,10 @@ $html_image_count	= '[count] images';
 //---------------
 
 // Date formatiing
-// Date formating for $html_date and $html_img_date uses
+// Date formating for $html_footer_date, $html_img_date and $html_album_date uses
 // the PHP's date() notation, cf http://www.php.net/manual/en/function.date.php
-$html_date			= 'm/d/Y \a\\t h:i a';
+// Now using notation from http://www.php.net/manual/en/function.strftime.php
+$html_footer_date	= '%m/%d/%Y, %I:%M %p';
 
 // Album Title
 $html_album			= 'Album';
@@ -139,15 +152,23 @@ $html_num_th_sep	= ',';		// separator for thousand (ex 1,000 in English)
 
 
 // Image date displayed
-$html_img_date		= 'l\, F d\, Y\, g:m A';
+// Now using notation from http://www.php.net/manual/en/function.strftime.php
+$html_img_date		= '%A %B %d %Y, %I:%M %p'; //l\, F d\, Y\, g:m A';
+
+// Album date displayed
+// cf http://www.php.net/manual/en/function.strftime.php
+$html_album_date	= '%B %Y';
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/07/21 04:54:45  ralfoide
+//	Added date format for album display; changed dates format to strftime (localizable); setting locale
+//
 //	Revision 1.12  2003/06/15 19:09:49  ralfoide
 //	Version 0.6.3.3: Japanese translation completed
-//
+//	
 //	Revision 1.11  2003/05/26 17:51:08  ralfoide
 //	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
 //	

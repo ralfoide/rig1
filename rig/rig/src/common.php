@@ -321,6 +321,18 @@ function shell_filename($str)
 }
 
 
+//****************************
+function shell_filename2($str)
+//****************************
+// Encode a filename before using it in a shell argument call
+// This one is more dedicated for directly unix calls.
+// Escapeshellcmd will transform ' into \' which is not always appropriate.
+{
+	$s = "\"" . escapeshellcmd($str) . "\"";
+	$s = str_replace("\\'", "'", $s);
+	return $s;
+}
+
 
 //*******************************
 function simplify_filename($name)
@@ -1150,8 +1162,9 @@ function get_images_prev_next()
 	global $current_image;
 	global $list_images;
 
-# array_search is >= PHP 4.0.5
-#	$key = array_search($current_image, $list_images, TRUE);
+	// array_search is >= PHP 4.0.5
+	//	$key = array_search($current_image, $list_images, TRUE);
+	// do it manually:
     $key = FALSE;
     foreach($list_images as $n => $item)
     {
@@ -1164,6 +1177,7 @@ function get_images_prev_next()
     }
 
 
+	// DEBUG
 	// echo "current = $current_image -- array = $list_images -- key = $key";
 
 	if (is_bool($key) && $key == FALSE)
@@ -1201,9 +1215,12 @@ function get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2002/10/20 11:49:37  ralfoide
+//	Added shell_filename2
+//
 //	Revision 1.4  2002/10/16 06:58:21  ralfoide
 //	Fixed typo
-//
+//	
 //	Revision 1.3  2002/10/16 05:05:24  ralfoide
 //	Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
 //	

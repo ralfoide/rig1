@@ -7,25 +7,30 @@
 // $Id$
 //**********************************************
 
+define("S", "/");
+
 // --- album & system-dependent locations ---
 
 // ---- global settings ---
   
 // base installation directory (absolute path)
 // The directory string must end with / (un*x) or \\ (windows)
-$dir_abs_install		= "/home/ralf/rig/";
+$dir_abs_install		= "/opt/rig-thumbnail" . S;
 
 // php sources: view sources and admin sources
 // Note: $dir_abs_src semantic has changed! Both are *absolute* paths instead
 // of being relative to $dir_abs_install.
 // The directory string must end with / (un*x) or \\ (windows)
-$dir_abs_src			= $dir_abs_install . "src/";
-$dir_abs_admin_src		= $dir_abs_install . "admin/";
+$dir_abs_src			= $dir_abs_install . "rig/src" . S;
+$dir_abs_admin_src		= $dir_abs_install . "rig/admin" . S;
+
+$dir_abs_mod			= $dir_abs_install . "rig/modules" . S;
+$dir_abs_templ			= $dir_abs_install . "rig/templates" . S;
 
 // global settings
 // Note: $dir_abs_globset semantic has changed! Path is *absolute* instead of relative to $dir_abs_install
 // The directory string must end with / (un*x) or \\ (windows)
-$dir_abs_globset		= $dir_abs_install . "settings/";
+$dir_abs_globset		= $dir_abs_install . "rig/settings" . S;
 
 
 // ---- local settings ---
@@ -33,20 +38,20 @@ $dir_abs_globset		= $dir_abs_install . "settings/";
 // The site-album directory (i.e. _this_ directory in absolute)
 // The 2 lines below automatically compute the absolute local file-system path
 // to the entry point "index.php" file.
-$dir_info_album			= pathinfo($PATH_TRANSLATED);
+$dir_info_album			= pathinfo($_SERVER['PATH_TRANSLATED']);
 $dir_abs_album			= $dir_info_album["dirname"];
 
 // local settings
 // $dir_abs_locset is optional: it is either an empty string or an absolute path -- RM 20030919 fixed
-$dir_abs_locset				= "";
-
+// RM 20040601: when dir_abs_locset is empty, it is *ignored*.
+$dir_abs_locset				= $dir_abs_album;
 
 // ---- URL settings ---
 
 // Relative-URL for rig images
 // Physically, this is relative to $dir_abs_album (i.e. where index.php is)
 // The URL string must end with /
-$dir_images				= "rig-images/";
+$dir_images				= "rig-images" . S;
 
 // Album location
 // Physically, this is relative to $dir_abs_album (i.e. where index.php is)
@@ -70,9 +75,12 @@ $dir_upload_album       = "upload-photos/";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2004/07/09 05:47:21  ralfoide
+//	Updated.
+//
 //	Revision 1.3  2003/11/09 20:53:57  ralfoide
 //	Fixed dir_abs_locset
-//
+//	
 //	Revision 1.2  2003/08/21 20:14:10  ralfoide
 //	New dir_variables, some made absolute, some renamed for clarity
 //	

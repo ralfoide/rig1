@@ -38,49 +38,57 @@ UTF-8
 //--------------------
 
 $html_language
-Language:
+言語:
+// Language:
 
 @$html_desc_lang en
 English
 
 @$html_desc_lang fr
-Français
+Fran�ais
 
 @$html_desc_lang sp
-Español
+Espa�ol
 
 @$html_desc_lang jp
-日本語 (UTF-8) [Experimental Translation]
+日本語
 
 
 // Themes available
 //-----------------
 
 $html_theme
-色の主題:
+ページの色:
+// 色の主題:
 // Color Theme:
 
 @$html_desc_theme gray
-灰色 
+グレー
+// 灰色 
 // Gray
 
 @$html_desc_theme blue
-青い 
+青
+// 青い 
 // Blue
 
 @$html_desc_theme sand
-砂 
+茶色
+// 砂 
 // Sand
 
 @$html_desc_theme khaki
-Khaki 
+カーキ
+// Khaki 
 
 @$html_desc_theme egg
-卵 
+黄色
+// 卵 
 // Egg
 
 @$html_desc_theme none
-どれも 
+無色
+// どれも 
 // None
 
 
@@ -90,99 +98,92 @@ Khaki
 //-------------
 
 $html_current_album
-現在のアルバム'; [Experimental Translation]
+現在のアルバム
 // Current Album
 
 $html_albums
-利用できるアルバム' [Experimental Translation]
+閲覧できるアルバム
 // Available Albums
 
 $html_images
-像 [Experimental Translation]
+画像
 // Images
 
 $html_options
-選択 [Experimental Translation]
+オプション
 // Options
 
 $html_generated
-発生させる [time] 秒 - <i>[date]</i> によって <i>[rig-version]</i>
+<i>[date]</i>- <i>[rig-version]</i>にて作成: 所要時間[time]秒
+//発生させる [time] 秒 - <i>[date]</i> によって <i>[rig-version]</i>
 
 $html_admin_intrfce
-管理インターフェイス [Experimental Translation]
+管理画面
 // Administration Interface
 
 $html_rig_admin
-RIG の管理インターフェイス [Experimental Translation]
+RIG 管理画面
 // RIG Administration Interface
 
 $html_comment_stats
-アルバムと補助的アルバムのための統計量: [Experimental Translation]
+このアルバムおよび下層アルバムについての情報
 // Stats for album and sub-albums
 
 $html_album_stat
-[bytes] によって占められる [files] バイトは [folders] のホールダーでファイルする
+<table><tr><td>ファイル数：</td><td>[files] (計 [bytes]バイト)</td></tr><tr><td>フォルダ数：</td><td>[folders]</td></tr></table>
 // [bytes] bytes occupied by [files] files in [folders] folders
 
 $html_actions
-行為 [Experimental Translation]
+アクション
 // Actions
 
-$html_mk_previews
-下検分すべてを作成しなさい
-// Create All Previews
+$html_act_create
+[1]Create All:
+// Create All: [RM 20030526 new]
 
-$html_rm_previews
-下検分すべてを削除しなさい
-// Delete All Previews
+$html_act_delete
+[2]Delete All:
+// Delete All: [RM 20030526 new]
 
-$html_rand_previews
-変更のアルバム任意アイコン
-// Change Album Random Icon
+$html_act_previews
+[3]Previews
+// Previews [RM 20030526 new]
 
-$html_rename_canon
-キャノン100-1234_img.jpg ファイルの名前を変更しなさい
-// Rename Canon 100-1234_img.jpg files
+$html_act_images
+[4]画像
+// Images [RM 20030526 new]
 
-$html_hide_album
-マスクのアルバム
-// Hide Album
+$html_act_prev_img
+[5]Previews &amp; 画像
+// Previews &amp; Images [RM 20030526 new]
 
-$html_show_album
-ショーのアルバム
-// Show Album
+$html_act_rnd_prev
+[6]変更のアルバム任意アイコン
+// Change Album Random Icon [RM 20030526 renamed]
+
+$html_act_canon
+[7]キャノン100-1234_img.jpg ファイルの名前を変更しなさい
+// Rename Canon 100-1234_img.jpg files [RM 20030526 renamed]
 
 $html_use_as_icon
 アルバムアイコンとして使用
 // Use as album icon
 
-$html_rename_image
-像の名前を変更しなさい
-// Rename Image
-
-$html_set_desc
-記述を置きなさい
-// Set Description
-
 $html_avail_albums
-利用できるアルバム [Experimental Translation]
+閲覧できるアルバム
 // Available Albums
 
 $html_avail_prevws
-利用できる下検分 [Experimental Translation]
+閲覧できる画像のプレビュー
 // Available Previews
 
-$html_comment1
-実像を見るためにあなたはこのページを再積載する必要があるかもしれない。
+$html_comment
+実際の画像を見るにはこのページのリロードが必要な場合があります
 // You may need to reload this page to see the real images
 
-$html_comment2
-像特定の選択にアクセスするために像をつけなさい。
-// Click on images to access image-specific options
-
 $html_back_to
-へ
-// Back to
+[name]へ戻る
+// Back to [name]
 
 $html_back_album
 アルバムへ
@@ -192,60 +193,56 @@ $html_back_previous
 前のアルバムへ
 // Back to previous album
 
-$html_hidden
-隠される
-// Hidden
-
 $html_vis_on
-示されている
+表示する
 // Show
 
 $html_vis_off
-隠される
+隠す
 // Hide
 
 $html_credits
-信用
+クレジット
 // Credits
 
 $html_show_credits
-表示 RIG と PHP 信用 
+RIG および PHP のクレジット
 // Display RIG & PHP Credits
 
 $html_hide_credits
-マスクの信用
+クレジットを隠す
 // Hide Credits
 
 $html_text_credits
-R'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) © 2001-2003 by R'alf<br>RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a>.<br>Based on <a href="http://www.php.net">PHP</a> and the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>
+R'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 by R'alf<br>Japanese Translation by INOUE Tatsuo<br>RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a>.<br>Based on <a href="http://www.php.net">PHP</a> and the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>
 
 $html_phpinfo
 PHP サーバー情報 
 // PHP Server Information
 
 $html_show_phpinfo
-表示PHP サーバー情報 
+PHP サーバー情報
 // Display PHP Server Information
 
 $html_hide_phpinfo
-マスクPHP サーバー情報 
+PHP サーバー情報を隠す
 // Hide PHP Server Information
 
 
 $html_login
-ログオン [Experimental Translation]
+ログイン
 // Login
 
 $html_validate
-入りなさい
+ログイン
 // Enter
 
 $html_remember
-私を覚えなさい
+ユーザー名／パスワードを記憶
 // Remember me
 
 $html_username
-ユーザーの名前
+ユーザー名
 // Username
 
 $html_password
@@ -253,11 +250,11 @@ $html_password
 // Password
 
 $html_welcome
-歓迎 <b>[name]</b>! ([change-link])
-// Welcome
+ようこそ、<b>[name]</b>さん! ([change-link])
+// Welcome <b>[name]</b>! ([change-link])
 
 $html_chg_user
-変更ユーザー
+ユーザー変更
 // change user
 
 $html_guest_login
@@ -266,20 +263,21 @@ $html_guest_login
 
 
 // RM 20030119 - v0.6.3
+
 $html_album_copyrt
-© [name]のすべての像の版権
-// All images &copy; [name]
+&copy; [year] [name]
+// All images &copy; [year] [name]
 
 $html_image_copyrt
-© [name]の像の版権
-// Image &copy; [name]
+&copy; [year] [name]
+// Image &copy; [year] [name]
 
 $html_album_count
 [count] 冊のアルバム
 // [count] albums
 
 $html_image_count
-[count] つの像
+[count] 枚の画像
 // [count] images
 
 
@@ -290,40 +288,40 @@ $html_image_count
 // Album Title
 
 $html_album
-アルバム [Experimental Translation]
+アルバム
 // Album
 
 $html_admin
-管理 [Experimental Translation]
+管理
 // Admin
 
 $html_none
-開始 [Experimental Translation]
+スタート
 // Start
 
 
 // Current Album
 
 $html_root
-開始 [Experimental Translation]
+スタート
 // Start
 
 // Images
 
 $html_image
-像 
+画像
 // Image
 
 $html_prev
-前
+前の画像へ
 // Previous
 
 $html_next
-次に
+次の画像へ
 // Next
 
 $html_image2
-像
+画像
 // image
 
 $html_pixels
@@ -335,15 +333,14 @@ $html_ok
 // Change
 
 $html_img_size
-像のサイズ
+画像のサイズ
 // Image Size
 
 $html_original
-元
+原寸
 // Original
 
 
 
 
 // end
-

@@ -57,34 +57,35 @@ $html_desc_theme	= array('gray'  => 'Gris',
 
 $html_current_album	= 'Album Actual';
 $html_albums		= 'Albums Disponibles';
-$html_images		= 'Im&aacute;genes';																// rf
-$html_options		= 'Opciones';																		// pdg, rf
+$html_images		= 'Im&aacute;genes';																			// rf
+$html_options		= 'Opciones';																					// pdg, rf
 
-$html_generated		= 'Creado en [time] secondos el dia <i>[date]</i> por <i>[rig-version]</i>';		// pdg
+$html_generated		= 'Creado en [time] secondos el dia <i>[date]</i> por <i>[rig-version]</i>';					// pdg
 
 $html_admin_intrfce	= 'Interfaz de administraci&oacute;n';
 
 $html_rig_admin		= 'Interfaz de administraci&oacute;n de RIG'; 
-$html_comment_stats	= 'Estad&iacute;sticas par este &aacute;lbum y sub-&aacute;lbumes :';				// rf
-$html_album_stat	= '[bytes] bytes ocupados por [files] ficheros en [folders] carpetas';				// rf
-$html_actions		= 'Acciones';																		// pdg, rf
-$html_mk_previews	= 'Crear todas las diapos&iacute;tivas';
-$html_rm_previews	= 'Borrar todas las diapos&iacute;tivas';
-$html_rand_previews	= 'Cambiar al azar el icono del &aacute;lbum';
-$html_rename_canon	= 'Renombrar los ficheros 100-1234_img.jpg de Canon';								// pdg, rf
+$html_comment_stats	= 'Estad&iacute;sticas par este &aacute;lbum y sub-&aacute;lbumes :';							// rf
+$html_album_stat	= '[bytes] bytes ocupados por [files] ficheros en [folders] carpetas';							// rf
+
+$html_actions		= 'Acciones';																					// pdg, rf
+// RM 20030120 splitting Mk/Del / All Previews / All Images / Both
+$html_act_create	= 'Crear todas las :';
+$html_act_delete	= 'Borrar todas las :';
+$html_act_previews	= 'Diapos&iacute;tivas';
+$html_act_images	= 'Im&aacute;genes';
+$html_act_prev_img	= 'Diapos&iacute;tivas y im&aacute;genes';
+$html_act_rnd_prev	= 'Cambiar al azar el icono del &aacute;lbum';
+$html_act_canon		= 'Renombrar los ficheros 100-1234_img.jpg de Canon';											// pdg, rf
+
 $html_use_as_icon	= 'Usar como icono del &aacute;lbum';
-$html_rename_image	= 'Renombrar la imagen';															// rf
-$html_set_desc		= 'Cambiar la descripci&oacute;n';
-$html_hide_album	= 'Ocultar el &aacute;lbum';
-$html_show_album	= 'Mostrar el &aacute;lbum ';
-$html_avail_albums	= 'Albumes disponibles';															// rf
+$html_rename_image	= 'Renombrar la imagen';																		// rf
+$html_avail_albums	= 'Albumes disponibles';																		// rf
 $html_avail_prevws	= 'Diapos&iacute;tivas disponibles';
-$html_comment1		= 'Puede necesitarse recargar esta p&aacute;gina para ver las verdaderas im&aacute;genes.';
-$html_comment2		= 'Pulse sobre las im&aacute;genes para tener acceso a opciones imagen-espec&iacute;ficas.';	// rf
-$html_back_to		= 'Volver al';																		// rf
+$html_comment		= 'Puede necesitarse recargar esta p&aacute;gina para ver las verdaderas im&aacute;genes.';
+$html_back_to		= 'Volver al [name]';																			// rf
 $html_back_album	= 'Volver al &aacute;lbum';
 $html_back_previous	= 'Volver al &aacute;lbum anterior';
-$html_hidden		= 'ocultado';
 $html_vis_on		= 'Mostrar';
 $html_vis_off		= 'Ocultar';
 
@@ -110,8 +111,8 @@ $html_chg_user		= 'Cambiar de usuario';
 $html_guest_login	= 'Modo \'Invitado\'';
 
 // RM 20030119 - v0.6.3
-$html_album_copyrt	= 'Im&aacute;genes &copy; [name]';
-$html_image_copyrt	= 'Imagen &copy; [name]';
+$html_album_copyrt	= 'Im&aacute;genes &copy; [year] [name]';
+$html_image_copyrt	= 'Imagen &copy; [year] [name]';
 $html_album_count	= '[count] albums';
 $html_image_count	= '[count] im&aacute;genes';
 
@@ -163,9 +164,12 @@ $pref_date_YMD      = 'D-M-Y';          // Long format.  Must contain D & M & Y.
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/05/26 17:51:08  ralfoide
+//	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
+//
 //	Revision 1.7  2003/02/21 09:03:03  ralfoide
 //	Added gray theme color
-//
+//	
 //	Revision 1.6  2003/02/16 20:22:58  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

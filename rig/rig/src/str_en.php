@@ -57,28 +57,25 @@ $html_admin_intrfce	= 'Administration Interface';
 $html_rig_admin		= 'RIG Administration Interface';
 $html_comment_stats	= 'Stats for album and sub-albums:';
 $html_album_stat	= '[bytes] bytes used by [files] files in [folders] folders';
+
 $html_actions		= 'Actions';
 // RM 20030120 splitting Mk/Del / All Previews / All Images / Both
-$html_act_create	= 'Create:';
-$html_act_delete	= 'Delete:';
-$html_act_previews	= 'All Previews';
-$html_act_images	= 'All Images';
-$html_act_prev_img	= 'All Previews &amp; Images';
+$html_act_create	= 'Create All:';
+$html_act_delete	= 'Delete All:';
+$html_act_previews	= 'Previews';
+$html_act_images	= 'Images';
+$html_act_prev_img	= 'Previews &amp; Images';
 $html_act_rnd_prev	= 'Change Album Random Icon';
 $html_act_canon		= 'Rename Canon 100-1234_img.jpg files';
-$html_hide_album	= 'Hide Album';
-$html_show_album	= 'Show Album';
+
 $html_use_as_icon	= 'Use as album icon';
 $html_rename_image	= 'Rename Image';
 $html_set_desc		= 'Set Description';
 $html_avail_albums	= 'Available Albums';
-$html_avail_prevws	= 'Available Previews';
-$html_comment1		= 'You may need to reload this page to see the real images.';
-$html_comment2		= 'Click on images to access image-specific options.';
-$html_back_to		= 'Back to';
+$html_comment		= 'You may need to reload this page to see the real images.';
+$html_back_to		= 'Back to [name]';
 $html_back_album	= 'Back to album';
 $html_back_previous	= 'Back to previous album';
-$html_hidden		= 'Hidden';
 $html_vis_on		= 'Show';
 $html_vis_off		= 'Hide';
 
@@ -104,8 +101,8 @@ $html_chg_user		= 'change user';
 $html_guest_login	= '\'Guest\' Mode';
 
 // RM 20030119 - v0.6.3
-$html_album_copyrt	= 'All images &copy; [name]';	// [name] will become $pref_copyright_name
-$html_image_copyrt	= 'Image &copy; [name]';		// [name] will become $pref_copyright_name
+$html_album_copyrt	= 'All images &copy; [year] [name]';	// [name] will become $pref_copyright_name
+$html_image_copyrt	= 'Image &copy; [year] [name]';		    // [name] will become $pref_copyright_name
 $html_album_count	= '[count] albums';
 $html_image_count	= '[count] images';
 
@@ -148,12 +145,15 @@ $html_img_date		= 'l\, F d\, Y\, g:m A';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/05/26 17:51:08  ralfoide
+//	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
+//
 //	Revision 1.10  2003/03/17 08:24:43  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)
 //	Fix: missing pref_copyright_name in settings/prefs.php
 //	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//
+//	
 //	Revision 1.9  2003/02/21 09:03:03  ralfoide
 //	Added gray theme color
 //	

@@ -56,24 +56,25 @@ $html_admin_intrfce	= 'Maintenance';		// Interface d'administration
 $html_rig_admin		= 'Maintenance de RIG';	// Interface d'administration 
 $html_comment_stats	= 'Statistiques pour cet album et sous-albums :';
 $html_album_stat	= '[bytes] octets occup&eacute;s par [files] fichiers dans [folders] dossiers';
+
 $html_actions		= 'Actions';
-$html_mk_previews	= 'Cr&eacute;er toutes les imagettes';
-$html_rm_previews	= 'Effacer toutes les imagettes';
-$html_rand_previews	= 'Changer al&eacute;atoirement l\'imagette de l\'album';
-$html_rename_canon	= 'Renomer les fichiers Canon 100-1234_img.jpg';
+// RM 20030120 splitting Mk/Del / All Previews / All Images / Both
+$html_act_create	= 'Cr&eacute;er toutes les :';
+$html_act_delete	= 'Effacer toutes les :';
+$html_act_previews	= 'Imagettes';
+$html_act_images	= 'Images';
+$html_act_prev_img	= 'Imagettes et images';
+$html_act_rnd_prev	= 'Changer al&eacute;atoirement l\'imagette de l\'album';
+$html_act_canon		= 'Renomer les fichiers Canon 100-1234_img.jpg';
+
 $html_use_as_icon	= 'Utiliser comme imagette pour l\'album';
 $html_rename_image	= 'Renommer l\'image';
-$html_set_desc		= 'Changer la description';
-$html_hide_album	= 'Cacher l\'album';
-$html_show_album	= 'Afficher l\'album';
 $html_avail_albums	= 'Albums Disponibles';
 $html_avail_prevws	= 'Imagettes Disponibles';
-$html_comment1		= 'Vous devrez probablement recharger cette page afin de voir les imagettes r&eacute;ellement pr&eacute;sentes.';
-$html_comment2		= 'Cliquez sur les imagettes pour afficher leurs options sp&eacute;cifiques.';
-$html_back_to		= 'Retour &agrave;';
+$html_comment		= 'Vous devrez probablement recharger cette page afin de voir les imagettes r&eacute;ellement pr&eacute;sentes.';
+$html_back_to		= 'Retour &agrave; [name]';
 $html_back_album	= 'Retour &agrave; l\'album';
 $html_back_previous	= 'Retour &agrave; l\'album pr&eacute;c&egrave;dent';
-$html_hidden		= 'Cach&eacute;';
 $html_vis_on		= 'Afficher';
 $html_vis_off		= 'Masquer';
 
@@ -99,8 +100,8 @@ $html_chg_user		= 'changer d\'utilisateur';
 $html_guest_login	= 'Mode \'invit&eacute;\'';
 
 // RM 20030119 - v0.6.3
-$html_album_copyrt	= 'Images &copy; [name]';
-$html_image_copyrt	= 'Image &copy; [name]';
+$html_album_copyrt	= 'Images &copy; [year] [name]';
+$html_image_copyrt	= 'Image &copy; [year] [name]';
 $html_album_count	= '[count] albums';
 $html_image_count	= '[count] images';
 
@@ -151,9 +152,12 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/05/26 17:51:08  ralfoide
+//	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
+//
 //	Revision 1.10  2003/02/21 09:03:03  ralfoide
 //	Added gray theme color
-//
+//	
 //	Revision 1.9  2003/02/16 20:22:57  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

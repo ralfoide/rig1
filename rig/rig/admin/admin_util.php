@@ -88,6 +88,10 @@ function rig_admin_perform_defer()
 	{
 		rig_admin_rm_previews($current_album, TRUE, TRUE);
 	}
+	else if ($admin == "rm_html_caches")
+	{
+		rig_admin_rm_html_caches($current_album);
+	}
 	else if ($admin == "rnm_canon")
 	{
 		rig_admin_rename_canon($current_album);
@@ -342,6 +346,84 @@ function rig_admin_rm_previews($album,
 	}
 
 	echo "</code><p>Done<hr></center><p>\n";
+	rig_flush();
+}
+
+
+
+
+//***************************************
+function rig_admin_rm_html_caches($album)
+//***************************************
+// RM 20040711 Recursively remove all HTML Caches
+{
+	$notice = true;
+	
+	global $abs_image_cache_path;
+
+	$abs_dir = $abs_image_cache_path . rig_prep_sep($album);
+
+	// tell php this may take a while...
+	// (30 s is php's default for the script processing. I allow 30s
+	// per directory, which is a lot)
+	set_time_limit(30);
+
+	// get all files and dirs, recurse in dirs first
+	// display sub albums if any
+	$n = 0;
+	$handle = @opendir($abs_dir);
+	if (!$handle)
+	{
+		rig_html_error("Admin: Delete HTML Caches", "Failed to open album directory, probably does not exist!", $abs_dir, $php_errormsg);
+	}
+	else
+	{
+		while (($file = readdir($handle)) !== FALSE)
+		{
+			if ($file != '.' && $file != '..')
+			{
+				$abs_file = $abs_dir . rig_prep_sep($file);
+				if (is_dir($abs_file))
+				{
+					if (!rig_check_ignore_list($file, $pref_album_ignore_list)) // RM 20030814
+					{
+						$name = rig_post_sep($album) . $file;
+						rig_admin_rm_html_caches($name);
+					}
+				}
+				// the pattern for previews is "prevSize_SimplifiedFileName"
+				else if (preg_match("/^" . ALBUM_CACHE_NAME . ".*" . ALBUM_CACHE_EXT . "$/", $file) == 1)
+				{
+					if ($notice)
+					{
+						echo "Deleting HTML Caches for <b>$album</b><p>\n";
+						$notice = false;
+						rig_flush();
+					}
+
+					echo "$file<br>\n";
+					unlink($abs_file);
+			    }
+				else
+				{
+					// there is an item we did not delete
+					$n++;
+				}
+			}
+		}
+
+		closedir($handle);
+	}
+
+	// remove the previews directory, if empty
+	// the root is never removed
+	if ($album && !$n)
+	{
+		// this will fail if the directory is not empty, which may happen
+		if (@rmdir($abs_dir))
+			echo "'$abs_dir' Deleted<p>";
+	}
+
 	rig_flush();
 }
 
@@ -964,9 +1046,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2004/07/14 06:08:34  ralfoide
+//	Clean html caches
+//
 //	Revision 1.3  2004/03/09 06:22:29  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.2  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)

@@ -87,6 +87,7 @@ rig_display_body();
   <a href="<?= rig_self_url("") . "&admin=rm_previews" ?>"><?= $html_act_previews ?></a>
 | <a href="<?= rig_self_url("") . "&admin=rm_images"   ?>"><?= $html_act_images ?></a>
 | <a href="<?= rig_self_url("") . "&admin=rm_prev_img" ?>"><?= $html_act_prev_img ?></a>
+| <a href="<?= rig_self_url("") . "&admin=rm_html_caches" ?>"><?= $html_act_htmlcache ?></a>
 <br>
   <a href="<?= rig_self_url("") . "&admin=rand_prev"   ?>"><?= $html_act_rnd_prev ?></a>
 <br>
@@ -190,10 +191,13 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2004/07/14 06:08:34  ralfoide
+//	Clean html caches
+//
 //	Revision 1.4  2004/07/06 04:10:57  ralfoide
 //	Fix: using "img" query param instead of "image"
 //	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.
-//
+//	
 //	Revision 1.3  2004/03/09 06:22:29  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

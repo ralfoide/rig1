@@ -8,16 +8,19 @@
 //**********************************************
 
 
-$rig_version = "0.6.4.0";
+$rig_version = "0.6.4.1";
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2003/08/18 04:24:02  ralfoide
+//	Bumped to 0.6.4.1 (PHP 4.3, album HTML cache, fixes)
+//
 //	Revision 1.14  2003/08/18 03:07:14  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
-//
+//	
 //	Revision 1.13  2003/08/15 07:13:23  ralfoide
 //	Started working on 0.6.4.0 (Album HTML cache, image thumbnails borders)
 //	

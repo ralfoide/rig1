@@ -59,12 +59,18 @@ $pref_preview_quality	= 70;
 $pref_preview_timeout	= 10;
 $pref_nb_col			= 5;
 
+// --- image viewing options ---
+
 $pref_image_size		= 512;
 $pref_image_quality		= 75;
 $pref_size_popup		= array(256, 300, 384, 400, 512, 640, 800, 1024, 1280, 1600);
 $pref_empty_album		= "empty_album.gif";
 
 $pref_global_gamma		= 1.0;	// use 1.0 for no-op
+
+// --- admin viewing options ---
+
+$pref_admin_size		= 256;
 
 
 
@@ -89,13 +95,25 @@ $pref_date_YM						= 'M/Y';	// format for short dates. M & Y must appear.
 /* French   */ // $pref_date_YMD	= 'D/N/Y';	// format for long dates. D & M & Y must appear.
 $pref_date_sep						= ' - ';	// separator between date and description
 
+
+// --- meta tags for album/image pages ---
+// Each album's pref can override this. The default is here.
+
+$pref_html_meta = "<meta name=\"robots\" content=\"noindex, nofollow\">";
+
+
+
+
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/03/12 07:03:16  ralfoide
+//	Prefs can override <meta> in album/image display
+//
 //	Revision 1.5  2003/02/16 20:10:35  ralfoide
 //	Update. Version 0.6.3.1
-//
+//	
 //	Revision 1.4  2003/01/07 17:54:03  ralfoide
 //	Moved URL-Rewrite conf array from global pref file to album-local pref file
 //	

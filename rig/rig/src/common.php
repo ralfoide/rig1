@@ -37,6 +37,7 @@
 	current_id				- integer
 	current_album			- string
 	current_image			- string
+	current_type			- string 'image' or 'video' -- RM 20030713
 	list_albums				- array of string
 	list_images				- array of filename
 	display_title			- string
@@ -68,6 +69,7 @@
 	-------------------------------------
 	list_hide				- array of filename
 	list_album_icon			- array of icon info { a:album(relative) , f:file, s:size }
+	list_description		- array of [filename] => description (text and/or html) -- RM 20030713
 
 */
 //-----------------------------------------------------------------------
@@ -91,6 +93,9 @@ define("ALBUM_ICON",			"album_icon.jpg");
 define("ALBUM_OPTIONS",			"options");
 define("ALBUM_OPTIONS_TXT",		"options.txt");
 define("ALBUM_OPTIONS_XML",		"options.xml");
+
+define("DESCRIPTION_TXT",		"descript.ion");		// RM 20030713
+define("FILEINFODIZ_TXT",		"file_info.diz");
 
 // start timing...
 $time_start = rig_getmicrotime();
@@ -1037,12 +1042,15 @@ function rig_clear_album_options()
 // Currently clears:
 //	list_hide				- array of filename
 //	list_album_icon			- array of icon info { a:album(relative) , f:file, s:size }
+//	list_description		- array of [filename] => description (text and/or html) -- RM 20030713
 {
 	global $list_hide;
 	global $list_album_icon;
+	global $list_description;
 
 	unset($list_hide);
 	unset($list_album_icon);
+	unset($list_description);
 }
 
 
@@ -1167,6 +1175,163 @@ function rig_read_album_options($album)
 	// if ($_debug_) { echo "<p>Reading list_hide: "; var_dump($list_hide);}
 
 	fclose($file);		// RM 20020713 fix
+	return TRUE;
+}
+
+
+//******************************************
+function rig_read_album_descriptions($album)
+//******************************************
+// Reloads the content of $list_description
+//	list_description		- array of [filename] => description (text and/or html) -- RM 20030713
+{
+	global $abs_album_path;	// descriptions
+	global $abs_option_path;	// new options have their own base directory (may be shared with previews anyway)
+
+
+	// first clear current options
+	global $list_description;
+	unset($list_description);
+
+	// if XML options are available, just read them
+	if (rig_xml_read_options($album))
+		return TRUE;
+		
+	// then grab new ones
+	//
+	// descriptions are stored either with the album itself or in the options directory
+	// the options dir's version superseedes the one from the album, if any
+
+
+	// first read the main dir files
+
+	$abs_dir = $abs_album_path . rig_prep_sep($album);
+
+
+	if (!rig_parse_description_file($abs_dir . rig_prep_sep(DESCRIPTION_TXT)))
+		 rig_parse_description_file($abs_dir . rig_prep_sep(FILEINFODIZ_TXT));
+
+
+	// then override with the options directory
+
+
+	// make sure the directory exists
+	// don't output an error message, the create function does it for us
+	if (!rig_create_option_dir($album))
+		return FALSE;
+
+
+	$abs_options = $abs_option_path . rig_prep_sep($album);
+
+	if (!rig_parse_description_file($abs_options . rig_prep_sep(DESCRIPTION_TXT)))
+		 rig_parse_description_file($abs_options . rig_prep_sep(FILEINFODIZ_TXT));
+
+	return TRUE;
+}
+
+
+
+//********************************************
+function rig_parse_description_file($abs_path)
+//********************************************
+// This reads in the description file for an album list or image list.
+// This function merges the file into the existing array list_description with format:
+//	list_description		- array of [filename] => description (text and/or html) -- RM 20030713
+// Format:
+/*
+	# Description file for rig
+	# Accepted names are "descript.ion" or "file_info.diz"
+	# Lines starting with # are ignored. So are empty lines.
+	# Line format is:
+	#   <img or album name>[ \t]+<description>\n
+	#   [ \t]+<continuation of previous description>\n
+*/
+{
+	global $list_description;
+
+	$file = @fopen($abs_path, "rt");
+
+	if (!$file)
+		return FALSE;
+
+	$continuing = FALSE;
+	$name = "";
+
+	while(!feof($file))
+	{
+		// read till we get a full line
+		$line = "";
+		
+		$same_line = TRUE;
+		$is_comment = FALSE;
+
+		while($same_line && !feof($file))
+		{
+			$temp = fgets($file, 1023);
+
+			if ($line == "")
+				$is_comment = ($temp[0] == '#');
+
+			if (substr($temp, -1) == "\n")
+			{
+				$temp = substr($temp, 0, -1);
+				$same_line = FALSE;
+			}
+	
+			if (substr($temp, -1) == "\r")
+			{
+				$temp = substr($temp, 0, -1);
+				$same_line = FALSE;
+			}
+
+			// store if not a comment line
+			if (!$is_comment)
+				$line .= $temp;
+		}
+
+		// need a valid line
+		if (!$line || $line == "" || $line == EOF || $is_comment)
+			continue;
+
+		// if starts by a whitespace, it's the continuation of the previous line
+		$nb_ws = strspn($line, " \t");
+		if ($nb_ws > 0 && $name != "")
+		{
+			// skip whitespace
+			$line = substr($line, $nb_ws);
+
+			// note that if the previous line nor the new one end or start with a
+			// whitespace, one must be added.
+			$t = $list_description[$name];
+			if ($t != "")
+			{
+				$t = $t[strlen($t)-1];
+				if ($t != " " && $t != "\t")
+					$line = " " . $line;
+			}
+
+			$list_description[$name] .= $line;
+		}
+		else
+		{
+			// this is a new entry, get the name and the text
+			// format is "(name)[ \t]+(text)"
+			if (ereg("^([^ \t]+)[ \t]+(.*)", $line, $reg) && is_string($reg[1]))
+			{
+				$name = $reg[1];
+				$list_description[$name] = $reg[2];
+			}
+		}
+
+	} // end while feof
+
+	fclose($file);
+
+	// DEBUG
+	// var_dump($album);
+	// var_dump($list_description);
+	
+
 	return TRUE;
 }
 
@@ -1706,6 +1871,8 @@ function rig_load_album_list($show_all = FALSE)
 		if (count($list_images))
 			usort($list_images, "rig_cmp_pretty_name");
 	}
+	
+	rig_read_album_descriptions($current_album);
 }
 
 
@@ -1850,6 +2017,7 @@ function rig_prepare_image($id, $album, $image, $title="")
 	global $current_id;
 	global $current_album;
 	global $current_image;
+	global $current_type;		// RM 20030713
 	global $current_img_info;
 	global $pref_use_db_id;
 	global $abs_album_path;
@@ -1860,6 +2028,7 @@ function rig_prepare_image($id, $album, $image, $title="")
 
 	$current_album = FALSE;
 	$current_image = FALSE;
+	$current_type = "";
 	$current_id = 0;
 
 	// first try the index argument
@@ -1873,12 +2042,17 @@ function rig_prepare_image($id, $album, $image, $title="")
 	}
 
 	// does the image really exist?
+	// is the image hidden?
 	if ($current_image)
 	{
 		$rel_img = $current_album . rig_prep_sep($current_image);
 		$abs_img = $abs_album_path . rig_prep_sep($current_album) . rig_prep_sep($current_image);
 
-		if (!rig_is_file($abs_img))
+		// RM 20030713 if the image is hidden, redirect to the album
+		// to prevent viewing hidden images by using a direct name
+		// Note: for albums, this is allowed (on purpose). That's just the way I feel it.
+
+		if (!rig_is_file($abs_img) || !rig_is_visible(-1, -1, $current_image))
 		{
 			// no, unset variables
 			$current_id = 0;
@@ -1903,6 +2077,11 @@ function rig_prepare_image($id, $album, $image, $title="")
 	$pretty_image  = rig_pretty_name($current_image, FALSE);
 
 	$current_img_info = rig_build_info($current_album, $current_image);
+
+	// -- get image type
+	// (that's the part before / in the file's type)
+	
+	list($current_type, $dummy) = explode("/", rig_get_file_type($current_image), 2);
 
 	// -- setup title of album
 	if ($title)
@@ -2105,9 +2284,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.23  2003/07/14 18:30:14  ralfoide
+//	Support for descript.ion and file_info.diz
+//
 //	Revision 1.22  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
-//
+//	
 //	Revision 1.21  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.

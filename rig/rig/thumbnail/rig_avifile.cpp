@@ -61,9 +61,9 @@ void rig_avifile_filetype_support(void)
 }
 
 
-//**********************************************************************
-bool rig_avifile_info(const char* filename, int32 &width, int32 &height)
-//**********************************************************************
+//*************************************************************************************
+bool rig_avifile_info(const char* filename, int32 &width, int32 &height, uint32 &codec)
+//*************************************************************************************
 {
 	DPRINTF(("rig_avifile_info: '%s'\n", filename));
 
@@ -82,7 +82,8 @@ bool rig_avifile_info(const char* filename, int32 &width, int32 &height)
 				{
 					width  = info->GetVideoWidth();
 					height = info->GetVideoHeight();
-	
+					codec  = info->GetFormat();
+
 					// dispose stuff
 					delete info;
 					
@@ -195,9 +196,12 @@ RigRgb * rig_avifile_read(const char* filename)
 /****************************************************************
 
 	$Log$
+	Revision 1.6  2003/11/25 05:02:05  ralfoide
+	Video: report the video codec
+
 	Revision 1.5  2003/08/18 03:22:19  ralfoide
 	Fixed missing include
-
+	
 	Revision 1.4  2003/08/18 02:06:16  ralfoide
 	New filetype support
 	

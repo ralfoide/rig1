@@ -20,7 +20,7 @@
 
 
 void	rig_avifile_filetype_support(void);
-bool	rig_avifile_info (const char* filename, int32 &width, int32 &height);
+bool	rig_avifile_info (const char* filename, int32 &width, int32 &height, uint32 &codec);
 RigRgb*	rig_avifile_read (const char* filename);
 
 
@@ -33,9 +33,12 @@ RigRgb*	rig_avifile_read (const char* filename);
 /****************************************************************
 
 	$Log$
+	Revision 1.5  2003/11/25 05:02:04  ralfoide
+	Video: report the video codec
+
 	Revision 1.4  2003/08/18 02:06:16  ralfoide
 	New filetype support
-
+	
 	Revision 1.3  2003/07/16 06:46:23  ralfoide
 	Made video support optional
 	

@@ -341,6 +341,9 @@ void rig_print_info(const char * in_filename)
 //*******************************************
 {
 	int32 width, height;
+#ifndef RIG_EXCLUDE_AVIFILE
+	uint32 codec;
+#endif
 
 	char *name = rig_unslash(in_filename);
 
@@ -349,9 +352,9 @@ void rig_print_info(const char * in_filename)
 		printf("[rig-thumbnail-result] jpeg %ld %ld\n", width, height);
 	}
 #ifndef RIG_EXCLUDE_AVIFILE
-	else if (rig_avifile_info(name, width, height))
+	else if (rig_avifile_info(name, width, height, codec))
 	{
-		printf("[rig-thumbnail-result] video %ld %ld\n", width, height);
+		printf("[rig-thumbnail-result] video %ld %ld @%.4s@\n", width, height, (const char *)(&codec));
 	}
 #endif
 	else
@@ -625,9 +628,12 @@ int main(int argc, char *argv[])
 /*****************************************************************************
 
 	$Log$
+	Revision 1.6  2003/11/25 05:02:04  ralfoide
+	Video: report the video codec
+
 	Revision 1.5  2003/08/18 02:06:16  ralfoide
 	New filetype support
-
+	
 	Revision 1.4  2003/07/16 06:46:23  ralfoide
 	Made video support optional
 	

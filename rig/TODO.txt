@@ -18,6 +18,13 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
+[1.N] Merge DB support from rig-063-exp
+- in 0.6.2.4:
+[3.F] URL-Rewrite support (cf site/prefs.php)
+- in 0.6.2.3:
+[1.F] Tuned album thumbnail table
+[2.F] Charset and html lang support
+- in 0.6.2.2:
 [1.F] Better error reporting
 [1.F] Multiple languages support (SP+JP on top of EN+FR)
 [2.F] Theme pages support
@@ -37,19 +44,41 @@ Admin:
 [5.N] Delete albums
 
 
-Database:
-Not in 0.6.2, introduced in 0.6.3
-
 
 ==== RIG :: Generic ========================================
 
+-- todo --
+
 20021101 [1.N] Only display phpinfo if _debug_ enabled or admin mode
 
+20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
+20020712 [2.N] Detect browser capability for DHTML
+
+20020712 [3.N] Add HTML descriptions for images and albums
+20020712 [3.N] Store HTML descriptions in DB
+20020712 [3.N] Edit HTML descriptions in Admin
+
+20020713 [4.N] Gamma flags: overall, album override, image override
+20020713 [4.N] Flags per album: guest-allowed, album gamma
+
+20020713 [4.N] Logging
+20020713 [5.N] Reference counting for images
+20020713 [6.N] Cache expiration based on time and reference count
+20020713 [9.N] Non-persistent cache for punchy/non overloaded servers
+               i.e.: no cache at all or session-based cache + expiration (per album option?)
+
+-- partially done --
+
+20021012 [4.W] Ask Pascal about Japanese
 20020712 [1.W] Rename functions using a constant rig_section_method naming
     20020712 [1.F] Renaming functions in admin_util.php
     20020712 [1.W] Renaming functions in common_display.php
     20020713 [1.W] Renaming functions in common.php
 
+-- done --
+
+20030107 [4.F] Bumped to version 0.6.2.7 and updated SourceForge
+20030107 [3.F] URL-Rewrite support (cf site/prefs.php)
 20021104 [4.F] Bumped to version 0.6.2.3
 20021101 [3.F] Fixes in Spanish
 20021030 [2.F] Finalized album thumbnail table, cleaned up experimental code. Checked with IE5, IE6, NS4.7 and Mozilla 1.1
@@ -81,40 +110,30 @@ Not in 0.6.2, introduced in 0.6.3
 20020712 [1.F] Disabled frame admin mode
 20020712 [1.F] Display phpinfo(ALL) on top of credits
 
--- todo --
-
-
-
-20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
-20020712 [2.N] Detect browser capability for DHTML
-
-20020712 [3.N] Add HTML descriptions for images and albums
-20020712 [3.N] Store HTML descriptions in DB
-20020712 [3.N] Edit HTML descriptions in Admin
-
-20020713 [4.N] Gamma flags: overall, album override, image override
-20020713 [4.N] Flags per album: guest-allowed, album gamma
-
-20020713 [4.N] Logging
-20020713 [5.N] Reference counting for images
-20020713 [6.N] Cache expiration based on time and reference count
-20020713 [9.N] Non-persistent cache for punchy/non overloaded servers
-               i.e.: no cache at all or session-based cache + expiration (per album option?)
-
-
-20021012 [4.W] Ask Pascal about Japanese
 
 
 ==== RIG :: Database =======================================
 
-Not in release 0.6.2
+-- todo --
+
+20021109 [3.N] Add SQL driver (use generic SQL support for PHP)
+20021109 [1.N] Rewrite TEXT driver for better performances
+20021109 [1.N] Make db-drivers class instances
+20021109 [1.N] Introduce IDAI class (id-album-image class)
+
+-- done --
+
+20021108 [1.F] Added DBA driver
+20021108 [1.F] Note: DB stuff currently only in separate rig-063-exp module
 
 
 
 ==== RIG :: Admin ==========================================
 
-
 -- todo --
+
+20021109 [2.N] Admin DB page to view current DB statistics
+20021109 [2.N] Admin DB page to synchronize dbs, select current one (check which installed), purge, etc.
 
 20020915 [1.N] Check compatible with port redirectors (aka http://localhost:8080/...)
 
@@ -312,9 +331,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/01/07 17:39:41  ralfoide
+//	URL-Rewrite. Version 0.6.2.4
+//
 //	Revision 1.3  2002/11/05 08:54:04  ralfoide
 //	Version 0.6.2.3 -- mostly fixes
-//
+//	
 //	Revision 1.2  2002/10/21 01:56:14  ralfoide
 //	Added summary of features
 //	

@@ -189,6 +189,7 @@ Admin:
 
 [0.6.4.4]
 
+20031207 [1.F] Fix: HTML cache must be invalidated if rig-cache contains newer data (previews, etc.)
 20031129 [2.F] Video: Notification and default display in case JavaScript is disabled
 20031129 [2.F] Video: Adjustement to download links depending on the target OS
 20031128 [2.F] Video: MacOS DivX download page: http://www.divx.com/divx/mac/
@@ -661,10 +662,13 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.41  2003/12/07 19:41:41  ralfoide
+//	Fix: invalidate html cache if image data cache modified
+//
 //	Revision 1.40  2003/11/29 22:35:01  ralfoide
 //	Video: JavaScript browser & OS detection, customize install codec links, etc.
 //	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)
-//
+//	
 //	Revision 1.39  2003/11/25 05:06:23  ralfoide
 //	New display of video codec. New video display common file.
 //	

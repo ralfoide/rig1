@@ -3092,6 +3092,7 @@ function rig_begin_buffering()
 		// - the local  pref folder modification date (can affect album visibility)
 		// - the global pref folder modification date (can affect album visibility)
 		// - the RIG source  folder modification date (can affect album content)
+		// - the cache folder for this album          (can affect previews sizes, etc.)
 		// (in that order, most likely to change tested first)
 
 		$tm_html   = rig_modif_date($abs_html);
@@ -3109,6 +3110,8 @@ function rig_begin_buffering()
 
 		if ($dir_abs_src != $dir_abs_locset)
 			$check_list[] = $dir_abs_locset;
+
+		$check_list[] = $abs_image_cache_path . rig_prep_sep($current_real_album);
 
 		// cache is valid if not expired
 		$is_valid  = !rig_check_expired($tm_html, $check_list);
@@ -3307,11 +3310,14 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.37  2003/12/07 19:41:41  ralfoide
+//	Fix: invalidate html cache if image data cache modified
+//
 //	Revision 1.36  2003/11/25 05:05:33  ralfoide
 //	Version 0.6.4.4 started.
 //	Added video install codec/player link & codec info.
 //	Isolated video display routines in new source file.
-//
+//	
 //	Revision 1.35  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)

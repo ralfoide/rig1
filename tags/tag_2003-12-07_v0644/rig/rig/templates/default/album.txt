@@ -1,0 +1,149 @@
+# rig-template-v1.0
+@rig-class	album.php
+@rig-desc	Default Album Template
+
+# vim: set tabstop=4 shiftwidth=4: #
+# RIG version 0.6-1.0
+# Copyright (c) 2003 Ralf
+# $Id$
+#
+# Syntax:
+# # starts a comment line (before the first @section, ignored after)
+# @ special tag line, @ must be first character
+# [[fuction]] calls 'function' from accompagnying class
+# {{variable}} insert 'variable' (from class or global)
+# [[if:function]] .. [[if:end]] for a conditional block, function must return TRUE/FALSE
+#
+# HTML template has 3 parts: header, body and footer. Only the body is cached in rig's html cache.
+
+@rig-section header
+
+[[rig_html_header]]
+[[rig_html_body]]
+
+@rig-section body		# -- buffering starts here
+
+<center>
+
+[[rig_display_title]]
+[[rig_display_user_name]]
+
+[[if:rig_valid_album]]
+<p>
+<table border="0" cellpadding="0" cellspacing="0">
+	<tr><td>
+		<table width="100%" border="0" bgcolor="{{color_table_border}}" cellpadding="10" cellspacing="1">
+			<tr><td bgcolor="{{color_header_bg}}">
+				<center><b><font size="+2" color="{{color_header_text}}">
+					{{html_current_album}}
+				</font></b></center>
+			</td></tr>
+			<tr><td bgcolor="{{color_table_bg}}">
+				<center><font color="{{color_index_text}}">
+					[[rig_display_current_album]]
+				</font></center>
+			</td></tr>
+		</table>
+	</td></tr>
+</table>
+
+[[if:end]]
+[[rig_flush]]
+
+<p>
+
+[[rig_load_album_list]]
+
+[[if:rig_has_albums]]
+
+<table border="0" cellpadding="0" cellspacing="0">
+	<tr><td>
+		<table width="100%" border="0" bgcolor="{{color_table_border}}" cellpadding="10" cellspacing="1">
+			<tr><td bgcolor="{{color_header_bg}}">
+				<center><font size="+2" color="{{color_header_text}}"><b>
+					{{html_albums}}
+				</b></font></center>
+			</td></tr>
+			<tr><td width="100%" bgcolor="{{color_table_bg}}">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					[[rig_display_album_list]]
+				</table>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr><td>&nbsp;</td></tr>
+					<tr><td width="80%" bgcolor="{{color_table_bg}}"><font color="{{color_table_infos}}">
+						<div align="left">[[rig_display_album_copyright]]</div>
+					</font></td>
+					<td width="20%" bgcolor="{{color_table_bg}}"><font color="{{color_table_infos}}">
+						<div align="right">[[rig_display_album_count]]</div>
+					</font></td></tr>
+				</table>
+			</td></tr>
+		</table>
+	</td></tr>
+</table>
+
+<p>
+
+[[if:end]]
+[[rig_flush]]
+
+[[if:rig_has_images]]
+
+<table border="0" cellpadding="0" cellspacing="0">
+	<tr><td>
+		<table width="100%" border="0" bgcolor="{{color_table_border}}" cellpadding="10" cellspacing="1">
+			<tr><td bgcolor="{{color_header_bg}}">
+				<center><font size="+2" color="{{color_header_text}}"><b>
+					{{html_images}}
+				</b></font></center>
+			</td></tr>
+			<tr><td bgcolor="{{color_table_bg}}">
+				<table width="100%" border="0" cellpadding="10" cellspacing="0">
+					[[rig_display_image_list]]
+				</table>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr><td width="80%" bgcolor="{{color_table_bg}}"><font color="{{color_table_infos}}">
+						<div align="left">[[rig_display_image_copyright]]</div>
+					</font></td>
+					<td width="20%" bgcolor="{{color_table_bg}}"><font color="{{color_table_infos}}">
+						<div align="right">[[rig_display_image_count]]</div>
+					</font></td></tr>
+				</table>
+				</table>
+			</td></tr>
+		</table>
+	</td></tr>
+</table>
+
+<p>
+
+[[if:end]]
+[[rig_flush]]
+
+
+[[rig_display_back_album]]
+
+[[rig_display_options]]
+[[rig_admin_link]]
+
+<p>
+
+@rig-section footer
+
+[[rig_display_credits]]
+[[rig_display_footer]]
+
+</body>
+</html>
+
+@rig-end
+
+# Everything past @rig-end is ignored. In fact the file is closed at that point.
+#
+#
+# $Log$
+# Revision 1.1  2003/09/13 21:48:45  ralfoide
+# Experimental: template system
+#
+#
+

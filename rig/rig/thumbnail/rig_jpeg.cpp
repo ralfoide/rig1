@@ -69,7 +69,7 @@ METHODDEF(void) rig_jpegio_error_exit (j_common_ptr cinfo)
 		#ifdef WIN32
 			char buffer[JMSG_LENGTH_MAX];
 			(*cinfo->err->format_message)(cinfo, buffer);
-			DPRINTF(("%s\n", buffer));
+			DPRINTF(("[rig] jpegio error: %s\n", buffer));
 		#endif
 	#endif
 	
@@ -98,7 +98,7 @@ bool rig_jpeg_info(const char* filename, int32 &width, int32 &height)
 
 	FILE * infile = NULL;
 
-	DPRINTF(("rig_jpeg_info: '%s'\n", filename));
+	DPRINTF(("[rig] rig_jpeg_info: '%s'\n", filename));
 
 	struct jpeg_decompress_struct cinfo;
 	struct rig_jpegio_error_mgr jerr;
@@ -166,7 +166,7 @@ RigRgb * rig_jpeg_read(const char* filename)
 	JSAMPLE  *buffer = NULL;
 	FILE     *infile = NULL;
 
-	DPRINTF(("rig_jpeg_read '%s'\n", filename));
+	DPRINTF(("[rig] rig_jpeg_read '%s'\n", filename));
 
 	// ---
 
@@ -328,7 +328,7 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 
 		// now specifiy the output for the jpeg lib. Use the default stdio stuff.
 
-		DPRINTF(("jpeg_stdio_dest\n"));
+		DPRINTF(("[rig] jpeg_stdio_dest\n"));
 		jpeg_stdio_dest(&cinfo, outfile);
 
 		// now set image main characteristics :
@@ -341,7 +341,7 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 		cinfo.in_color_space = JCS_RGB;
 
 	
-		DPRINTF(("jpeg_set_defaults\n"));
+		DPRINTF(("[rig] jpeg_set_defaults\n"));
 		jpeg_set_defaults(&cinfo);
 
 		// Make optional parameter settings here
@@ -355,7 +355,7 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 
 		// now go for it
 
-		DPRINTF(("jpeg_start_compress\n"));
+		DPRINTF(("[rig] jpeg_start_compress\n"));
 		jpeg_start_compress(&cinfo, TRUE);
 
 		// actually write the data
@@ -375,7 +375,7 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 		buffer = new JSAMPLE[row_stride];
 		if (buffer)
 		{
-			DPRINTF(("buffer %p\n", buffer));
+			DPRINTF(("[rig] jpeg buffer %p\n", buffer));
 			row_pointer[0] = buffer;
 		
 			for( ;cinfo.next_scanline < cinfo.image_height; count_progress++)
@@ -394,11 +394,11 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 				// write the data
 			    jpeg_write_scanlines(&cinfo, row_pointer, 1);
 			}
-			DPRINTF(("write done\n"));
+			DPRINTF(("[rig] jpeg write done\n"));
 		}
 
 		// indicate end of processing
-		DPRINTF(("jpeg_finish_compress\n"));
+		DPRINTF(("[rig] jpeg_finish_compress\n"));
 		jpeg_finish_compress(&cinfo);
 	}
 
@@ -417,9 +417,12 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 /****************************************************************
 
 	$Log$
+	Revision 1.4  2004/07/09 05:55:57  ralfoide
+	Comments
+
 	Revision 1.3  2003/08/18 02:06:16  ralfoide
 	New filetype support
-
+	
 	Revision 1.2  2002/10/20 09:04:10  ralfoide
 	Fix for non-RGB jpeg
 	

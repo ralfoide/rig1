@@ -527,7 +527,7 @@ void rig_rescale_up_generic(int32 ssx, int32 ssy,
 		uint8 *sg1 = sg + yc1;
 		uint8 *sb1 = sb + yc1;
 
-		DPRINTF(("y=%2d / yf0=%03d -> r=%03d / g=%03d / b=%03d\n", y, yf0, *sr0, *sg0, *sb0));
+		DPRINTF(("[rig] rgb: y=%2d / yf0=%03d -> r=%03d / g=%03d / b=%03d\n", y, yf0, *sr0, *sg0, *sb0));
 
 		int32 *px = xcol;
 		for(int32 x=0; x<dsx; x++)
@@ -537,7 +537,7 @@ void rig_rescale_up_generic(int32 ssx, int32 ssy,
 			int32 xf1 = 256 - xf0;
 			int32 xc1 = xc0 + 1;
 
-			DPRINTF(("   x=%2d / xf0=%03d -> r=%03d / g=%03d / b=%03d\n", x, xf0, sr0[xc0], sg0[xc0], sb0[xc0]));
+			DPRINTF(("[rig] rgb:   x=%2d / xf0=%03d -> r=%03d / g=%03d / b=%03d\n", x, xf0, sr0[xc0], sg0[xc0], sb0[xc0]));
 
 			uint8 r, g, b;
 
@@ -575,7 +575,7 @@ void rig_rescale_up_generic(int32 ssx, int32 ssy,
 				b = (uint8)((sb0[xc0]*yf0*xf0 + sb0[xc1]*yf0*xf1 + sb1[xc0]*yf1*xf0 + sb1[xc1]*yf1*xf1) >> 16);
 			}
 
-			DPRINTF(("-> r=%03d / g=%03d / b=%03d\n", r, g, b));
+			DPRINTF(("[rig] rgb: -> r=%03d / g=%03d / b=%03d\n", r, g, b));
 
 			// write pixel
 			*(dr++) = r;
@@ -656,9 +656,12 @@ RigRgb * RigRgb::Rescale(int32 sx, int32 sy)
 /*****************************************************************************
 
 	$Log$
+	Revision 1.2  2004/07/09 05:55:57  ralfoide
+	Comments
+
 	Revision 1.1  2002/08/04 00:58:08  ralfoide
 	Uploading 0.6.2 on sourceforge.rig-thumbnail
-
+	
 	Revision 1.1  2001/11/26 00:07:40  ralf
 	Starting version 0.6: location and split of site vs album files
 	

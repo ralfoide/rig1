@@ -97,8 +97,9 @@ require_once($dir_install . $dir_src . "login_util.php");
 read_prefs_paths();
 handle_cookies();
 
-// include language strings
-if (!$current_language)
+// include language strings, default is english ("en")
+// Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
+if (!file_exist($dir_install . $dir_src . "str_$current_language.php") || !$current_language)
 	$current_language = 'en';
 require_once($dir_install . $dir_src . "str_$current_language.php");
 require_once($dir_install . $dir_src . "version.php");
@@ -1200,9 +1201,12 @@ function get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/16 05:05:24  ralfoide
+//	Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

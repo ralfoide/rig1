@@ -1179,7 +1179,7 @@ function rig_read_album_options($album)
 			}
 
 			// DEBUG
-			echo "<br>NEW array; '$var_name'";
+			// echo "<br>NEW array; '$var_name'";
 		}
 		else if ($line)
 		{
@@ -1227,13 +1227,10 @@ function rig_read_album_options($album)
 	}
 
 	// DEBUG
-	// if ($_debug_) 
-	global $list_hide;
-	// if ($_debug_) 
-	global $list_album_icon;
-	// if ($_debug_) 
-	{ echo "<p>Reading list_hide: "; var_dump($list_hide);}
-	{ echo "<p>Reading list_album_icon: "; var_dump($list_album_icon);}
+	// if ($_debug_) global $list_hide;
+	// if ($_debug_) global $list_album_icon;
+	// { echo "<p>Reading list_hide: "; var_dump($list_hide);}
+	// { echo "<p>Reading list_album_icon: "; var_dump($list_album_icon);}
 
 	fclose($file);		// RM 20020713 fix
 	return TRUE;
@@ -1338,8 +1335,11 @@ function rig_get_album_date($album)
 	$abs_dir = $abs_album_path . rig_prep_sep($album);
 
 	// read the timestamp on the file "." in the directory (aka the directory itself)
-	$tm = filemtime(rig_post_sep($abs_dir) . ".");
-	return strftime($html_album_date, $tm);	
+	$t = filemtime(rig_post_sep($abs_dir) . ".");
+	$t = strftime($html_album_date, $t);
+	
+	// RM 20030817 capitalize first word (month name in French or Spanish)
+	return ucfirst($t);
 }
 
 
@@ -2496,6 +2496,17 @@ function rig_parse_string_data($filename)
 
 
 //****************************
+function rig_modif_date($path)
+//****************************
+{
+	if (rig_is_dir($path) || rig_is_file($path))
+		return filemtime($path);
+	else
+		return 0;
+}
+
+
+//****************************
 function rig_begin_buffering()
 //****************************
 // returns html filename to include or TRUE to start buffering and output or FALSE on errors
@@ -2543,20 +2554,17 @@ function rig_begin_buffering()
 		// - the RIG source  folder modification date (can affect album content)
 		// (in that order, most likely to change tested first)
 	
-		$tm_html   = filemtime($abs_html);	
-		$tm_album  = filemtime($abs_album_path  . rig_prep_sep($current_album));
-		$tm_option = filemtime($abs_option_path . rig_prep_sep($current_album));
-		$tm_src    = filemtime($dir_install     . rig_prep_sep($dir_src));
-		$tm_global = filemtime($dir_install     . rig_prep_sep($dir_globset));
-
-		// Quick fix in case locset is empty -- RM 20030815
-		if (is_string($dir_locset) && $dir_locset && rig_is_dir($dir_locset))
-			$tm_local  = filemtime($dir_locset);
-		else
-			$tm_local = $tm_html;
+		$tm_html   = rig_modif_date($abs_html);	
+		$tm_album  = rig_modif_date($abs_album_path  . rig_prep_sep($current_album));
+		$tm_option = rig_modif_date($abs_option_path . rig_prep_sep($current_album) . rig_prep_sep(ALBUM_OPTIONS_TXT));
+		$tm_optxml = rig_modif_date($abs_option_path . rig_prep_sep($current_album) . rig_prep_sep(ALBUM_OPTIONS_XML));
+		$tm_src    = rig_modif_date($dir_install     . rig_prep_sep($dir_src));
+		$tm_global = rig_modif_date($dir_install     . rig_prep_sep($dir_globset));
+		$tm_local  = is_string($dir_locset) ? rig_modif_date($dir_locset) : 0;
 
 		$is_valid =    ($tm_html >= $tm_album)
 		            && ($tm_html >= $tm_option)
+		            && ($tm_html >= $tm_optxml)
 					&& ($tm_html >= $tm_local)
 					&& ($tm_html >= $tm_global)
 					&& ($tm_html >= $tm_src);
@@ -2744,9 +2752,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.30  2003/08/18 04:25:30  ralfoide
+//	Expire album cache when album option change. Capitalize album month name.
+//
 //	Revision 1.29  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//
+//	
 //	Revision 1.28  2003/08/16 05:35:34  ralfoide
 //	fix in case locset is empty
 //	

@@ -56,14 +56,14 @@ else
 		require_once(rig_check_src_file($dir_abs_src . "image.php"));
 	}
 	// TEST -- RM 20040201
-	else if (isset($_GET['rec']) && $_GET['rec'] != NULL)
-	{
-		require_once(rig_check_src_file($dir_abs_src . "album_rec.php"));
-	}
-	// TEST -- RM 20040201
-	else if (isset($_GET['overview']) && $_GET['overview'] != NULL)
+	else if (isset($_GET['overview']))
 	{
 		require_once(rig_check_src_file($dir_abs_src . "overview.php"));
+	}
+	// TEST -- RM 20040222
+	else if (isset($_GET['tests']))
+	{
+		require_once(rig_check_src_file($dir_abs_src . "tests.php"));
 	}
 	else
 	{
@@ -75,9 +75,12 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2004/02/23 04:09:00  ralfoide
+//	Entry point for overview test and for phpUnit testing
+//
 //	Revision 1.7  2004/02/18 07:38:51  ralfoide
 //	Ovierview test
-//
+//	
 //	Revision 1.6  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)

@@ -162,6 +162,7 @@ Admin:
 
 [0.6.3.5]
 
+20030721 [1.F] rig_thumbnail: Detects and uses gcc-3.3 (required for latest libavifile 0.7.33)
 20030720 [1.F] Albums: Auto-switch between grid and vertical layout (if descriptions present)
 20030720 [1.F] Albums: Smaller preview thumbnails for vertical layout mode
 20030719 [2.F] Albums and Images: Displayed dates are translated using current locale
@@ -557,9 +558,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.27  2003/07/21 21:48:41  ralfoide
+//	Updated makefile-with-video for gcc-3.3
+//
 //	Revision 1.26  2003/07/21 05:00:17  ralfoide
 //	Album dates; Dates format localizable; Setting locale on language; Album layout auto-switch.
-//
+//	
 //	Revision 1.25  2003/07/19 07:52:36  ralfoide
 //	Vertical layout for albums
 //	

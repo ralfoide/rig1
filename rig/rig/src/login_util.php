@@ -31,6 +31,7 @@ function rig_enter_login($url, $admin = FALSE)
 	global $user,			$passwd;
 	global $admusr,			$admpwd;
 	global $force_login,	$keep;
+	global $login_error;
 
 	global $pref_auto_guest;
 	global $pref_allow_guest;
@@ -38,14 +39,14 @@ function rig_enter_login($url, $admin = FALSE)
 
 	if ($admin)
 	{
-		$valid    = rig_test_user_pwd($admin, &$rig_adm_user, &$rig_adm_passwd);
+		$valid    = rig_test_user_pwd($admin, &$rig_adm_user, &$rig_adm_passwd, &$login_error);
 		$var_user = "admusr";
 		$var_pwd  = "admpwd";
 		$title    = "$html_rig_admin $html_login";
 	}
 	else
 	{
-		$valid    = rig_test_user_pwd($admin, &$rig_user, &$rig_passwd);
+		$valid    = rig_test_user_pwd($admin, &$rig_user, &$rig_passwd, &$login_error);
 		$var_user = "user";
 		$var_pwd  = "passwd";
 		$title    = "$html_login";
@@ -61,7 +62,7 @@ function rig_enter_login($url, $admin = FALSE)
 	{
 		$rig_user = $pref_guest_username;
 		$rig_passwd = "";
-		$valid = rig_test_user_pwd($admin, &$rig_user, &$rig_passwd);
+		$valid = rig_test_user_pwd($admin, &$rig_user, &$rig_passwd, &$login_error);
 	}
 
 	if ($force_login || !$valid)
@@ -75,19 +76,22 @@ function rig_enter_login($url, $admin = FALSE)
 }
 
 
-//**************************************************
-function rig_test_user_pwd($admin, &$user, &$passwd)
-//**************************************************
+//************************************************************
+function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
+//************************************************************
 // returns TRUE if user/passwd is valid
 // returns FALSE otherwise and clear the user/passwd variables
+// RM 20030222 adding error message
 {
 	global $dir_locset;
 	global $dir_install;
 	global $dir_globset;
 	global $display_user;
 	$valid = FALSE;
+	$logerr = "";
+	$display_user = "";
 
-	// debug
+	// DEBUG
 	// echo "testing user/pwd: user='$user' pwd='$passwd' admin='$admin'\n";
 	// RM 090401 TBDL
 	// $passwd = "";
@@ -115,7 +119,21 @@ function rig_test_user_pwd($admin, &$user, &$passwd)
 					$p = split(':', $line, 3);
 					if (is_array($p))
 					{
-						$valid = ($p[0] == $user && ($p[1][0] == '' || $p[1] == $passwd));
+						if ($p[0] == $user)
+						{
+							// if password is empty in password file, it does not matter
+							// what password was given, they all match. otherwise, must match
+							// RM 2003022 TBDL use crypt()
+							if ($p[1][0] == '' || $p[1] == $passwd)
+							{
+								$valid = TRUE;
+							}
+							else
+							{
+								$logerr = "Error: Invalid password";	// RM 20030222 TBLD translation string
+							}
+						}
+								
 						if ($valid)
 						{
 							$display_user = $p[2];
@@ -126,15 +144,27 @@ function rig_test_user_pwd($admin, &$user, &$passwd)
 			}
 			fclose($file);
 		}
+		else
+		{
+			$logerr = "Error: impossible to read the user/password file!";
+
+			$valid = rig_html_error("Can't read the user/password file",
+								    "Failed to read from file",
+								    $file,
+								    $php_errormsg);
+		}
 	}
 
 	if (!$valid)
 	{
 		$user = "";
 		$passwd = "";
-		$display_user = "";
 	}
 
+	if (!$logerr && !$display_user)
+		$logerr = "Error: Invalid user name";	// RM 20030222 TBLD translation string
+
+	// DEBUG
 	// echo "valid='$valid'<br>\n";
 
 	return $valid;
@@ -170,6 +200,9 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/02/23 08:14:36  ralfoide
+//	Login: display error msg when invalid password or invalid user
+//
 //	Revision 1.6  2003/02/16 20:22:56  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -177,7 +210,7 @@ function rig_display_user_name($user = "")
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.5  2002/10/24 23:57:49  ralfoide
 //	Fix for end-of-file
 //	

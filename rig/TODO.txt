@@ -59,6 +59,10 @@ Admin:
 -- todo --
 
 [0.6.4]
+20030222 [1.N] Login: allow for plain vs crypt vs MD5 password in the password file
+20030220 [7.N] Manual: write real CODINGRULES.TXT
+20030220 [6.N] Manual: write real INSTALL.TXT explaining site vs. album locations
+20030220 [6.N] Manual: write real INSTALL.TXT based on CVS checkout
 20030208 [2.N] Video-Exp: admin-video page to edit properties for one video file (currently: time of thumbnail)
 20030208 [2.N] Video-Exp: use mplayer or ffmpeg(?) to extract one jpg/png image from the movie at a given time
 20030208 [2.N] Video-Exp: find how to play a video in a web browser (<object>+<embed> or video/X stream ?)
@@ -69,6 +73,7 @@ Admin:
 20030119 [4.N] Experiment: can the PHP code get the browser's window size via JavaScript? (for a full screen view)
 20030119 [4.N] Templates: second display image template, with no link images and tiny header line (good for a full screen view)
 20030119 [3.N] Templates: create HTML templates, using keywords instead of PHP code
+20030119 [2.N] Templates: move structural html in template, not in rig code! (cf album/image tables)
 20030118 [1.N] Cookies: don't store the full path in the cookie (stop at or before "index.php?")
 20030118 [1.N] Cookies: use only one cookie for user+passwd (one admin, one normal)
 20030118 [1.N] Cookies: don't store image size cookie if default size (remove existing cookie)
@@ -104,8 +109,8 @@ Admin:
 20020713 [4.N] Gamma flags: overall, album override, image override
 20020713 [4.N] Flags per album: guest-allowed, album gamma
 
-20020713 [4.N] Logging
-20020713 [5.N] Reference counting for images
+20020713 [4.N] Logging [==> use text/flock -- RM 20030220]
+20020713 [5.N] Reference counting for images [==> requires DB or text/flock -- RM 20030220]
 20020713 [6.N] Cache expiration based on time and reference count
 20020713 [9.N] Non-persistent cache for punchy/non overloaded servers
                i.e.: no cache at all or session-based cache + expiration (per album option?)
@@ -119,8 +124,10 @@ Admin:
 [0.6.4]
 
 [0.6.3.1]
-20030220 [1.F] Added gray theme color
-20030216 [1.F] Bumped to version 0.6.3.1
+20030222 [1.F] Login: display error msg when invalid password
+20030222 [1.F] Login: display error msg when invalid user
+20030220 [1.F] Themes: Added gray theme color
+20030216 [1.F] Version: Bumped to version 0.6.3.1
 20030216 [1.F] Bug fix: album visibility not used correctly by display album
 20030216 [1.F] Bug fix: visibility values not correctly read from options.txt
 
@@ -183,7 +190,33 @@ Admin:
 
 
 
-==== RIG :: Database =======================================
+==== RIG :: Video == [notes] ===============================
+
+
+# This section is a repository of notes, not an action list.
+
+VideoLan:
+	- http://www.videolan.org
+	- Streaming server (Linux, Windows, multicast), Client (multiple OSes)
+mPlayer:
+	- http://www.mplayerhq.hu/
+RSTP:
+	- http://www.rtsp.org/
+
+
+
+==== RIG :: Database == [obsolete] =========================
+
+
+# This section is no longuer maintained.
+# These are just TODO notes, but items won't actually be closed.
+#
+# DB support is temporarily put apart. The idai (id-album-image class) branch
+# is no longer in use. It works just fine with DBM or (of course) has dramatic
+# performances with a text db. The id workflow wasn't clear enough to merge
+# this into the main branch without making it impossible to maintain. But don't
+# worry (or do, whatever serves you best), since the db support will come back RSN.
+
 
 -- todo --
 
@@ -199,7 +232,12 @@ Admin:
 
 
 
-==== RIG :: Admin ==========================================
+==== RIG :: Admin == [obsolete] ============================
+
+
+# This section is no longuer maintained.
+# These are just TODO notes, but items won't actually be closed.
+
 
 -- todo --
 
@@ -226,7 +264,7 @@ Admin:
 
 *********************************************************************
 *********************************************************************
------------- old todo/log -------------------------------------------
+------------ old todo/log -- [obsolete] -----------------------------
 *********************************************************************
 *********************************************************************
 
@@ -402,9 +440,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2003/02/23 08:14:34  ralfoide
+//	Login: display error msg when invalid password or invalid user
+//
 //	Revision 1.11  2003/02/21 09:03:02  ralfoide
 //	Added gray theme color
-//
+//	
 //	Revision 1.10  2003/02/18 08:16:32  ralfoide
 //	update
 //	

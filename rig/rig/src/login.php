@@ -17,6 +17,7 @@ global $color_body_bg;
 global $color_body_text;
 global $color_title_bg;
 global $color_title_text;
+global $color_error1_bg;
 global $pref_allow_guest;
 global $pref_guest_username;
 
@@ -34,31 +35,41 @@ rig_display_body();
 <p>
 
 <table border=0>
-	<tr>
-		<td>
+<form method="POST" action="<?= $url ?>">
+<?php
+	if ($login_error)
+	{
+?>
+	<tr align="center"> 
+		<td colspan="2" bgcolor="<?= $color_error1_bg ?>"><?= $login_error ?></td>
+	</tr>
+<?php
+}
+?>
+  	<tr>
+		<td valign="baseline">
 			<?= $html_username ?>
 		</td><td>
-			<form method="POST" action="<?= $url ?>">
-				<input type="text" name="<?= $var_user ?>" size="20" tabindex="1">
+			<input type="text" name="<?= $var_user ?>" size="20" tabindex="1">
 		</td>
-	</tr><tr>
+	</tr><tr valign="baseline">
 		<td>
 			<?= $html_password ?>
 		</td><td>
 				<input type="password" name="<?= $var_pwd ?>" size="20" tabindex="2">
 		</td>
-	</tr><tr>
+	</tr><tr valign="baseline">
 		<td></td>
 		<td>
 				<input type="checkbox" name="keep" value="on" checked tabindex="3"> <?= $html_remember ?>
 		</td>
-	</tr><tr>
+	</tr><tr valign="baseline">
 		<td></td>
 		<td>
 				<input type="submit" value="&nbsp;&nbsp;&nbsp;<?= $html_validate ?>&nbsp;&nbsp;&nbsp;" name="ok" tabindex="3">
-			</form>
 		</td>
 	</tr>
+</form>
 <?php
 	// include the guest mode button, if allowed and not in administrator mode
 	if ($pref_allow_guest && !$admin)
@@ -95,6 +106,9 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/02/23 08:14:36  ralfoide
+//	Login: display error msg when invalid password or invalid user
+//
 //	Revision 1.5  2003/02/16 20:22:56  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -102,7 +116,7 @@ rig_display_body();
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.4  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

@@ -1167,6 +1167,7 @@ function rig_handle_cookies()
 	global $pref_allow_guest;
 	global $pref_guest_username;
 
+	global $login_error;
 	global $force_login,  $keep;
 	global $user, 		  $passwd;
 	global $admusr, 	  $admpwd;
@@ -1215,7 +1216,7 @@ function rig_handle_cookies()
 		$rig_user   = $user;
 		$rig_passwd = crypt($passwd);
 
-		if (rig_test_user_pwd(FALSE, &$rig_user, &$rig_passwd))
+		if (rig_test_user_pwd(FALSE, &$rig_user, &$rig_passwd, &$login_error))
 		{
 			// set the expiration date to +1 year if we want to keep it,
 			// or 0 if it's only for this session
@@ -1238,7 +1239,7 @@ function rig_handle_cookies()
 		$rig_adm_user   = $admusr;
 		$rig_adm_passwd = crypt($admpwd);
 
-		if (rig_test_user_pwd(TRUE, &$rig_adm_user, &$rig_adm_passwd))
+		if (rig_test_user_pwd(TRUE, &$rig_adm_user, &$rig_adm_passwd, &$login_error))
 		{
 			// set the expiration date to +1 year if we want to keep it,
 			// or 0 if it's only for this session
@@ -1844,9 +1845,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.17  2003/02/23 08:14:36  ralfoide
+//	Login: display error msg when invalid password or invalid user
+//
 //	Revision 1.16  2003/02/17 10:03:00  ralfoide
 //	Toying with XML
-//
+//	
 //	Revision 1.15  2003/02/17 07:47:01  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
 //	

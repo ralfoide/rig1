@@ -84,21 +84,23 @@ define("CURRENT_ALBUM_ARROW",	"&nbsp;=&gt;&nbsp;");
 define("EXTLIST",				".jpg.jpeg");
 define("SOFT_NAME",				"Rig [Ralf Image Gallery]");
 define("ALBUM_ICON",			"album_icon.jpg");
-define("ALBUM_OPTIONS",			"options.txt");
+define("ALBUM_OPTIONS",			"options");
+define("ALBUM_OPTIONS_TXT",		"options.txt");
+define("ALBUM_OPTIONS_XML",		"options.xml");
 
 // start timing...
 $time_start = rig_getmicrotime();
 
 // read site-prefs and then override with local prefs, if any
 rig_check_src_file($dir_install . $dir_globset . "prefs.php");
-require_once($dir_install . $dir_globset . "prefs.php");
+require_once      ($dir_install . $dir_globset . "prefs.php");
 
-if (rig_is_file($dir_locset . "prefs.php"))
+if (rig_is_file ($dir_locset . "prefs.php"))
 	require_once($dir_locset . "prefs.php");
 
 // setup...
 rig_check_src_file($dir_install . $dir_src . "login_util.php");
-require_once($dir_install . $dir_src . "login_util.php");
+require_once      ($dir_install . $dir_src . "login_util.php");
 
 rig_read_prefs_paths();
 rig_handle_cookies();
@@ -115,7 +117,7 @@ rig_handle_cookies();
 //-------------------------
 // RM 20020714 fix: always load the str_en first
 rig_check_src_file($dir_install . $dir_src . "str_en.php");
-require_once($dir_install . $dir_src . "str_en.php");
+require_once      ($dir_install . $dir_src . "str_en.php");
 
 // and override with other language if not english
 
@@ -129,7 +131,7 @@ if (!isset($current_language) || !rig_is_file($dir_install . $dir_src . "str_$cu
 if ($current_language != 'en')
 {
 	rig_check_src_file($dir_install . $dir_src . "str_$current_language.php");
-	require_once($dir_install . $dir_src . "str_$current_language.php");
+	require_once      ($dir_install . $dir_src . "str_$current_language.php");
 }
 
 // include theme strings
@@ -141,23 +143,25 @@ if ($current_language != 'en')
 if (!isset($current_theme) || !rig_is_file($dir_install . $dir_src . "theme_$current_theme.php"))
 	$current_theme = $pref_default_theme;
 rig_check_src_file($dir_install . $dir_src . "theme_$current_theme.php");
-require_once($dir_install . $dir_src . "theme_$current_theme.php");
+require_once      ($dir_install . $dir_src . "theme_$current_theme.php");
 
 
 rig_check_src_file($dir_install . $dir_src . "version.php");
-require_once($dir_install . $dir_src . "version.php");
+require_once      ($dir_install . $dir_src . "version.php");
 
 rig_setup();
 rig_create_option_dir("");
 
 rig_check_src_file($dir_install . $dir_src . "common_display.php");
-require_once($dir_install . $dir_src . "common_display.php");
+require_once      ($dir_install . $dir_src . "common_display.php");
 rig_check_src_file($dir_install . $dir_src . "common_images.php");
-require_once($dir_install . $dir_src . "common_images.php");
+require_once      ($dir_install . $dir_src . "common_images.php");
+rig_check_src_file($dir_install . $dir_src . "common_xml.php");			// RM 20030216
+require_once      ($dir_install . $dir_src . "common_xml.php");
 
 // RM 20021021 not for rig 062 yet
 // rig_check_src_file($dir_install . $dir_src . "common_db.php");
-// require_once($dir_install . $dir_src . "common_db.php");
+// require_once      ($dir_install . $dir_src . "common_db.php");
 
 rig_setup_db();
 
@@ -890,6 +894,10 @@ function rig_read_album_options($album)
 	// first clear current options
 	rig_clear_album_options();
 
+	// if XML options are available, just read them
+	if (rig_xml_read_options($album))
+		return TRUE;
+		
 	// then grab new ones
 	global $abs_preview_path;	// old location for options was with previews
 	global $abs_option_path;	// new options have their own base directory (may be shared with previews anyway)
@@ -899,22 +907,24 @@ function rig_read_album_options($album)
 	if (!rig_create_option_dir($album))
 		return FALSE;
 
-	// RM 20030121 moving options to option's dir -- amazin design isn't it?
+	// RM 20030121 moving options to option's dir -- amazing design isn't it?
 	// first try to get options at the new location
-	$abs_options = $abs_option_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+	$abs_options = $abs_option_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS_TXT);
 
 	if (!rig_is_file($abs_options))
 	{
 		// if that fails, try the old location
-		$abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+		$abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS_TXT);
 	
 		// silently abort if the file does not exist
 		if (!rig_is_file($abs_options))
 			return FALSE;
 	}
 
-global $_debug_;
-if ($_debug_)  echo "<p>Reading abs_options '$abs_options'<br>";
+	// DEBUG
+	// global $_debug_;
+	// if ($_debug_)  echo "<p>Reading abs_options '$abs_options'<br>";
+
 	$file = @fopen($abs_options, "rt");
 
 	if (!$file)
@@ -950,10 +960,13 @@ if ($_debug_)  echo "<p>Reading abs_options '$abs_options'<br>";
 		{
 			$key = -1;
 			$c = substr($line, 0, 1);
-if ($_debug_) echo "<br>Read line; '$line'";
+			// DEBUG
+			// if ($_debug_) echo "<br>Read line; '$line'";
 			if ($c == '[')
 			{
-if ($_debug_) echo "<br>----- format is [key]value";
+				// DEBUG
+				// if ($_debug_) echo "<br>----- format is [key]value";
+
 				// format is "[key]value"
 				if (ereg("^\[(.*)\](.*)", $line, $reg) && is_string($reg[1]))
 				{
@@ -967,26 +980,32 @@ if ($_debug_) echo "<br>----- format is [key]value";
 			}
 			else if ($c == '_')
 			{
-if ($_debug_) echo "<br>----- format is _value";
+				// DEBUG
+				// if ($_debug_) echo "<br>----- format is _value";
+		
 				// format is "_value"
 				$line = substr($line, 1);		// RM 20030215 bug fix (..., 1, -1) => (..., 1);
 			}
-if ($_debug_) echo "<br>----- key = '$key'";
-if ($_debug_) echo "<br>----- value = '$value'";
-if ($_debug_) echo "<br>----- line = '$line'";
+
+			// DEBUG
+			// if ($_debug_) echo "<br>----- key = '$key'";
+			// if ($_debug_) echo "<br>----- value = '$value'";
+			// if ($_debug_) echo "<br>----- line = '$line'";
 
 			if ($key == -1)
 				$local[] = $line;
 			else
 				$local[$key] = $value;
 
-if ($_debug_) { echo "<p>local: "; var_dump($local); }
+			// DEBUG
+			// if ($_debug_) { echo "<p>local: "; var_dump($local); }
 		}
 	}
 
-if ($_debug_) global $list_hide;
-if ($_debug_) global $list_album_icon;
-if ($_debug_) { echo "<p>Reading list_hide: "; var_dump($list_hide);}
+	// DEBUG
+	// if ($_debug_) global $list_hide;
+	// if ($_debug_) global $list_album_icon;
+	// if ($_debug_) { echo "<p>Reading list_hide: "; var_dump($list_hide);}
 
 	fclose($file);		// RM 20020713 fix
 	return TRUE;
@@ -1018,8 +1037,7 @@ function rig_write_album_options($album, $silent = FALSE)
 	if (!rig_create_option_dir($album))
 		return FALSE;
 
-	// $abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
-	$abs_options = $abs_option_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+	$abs_options = $abs_option_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS_TXT);
 
 	// make sure the directory exists
 
@@ -1826,9 +1844,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.16  2003/02/17 10:03:00  ralfoide
+//	Toying with XML
+//
 //	Revision 1.15  2003/02/17 07:47:01  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
-//
+//	
 //	Revision 1.14  2003/02/17 07:34:54  ralfoide
 //	Conditional debuggin
 //	

@@ -990,14 +990,16 @@ function rig_display_image_info()
 	global $current_album;
 	global $current_image;
 	global $current_img_info;
-	global $html_pixels, $html_image2;
+	global $html_pixels;
+	// global $html_image2; -- RM 20040226 v.0.6.4.5 removed as it can be either image or video
 
 	if ($current_img_info)
 		$res = $current_img_info;
 	else
 		$res = rig_build_info($current_album, $current_image);
 
-	$s  = $res["f"] . " $html_image2" . ", " . $res["w"] . "x" . $res["h"] . " $html_pixels";
+	// RM 20040226 v.0.6.4.5 removed ." $html_image2" below as it can be either image or video
+	$s  = $res["f"] . ", " . $res["w"] . "x" . $res["h"] . " $html_pixels";
 
 	if ($res["d"])
 	{
@@ -1743,9 +1745,12 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.32  2004/02/27 08:49:06  ralfoide
+//	No longer display "image" after "jpeg" or "video" in display info
+//
 //	Revision 1.31  2004/02/18 07:38:29  ralfoide
 //	Allow for extra html in body (typically for JS)
-//
+//	
 //	Revision 1.30  2003/11/29 22:35:41  ralfoide
 //	Video: JavaScript browser & OS detection, customize install codec links, etc.
 //	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)

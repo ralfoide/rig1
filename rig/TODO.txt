@@ -18,12 +18,13 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
-- in 0.6.4.5:
-[1.N] Fix: Translated strings
-[1.N] Fix: Can't handle album name with é accent in it
-[1.N] Fix: Disable pagination display if there's only one page
+- in 0.7:
 [2.N] Feature: Implement default UI language based on html-accept-language (and don't store default cookies)
 [2.N] Feature: Integrate album overview
+- in 0.6.4.5:
+[1.W] Fix: Translated strings
+[1.N] Fix: Can't handle album name with é accent in it
+[1.N] Fix: Disable pagination display if there's only one page
 - in 0.6.4.4:
 [1.F] Fix: invalidate html cache if image data cache modified
 [2.F] Video: Use JavaScript browser & OS detection to customize html tag and display proper install codec links
@@ -110,22 +111,19 @@ Admin:
 
 ==== RIG :: Generic ========================================
 
--- todo --
 
-[future]
+-- todo -- [future, sorted by priority now]
+
 
 20040218 [1.N] License: Use GPL.
 20040217 [1.N] CVS: Move to 0.7
-20040217 [1.N] Fix: Translate all new strings in Japanese
-20040217 [1.N] Fix: Translate all new strings in Spanish
-20040217 [1.N] Fix: Translate all new strings in French
-20040217 [1.N] Fix: Make sure all new strings are translatable
+20040226 [1.N] Fix: Need real Japanese translations for Tatsuo
 20040217 [1.N] Fix: Can't handle album name with é accent in it
 20031129 [1.N] Fix: WMV video doesn't play under Win/Mozilla
 20031129 [1.N] Fix: Disable pagination display if there's only one page
-20030807 [1.N] Fix: Japanese: No '-san' added to "Guest" user name
 
-20040217 [2.N] Feature: Implement default UI language based on html-accept-language (and don't store default cookies)
+20040217 [2.N] Feature: Implement default UI language based on html-accept-language
+20040217 [2.N] Fix: Don't store default cookies (for first time visitors)
 20040217 [2.N] Feature: Integrate album overview
 20040222 [2.N] Feature: Use PATH_INFO urls (i.e. encode album/image as "url path" rather than query arguments, with cookie side effects etc.)
 
@@ -133,7 +131,6 @@ Admin:
 20040217 [2.N] Feature: Use CSS2
 20040217 [2.N] Feature: New template system
 20040217 [2.N] Feature: New OO
-20040217 [2.N] Exp: Use phpUnit
 20031129 [2.N] Fix: Pagination display incorrect in vertical mode
 20030901 [2.N] Feature: Implement follow image symlinks
 20030802 [2.N] Jhead: Use jhead to detect image rotation and rotate image automatically
@@ -194,15 +191,24 @@ Admin:
 20030308 [0.N] Translate: Restructure code, move functions in admin_util
 20030112 [0.N] Revise the TODO file structure -- separating Generic/Admin/DB doesn't really work for me.
 
+
 -- in progress --
+
 
 20030808 [2.W] Manual: INSTALL.txt is obsolete and misleading
 
 
--- done --
+-- done -- (sorted by finish date)
+
 
 [0.6.4.5]
 
+20040226 [2.F] Fix: Minor fixes in phpUnit
+20040226 [1.F] Fix: Translate all new strings in French, Spanish and Japanese
+20040224 [2.F] Test: Testing strings are correctly translated using phpUnit
+20040224 [1.F] Fix: Make sure all new strings are translatable
+20040222 [1.F] Fix: Japanese: No '-san' added to "Guest" user name
+20040222 [2.F] Exp: Setup phpUnit testing with tests= in Query URL
 20040212 [9.F] Idea: Use http-accept-language to set initial UI language (nothing coded yet)
 20040201 [9.F] Idea: HTML overview, redesigned using CSS and no frames (prototype only)
 20040201 [9.F] Idea: HTML overview using recursive <iframe> (prototype only)
@@ -683,9 +689,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.45  2004/02/27 08:51:03  ralfoide
+//	Strings for video, translated and unit testing for these strings
+//
 //	Revision 1.44  2004/02/23 04:10:48  ralfoide
 //	Next: use GPL. Bug fix needed.
-//
+//	
 //	Revision 1.43  2004/02/18 07:35:25  ralfoide
 //	Todo/changelog update
 //	

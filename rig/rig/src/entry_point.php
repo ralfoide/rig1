@@ -55,6 +55,16 @@ else
 	{
 		require_once(rig_check_src_file($dir_abs_src . "image.php"));
 	}
+	// TEST -- RM 20040201
+	else if (isset($_GET['rec']) && $_GET['rec'] != NULL)
+	{
+		require_once(rig_check_src_file($dir_abs_src . "album_rec.php"));
+	}
+	// TEST -- RM 20040201
+	else if (isset($_GET['overview']) && $_GET['overview'] != NULL)
+	{
+		require_once(rig_check_src_file($dir_abs_src . "overview.php"));
+	}
 	else
 	{
 		require_once(rig_check_src_file($dir_abs_src . "album.php"));
@@ -65,6 +75,9 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2004/02/18 07:38:51  ralfoide
+//	Ovierview test
+//
 //	Revision 1.6  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)
@@ -72,7 +85,7 @@ else
 //	Fix: Changed credit line
 //	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
 //	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//
+//	
 //	Revision 1.5  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
 //	

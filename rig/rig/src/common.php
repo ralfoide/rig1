@@ -907,6 +907,7 @@ function rig_read_album_options($album)
 			return FALSE;
 	}
 
+// echo "<p>Reading abs_options '$abs_options'<br>";
 	$file = @fopen($abs_options, "rt");
 
 	if (!$file)
@@ -942,8 +943,10 @@ function rig_read_album_options($album)
 		{
 			$key = -1;
 			$c = substr($line, 0, 1);
+// echo "<br>Read line; '$line'";
 			if ($c == '[')
 			{
+// echo "<br>----- format is [key]value";
 				// format is "[key]value"
 				if (ereg("^\[(.*)\](.*)", $line, $reg) && is_string($reg[1]))
 				{
@@ -957,16 +960,26 @@ function rig_read_album_options($album)
 			}
 			else if ($c == '_')
 			{
+// echo "<br>----- format is _value";
 				// format is "_value"
-				$line = substr($line, 1, -1);
+				$line = substr($line, 1);		// RM 20030215 bug fix (..., 1, -1) => (..., 1);
 			}
+// echo "<br>----- key = '$key'";
+// echo "<br>----- value = '$value'";
+// echo "<br>----- line = '$line'";
 
 			if ($key == -1)
 				$local[] = $line;
 			else
 				$local[$key] = $value;
+
+// echo "<p>local: "; var_dump($local);
 		}
 	}
+
+// global $list_hide;
+// global $list_album_icon;
+// echo "<p>Reading list_hide: "; var_dump($list_hide);
 
 	fclose($file);		// RM 20020713 fix
 	return TRUE;
@@ -1802,6 +1815,9 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2003/02/16 21:30:32  ralfoide
+//	fix reading _value lines in options.txt
+//
 //	Revision 1.11  2003/02/16 20:22:54  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -1809,7 +1825,7 @@ function rig_parse_string_data($filename)
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.10  2003/01/07 18:02:01  ralfoide
 //	Support for URL-Rewrite conf array
 //	

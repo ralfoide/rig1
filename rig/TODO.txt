@@ -121,7 +121,9 @@ Admin:
 [0.6.4]
 
 [0.6.3.1]
-20030215 [1.F] Bumped to version 0.6.3.1
+20030216 [1.F] Bumped to version 0.6.3.1
+20030216 [1.F] Bug fix: album visibility not used correctly by display album
+20030216 [1.F] Bug fix: visibility values not correctly read from options.txt
 
 [0.6.3]
 20030215 [1.F] Updating sourceforge CVS, make CVS tag_2003-02-15_v0630
@@ -401,9 +403,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/02/17 08:18:38  ralfoide
+//	Version 0.6.3.1 started...
+//
 //	Revision 1.8  2003/02/16 20:23:56  ralfoide
 //	Version 0.6.3 updated to CVS, going on with 0.6.3.1
-//
+//	
 //	Revision 1.7  2003/02/16 20:08:57  ralfoide
 //	Update. Version 0.6.3.1
 //	

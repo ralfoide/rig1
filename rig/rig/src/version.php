@@ -7,12 +7,15 @@
 // $Id$
 //**********************************************
 
-$rig_version = "0.6.3";
+$rig_version = "0.6.3.1";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/02/17 08:18:42  ralfoide
+//	Version 0.6.3.1 started...
+//
 //	Revision 1.7  2003/02/16 20:22:59  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -20,7 +23,7 @@ $rig_version = "0.6.3";
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.6  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.

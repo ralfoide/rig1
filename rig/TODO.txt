@@ -118,15 +118,14 @@ Admin:
 -- todo -- [future, sorted by priority now]
 
 
+20040708 [1.N] Manual: Description RH9 dependencies
 20040601 [1.N] Manual: Need description of Windows installation/build instructions.
 20040528 [1.N] Setup: Installer for Windows (assumes IIS and PHP with defaults)
 20040528 [1.N] Setup: Prebuild binaries for rig_thumbnail
-20040525 [1.N] Fix: rig_thumnail use sig alarm/kill if locked in libavi processing (currently locks on Cinepak reader)
 20040218 [1.N] License: Use GPL.
 20040217 [1.N] CVS: Move to 0.7
 20040217 [1.N] Fix: Can't handle album name with é accent in it
 20031129 [1.N] Fix: WMF video doesn't play under Win/Mozilla
-20031129 [1.N] Fix: Disable pagination display if there's only one page
 
 20040528 [2.N] Feature: Do not allow access to image in original file size
 20040528 [2.N] Feature: Stream image instead of redirecting to temp folder URL (would prevent browsing)
@@ -212,6 +211,9 @@ Admin:
 
 [0.6.5]
 
+20040708 [1.F] Fix: Don't put ipage/apage=1 in URL as it's a default
+20040708 [1.F] Fix: Disable pagination display if there's only one page
+20040707 [1.F] Fix: rig_thumnail use sig alarm/kill if locked in libavi processing (currently locks on Cinepak reader)
 20040705 [1.F] CVS: Moving on to 0.6.5
 
 [0.6.4.5]
@@ -710,9 +712,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.53  2004/07/09 05:58:32  ralfoide
+//	Fixes for pagination, etc.
+//
 //	Revision 1.52  2004/07/06 04:56:46  ralfoide
 //	Preparing to tag 0.6.4.5
-//
+//	
 //	Revision 1.51  2004/07/06 04:37:42  ralfoide
 //	Fix
 //	

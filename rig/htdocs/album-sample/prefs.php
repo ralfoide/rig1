@@ -17,13 +17,19 @@
 $pref_allow_guest		= TRUE;				// can be TRUE (default) or FALSE
 $pref_auto_guest		= TRUE;				// should guest authentificate? TRUE (default) or FALSE
 
+$pref_global_gamma		= 1.0;	// use 1.0 for no-op
+
+
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2002/10/21 01:56:53  ralfoide
+//	Added local override of gamma
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//
+//	
 //	Revision 1.1  2001/11/26 04:35:05  ralf
 //	version 0.6 with location.php
 //	

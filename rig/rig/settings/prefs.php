@@ -209,6 +209,13 @@ $pref_small_preview_size	= 64;
 $pref_small_preview_quality	= 60;
 
 
+// --- admin viewing options ---
+
+// RM 20030821: not currently used -- for future admin_image.php page
+
+$pref_admin_size		= 256;
+
+
 // --- image viewing options ---
 
 
@@ -228,67 +235,81 @@ $pref_empty_album		= 'empty_album.gif';
 $pref_global_gamma		= 1.0;	// use 1.0 for no-op
 
 
-// --- supported file types [RM 20030627 v0.6.3.4] ---
-
-// Note: these are default settings and should not be modified. They will be
-// overriden by settings reported by rig_thumbnail.exe at runtime.
-// Note: In most cases, the variable should be set to NULL, in which case
-// the real settings reported by rig_thumbnail.exe at runtime will be used.
-// If this array is defined, rig_thumbnail.exe report will not be used.
-
-$pref_file_types		= NULL;
-
-// In case you really want to override the file type array and you really know
-// what you are doing, here is a sample of what it should contain:
-//
-// For matching pattern syntax, cf http://www.php.net/manual/en/function.preg-match.php
-// or http://www.perldoc.com/perl5.8.0/pod/perlre.html
-
-/*
-$pref_file_types		= array("/\.jpe?g$/i"					 => 'image/jpeg',
-								"/\.(avi|wmv|as[fx])$/i"		 => 'video/avi',
-								"/\.(mov|qt|sdp|rtsp)$/i"		 => 'video/quicktime',
-								"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => 'video/mpeg');
-*/
-
 
 // --- files and albums ignore list [RM 20030813 v0.6.3.5] ---
 
-// TBDL: comment on this
-// Quick notes: these arrays list reg-exp patterns of names to avoid for images and albums.
-// The ignore list is taken into account when reading the filesystem's content. That means
-// that filenames ignored here are never seen *ever* (not even in admin mode!) and are
-// never accessed by RIG. As far as RIG is concerned, they do not exist.
-//
-// Arrays can be affected NULL or FALSE or the empty string or the empty array if you want to
-// disable the feature.
-//
-// Typical pattenrs:
-// - "/^foo$/"   matches a filename being _exactly_ "foo"
-// - "/^foo/"    matches any filename starting by "foo".
-// - "/\bfoo\b/" matches any filename with the word "foo" (word-boundary check)
-// - "/foo/i"    matches any filename containing "foo" or "FOO" or "FoO" anywhere
-//				 in the name (i means case-insenstive)
+/***********************************************************
+ *
+ *	Setting: 		$pref_album_ignore_list
+ *	Type:			Array of regexp strings
+ *	Default:		NULL
+ *	
+ *	This array list reg-exp patterns of names to avoid for albums.
+ *	The ignore list is taken into account when reading the filesystem's
+ *	content. That means that filenames ignored here are never seen *ever*
+ *	(not even in admin mode!) and are never accessed by RIG.
+ *	As far as RIG is concerned, they do not exist.
+ *
+ *	Arrays can be affected NULL or FALSE or the empty string or the empty
+ *	array if you want to disable the feature.
+ *
+ *	For matching pattern syntax, cf http://www.php.net/manual/en/function.preg-match.php
+ *	or http://www.perldoc.com/perl5.8.0/pod/perlre.html
+ *
+ *	Typical pattenrs:
+ *	- "/^foo$/"   matches a filename being _exactly_ "foo"
+ *	- "/^foo/"    matches any filename starting by "foo".
+ *	- "/\bfoo\b/" matches any filename with the word "foo" (word-boundary check)
+ *	- "/foo/i"    matches any filename containing "foo" or "FOO" or "FoO" anywhere
+ *				  in the name (i means case-insenstive)
+ *
+ *	Example:
+ *	
+ *	$pref_album_ignore_list	= array("/^CVS$/",
+ *									"/AlbumToBeIgnored/");
+ *
+ ***********************************************************/
 
 $pref_album_ignore_list	= NULL;
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_image_ignore_list
+ *	Type:			Array of regexp strings
+ *	Default:		NULL
+ *	
+ *	This array list reg-exp patterns of names to avoid for images.
+ *	The ignore list is taken into account when reading the filesystem's
+ *	content. That means that filenames ignored here are never seen *ever*
+ *	(not even in admin mode!) and are never accessed by RIG.
+ *	As far as RIG is concerned, they do not exist.
+ *
+ *	Arrays can be affected NULL or FALSE or the empty string or the empty
+ *	array if you want to disable the feature.
+ *
+ *	For matching pattern syntax, cf http://www.php.net/manual/en/function.preg-match.php
+ *	or http://www.perldoc.com/perl5.8.0/pod/perlre.html
+ *
+ *	Typical pattenrs:
+ *	- "/^foo$/"   matches a filename being _exactly_ "foo"
+ *	- "/^foo/"    matches any filename starting by "foo".
+ *	- "/\bfoo\b/" matches any filename with the word "foo" (word-boundary check)
+ *	- "/foo/i"    matches any filename containing "foo" or "FOO" or "FoO" anywhere
+ *				  in the name (i means case-insenstive)
+ *
+ *	Example:
+ *	
+ *	$pref_album_ignore_list	= array("/fuzzy/",
+ *									"/ImageToBeIgnored/",
+ *									"/^temp_/i");
+ *
+ ***********************************************************/
+
+
 $pref_image_ignore_list	= NULL;
 
-/* Example:
 
-$pref_album_ignore_list	= array("/^CVS$/",
-								"/AlbumToBeIgnored/");
-
-$pref_image_ignore_list	= array("/fuzzy/",
-								"/ImageToBeIgnored/",
-								"/^temp_/i");
-*/
-
-
-// --- admin viewing options ---
-
-// RM 20030821: not currently used -- for future admin_image.php page
-
-$pref_admin_size		= 256;
 
 
 
@@ -371,18 +392,18 @@ $pref_html_meta = "<meta name=\"robots\" content=\"noindex, nofollow\">";
  *	Type:			Boolean (0 or 1)
  *	Default:		1
  *	
- * When set to 1, disables web-interface for translating language.
- * This is the site-wide setting.
- * If you want to enable it, please do so in the album prefs.php!
+ *	When set to 1, disables web-interface for translating language.
+ *	This is the site-wide setting.
+ *	If you want to enable it, please do so in the album prefs.php!
  *
- * There are security issues with the translation interface.
- * The feature currently does not check for cross-scripting exploits in the
- * language strings. This will be fixed later, in the meantime it is strongly
- * recommanded that you keep the feature disabled unless you strongly trust
- * your admin editors. You have been warned.
+ *	There are security issues with the translation interface.
+ *	The feature currently does not check for cross-scripting exploits in the
+ *	language strings. This will be fixed later, in the meantime it is strongly
+ *	recommanded that you keep the feature disabled unless you strongly trust
+ *	your admin editors. You have been warned.
  *
- * Default: line with value 1. Set to 0 to enable language translation
- * by admins directly in the web interface.
+ *	Default: line with value 1. Set to 0 to enable language translation
+ *	by admins directly in the web interface.
  *
  ***********************************************************/
 
@@ -395,23 +416,23 @@ $pref_disable_web_translate_interface = 1;
  *	Type:			String ('1' or '2')
  *	Default:		'1'
  *	
- * Selects the default image layout.
+ *	Selects the default image layout.
  *
- * There are currently two image layouts:
+ *	There are currently two image layouts:
  *
- * 1: The image is on the top of the page, with the prev/next previews on each side.
- *    The image size popup and all other options are *below* the image.
- *    This is an ideal layout if you hate to scroll down to see an image on a small screen
- *    (1024x768 or less) and rarely use the image size popup anyway.
+ *	1: The image is on the top of the page, with the prev/next previews on each side.
+ *	   The image size popup and all other options are *below* the image.
+ *	   This is an ideal layout if you hate to scroll down to see an image on a small screen
+ *	   (1024x768 or less) and rarely use the image size popup anyway.
  *
- * 2: The image size popup and the prev/next previews are on *top* of the image.
- *    There is nothing to left/right of the image. This is ideal if you like to see big
- *    sizes for images.
+ *	2: The image size popup and the prev/next previews are on *top* of the image.
+ *	   There is nothing to left/right of the image. This is ideal if you like to see big
+ *	   sizes for images.
  *
- * I like 1 now. Most others like 2 with was RIG's original layout.
+ *	I like 1 now. Most others like 2 with was RIG's original layout.
  *
- * WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
- * This is the reason why you cannot choose the layout in live. I'll add that later.
+ *	WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
+ *	This is the reason why you cannot choose the layout in live. I'll add that later.
  *
  ***********************************************************/
 
@@ -424,24 +445,24 @@ $pref_image_layout = '1';
  *	Type:			String (either 'grid' or 'vert' only)
  *	Default:		'grid'
  *	
- * Selects the default layout for albums with NO descriptions.
+ *	Selects the default layout for albums with NO descriptions.
  *
- * There are currently two album layouts:
+ *	There are currently two album layouts:
  *
- * 'grid': This is default layout.
- *         Album lists are presented in a N-per-row grid.
- *         Image lists are presented in a N-per-row grid.
- *         There are as many row as necessary to display all the visible items.
- *         N is defined by $pref_nb_col, described below (default: 5)
+ *	'grid': This is default layout.
+ *	        Album lists are presented in a N-per-row grid.
+ *	        Image lists are presented in a N-per-row grid.
+ *	        There are as many row as necessary to display all the visible items.
+ *	        N is defined by $pref_nb_col, described below (default: 5)
  *
- * 'vert': An alternate vertical layout for albums.
- *         Album lists are presented one per line, vertically.
- *         Image lists are presented in a N-per-row grid like in 'grid' layout.
- *         There are as many row as necessary to display all the visible items.
- *         N is defined by $pref_nb_col, described below (default: 5)
+ *	'vert': An alternate vertical layout for albums.
+ *	        Album lists are presented one per line, vertically.
+ *	        Image lists are presented in a N-per-row grid like in 'grid' layout.
+ *	        There are as many row as necessary to display all the visible items.
+ *	        N is defined by $pref_nb_col, described below (default: 5)
  *
- * WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
- * This is the reason why you cannot choose the layout in live. I'll add that later.
+ *	WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
+ *	This is the reason why you cannot choose the layout in live. I'll add that later.
  *
  ***********************************************************/
 
@@ -455,14 +476,14 @@ $pref_album_layout = 'grid';
  *	Type:			String (either 'grid' or 'vert' only)
  *	Default:		'vert'
  *	
- * Selects the default layout for albums with descriptions.
+ *	Selects the default layout for albums with descriptions.
  *
- * If you want the same layout for both kind of albums (with or without
- * descriptions), you can either use an empty string or use
- * the same layout that for $pref_album_layout by writing:
- *	$pref_album_with_description_layout = $pref_album_layout;
+ *	If you want the same layout for both kind of albums (with or without
+ *	descriptions), you can either use an empty string or use
+ *	the same layout that for $pref_album_layout by writing:
+ *		$pref_album_with_description_layout = $pref_album_layout;
  *
- * For the various album layouts, please look at $pref_album_layout.
+ *	For the various album layouts, please look at $pref_album_layout.
  *
  ***********************************************************/
 
@@ -476,7 +497,7 @@ $pref_album_with_description_layout = 'vert';
  *	Type:			Integer >= 1
  *	Default:		5
  *	
- * Selects the number of album or images per line/row in grid layout.
+ *	Selects the number of album or images per line/row in grid layout.
  *
  ***********************************************************/
 
@@ -489,8 +510,8 @@ $pref_nb_col		= 5;
  *	Type:			Boolean (TRUE or FALSE)
  *	Default:		TRUE
  *	
- * When set to true, displays a border around the album thumbnails
- * using the rig_images/album_(bottom|right)(left|line|right).gif files
+ *	When set to true, displays a border around the album thumbnails
+ *	using the rig_images/album_(bottom|right)(left|line|right).gif files
  *
  ***********************************************************/
 
@@ -503,8 +524,8 @@ $pref_use_album_border	= TRUE;
  *	Type:			Boolean (TRUE or FALSE)
  *	Default:		TRUE
  *	
- * When set to true, displays a border around the image thumbnails
- * using the rig_images/image_(bottom|right)(left|line|right).gif files
+ *	When set to true, displays a border around the image thumbnails
+ *	using the rig_images/image_(bottom|right)(left|line|right).gif files
  *
  ***********************************************************/
 
@@ -522,11 +543,11 @@ $pref_use_image_border	= TRUE;
  *	Type:			Boolean (TRUE or FALSE)
  *	Default:		TRUE
  *	
- * When set to true, 'descript.ion' and 'file_info.diz' files are read
- * in every album folders to extract description strings for albums.
+ *	When set to true, 'descript.ion' and 'file_info.diz' files are read
+ *	in every album folders to extract description strings for albums.
  *
- * Note that albums that have description will automatically show
- * up using $pref_album_with_description_layout.
+ *	Note that albums that have description will automatically show
+ *	up using $pref_album_with_description_layout.
  *
  ***********************************************************/
 
@@ -539,14 +560,14 @@ $pref_enable_descriptions = TRUE;
  *	Type:			Boolean (TRUE or FALSE)
  *	Default:		TRUE
  *	
- * When set to true, the HTML generated for each album page is
- * cached in the $dir_album_cache folder. The HTML is automatically
- * expired whenever one of these folders is modified:
- * - The album folder
- * - The album's option folder
- * - The $dir_abs_src or $dir_abs_admin_src folders
- * - The $dir_abs_globset or $dir_abs_locset folders
- * - The current template folder
+ *	When set to true, the HTML generated for each album page is
+ *	cached in the $dir_album_cache folder. The HTML is automatically
+ *	expired whenever one of these folders is modified:
+ *	- The album folder
+ *	- The album's option folder
+ *	- The $dir_abs_src or $dir_abs_admin_src folders
+ *	- The $dir_abs_globset or $dir_abs_locset folders
+ *	- The current template folder
  *
  ***********************************************************/
 
@@ -559,11 +580,11 @@ $pref_enable_album_html_cache = TRUE;
  *	Type:			Boolean (TRUE or FALSE)
  *	Default:		FALSE
  *	
- * When set to true, it possible to view hidden albums by
- * giving their exact name in the web browser's query string.
+ *	When set to true, it possible to view hidden albums by
+ *	giving their exact name in the web browser's query string.
  *
- * Note that albums matched by $pref_album_ignore_list can
- * NEVER be accessed, even if this preference is TRUE.
+ *	Note that albums matched by $pref_album_ignore_list can
+ *	NEVER be accessed, even if this preference is TRUE.
  *
  ***********************************************************/
 
@@ -576,16 +597,107 @@ $pref_enable_access_hidden_albums = FALSE;
  *	Type:			Boolean (TRUE or FALSE)
  *	Default:		FALSE
  *	
- * When set to true, it possible to view hidden images by
- * giving their exact name in the web browser's query string.
+ *	When set to true, it possible to view hidden images by
+ *	giving their exact name in the web browser's query string.
  *
- * Note that albums matched by $pref_image_ignore_list can
- * NEVER be accessed, even if this preference is TRUE.
+ *	Note that albums matched by $pref_image_ignore_list can
+ *	NEVER be accessed, even if this preference is TRUE.
  *
  ***********************************************************/
 
 $pref_enable_access_hidden_images = TRUE;
 
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_follow_album_symlinks
+ *	Type:			Boolean (TRUE or FALSE)
+ *	Default:		FALSE
+ *	
+ *	When set to true, if an album path is actually a symbolic link
+ *	onto a folder representing another album path in the same
+ *	RIG album, the link will be followed internally. Images, cache
+ *	and options from the original album will be used.
+ *
+ *	This option has a number of restrictions:
+ *	- Your filesystem must support symbolic links.
+ *	- The links must point into the same album.
+ *	- Options and cache files from link origin are used.
+ *	- Naviguation URLs will most likely reflect the path traversal
+ *	  (this is actually implementation-dependant and I may change
+ *	   this behavior as it best suits me. Ideally it should not,
+ *	   but it might be easier to implement a true traversal first)
+ *
+ *	Note that albums matched by $pref_album_ignore_list can
+ *	NEVER be accessed, even if this preference is TRUE (this is true
+ *	for both source and destination of the symlink).
+ *
+ ***********************************************************/
+
+$pref_follow_album_symlinks = TRUE;
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_follow_image_symlinks
+ *	Type:			Boolean (TRUE or FALSE)
+ *	Default:		FALSE
+ *	
+ *	When set to true, if an image path is actually a symbolic link
+ *	onto another image path in the same RIG album, the link will
+ *	be followed internally. The image cache from the original image
+ *	will be used *but* the album option of the original album will
+ *	be used.
+ *
+ *	This option has a number of restrictions:
+ *	- Your filesystem must support symbolic links.
+ *	- The links must point into the same album.
+ *	- Naviguation URLs will most likely reflect the path traversal
+ *	  (this is actually implementation-dependant and I may change
+ *	   this behavior as it best suits me. Ideally it should not,
+ *	   but it might be easier to implement a true traversal first)
+ *
+ *	Note that images matched by $pref_image_ignore_list can
+ *	NEVER be accessed, even if this preference is TRUE (this is true
+ *	for both source and destination of the symlink).
+ *
+ ***********************************************************/
+
+$pref_follow_image_symlinks = TRUE;
+
+
+
+// --- supported file types [RM 20030627 v0.6.3.4] ---
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_file_types
+ *	Type:			Array of (key/value) strings
+ *	Default:		NULL
+ *	
+ *	This array describes which filename maps to which filetype.
+ *
+ *	When the variable is set to NULL (the default), the help application
+ *	rig_thumbnail.exe is queried to get the set of actually supported
+ *	filetypes and the associated filename patterns.
+ *
+ *	Unless you are really familliar with the internals of RIG, you do not
+ *	want to change this array.
+ *	If you're stubborn or in case you really need to override the file type
+ *	array and you really know what you are doing, here is a sample of what it
+ *	should currently contain:
+ *	 
+ *	$pref_file_types= array("/\.jpe?g$/i"					 => 'image/jpeg',
+ *							"/\.(avi|wmv|as[fx])$/i"		 => 'video/avi',
+ *							"/\.(mov|qt|sdp|rtsp)$/i"		 => 'video/quicktime',
+ *							"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => 'video/mpeg');
+ *
+ *	For matching pattern syntax, cf http://www.php.net/manual/en/function.preg-match.php
+ *	or http://www.perldoc.com/perl5.8.0/pod/perlre.html
+ *
+ ***********************************************************/
+
+$pref_file_types		= NULL;
 
 
 
@@ -593,9 +705,13 @@ $pref_enable_access_hidden_images = TRUE;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.18  2003/09/01 20:54:24  ralfoide
+//	More variable descriptions.
+//	Added pref_follow_album/image_symlinks
+//
 //	Revision 1.17  2003/08/21 20:20:52  ralfoide
 //	New enable prefs (album/image hidden, descriptions, album cache)
-//
+//	
 //	Revision 1.16  2003/08/18 02:14:35  ralfoide
 //	Updated, new filetype support
 //	

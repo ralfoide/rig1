@@ -9,7 +9,9 @@
 //
 // phpUnit testing for RIG -- "http://phpunit.sourceforge.net/" for more information
 
+require_once $dir_abs_src . "common.php";
 require_once $dir_abs_src . "phpunit.php";
+
 ?>
 <html>
 <head>
@@ -21,11 +23,13 @@ require_once $dir_abs_src . "phpunit.php";
 
 <?php
 
-//*********************************
-class phpUnit_Test extends TestCase
-//*********************************
+require_once $dir_abs_src . "test_str.php";
+
+//**********************************
+class RTest_phpUnit extends TestCase
+//**********************************
 {
-	function phpUnitTest($name = "phpUnit_Test")
+	function RTest_phpUnit($name = "RTest_phpUnit")
 	{
 		$this->TestCase($name);
 	}
@@ -40,13 +44,13 @@ class phpUnit_Test extends TestCase
 	
 	function test_fails()
 	{
-		$this->assert(TRUE, FALSE, "This should fail");
+		$this->assert(FALSE, "This should fail");
 		$this->assertEquals(1, 2, "This should fail");
 	}
 
 	function test_OK()
 	{
-		$this->assert(TRUE, TRUE, "This should work");
+		$this->assert(TRUE, "This should work");
 		$this->assertEquals(42, 42, "This should work");
 	}
 }
@@ -54,7 +58,8 @@ class phpUnit_Test extends TestCase
 //---------------------------
 
 $rig_suite = new TestSuite();
-$rig_suite->addTest(new TestSuite("phpUnit_Test"));
+// $rig_suite->addTest(new TestSuite("RTest_phpUnit")); // -- self-test boot
+$rig_suite->addTest(new TestSuite("RTest_I18l_Strings"));
 
 //---------------------------
 
@@ -71,8 +76,11 @@ $result->report();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2004/02/27 08:44:57  ralfoide
+//	New test unit for strings
+//
 //	Revision 1.1  2004/02/23 04:08:25  ralfoide
 //	Setting up phpUnit testing
-//
+//	
 //-------------------------------------------------------------
 ?>

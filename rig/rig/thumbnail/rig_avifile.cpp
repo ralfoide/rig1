@@ -20,6 +20,8 @@
 
 #ifndef RIG_EXCLUDE_AVIFILE
 
+#include <stdio.h>
+
 //----------------------------------------------------------------------------
 // libavifile headers
 
@@ -193,9 +195,12 @@ RigRgb * rig_avifile_read(const char* filename)
 /****************************************************************
 
 	$Log$
+	Revision 1.5  2003/08/18 03:22:19  ralfoide
+	Fixed missing include
+
 	Revision 1.4  2003/08/18 02:06:16  ralfoide
 	New filetype support
-
+	
 	Revision 1.3  2003/07/16 06:46:23  ralfoide
 	Made video support optional
 	

@@ -118,7 +118,7 @@ Admin:
 20040601 [1.N] Manual: Need description of Windows installation/build instructions.
 20040528 [1.N] Setup: Installer for Windows (assumes IIS and PHP with defaults)
 20040528 [1.N] Setup: Prebuild binaries for rig_thumbnail
-20040525 [1.N] Fix: rig_thumnail use sig alarm/kill if locked in libavi processing (currently crashes on Cinepak reader)
+20040525 [1.N] Fix: rig_thumnail use sig alarm/kill if locked in libavi processing (currently locks on Cinepak reader)
 20040218 [1.N] License: Use GPL.
 20040217 [1.N] CVS: Move to 0.7
 20040217 [1.N] Fix: Can't handle album name with é accent in it
@@ -210,6 +210,7 @@ Admin:
 
 [0.6.4.5]
 
+20040703 [1.F] Fix: using "img" query param instead of "image" (for broken browser which interpret &image= in URLs)
 20040516 [1.F] Fix: Use rig_get to access $_SERVER['PHP_SELF'] in rig_self_url().
 20040308 [3.F] Source: Cleanup of extraneous CVS logs and unused <script> test code
 20040302 [1.F] Fix: Translated/fixed tooltips international strings
@@ -702,9 +703,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.51  2004/07/06 04:37:42  ralfoide
+//	Fix
+//
 //	Revision 1.50  2004/06/03 14:18:17  ralfoide
 //	Update
-//
+//	
 //	Revision 1.49  2004/03/09 06:22:29  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

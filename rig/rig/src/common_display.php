@@ -165,13 +165,8 @@ function rig_display_album_list()
 	global $abs_preview_path;
 	global $list_albums;
 	global $current_album;
+	global $list_description;				// RM 20030713
 	global $pref_disable_album_borders;
-
-	// name of album-border images
-	$box_tr = $dir_images . "box_tr.gif";
-	$box_br = $dir_images . "box_br.gif";
-	$line_b = $dir_images . "line_b.gif";
-	$line_r = $dir_images . "line_r.gif";
 
 	$i = 0;
 	$n = $pref_nb_col;
@@ -197,6 +192,14 @@ function rig_display_album_list()
 
 		// prepare title
 		$title = "<center><a href=\"$link\">$pretty</a></center>\n";
+
+
+		// prepare description, if any
+		if (is_string($list_description[$dir]))
+			$desc = $list_description[$dir];
+		else
+			$desc = "";
+
 
 		$square_size = $pref_preview_size + 12;
 		echo "<td $w>\n";
@@ -280,9 +283,18 @@ function rig_display_album_list()
 				</table>
 				<?php
 			}
-			else
+/*
+			else if (0)
 			{
-				// New layout. Still not perfect but will do right now.
+				// Semi-New layout. Still not perfect but will do right now.
+				// This is broken under Mozilla 1.0
+
+				// name of album-border images
+				// old names
+				$box_tr = $dir_images . "box_tr.gif";
+				$box_br = $dir_images . "box_br.gif";
+				$line_b = $dir_images . "line_b.gif";
+				$line_r = $dir_images . "line_r.gif";
 
 				?>
 				<table border="0" cellspacing="0" cellpadding="0">
@@ -331,11 +343,69 @@ function rig_display_album_list()
 				</table>
 				<?php
 			}
+*/
+			else
+			{
+				// RM 20030713 -- better layout that almost works with Mozilla 1.0
+				// It uses background pictures for table cells, which means it won't
+				// render on old browser (and that's actually better than a broken
+				// cell layout anyway)
+
+				$sx2 = $sx+2;		$sy2 = $sy+2;			// image size including border=1
+				$sx8 = $sx2+6;		$sy8 = $sy2+6;			// image size including border=1 and including 6-pixel shadow frame
+				$sxL = $sx2-9;		$syL = $sy2-9;
+				$sxT = $sx8+2*$x2;	$syT = $sy8 + 2*$y2;	// the overal table size including surrounding spacing
+
+				// name of album-border images
+				// old names
+				$box_tr = $dir_images . "album_topright.gif";
+				$box_br = $dir_images . "album_bottomright.gif";
+				$box_bl = $dir_images . "album_bottomleft.gif";
+				$line_b = $dir_images . "album_bottomline.gif";
+				$line_r = $dir_images . "album_rightline.gif";
+
+				?>
+				<table  width="<?= $sxT ?>" height="<?= $syT ?>" border="0" cellspacing="0" cellpadding="0">
+				  <tr> 
+				    <td width="<?= $x2  ?>" height="<?= $y2  ?>"></td>
+				    <td width="<?= $sx8 ?>" height="<?= $y2  ?>" colspan="3"></td>
+				    <td width="<?= $x2  ?>" height="<?= $y2  ?>"></td>
+				  </tr>
+				  <tr> 
+				    <td width="<?= $x2  ?>" height="<?= $sy8 ?>" rowspan="3"></td>
+				    <td width="<?= $sx2 ?>" height="<?= $sy2 ?>" colspan="2" rowspan="2" align="center">
+					    <table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
+						    <tr>
+							    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
+						    </tr>
+						</table></td>
+				    <td width="6"           height="9"           background="<?= $box_tr ?>"></td>
+				    <td width="<?= $x2  ?>" height="<?= $sy8 ?>" rowspan="3"></td>
+				  </tr>
+				  <tr> 
+				    <td width="6"           height="<?= $syL ?>" background="<?= $line_r ?>"></td>
+				  </tr>
+				  <tr> 
+				    <td width="9"           height="6" background="<?= $box_bl ?>"></td>
+				    <td width="<?= $sxL ?>" height="6" background="<?= $line_b ?>"></td>
+				    <td width="6"           height="6" background="<?= $box_br ?>"></td>
+				  </tr>
+				  <tr> 
+				    <td width="<?= $x2  ?>" height="<?= $y2  ?>"></td>
+				    <td width="<?= $sx8 ?>" height="<?= $y2  ?>" colspan="3"></td>
+				    <td width="<?= $x2  ?>" height="<?= $y2  ?>"></td>
+				  </tr>
+				</table>
+				<?php
+
+			}
  	   }
 
 		echo "</td></tr>\n";
 		echo "<tr><td>$title</td></tr>\n";
+		echo "<tr><td><center>$desc</center></td></tr>\n";
 		echo "</table>";
+	
 
 		$i++;
 		if ($i >= $n)
@@ -367,6 +437,7 @@ function rig_display_image_list()
 	global $pref_nb_col;
 	global $list_images;
 	global $current_album;
+	global $list_description;				// RM 20030713
 	global $pref_preview_size;
 
 	$i = 0;
@@ -415,9 +486,17 @@ function rig_display_image_list()
 
 		$link = rig_self_url($file);
 		$title = "<center><a href=\"$link\">$pretty1</a></center>";
-		
+
+
+		// prepare description, if any
+		if (is_string($list_description[$file]))
+			$desc = $list_description[$file];
+		else
+			$desc = "";
+
+		// add a vertical space for the last line
 		if (!$is_last_line)
-			$title .= "<br>";
+			$desc .= "<br>";
 
 		$square_size = $pref_preview_size + 8;
 
@@ -435,6 +514,9 @@ function rig_display_image_list()
 					</td></tr>
 					<tr>
 						<td><?= $title ?></td>
+					</tr>
+					<tr>
+						<td><center><?= $desc ?></center></td>
 					</tr>
 				</table>
 		<?php
@@ -515,6 +597,9 @@ function rig_display_image()
 	global $pref_image_size;
 	global $pref_image_quality;
 
+	global $_test_;
+	if (isset($_test_)) echo "Test type: $_test_<br>";
+
 	if ($rig_img_size != -2 && $rig_img_size < 1)
 		$rig_img_size = $pref_image_size;
 
@@ -571,12 +656,14 @@ function rig_display_image()
 
 		$subtype = substr($type, 6);
 
-global $_test_;
-var_dump($subtype);
-var_dump($_test_);
+
 
 		if ($subtype == "avi")
 		{
+			// ----------------------------------------
+			// -------------- AVI ---------------------
+			// ----------------------------------------
+
 			// Link
 			// Windows Media Player <object>
 			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/addwmwebpage.asp?frame=true&hidetoc=true
@@ -595,26 +682,38 @@ var_dump($_test_);
 			//		Windows Media Player 9 Series 6BF52A52-394A-11d3-B153-00C04F79FAA6
 			// http://home.maconstate.edu/dadams/Tutorials/AV/AV03/av03-03.htm
 
-	if ($_test_==4)
-	{
-		?>
-	
-		<object data="<?= $full ?>" type="video/x-msvideo" />
-	
-		<?
-	}
-	else if ($_test_==3)
-	{
-		?>
-			<embed
-				src="<?= $full ?>"
-				width="<?= $sx ?>" height="<?= $sy ?>"
-			>
-			</embed>
-		<?
-	}
-	else
-	{		?>
+		if ($_test_==4)
+		{
+			// Win32 Moz 1.4: doesn't work
+			// Win32 IE6: unsafe ActiveX, won't play
+			?>
+		
+			<object data="<?= $full ?>" type="video/x-msvideo" />
+		
+			<?
+		}
+		else if ($_test_==3)
+		{
+			// Win32  Moz 1.4: WMV7 displays but doesn't play
+			// Win32  IE6: WMV9 shows with bad aspect ratio, plays.
+			// MacOSX Safari: yes if WMV 7.1/MacOS X installed before
+			
+			?>
+				<embed
+					type="application/x-msvideo"
+					src="<?= $full ?>"
+					width="<?= $sx ?>" height="<?= $sy ?>"
+				>
+				</embed>
+			<?
+		}
+		else
+		{
+			// Win32  Moz 1.4: WMV7 displays but doesn't play
+			// Win32  IE6: WMV9 shows, plays (using lack of image size, otherwise bad aspect ratio).
+			// MacOSX Safari: no pluging, and MS download page invalid
+
+				?>
 				<object 
 					classid="CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6"
 					codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112"
@@ -653,10 +752,13 @@ var_dump($_test_);
 					<a href="http://www.microsoft.com/windows/windowsmedia/download/">Windows Media</a>
 				</font>
 			<?
-	}
+			}
 		}
 		else if ($subtype == "mpeg")
 		{
+			// ----------------------------------------
+			// -------------- MPEG --------------------
+			// ----------------------------------------
 	
 			if ($_test_==4)
 			{
@@ -679,18 +781,23 @@ var_dump($_test_);
 		}
 		else if ($subtype == "quicktime")
 		{
-		
-			// url-encode filename
-			// $preview = rig_encode_url_link($preview);
+			// ----------------------------------------
+			// -------------- QuickTime ---------------
 	
-	
-			// QuickTime EMBED attributed are described here:
+			// ----------------------------------------
+
+			// QuickTime EMBED attributes are described here:
 			// http://www.apple.com/quicktime/authoring/embed2.html
 			//
 			// QuickTime OBJECT tag:
 			// http://www.apple.com/quicktime/tools_tips/tutorials/activex.html
-	
-			$sy2 = $sy+16;	// for QT, add 16 to the height to see the controls
+
+			// for QT, add 16 to the height to see the controls (cf doc above)
+			$sy2 = $sy+16;
+
+			
+
+
 	
 			/*
 				The following EMBED attributes are supposedly supported but break the QT player
@@ -1283,6 +1390,295 @@ function rig_display_footer()
 	//     phpinfo(INFO_VARIABLES);
     //     phpinfo(INFO_ENVIRONMENT);
     // }
+    
+    // RM 20030713 javascript page debug
+    if ($_debug_)
+    {
+?>
+
+</center>
+<b>Navigator Object Data</b>
+<br>
+<tt><script LANGUAGE="JavaScript">
+<!--
+
+document.write("navigator.appCodeName: " + navigator.appCodeName + "<BR>");
+document.write('<A HREF="http://www.webreference.com/js/column6/"><code>navigator.appName<\/code><\/A>: ' + navigator.appName + "<BR>");
+document.write('<A HREF="http://www.webreference.com/js/column6/"><code>navigator.appVersion<\/code><\/A>: ' + navigator.appVersion + "<BR>");
+document.write("navigator.userAgent: " + navigator.userAgent + "<BR>");
+
+document.write("navigator.platform: " + navigator.platform + "<BR>");
+document.write("navigator.javaEnabled(): " + is_java + "<BR>");
+//-->
+</script>
+
+</tt>
+
+<p>
+<b>Version Number</b>
+<br><tt><script LANGUAGE="JavaScript">
+<!--
+        if (is_opera) {
+           document.write("<TT>***Version numbers here are only valid</TT><BR>");
+           document.write("<TT>***if Opera is set to identify itself as Opera</TT><BR>");
+           document.write("<TT>***use is_opera vars instead</TT><BR>");
+        }
+	document.write("<TT>major version number: " + is_major + "</TT><BR>");
+	document.write("<TT>major/minor version number: " + is_minor + "</TT><BR>");
+//--></script>
+</tt>
+<p>
+
+<b>Browser Version</b>
+<br>
+<tt><script LANGUAGE="JavaScript">
+<!--
+	document.write("nav:" + is_nav + "<BR>");
+	document.write("nav2:" + is_nav2 + "<BR>");
+	document.write("nav3:" + is_nav3 + "<BR>");
+	document.write("nav4:" + is_nav4 + "<BR>");
+	document.write("nav4up:" + is_nav4up + "<BR>");
+	document.write("nav5:" + is_nav5 + "<BR>");
+	document.write("nav5up:" + is_nav5up + "<BR>");
+	document.write("nav6:" + is_nav6 + "<BR>");
+	document.write("nav6up:" + is_nav6up + "<BR>"); // 001121 new - abk
+	document.write("nav7:" + is_nav7 + "<BR>"); 
+	document.write("nav7up:" + is_nav7up + "<BR>");
+//	document.write("navonly:" + is_navonly + "<BR>");
+// is false in ns6?
+	document.write("<P>ie:" + is_ie + "<BR>");
+	document.write("ie3:" + is_ie3 + "<BR>");
+	document.write("ie4:" + is_ie4 + "<BR>");
+	document.write("ie4up:" + is_ie4up + "<BR>");
+	document.write("ie5:" + is_ie5 + "<BR>");
+	document.write("ie5up:" + is_ie5up + "<BR>");
+ 	document.write("ie5_5:" + is_ie5_5 + "<BR>");
+    	document.write("ie5_5up:" + is_ie5_5up + "<BR>");
+	document.write("ie6:" + is_ie6 + "<BR>");
+	document.write("ie6up:" + is_ie6up + "<BR>");
+
+	document.write("<P>aol:" + is_aol + "<BR>");
+	document.write("aol3:" + is_aol3 + "<BR>");
+	document.write("aol4:" + is_aol4 + "<BR>");
+	document.write("aol5:" + is_aol5 + "<BR>");
+	document.write("aol6:" + is_aol6 + "<BR>");
+	document.write("aol7:" + is_aol7 + "<BR>"); // 020214 - dmr
+        document.write("aol8:" + is_aol8 + "<BR>");
+	
+	document.write("<P>opera:" + is_opera + "<BR>");
+	document.write("opera2:" + is_opera2 + "<BR>");
+	document.write("opera3:" + is_opera3 + "<BR>");
+	document.write("opera4:" + is_opera4 + "<BR>");
+	document.write("opera5:" + is_opera5 + "<BR>");
+	document.write("opera5up:" + is_opera5up + "<BR>");
+	document.write("opera6:" + is_opera6 + "<BR>");
+	document.write("opera6up:" + is_opera6up + "<BR>");
+	document.write("opera7:" + is_opera7 + "<BR>");
+	document.write("opera7up:" + is_opera7up + "<BR>");
+
+        document.write("<P>safari:" + is_safari + "<BR>");
+
+        document.write("<P>konqueror:" + is_konq + "<BR>");
+
+        document.write("<P>Gecko based: " + is_gecko + "<BR>");
+        if (is_gecko) {
+           document.write("Gecko build: " + is_gver + "<BR>");
+        }
+
+	document.write("<P>mozilla (guessing): " + is_moz + "<BR>");
+	if (is_moz) {
+           document.write("mozilla version (guessing): " + is_moz_ver + "<BR>");
+	}
+
+	document.write("<P>" + "webtv:" + is_webtv + "<BR>");
+	document.write("<P>" + "hotjava:" + is_hotjava + "<BR>");
+	document.write("hotjava3:" + is_hotjava3 + "<BR>");
+	document.write("hotjava3up:" + is_hotjava3up + "<BR>");
+	document.write("<P>" + "AOL TV(TVNavigator):" + is_TVNavigator + "<BR>");
+//-->
+</script>
+</tt>
+<p>
+<b>JavaScript Version</b>
+<br><tt>
+<script LANGUAGE="JavaScript">
+<!--
+        if (is_opera) {
+           if (is_opera7up) {
+              document.write("js:" + is_js + " <a href='http://www.opera.com/docs/specs/opera07/#ecmascript'>Opera compatibility statement</a>");
+           } else {
+              document.write("js:" + is_js + " <a href='http://www.opera.com/docs/specs/#ecmascript'>(but see Opera's compatibility statements)</a>");
+           }
+        } else {
+           document.write("js:" + is_js + "<BR>");
+        }
+//-->
+</script>
+
+<script LANGUAGE=JScript>
+<!--
+// 020131 included is_ie check to filter opera which doesn't recognize
+// ScriptEngine() and spawns an error - dragle
+if((document.all) && (is_ie)) {
+	document.write("<P>IE 4/5/6 Script Engines Installed: " + ScriptEngine() + "<BR>");
+	document.write("Version: " + ScriptEngineMajorVersion() + "." + ScriptEngineMinorVersion() + "." + ScriptEngineBuildVersion() + "<BR>");
+}
+//-->
+</SCRIPT>
+</tt>
+
+<p>
+<b>OS</b>
+<br>
+<tt><script LANGUAGE="JavaScript">
+<!--
+	document.write("win:" + is_win + "<BR>");
+//	document.write("win16:" + is_win16 + "<BR>");
+//	document.write("win31:" + is_win31 + "<BR>");
+//	document.write("win32:" + is_win32 + "<BR>");
+//	document.write("win95:" + is_win95 + "<BR>");
+//	document.write("win98:" + is_win98 + "<BR>");
+	//	document.write("winme:" + is_winme + "<BR>");
+//	document.write("winnt:" + is_winnt + "<BR>");
+	//	document.write("win2k:" + is_win2k + "<BR>");
+//      document.write("winxp:" + is_winxp + "<BR>");
+
+	document.write("os2:" + is_os2 + "<BR>");
+
+	document.write("mac:" + is_mac + "<BR>");
+//	document.write("mac68k:" + is_mac68k + "<BR>");
+//	document.write("macppc:" + is_macppc + "<BR>");
+
+	document.write("unix:" + is_unix + "<BR>");
+	document.write("sun:" + is_sun + "<BR>");
+//	document.write("sun4:" + is_sun4 + "<BR>");
+//	document.write("sun5:" + is_sun5 + "<BR>");
+//	document.write("suni86:" + is_suni86 + "<BR>");
+	document.write("irix:" + is_irix + "<BR>");
+//	document.write("irix5:" + is_irix5 + "<BR>");
+//	document.write("irix6:" + is_irix6 + "<BR>");
+	document.write("hpux:" + is_hpux + "<BR>");
+//	document.write("hpux9:" + is_hpux9 + "<BR>");
+//	document.write("hpux10:" + is_hpux10 + "<BR>");
+	document.write("aix:" + is_aix + "<BR>");
+//	document.write("aix1:" + is_aix1 + "<BR>");
+//	document.write("aix2:" + is_aix2 + "<BR>");
+//	document.write("aix3:" + is_aix3 + "<BR>");
+//	document.write("aix4:" + is_aix4 + "<BR>");
+	document.write("linux:" + is_linux + "<BR>");
+	document.write("sco:" + is_sco + "<BR>");
+	document.write("unixware:" + is_unixware + "<BR>");
+	document.write("mpras:" + is_mpras + "<BR>");
+	document.write("reliant:" + is_reliant + "<BR>");
+	document.write("dec:" + is_dec + "<BR>");
+	document.write("sinix:" + is_sinix + "<BR>");
+	document.write("bsd:" + is_bsd + "<BR>");
+	document.write("freebsd:" + is_freebsd + "<BR>");
+
+	document.write("vms:" + is_vms + "<BR>");
+//-->
+</script>
+</tt>
+
+<p>
+<b>Object Detection Tests</b>
+<br>
+<tt><script LANGUAGE="JavaScript">
+<!--
+	document.write('<A HREF="/dhtml/diner/browsvars/">document.all<\/A>: ' + is_all + "<BR>");
+	document.write('document.anchors: ' + is_anchors + "<BR>");
+	document.write('<A HREF="http://webreference.com/js/column8/">document.cookie<\/A>: ' + is_cookie + "<BR>");
+	document.write('<a href="http://www.webreference.com/programming/javascript/beginning/chap6/1/2.html">document.forms</a>: ' + is_forms + "<BR>");
+	document.write('<A HREF="http://www.webreference.com/programming/javascript/domscripting/1/">document.getElementById</A>: ' + is_getElementById + "*<BR>"); // new 001121 abk for ns6+
+	document.write('<A HREF="http://www.webreference.com/programming/javascript/domscripting/1/3.html">document.getElementsByTagName</A>: ' + is_getElementsByTagName + "<BR>");
+	document.write('<A HREF="http://www.webreference.com/js/column75/3.html">document.documentElement</A>: ' + is_documentElement + "<BR>");
+
+	document.write('<A HREF="http://webreference.com/dhtml/column1/">document<\/A>.<A HREF="http://www.webreference.com/js/column1/">images<\/A>: ' + is_images + "<BR>");
+document.write('<A HREF="/dhtml/diner/browsvars/">document.layers<\/A>: ' + is_layers + " - NS6 gives false here**" + "<BR>");
+// ' + is_layers + "<BR>");
+	document.write('<A HREF="http://www.webreference.com/js/column16/byurl.html">document.links</A>: ' + is_links + "<BR><BR>");
+	document.write('<A HREF="http://webreference.com/js/column36/">window.frames<\/A>: ' + is_frames + "<BR>");
+	document.write('window.length: ' + window.length +"<BR>");
+
+//-->
+</script>
+</tt>
+
+<p>
+
+<b>Method Detection Tests</b>
+<br>
+<tt><script LANGUAGE="JavaScript">
+<!--
+	document.write('<A HREF="http://www.webreference.com/js/column5/">window.RegExp<\/A>: ' + is_regexp + "<BR>");
+	document.write('<A HREF="/dev/menus/">window.Option<\/A>: ' + is_option + "<BR>");
+
+//-->
+</script>
+
+</tt>
+
+<p>
+<b>Screen Properties</b>
+<br>
+<tt><script LANGUAGE="JavaScript">
+<!--
+	document.write('<A HREF="http://webreference.com/js/column17/">window.screen</A>: ' + is_screen + "<BR>");
+if (window.screen) {
+	document.write('screen.height: ' + screen.height + "<BR>");
+	document.write('screen.width: ' + screen.width + "<BR>");
+	document.write('screen.availHeight: ' + screen.availHeight + "<BR>");
+	document.write('screen.availWidth: ' + screen.availWidth + "<BR>");
+	document.write('screen.colorDepth: ' + screen.colorDepth + "<BR>");
+}
+//-->
+</script>
+
+
+<script LANGUAGE=JScript>
+<!--
+if (window.screen) {
+	document.write("fontSmoothingEnabled: " + screen.fontSmoothingEnabled + "<BR>");
+}
+//-->
+
+</SCRIPT>
+</tt>
+
+<p>
+<b>Document Properties</b>
+<br>
+<tt><script LANGUAGE="JavaScript">
+<!--
+//	document.write('document.lastModified: ' + document.lastModified + "<BR>"); // gecko bug?
+//	document.write('"Not Your Business!": ' + "Not Your Business!" + "<BR>");
+	document.write('document.URL: ' + document.URL + "<BR>");
+//-->
+</script>
+
+</tt>
+
+<p>
+<b>Flash Detection</b>
+<br>
+<tt><script LANGUAGE="JavaScript">
+<!--
+	document.write('Flash Player Present: ');
+        if (is_Flash) {
+           document.write("true<BR>");
+           document.write("Player Version: " + is_FlashVersion);
+        } else {
+           document.write("Can't Tell");
+        }
+//-->
+
+</script>
+</tt>
+
+<center>
+<?php
+
+    }
 }
 
 //-----------------------------------------------------------------------
@@ -1290,9 +1686,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.19  2003/07/14 18:32:23  ralfoide
+//	New album frame table, support for descriptions, javascript testing
+//
 //	Revision 1.18  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
-//
+//	
 //	Revision 1.17  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
 //	

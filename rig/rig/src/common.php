@@ -3339,7 +3339,7 @@ function rig_begin_buffering()
 
 		// if cache is no longer valid, remove existing cache file
 		if (!$is_valid)
-			unlink($abs_html);
+			@unlink($abs_html);
 	}
 
 	if ($is_valid)
@@ -3569,9 +3569,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.48  2004/12/25 07:44:19  ralfoide
+//	Update
+//
 //	Revision 1.47  2004/08/12 21:52:41  ralfoide
 //	Fix to remove all unfriendly characters even if not at beginning
-//
+//	
 //	Revision 1.46  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

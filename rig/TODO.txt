@@ -211,6 +211,7 @@ Admin:
 
 [0.6.5]
 
+20041224 [1.F] Fix: Added missing COPYING.txt for GPL license. Updated LICENSE.txt accordingly.
 20041005 [1.F] Fix: Encode/decode item name in admin URLs
 20040717 [1.F] License: Added GPL headers in source files.
 20040715 [1.F] Fix: Remove temporary HTML cache if PHP processing aborted before completion
@@ -719,9 +720,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.58  2004/12/25 07:44:19  ralfoide
+//	Update
+//
 //	Revision 1.57  2004/10/07 01:18:29  ralfoide
 //	Fix
-//
+//	
 //	Revision 1.56  2004/07/17 07:52:29  ralfoide
 //	GPL headers
 //	

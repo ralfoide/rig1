@@ -3,7 +3,8 @@
 
 # -----------------------------
 
-OFILES = $(wildcard *.o) $(wildcard *.exe)
+OFILES = $(wildcard *.o)
+EFILES = $(wildcard *.exe)
 
 # -----------------------------
 
@@ -29,11 +30,25 @@ with-video:
 clean:
 	rm -fv $(OFILES)
 	make -f makefile-libjpeg clean
+	@echo
+	@echo "**** IMPORTANT: To remove $(EFILES) too, use 'make clean-all' *****"
+	@echo
+
+clean-all: clean
+	rm -fv $(EFILES)
+
+super-clean: clean-all
+
+extra-clean: clean-all
+
 
 # -----------------------------
 
 #
 # $Log$
+# Revision 1.5  2003/11/09 20:53:30  ralfoide
+# Added clean-all target to remove exe too
+#
 # Revision 1.4  2003/08/16 22:04:02  ralfoide
 # Always compile its own libjpeg.
 #

@@ -7,6 +7,26 @@
 // $Id$
 //**********************************************
 
+
+// --- Detect different kind of devices depending on the current referer ---
+// RM 20040711 Support for palm sized screens (Experimental)
+// RM 20040711 TBDL move somewhere else, this is not to be in prefs.php
+
+if (preg_match("/; ([1-9][0-9]+)x([0-9]{2,})\)$/", rig_get($_SERVER, 'HTTP_USER_AGENT', ''), $match) == 1)
+{
+	$rig_referer_sx = (int)$match[1];
+	$rig_referer_sy = (int)$match[2];
+	$rig_is_small_screen = is_int($rig_referer_sx) && $rig_referer_sx > 0 && $rig_referer_sx < 640
+						&& is_int($rig_referer_sy) && $rig_referer_sy > 0 && $rig_referer_sy < 480;
+}
+else
+{
+	$rig_referer_sx = 0;
+	$rig_referer_sy = 0;
+	$rig_is_small_screen = FALSE;
+}
+
+
 // --- system-dependent prefs ---
 
 /***********************************************************
@@ -498,12 +518,14 @@ $pref_album_with_description_layout = 'vert';
  *	Default:		5
  *	
  *	Selects the number of album per row in grid layout.
- 
  *
  ***********************************************************/
 
 $pref_album_nb_col		= 5;
 
+// RM 20040711 Support for palm sized screens (Experimental)
+if ($rig_is_small_screen)
+	$pref_album_nb_col = min(1, $rig_referer_sx / $pref_preview_size);
 
 
 /***********************************************************
@@ -518,6 +540,9 @@ $pref_album_nb_col		= 5;
 
 $pref_image_nb_col		= 5;
 
+// RM 20040711 Support for palm sized screens (Experimental)
+if ($rig_is_small_screen)
+	$pref_image_nb_col = min(1, $rig_referer_sx / $pref_preview_size);
 
 
 /***********************************************************
@@ -616,6 +641,10 @@ $pref_enable_image_border	= TRUE;
  ***********************************************************/
 
 $pref_enable_descriptions = TRUE;
+
+// RM 20040711 Support for palm sized screens (Experimental)
+if ($rig_is_small_screen)
+	$pref_enable_descriptions = FALSE;
 
 
 /***********************************************************
@@ -801,9 +830,12 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.23  2004/07/14 06:08:16  ralfoide
+//	Experimental small pda screen support
+//
 //	Revision 1.22  2004/07/09 05:48:47  ralfoide
 //	Bumped default script timeout to 20s
-//
+//	
 //	Revision 1.21  2004/02/18 07:37:01  ralfoide
 //	Allow viewing hidden images by direct access
 //	

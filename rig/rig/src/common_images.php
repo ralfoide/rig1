@@ -21,12 +21,15 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 	global $pref_preview_timeout;
 	global $pref_preview_quality;
 	global $pref_global_gamma;
+	global $php_errormsg;			// RM 20040709 removes php_errormsg undeclared in PHP 4.3.7
 
 	// inform PHP this may take a while...
 	if ($pref_preview_timeout)
 		set_time_limit($pref_preview_timeout);
 
-	$args = "-r " . rig_shell_filename($abs_source) . " " . rig_shell_filename($abs_dest) . " $size";
+	$args = "-r " . rig_shell_filename($abs_source)
+		    . " " . rig_shell_filename($abs_dest)
+		    . " $size";
 
 	// add quality argument
 	if ($quality > 0)
@@ -357,10 +360,10 @@ function rig_image_info($abs_file)
 			// --- use the thumbnail application to extract info ---
 	
 			$args = "-i " . rig_shell_filename($abs_file) . "";
-	
+
 			// get the info now
 			$res = exec($abs_preview_exec . " " . $args, $output, $retvar);
-	
+
 			if ($retvar == 127)
 			{
 				rig_html_error("Get Image Information",
@@ -475,17 +478,17 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 	global $dir_image_cache;
 	global $current_real_album;			// RM 20030907
 
-// DEBUG
-/*
-echo "<br><b>Current (real) album:</b> $album -- $current_real_album\n";
-echo "<br><b>dir_abs_album:</b> $dir_abs_album\n";
-echo "<br><b>dir_images:</b> $dir_images\n";
-echo "<br><b>abs_path:</b> $abs_path\n";
-echo "<br><b>url_path:</b> $url_path\n";
-echo "<br><b>use_default:</b> $use_default\n";
-$check_icon_properties=TRUE;
-echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
-*/
+	// DEBUG
+	/*
+	echo "<br><b>Current (real) album:</b> $album -- $current_real_album\n";
+	echo "<br><b>dir_abs_album:</b> $dir_abs_album\n";
+	echo "<br><b>dir_images:</b> $dir_images\n";
+	echo "<br><b>abs_path:</b> $abs_path\n";
+	echo "<br><b>url_path:</b> $url_path\n";
+	echo "<br><b>use_default:</b> $use_default\n";
+	$check_icon_properties=TRUE;
+	echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
+	*/
 
 	// the root album does not have any preview [RM 20030728]
 	if ($album != '')
@@ -496,10 +499,10 @@ echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
 		$create_icon = FALSE;
 	
 		// the target file this is all about
-		$dest_file = rig_prep_sep($album) . rig_prep_sep(ALBUM_ICON);
+		$dest_file = rig_post_sep($album) . ALBUM_ICON;
 	
-		$abs_path = $abs_image_cache_path . $dest_file;
-		$url_path = $dir_image_cache  . $dest_file;
+		$abs_path = rig_post_sep($abs_image_cache_path) . $dest_file;
+		$url_path = rig_post_sep($dir_image_cache)  . $dest_file;
 	
 		// -1- perform various checks
 	
@@ -617,7 +620,7 @@ echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
 	
 			if (is_array($list_album_icon) && is_string($list_album_icon['f']))
 			{
-				$info = rig_build_preview_ex($album . rig_prep_sep($list_album_icon['a']),
+				$info = rig_build_preview_ex(rig_post_sep($album) . $list_album_icon['a'],
 											 $list_album_icon['f'],
 											 $size, $quality);
 				$abs_path = rig_post_sep($info['a']) . $info['p'];
@@ -828,9 +831,12 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.19  2004/07/14 06:19:13  ralfoide
+//	Minor fixes for Win32/PHP 4.3.7 support
+//
 //	Revision 1.18  2004/07/09 05:52:06  ralfoide
 //	Handling of timeout in thumbnail creation
-//
+//	
 //	Revision 1.17  2004/06/03 14:14:47  ralfoide
 //	Fixes to support PHP 4.3.6
 //	

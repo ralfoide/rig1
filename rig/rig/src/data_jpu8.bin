@@ -45,10 +45,10 @@ $html_language
 English
 
 @$html_desc_lang fr
-Fran�ais
+Fran&ccedil;ais
 
 @$html_desc_lang sp
-Espa�ol
+Espa&ntilde;ol
 
 @$html_desc_lang jp
 日本語
@@ -59,22 +59,18 @@ Espa�ol
 
 $html_theme
 ページの色:
-// 色の主題:
 // Color Theme:
 
 @$html_desc_theme gray
 グレー
-// 灰色 
 // Gray
 
 @$html_desc_theme blue
 青
-// 青い 
 // Blue
 
 @$html_desc_theme sand
 茶色
-// 砂 
 // Sand
 
 @$html_desc_theme khaki
@@ -83,12 +79,10 @@ $html_theme
 
 @$html_desc_theme egg
 黄色
-// 卵 
 // Egg
 
 @$html_desc_theme none
 無色
-// どれも 
 // None
 
 
@@ -102,7 +96,7 @@ $html_current_album
 // Current Album
 
 $html_albums
-閲覧できるアルバム
+アルバム一覧
 // Available Albums
 
 $html_images
@@ -115,7 +109,6 @@ $html_options
 
 $html_generated
 <i>[date]</i>- <i>[rig-version]</i>にて作成: 所要時間[time]秒
-//発生させる [time] 秒 - <i>[date]</i> によって <i>[rig-version]</i>
 
 $html_admin_intrfce
 管理画面
@@ -139,31 +132,31 @@ $html_actions
 
 $html_act_create
 作　成: 
-// [1]Create All: [RM 20030526 new]
+// Create All: [RM 20030526 new]
 
 $html_act_delete
 削　除: 
-// [2]Delete All: [RM 20030526 new]
+// Delete All: [RM 20030526 new]
 
 $html_act_previews
 全てのプレビュー
-// [3]Previews [RM 20030526 new]
+// Previews [RM 20030526 new]
 
 $html_act_images
 全ての画像
-// [4]Images [RM 20030526 new]
+// Images [RM 20030526 new]
 
 $html_act_prev_img
 全てのプレビューと画像
-// [5]Previews &amp; Images [RM 20030526 new]
+// Previews &amp; Images [RM 20030526 new]
 
 $html_act_rnd_prev
 このアルバムのアイコンをランダムに変更
-// [6]Change Album Random Icon [RM 20030526 renamed]
+// Change Album Random Icon [RM 20030526 renamed]
 
 $html_act_canon
 キャノン製カメラのデフォルトファイル名をつけ変える
-// [7]Rename Canon 100-1234_img.jpg files [RM 20030526 renamed]
+// Rename Canon 100-1234_img.jpg files [RM 20030526 renamed]
 
 $html_use_as_icon
 アルバムアイコンとして使用
@@ -253,6 +246,10 @@ $html_welcome
 ようこそ、<b>[name]</b>さん! ([change-link])
 // Welcome <b>[name]</b>! ([change-link])
 
+$html_welcome_guest
+ようこそ ! ([change-link])
+// Welcome! ([change-link])
+
 $html_chg_user
 ユーザー変更
 // change user
@@ -262,6 +259,7 @@ $html_guest_login
 // 'Guest' Mode
 
 
+// --------------------
 // RM 20030119 - v0.6.3
 
 $html_album_copyrt
@@ -280,6 +278,25 @@ $html_image_count
 [count] 枚の画像
 // [count] images
 
+// ----------------------
+// RM 20040222 - v0.6.4.5
+
+$html_video_codec_detail
+フォーマットのビデオ: <i>[codec_name]</i>
+// Video format: <i>[codec_name]</i>
+
+$html_video_install_named_player
+[&nbsp;<a href="[url]">[name]をインストールする</a>&nbsp;] 
+// [&nbsp;<a href=\"[url]\">Install&nbsp;[name]</a>&nbsp;] (<- extra space at the end)
+
+$html_video_install_unnamed_player
+[&nbsp;<a href="[url]">プレーヤーをインストールする</a>&nbsp;]
+// [&nbsp;<a href=\"[url]\">Install&nbsp;the&nbsp;player</a>&nbsp;]
+
+$html_video_download
+[&nbsp;<a title="ダウンロードして 展示する" href="[url]">ダウンロードする</a>&nbsp;]
+// [&nbsp;<a title=\"Download video and play on your computer\" href=\"[url]\">Download</a>&nbsp;]
+
 
 // Script Content
 //---------------
@@ -296,14 +313,14 @@ $html_admin
 // Admin
 
 $html_none
-スタート
+ホーム
 // Start
 
 
 // Current Album
 
 $html_root
-スタート
+ホーム
 // Start
 
 // Images

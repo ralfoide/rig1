@@ -17,12 +17,16 @@ function rig_display_video($type)
 {
 	global $dir_album;
 	global $abs_album_path;
-	global $current_real_album;		// RM 20030907
+	global $current_real_album;					// RM 20030907
 	global $current_image;
 	global $pretty_image;
 	global $rig_img_size;
 	global $pref_image_size;
 	global $pref_image_quality;
+	global $html_video_codec_detail;			// RM 20040222
+	global $html_video_install_named_player;	// RM 20040222
+	global $html_video_install_unnamed_player;	// RM 20040222
+	global $html_video_download;				// RM 20040226
 
 
 	global $_test_;
@@ -78,9 +82,8 @@ function rig_display_video($type)
 				$codec_name = $codec_info;
 			}
 
-			// RM 20031110 TBT To Be Translated
-			$codec_detail = "Video format: <i>$codec_name</i>";
-			
+			$codec_detail = str_replace('[codec_name]', $codec_name, $html_video_codec_detail); // RM 20040222 translated
+
 			if ($codec_url != NULL && is_array($codec_url))
 			{
 				foreach($codec_url as $name => $url)
@@ -97,16 +100,24 @@ function rig_display_video($type)
 					else
 					{
 						// display links
+						// // RM 20040222 translated strings
 
 						if (is_string($name) && preg_match("/\(([^\)]*)\)(.*)/", $name, $matches) == 1)
-							// RM 20031124 TBT To Be Translated
-							$codec_install .= rig_video_javascript_testline($matches[1], "[&nbsp;<a href=\"$url\">Install&nbsp;" . $matches[2] . "</a>&nbsp;] ");
+						{
+							$t = str_replace('[url]',  $url,        $html_video_install_named_player);
+							$t = str_replace('[name]', $matches[2], $t);
+							$codec_install .= rig_video_javascript_testline($matches[1], $t);
+						}
 						else if (is_string($name))
-							// RM 20031124 TBT To Be Translated
-							$codec_install .= "[&nbsp;<a href=\"$url\">Install&nbsp;$name</a>&nbsp;] ";
+						{
+							$t = str_replace('[url]',  $url,  $html_video_install_named_player);
+							$t = str_replace('[name]', $name, $t);
+							$codec_install .= $t;
+						}
 						else
-							// RM 20031124 TBT To Be Translated
-							$codec_install .= "[&nbsp;<a href=\"$url\">Install&nbsp;the&nbsp;player</a>&nbsp;]";
+						{
+							$codec_install .= str_replace('[url]', $url, $html_video_install_unnamed_player);
+						}
 					}
 				}
 			}
@@ -304,13 +315,16 @@ function rig_display_video($type)
 		// --- Display links & info below the player ---
 		// ---------------------------------------------
 
+		$video_link = str_replace('[url]', $full, $html_video_download);
+
 		?>
 			<p>
 			<font size="-1">
 			<?= $codec_detail ?>
 			<br>
 			<?= $codec_install ?>
-			[&nbsp;<a href="<?= $full ?>">External&nbsp;display</a>&nbsp;]
+
+			<?= $video_link ?>
 			</font>
 		<?php
 
@@ -632,9 +646,12 @@ function rig_video_javascript_testline($test, $line)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2004/02/27 08:49:42  ralfoide
+//	Translation for video strings
+//
 //	Revision 1.3  2003/11/29 22:44:23  ralfoide
 //	Fixed line endings (some lines in dos mode converted to unix mode)
-//
+//	
 //	Revision 1.2  2003/11/29 22:35:42  ralfoide
 //	Video: JavaScript browser & OS detection, customize install codec links, etc.
 //	Tested against Win/IE6, Win/Mozilla 1.4, Linux/Mozilla, Linux/Konqueror, MacOS X/Safari (Panther)

@@ -109,14 +109,21 @@ $html_remember		= 'Remember me';
 $html_username		= 'Username';
 $html_password		= 'Password';
 $html_welcome		= 'Welcome <b>[name]</b>! ([change-link])';
+$html_welcome_guest	= 'Welcome! ([change-link])';				// RM 20040222 0.6.4.5
 $html_chg_user		= 'change user';
 $html_guest_login	= '\'Guest\' Mode';
 
 // RM 20030119 - v0.6.3
-$html_album_copyrt	= 'All images &copy; [year] [name]';	// [name] will become $pref_copyright_name
-$html_image_copyrt	= 'Image &copy; [year] [name]';		    // [name] will become $pref_copyright_name
+$html_album_copyrt	= 'All images &copy; [year] [name]';		// [name] will become $pref_copyright_name
+$html_image_copyrt	= 'Image &copy; [year] [name]';		   		// [name] will become $pref_copyright_name
 $html_album_count	= '[count] albums';
 $html_image_count	= '[count] images';
+
+// RM 20040222 - v0.6.4.5
+$html_video_codec_detail			= "Video format: <i>[codec_name]</i>";
+$html_video_install_named_player	= "[&nbsp;<a href=\"[url]\">Install&nbsp;[name]</a>&nbsp;] ";
+$html_video_install_unnamed_player	= "[&nbsp;<a href=\"[url]\">Install&nbsp;the&nbsp;player</a>&nbsp;]";
+$html_video_download				= "[&nbsp;<a title=\"Download video and play on your computer\" href=\"[url]\">Download</a>&nbsp;]";
 
 
 // Script Content
@@ -168,6 +175,9 @@ $html_album_date	= '%B %Y';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.16  2004/02/27 08:49:42  ralfoide
+//	Translation for video strings
+//
 //	Revision 1.15  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)
@@ -175,7 +185,7 @@ $html_album_date	= '%B %Y';
 //	Fix: Changed credit line
 //	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
 //	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//
+//	
 //	Revision 1.14  2003/07/23 01:19:13  ralfoide
 //	Language: strings for tooltip details
 //	

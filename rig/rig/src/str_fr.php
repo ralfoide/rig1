@@ -108,6 +108,7 @@ $html_remember		= 'M&eacute;moriser';
 $html_username		= 'Utilisateur';
 $html_password		= 'Mot de passe';
 $html_welcome		= 'Bienvenue <b>[name]</b> ! ([change-link])';
+$html_welcome_guest	= 'Bienvenue! ([change-link])';	// RM 20040222 0.6.4.5
 $html_chg_user		= 'changer d\'utilisateur';
 $html_guest_login	= 'Mode \'invit&eacute;\'';
 
@@ -116,6 +117,13 @@ $html_album_copyrt	= 'Images &copy; [year] [name]';
 $html_image_copyrt	= 'Image &copy; [year] [name]';
 $html_album_count	= '[count] albums';
 $html_image_count	= '[count] images';
+
+// RM 20040222 - v0.6.4.5
+$html_video_codec_detail			= "Format du film: <i>[codec_name]</i>";
+$html_video_install_named_player	= "[&nbsp;<a href=\"[url]\">Installer &nbsp;[name]</a>&nbsp;] ";
+$html_video_install_unnamed_player	= "[&nbsp;<a href=\"[url]\">Installer &nbsp;le&nbsp;lecteur</a>&nbsp;]";
+$html_video_download				= "[&nbsp;<a title=\"Télécharger la vidéo et la jouer sur votre ordinateur\" href=\"[url]\">Télécharger</a>&nbsp;]";
+
 
 // Contenu des Scripts
 //--------------------
@@ -174,6 +182,9 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.16  2004/02/27 08:49:42  ralfoide
+//	Translation for video strings
+//
 //	Revision 1.15  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)
@@ -181,7 +192,7 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 //	Fix: Changed credit line
 //	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
 //	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//
+//	
 //	Revision 1.14  2003/07/23 01:19:13  ralfoide
 //	Language: strings for tooltip details
 //	

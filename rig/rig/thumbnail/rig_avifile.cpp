@@ -35,7 +35,7 @@
 //----------------------------------------------------------------------------
 // Debug macro utility
 
-#if 1
+#if 0
 	#define DPRINTF(s) rig_dprintf s
 #else
 	#define DPRINTF(s)
@@ -271,9 +271,12 @@ RigRgb * rig_avifile_read(const char* filename)
 /****************************************************************
 
 	$Log$
+	Revision 1.8  2004/07/09 05:58:47  ralfoide
+	Disabled debug printfs
+
 	Revision 1.7  2004/07/09 05:55:28  ralfoide
 	Thumbnail for video is now based on the closest keyframe to 10% of the length of movie.
-
+	
 	Revision 1.6  2003/11/25 05:02:05  ralfoide
 	Video: report the video codec
 	

@@ -24,6 +24,8 @@ if (PHP_OS == 'WINNT')
 	 *
 	 *	Section:	Windows (Win32) specific settings.
 	 *
+	 *	Note:		Un*x settings are right below, please scroll.
+	 *
 	 *	For new installations: most likely, you will not need to
 	 *	change anything in this section.
 	 *
@@ -35,17 +37,17 @@ if (PHP_OS == 'WINNT')
 	/***********************************************************
 	 *
 	 *	Setting: 		$pref_preview_exec
-	 *	Type:			File-system relative path with \\ separators
+	 *	Type:			File-system relative path with \ separators
 	 *	Relative to:	$dir_install
-	 *	Default:		thumbnail\\Release\\rig_thumbnail.exe
+	 *	Default:		thumbnail\Release\rig_thumbnail.exe
 	 *	
 	 *	This path indicates where the rig_thumbnail.exe application
 	 *	can be find. It has to be relative to the installation
-	 *	directory. For a Windows path, use \\ as directory separator.
-	 *	The path must NOT start by \\. 
+	 *	directory. For a Windows path, use \ as directory separator.
+	 *	The path must NOT start by \. 
 	 ***********************************************************/
 
-	$pref_preview_exec		= "thumbnail\\Release\\rig_thumbnail.exe";
+	$pref_preview_exec		= 'thumbnail\release\rig_thumbnail.exe';
 
 
 	/***********************************************************
@@ -253,6 +255,7 @@ $pref_preview_size		= 80;
 $pref_preview_quality	= 70;
 $pref_preview_timeout	= 10;
 
+
 // RM 20030720
 // size and quality of small preview (used for vertical album layout)
 $pref_small_preview_size	= 64;
@@ -280,14 +283,27 @@ $pref_global_gamma		= 1.0;	// use 1.0 for no-op
 
 // --- supported file types [RM 20030627 v0.6.3.4] ---
 
+// Note: these are default settings and should not be modified. They will be
+// overriden by settings reported by rig_thumbnail.exe at runtime.
+// Note: In most cases, the variable should be set to null, in which case
+// the real settings reported by rig_thumbnail.exe at runtime will be used.
+// If this array is defined, rig_thumbnail.exe report will not be used.
+
+$pref_file_types		= null;
+
+// In case you really want to override the file type array and you really know
+// what you are doing, here is a sample of what it should contain:
+//
 // For matching pattern syntax, cf http://www.php.net/manual/en/function.preg-match.php
 // or http://www.perldoc.com/perl5.8.0/pod/perlre.html
 
+/*
 $pref_file_types		= array("/\.jpe?g$/i"					 => 'image/jpeg',
 								"/\.(avi|wmv|as[fx])$/i"		 => 'video/avi',
 								"/\.(mov|qt|sdp|rtsp)$/i"		 => 'video/quicktime',
 								"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => 'video/mpeg');
-								
+*/
+
 
 // --- files and albums ignore list [RM 20030813 v0.6.3.5] ---
 
@@ -551,9 +567,12 @@ $pref_use_image_border	= TRUE;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.16  2003/08/18 02:14:35  ralfoide
+//	Updated, new filetype support
+//
 //	Revision 1.15  2003/08/15 07:15:03  ralfoide
 //	Album/image border usage flags
-//
+//	
 //	Revision 1.14  2003/08/14 04:42:08  ralfoide
 //	Album & Image ignore lists
 //	

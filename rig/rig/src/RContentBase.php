@@ -19,13 +19,16 @@ class RContentBase
 	var $mPref;
 	var $mPath;
 
+	var $mPageTitle;
+	var $mDisplayTitle;
+
 
 	//**************************
 	function RContentBase($path)
 	//**************************
 	// Initializes the class
 	// Note that the path is copied, not referenced
-	// Derived classes should call this constructor first
+	// Derived classes should call parent constructor first
 	// Derived classes should affect mPref the desired pref class
 	{
 		echo "<h3>RContentBase -> new</h3>";
@@ -37,45 +40,54 @@ class RContentBase
 	function Load()
 	//*************
 	// Loads the content
-	// Derived classes should this Load() first
+	// Derived classes should call this Load() first
 	// then load their specific content.
+	// Returns TRUE if operation was successfull, FALSE otherwise
 	{
 		echo "<h3>RContentBase -> Load</h3>";
-		$this->mPref->Load($this->mPath);
+		return $this->mPref->Load($this->mPath);
 	}
 
 
 	//*************
 	function Sync()
 	//*************
-	// Synchronizes (save) the state
+	// Synchronizes (saves) the state
 	// Currently there's only need to save the pref state
 	// Needs not be derived (but can)
+	// Returns TRUE if operation was successfull, FALSE otherwise
 	{
 		echo "<h3>RContentBase -> Sync</h3>";
-		$this->mPref->Save($this->mPath);
+		
+		ok = $this->mPref->Save($this->mPath);
+		
+		// rig_setup_db was called in common.php
+		rig_terminate_db();
+		return ok;
 	}
 
 
 	//***************
 	function Render()
 	//***************
-	// Renders the content into an HTML string
-	// Base class does nothing. Derived classes
-	// should return a string. Avoid using echo or print directly
-	// as the content may be cached for later use.
+	// Renders the content to the web browser.
+	// Base class does nothing. Derived classes can output
+	// strings anyway needed (echo or direct print should be OK).
+	// The content may be loggued using PHP's ob_start() for
+	// caching purposes.
+	// Returns TRUE if operation was successfull, FALSE otherwise
 	{
 		// Typical rendering should have steps like this:
 		// 1- Document declaration
-		$str  = "<html>";
+		echo "<html>";
 		// 2- Header
-		$str .= "<head><title>RIG RContent Test</title></head>";
+		echo "<head><title>RIG RContentBase</title></head>";
 		// 3- Body
-		$str .= "<body><h3>Empty content</h3></body>";
+		echo "<body><h3>Empty content</h3></body>";
 		// 4- Footer and document end
-		$str .= "</html>";
-		
-		return $str;
+		echo "</html>";
+
+		return TRUE;
 	}
 
 } // RContentBase
@@ -83,9 +95,12 @@ class RContentBase
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/08/18 03:06:44  ralfoide
+//	OO experiment continued
+//
 //	Revision 1.2  2003/07/11 15:55:25  ralfoide
 //	Cosmetics
-//
+//	
 //	Revision 1.1  2003/06/30 06:09:22  ralfoide
 //	New OO code layout
 //	

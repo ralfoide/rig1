@@ -74,6 +74,24 @@ class RPath
 	}
 
 
+	//******************
+	function DirExists()
+	//******************
+	{
+		$name = GetAbs();
+		return file_exists($name) && is_dir($name);
+	}
+
+
+	//*******************
+	function FileExists()
+	//*******************
+	{
+		$name = GetAbs();
+		return file_exists($name) && is_file($name);
+	}
+
+
 	//***************
 	function GetUrl()
 	//***************
@@ -129,9 +147,12 @@ class RPath
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/08/18 03:06:44  ralfoide
+//	OO experiment continued
+//
 //	Revision 1.2  2003/07/11 15:55:25  ralfoide
 //	Cosmetics
-//
+//	
 //	Revision 1.1  2003/06/30 06:09:22  ralfoide
 //	New OO code layout
 //	

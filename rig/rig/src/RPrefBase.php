@@ -34,10 +34,13 @@ class RPrefBase
 	function Load(&$path)
 	//*******************
 	// Loads the prefs
+	// Returns TRUE if operation was successfull, FALSE otherwise
 	{
 		echo "<h3>RPrefBase -> Load</h3>";
 		var_dump($path->GetAbs());
 		var_dump($path->GetRel());
+		
+		return TRUE;
 	}
 
 
@@ -45,6 +48,7 @@ class RPrefBase
 	function Save(&$path)
 	//*******************
 	// Saves the prefs
+	// Returns TRUE if operation was successfull, FALSE otherwise
 	{
 		echo "<h3>RPrefBase -> Save</h3>";
 		var_dump($path->GetAbs());
@@ -55,6 +59,8 @@ class RPrefBase
 		
 		echo "<h3>Class vars:</h3>";
 		print_r(get_class_vars($this));
+
+		return TRUE;
 	}
 
 
@@ -63,9 +69,12 @@ class RPrefBase
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/08/18 03:06:44  ralfoide
+//	OO experiment continued
+//
 //	Revision 1.2  2003/07/11 15:55:25  ralfoide
 //	Cosmetics
-//
+//	
 //	Revision 1.1  2003/06/30 06:09:22  ralfoide
 //	New OO code layout
 //	

@@ -104,7 +104,11 @@ Admin:
 
 [for 0.6.3]
 
-20030625 [1.N] Fix: It should not be possible to view hidden images by giving the right URL
+20030713 [2.N] rig_thumbnail: Need an RPM and a DEB with ways to autobuild (sourceforge's farm?)
+20030713 [2.N] rig_thumbnail: Should try to use autoconf or something
+20030713 [1.N] rig_thumbnail: Doesn't link with the default libavifile-0.7-dev/unstable
+20030713 [1.N] rig_thumbnail: Uses incorrect include path to find jpeg headers
+
 20030625 [1.N] Fix: Changing theme color doesn't seem to work anymore (?)
 
 20030316 [2.N] MM feedback: INSTALL.txt is obsolete and misleading
@@ -145,6 +149,14 @@ Admin:
 [0.6.4]
 
 [0.6.3.4]
+
+
+20030713 [1.F] Descriptions: support in-album "file_info.diz" or "descript.ion" files [tip of the nib: AR]
+
+20030713 [1.F] Fix: Fixed broken album frame for Mozilla 1.0 (render using cell background images)
+20030713 [1.F] Comments: started adding some useful(?) comments to settings/prefs.php
+20030713 [1.F] Fix: It should not be possible to view hidden images by giving the right URL (it is possible for albums -- by design)
+20030713 [1.F] rig_thumbnail: add movie frame to movie thumbnails
 
 20030629 [3.F] OO-Exp: Test implementation: RContentBase, RAlbum, RPrefBase, RPrefAlbum, RUser, RPath
 20030629 [3.F] OO-Exp: Class layout
@@ -521,9 +533,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.24  2003/07/14 18:27:37  ralfoide
+//	New album frame table, frame in video thumbnail, support for descript.ion and file_info.diz
+//
 //	Revision 1.23  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
-//
+//	
 //	Revision 1.22  2003/06/30 06:13:41  ralfoide
 //	Video support, OO class test
 //	

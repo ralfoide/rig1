@@ -192,7 +192,8 @@ function display_album_list()
 		$square_size = $pref_preview_size + 12;
 		echo "<td $w>\n";
 		echo "<table border=\"0\">\n";
-		echo "<tr><td align=\"center\" height=\"$square_size\">\n";
+		// echo "<tr><td align=\"center\" height=\"$square_size\">\n";
+		echo "<tr><td align=\"center\">\n";
 
 		// get the relative and absolute path to the preview icon
 		$abs_path = "";
@@ -212,6 +213,9 @@ function display_album_list()
 		{
 			// otherwise get the size of the icon and display it with a nice fancy table
 
+			$dx = $pref_preview_size;
+			$dy = $pref_preview_size;
+
 			$icon_info = image_info($abs_path);
 			if (is_array($icon_info) && count($icon_info) > 2)
 			{
@@ -220,10 +224,12 @@ function display_album_list()
 			}
 			else
 			{
-				$sx = $pref_preview_size;
-				$sy = $pref_preview_size;
+				$sx = $dx;
+				$sy = $dy;
 			}
 
+if (0)
+{
 			?>
 
 <table border="1" cellspacing="0" cellpadding="0">
@@ -246,7 +252,110 @@ function display_album_list()
 </table>
 			
 			<?php
-		}
+}
+else if (0) // -----------------------------------------------------------------
+{
+?>
+<table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
+    <tr><td>
+        <a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<? $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
+    </tr>
+</table>
+<?php
+}
+else if (0) // -----------------------------------------------------------------
+{
+	$y2 = ($dy-$sy-8)/2;
+	$x2 = ($dx-$sx-8)/2;
+?>
+<table border="0" cellspacing="0" cellpadding="0" colspan="5" rowspan="5">
+<!-- top row -->
+<tr><td colspan="5"><img src="<?= $box_tr ?>" width="<?= $dx ?>" height="<?= $y2 ?>"></td></tr>
+<!-- center rows -->
+<tr>
+	<!-- left column -->
+	<td rowspan="4"><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+6 ?>"></td></tr>
+	<!-- center columns -->
+	<td>
+		<table border="0" bgcolor="#000000" cellspacing="10" cellpadding="0">
+		    <tr>
+		    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<=? $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
+		    </tr>
+		</table>
+	</td>
+	<td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
+	<td><img src="<?= $box_tr ?>" width="3" height="6"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
+	<!-- right column -->
+	<td rowspan="4"><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+6 ?>"></td></tr>
+</tr>
+<tr>
+	<td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
+	<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+	<td><img src="<?= $line_r ?>" width="3" height="3"></td>
+</tr>
+<tr>
+	<td><img src="<?= $box_tr ?>" width="6" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
+	<td><img src="<?= $line_b ?>" width="3" height="3"></td>
+	<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+</tr>
+<!-- bottom row -->
+<tr><td colspan="5"><img src="<?= $box_tr ?>" width="<?= $dx ?>" height="<?= $y2 ?>"></td></tr>
+</table>
+<?php
+}
+else if (1) // -----------------------------------------------------------------
+{
+	$y2 = ($dy-$sy-8)/2;
+	$x2 = ($dx-$sx-8)/2;
+?>
+<table border="0" cellspacing="0" cellpadding="0">
+	<!-- top row -->
+	<tr>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+	</tr>
+	<!-- center rows -->
+	<tr>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
+		<td><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
+		    <tr>
+			    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
+		    </tr>
+		</table></td>
+		<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
+		<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
+	</tr>
+	<tr>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+		<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
+		<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+		<td><img src="<?= $line_r ?>" width="3" height="3"></td>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+	</tr>
+	<tr>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+		<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
+		<td><img src="<?= $line_b ?>" width="3" height="3"></td>
+		<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+	</tr>
+	<!-- bottom row -->
+	<tr>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+		<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+	</tr>
+</table>
+<?php
+}
+
+    }
 
 		echo "</td></tr>\n";
 		echo "<tr><td>$title</td></tr>\n";
@@ -753,9 +862,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2002/10/30 09:06:18  ralfoide
+//	Experimenting with alternate table to display album thumbnails
+//
 //	Revision 1.7  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
-//
+//	
 //	Revision 1.6  2002/10/23 16:01:01  ralfoide
 //	Added <html lang>; now transmitting charset via http headers.
 //	

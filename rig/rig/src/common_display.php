@@ -173,7 +173,7 @@ function rig_display_album_list()
 	global $list_description;				// RM 20030713
 	global $pref_album_layout;				// RM 20030718 'grid' or 'vert'
 	global $pref_album_with_description_layout;	// RM 20030720 auto-switch
-	global $pref_disable_album_borders;
+	global $pref_use_album_border;			// RM 20030814
 
 	$i = 0;
 
@@ -349,10 +349,9 @@ function rig_display_album_list()
 			// immediately after without any new-line in between (most browsers would insert
 			// a vertical space otherwise)
 
-			if (isset($pref_disable_album_borders) && $pref_disable_album_borders)
+			if (isset($pref_use_album_border) && !$pref_use_album_border)
 			{
-				// Disable the picture borders around the image
-				// This is for Mozilla 1.0 lovers since it doesn't handle it correctly.
+				// Do not display any border around the thumbnail
 
 				$x2 = ($dx-$sx-2)/2;
 				$y2 = ($dy-$sy-2)/2;
@@ -463,7 +462,7 @@ function rig_display_album_list()
 		}
 		
 
-		flush();
+		rig_flush();
 	}
 
 	echo "</tr>\n";
@@ -480,11 +479,13 @@ function rig_display_image_list()
 	// </tr -->
 
 	global $pref_nb_col;
+	global $dir_images;
 	global $list_images;
 	global $html_image;
 	global $current_album;
 	global $list_description;				// RM 20030713
 	global $pref_preview_size;
+	global $pref_use_image_border;			// RM 20030814
 
 	$i = 0;
 	$n = $pref_nb_col;
@@ -510,7 +511,7 @@ function rig_display_image_list()
 
 		$info = rig_build_preview_info($current_album, $file);
 		$preview = $info["p"];
-		
+
 		if (isset($info["w"]))
 			$width = "width=\"" . $info["w"] . "\"";
 		else
@@ -552,11 +553,108 @@ function rig_display_image_list()
 			<td <?= $w ?>>
 				<table border="0">
 					<tr><td align="center" valing="center" height="<?= $square_size ?>">
+					<?php
+						if (isset($pref_use_image_border) && !$pref_use_image_border)
+						{
+							// Do not display any border around the thumbnail
+					?>
 						<table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
 						<tr><td>
 							<a href="<?= $link ?>"><img src="<?= $preview ?>" alt="<?= $pretty2 ?>" title="<?= $tooltip ?>" <?= $width ?> <?= $height ?> border="0" align="middle"></a></td>
 						</tr>
 						</table>
+					<?php
+						}
+						else
+						{
+							// Display using a border around the thumbnail
+
+							// get the size of the icon
+					
+							$dx = $preview_size;
+							$dy = $preview_size;
+
+							$icon_info = rig_image_info($abs_path);
+							
+							if (isset($info["w"]))
+								$sx = $info["w"];
+							else
+								$sx = $dx;
+						
+							if (isset($info["h"]))
+								$sy = $info["h"];
+							else
+								$sy = $dy;
+							
+							// space around the album thumbnail and the shadow (to take into account the fact that
+							// the thumbnail may be actually smaller than the expected default thumbnail size)
+							// dx/dy is the default thumbnail size
+							// sx/sy is the real thumbail size of this thumbnail
+							// -8 is because the thumbnail has a 1-pixel border (*2) and the two shadows are 3 pixels each
+							$x2 = ($dx-$sx-8)/2;
+							$y2 = ($dy-$sy-8)/2;
+				
+							// make sure this size is positive non nul
+							if ($x2 <= 0) $x2 = 1;
+							if ($y2 <= 0) $y2 = 1;
+				
+							// RM 20021101 important: the various <img> and the title must have the </td>
+							// immediately after without any new-line in between (most browsers would insert
+							// a vertical space otherwise)
+
+							// RM 20030713 -- better layout that almost works with Mozilla 1.0
+							// It uses background pictures for table cells, which means it won't
+							// render on old browser (and that's actually better than a broken
+							// cell layout anyway)
+			
+							$sx2 = $sx+2;		$sy2 = $sy+2;			// image size including border=1
+							$sx8 = $sx2+6;		$sy8 = $sy2+6;			// image size including border=1 and including 6-pixel shadow frame
+							$sxL = $sx2-9;		$syL = $sy2-9;
+							$sxT = $sx8+2*$x2;	$syT = $sy8 + 2*$y2;	// the overal table size including surrounding spacing
+			
+							// name of album-border images
+							// old names
+							$box_tr = $dir_images . "image_topright.gif";
+							$box_br = $dir_images . "image_bottomright.gif";
+							$box_bl = $dir_images . "image_bottomleft.gif";
+							$line_b = $dir_images . "image_bottomline.gif";
+							$line_r = $dir_images . "image_rightline.gif";
+			
+							?>
+							<table  width="<?= $sxT ?>" height="<?= $syT ?>" border="0" cellspacing="0" cellpadding="0">
+							  <tr> 
+							    <td width="<?= $x2  ?>" height="<?= $y2  ?>"></td>
+							    <td width="<?= $sx8 ?>" height="<?= $y2  ?>" colspan="3"></td>
+							    <td width="<?= $x2  ?>" height="<?= $y2  ?>"></td>
+							  </tr>
+							  <tr> 
+							    <td width="<?= $x2  ?>" height="<?= $sy8 ?>" rowspan="3"></td>
+							    <td width="<?= $sx2 ?>" height="<?= $sy2 ?>" colspan="2" rowspan="2" align="center">
+								    <table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
+									    <tr>
+										    <td><a href="<?= $link ?>"><img src="<?= $preview ?>" alt="<?= $pretty2 ?>" title="<?= $tooltip ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
+									    </tr>
+									</table></td>
+							    <td width="6"           height="9"           background="<?= $box_tr ?>"></td>
+							    <td width="<?= $x2  ?>" height="<?= $sy8 ?>" rowspan="3"></td>
+							  </tr>
+							  <tr> 
+							    <td width="6"           height="<?= $syL ?>" background="<?= $line_r ?>"></td>
+							  </tr>
+							  <tr> 
+							    <td width="9"           height="6" background="<?= $box_bl ?>"></td>
+							    <td width="<?= $sxL ?>" height="6" background="<?= $line_b ?>"></td>
+							    <td width="6"           height="6" background="<?= $box_br ?>"></td>
+							  </tr>
+							  <tr> 
+							    <td width="<?= $x2  ?>" height="<?= $y2  ?>"></td>
+							    <td width="<?= $sx8 ?>" height="<?= $y2  ?>" colspan="3"></td>
+							    <td width="<?= $x2  ?>" height="<?= $y2  ?>"></td>
+							  </tr>
+							</table>
+							<?php
+						}
+					?>
 	
 					</td></tr>
 					<tr>
@@ -579,7 +677,7 @@ function rig_display_image_list()
 			echo "</td>\n";
 		}
 
-		flush();
+		rig_flush();
 	}
 
 	echo "</tr>\n";
@@ -1733,9 +1831,12 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.22  2003/08/15 07:14:02  ralfoide
+//	Album HTML cache generation, image thumbnail borders
+//
 //	Revision 1.21  2003/07/21 04:58:26  ralfoide
 //	Tooltips that work with Mozilla (using title attribute); Date description in grid albums and tooltips; Small preview for vertical album layout; Auto-switch album layout on description presence.
-//
+//	
 //	Revision 1.20  2003/07/19 07:52:36  ralfoide
 //	Vertical layout for albums
 //	

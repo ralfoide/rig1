@@ -80,9 +80,6 @@ Admin:
 20030220 [6.N] Manual: write real INSTALL.TXT explaining site vs. album locations
 20030220 [6.N] Manual: write real INSTALL.TXT based on CVS checkout
 20030208 [2.N] Video-Exp: admin-video page to edit properties for one video file (currently: time of thumbnail)
-20030208 [2.N] Video-Exp: use mplayer or ffmpeg(?) to extract one jpg/png image from the movie at a given time
-20030208 [2.N] Video-Exp: find how to play a video in a web browser (<object>+<embed> or video/X stream ?)
-20030208 [2.N] Video-Exp: enable video support if mplayer available (Q: howto guess extensions/mime-types?)
 20030208 [1.N] PNG: browse PNG files in dirs / simulate jhead-like info for display
 20030208 [1.N] rig_thumbnail: add PNG support. use "libpng" (Debian packages libpng3 and libpng2-dev)
 20030208 [1.N] rig_thumbnail: use "libjpeg62" (Debian packages libjpeg62 and libjpeg62-dev)
@@ -106,15 +103,16 @@ Admin:
 
 
 [for 0.6.3]
-20030316 [1.N] MM Fix: Album border broken with Mozilla 1.0 is a must-fix
-20030316 [1.N] MM Fix: Should not display album-block if only contains hidden albums
+
+20030625 [1.N] Fix: It should not be possible to view hidden images by giving the right URL
+20030625 [1.N] Fix: Changing theme color doesn't seem to work anymore (?)
+
 20030316 [2.N] MM feedback: INSTALL.txt is obsolete and misleading
 20030316 [2.N] MM feedback: README.txt is obsolete and misleading
 20030308 [1.N] Translate: Must enforce line syntax of upload file (security: no php, no html)
 20030308 [3.N] Translate: Should display backuped files in popup for "undo"
 20030308 [4.N] Translate: Restructure code, move functions in admin_util.
 
-20030126 [2.N] Must not display album images borders with Mozilla 1.0 (broken)
 20030126 [2.N] Need javascript to detect browser (if javascript supported)
 20030119 [1.N] Bug/URL-rewrite: cookie path should use the real URL, not the rewritten one (use a pref?)
 20030111 [1.N] Learn how to make a Debian package. Actually make one.
@@ -147,16 +145,31 @@ Admin:
 [0.6.4]
 
 [0.6.3.4]
-20030615 [1.W] Version: Bumped to version 0.6.3.4
+
+20030629 [3.F] OO-Exp: Test implementation: RContentBase, RAlbum, RPrefBase, RPrefAlbum, RUser, RPath
+20030629 [3.F] OO-Exp: Class layout
+
+20030628 [2.F] Video-Exp: Create thumbnails for video using ffmpeg
+20030628 [2.F] Video-Exp: Depending on the media handler, change the image output (for video support)
+20030628 [2.F] Video-Exp: Create an array of "extension/media handlers" (images vs video)
+20030628 [2.F] Video-Exp: use mplayer or ffmpeg(?) to extract one jpg/png image from the movie at a given time
+20030628 [2.F] Video-Exp: find how to play a video in a web browser (<object>+<embed> or video/X stream ?)
+20030628 [2.F] Video-Exp: enable video support if mplayer available (Q: howto guess extensions/mime-types?)
+
+20030625 [1.F] Fix: Unreplaced [year] variable in image-copyright string
+20030615 [1.F] Version: Bumped to version 0.6.3.4
 
 [0.6.3.3]
 20030615 [1.F] Sourceforge: uploading package for 0.6.3.3 (unstable, more cleanup needed before being stable)
-20030615 [1.F] CVS: tag_2003-02-22_v0633
+20030615 [1.F] CVS: tag_2003-06-15_v0633 [Note: cvs -z3 rtag -a tag_2003-06-15_v0633 rig]
 20030615 [1.F] CVS: Upload japanese file as well as language string updates
 20030606 [1.F] Lang: Japanese translation finished by Tastuo
 20030526 [2.F] Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
 20030321 [2.F] Pref: add a pref to have image.php display next/prev images on top of main image, as before (for MM).
                (Note: later this should become a different layout theme)
+20030316 [1.F] Fix: Album border broken with Mozilla 1.0 is a must-fix [MM bug report]
+20030126 [2.X] Must not display album images borders with Mozilla 1.0 (broken)
+20030316 [1.F] Fix: Should not display album-block if only contains hidden albums [MM bug report]
 20030321 [1.F] Fix: album/image count was not correctly displayed on admin page.
 20030316 [1.F] Version: Bumped to version 0.6.3.3
 
@@ -507,9 +520,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.22  2003/06/30 06:13:41  ralfoide
+//	Video support, OO class test
+//
 //	Revision 1.21  2003/06/15 19:09:48  ralfoide
 //	Version 0.6.3.3: Japanese translation completed
-//
+//	
 //	Revision 1.20  2003/05/26 17:53:46  ralfoide
 //	Removed unused language strings. Updated Japanese. New rig_display_back_to_album.
 //	

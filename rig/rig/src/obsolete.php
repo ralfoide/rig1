@@ -21,9 +21,9 @@ function http_auth()
 }
 
 
-//****************************
-function print_array_str($str)
-//****************************
+//********************************
+function rig_print_array_str($str)
+//********************************
 {
 	echo "str[] = '$str'<br>\n";
 	for($i=0, $n=strlen($str); $i<$n; $i++)
@@ -43,7 +43,7 @@ function read_prefs()
 
 	if (!$fp)
 	{
-		html_error("Can't access preference file " . PREF_FILE_NAME, TRUE);
+		rig_html_error("Preferences", "Can't access preference file", PREF_FILE_NAME, $php_errormsg);
 		return;
 	}
 
@@ -71,7 +71,7 @@ function read_prefs()
 
 	fclose($fp);
 
-	read_prefs_paths();
+	rig_read_prefs_paths();
 }
 
 
@@ -80,7 +80,7 @@ function show_album($album)
 //*************************
 {
 	global $abs_album_path;
-	$abs_dir = $abs_album_path . prep_sep($album);
+	$abs_dir = $abs_album_path . rig_prep_sep($album);
 
 	// debug
 	// echo "Album = $album<br>abs = $abs_dir<p>\n";
@@ -103,7 +103,7 @@ function show_album($album)
 			else
 				$tag = 'b';
 			echo "&nbsp;|&nbsp;";
-			$name = post_sep($name) . $item;
+			$name = rig_post_sep($name) . $item;
 			$pretty = pretty_name($item);
 			echo "<$tag><a href=\"./album.php?album=$name\">$pretty</a></$tag>\n";
 		}
@@ -116,7 +116,7 @@ function show_album($album)
 	$file_list = array();
 	$handle = @opendir($abs_dir);
 	if (!$handle)
-		html_error("Album directory '$abs_dir' does not exist!");
+		rig_html_error("Album", "Album directory does not exist!", $abs_dir, $php_errormsg);
 	else
 	{
 		create_preview_dir($album);
@@ -126,18 +126,18 @@ function show_album($album)
 		{
 			if ($file != '.' && $file != '..')
 			{
-				$abs_file = $abs_dir . prep_sep($file);
+				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
 					$n++;
 					if ($n == 1)
 						echo "<h2>Albums</h2><p>\n";
 
-					$name = post_sep($album) . $file;
+					$name = rig_post_sep($album) . $file;
 					$pretty = pretty_name($file);
 					echo "<a href=\"./album.php?album=$name\">$pretty</a><br>\n";
 				}
-				else if (valid_ext($file))
+				else if (rig_valid_ext($file))
 				{
 			    	$file_list[] = $file;
 			    }
@@ -163,7 +163,7 @@ function show_album($album)
 	{
 		foreach($file_list as $file)
 		{
-			$album_file = post_sep($album) . $file;
+			$album_file = rig_post_sep($album) . $file;
 			$pretty = pretty_name($file);
 			$preview = preview_file($album_file);
 			$link = "\"./image.php?album=$name&image=$file\"";
@@ -194,9 +194,12 @@ function show_album($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

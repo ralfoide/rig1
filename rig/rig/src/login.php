@@ -6,39 +6,31 @@
 //**********************************************
 // $Id$
 //**********************************************
-?>
-<html>
-<head>
-	<title>
-		<?= $title ?>
-	</title>
-</head>
 
-<?php
-	global $display_language;
-	global $html_username;
-	global $html_password;
-	global $html_validate;
-	global $html_guest_login;
-	global $html_symb_lang;
-	global $html_desc_lang;
-	global $color_body_bg;
-	global $color_body_text;
-	global $color_header_bg;
-	global $pref_allow_guest;
-	global $pref_guest_username;
+global $html_username;
+global $html_password;
+global $html_validate;
+global $html_guest_login;
+global $html_symb_lang;
+global $html_desc_lang;
+global $color_body_bg;
+global $color_body_text;
+global $color_title_bg;
+global $color_title_text;
+global $pref_allow_guest;
+global $pref_guest_username;
+
+rig_display_header($title);
+rig_display_body();
 ?>
 
-<body bgcolor="<?= $color_body_bg ?>" text="<?= $color_body_text ?>">
 <center>
 
-<table width="100%" bgcolor="<?= $color_header_bg ?>"><tr><td>
-	<center>
-		<h1>
-			<?= $title ?>
-		</h1>
-	</center>
-</td></tr></table>
+<?php
+	rig_display_section("<h1> $title </h1>",
+						$color_title_bg,
+						$color_title_text);
+?>
 <p>
 
 <table border=0>
@@ -90,17 +82,12 @@
 </table>
 
 <p>
-<!--table width="100%" bgcolor="<?= $color_header_bg ?>">
-	<tr><td>
-		<br>
-	</td></tr>
-</table -->
-
-<?= $display_language ?>&nbsp;|&nbsp;<a href="<?= $url . "&lang=$html_symb_lang" ?>"><?= $html_desc_lang ?></a>
+&nbsp;
 <p>
-
 <?php
-	insert_footer();
+	rig_display_options(FALSE);
+	rig_display_footer();
+	rig_terminate_db();
 ?>
 
 </body>
@@ -108,9 +95,12 @@
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

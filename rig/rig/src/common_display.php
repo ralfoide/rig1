@@ -11,6 +11,51 @@
 //-----------------------------------------------------------------------
 
 
+//*********************************
+function rig_display_header($title)
+//*********************************
+{
+	global $html_encoding;
+	global $theme_css_head;
+
+	?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<meta HTTP-EQUIV="Content-type" CONTENT="text/html; charset=<?= $html_encoding ?>">
+	<title>
+		<?= $title ?>
+	</title>
+	<?= $theme_css_head ?>
+</head>
+	<?php
+}
+
+//*************************
+function rig_display_body()
+//*************************
+{
+	global $color_body_bg;
+	global $color_body_text;
+	global $color_body_link;
+	global $color_body_alink;
+	global $color_body_vlink;
+
+	?>
+		<body bgcolor="<?= $color_body_bg    ?>"
+			  text   ="<?= $color_body_text  ?>"
+			  link   ="<?= $color_body_link	 ?>"
+			  alink  ="<?= $color_body_alink ?>"
+			  vlink  ="<?= $color_body_vlink ?>"
+		>
+	<?php
+}
+
+
+
+//-----------------------------------------------------------------------
+
+
 //**************************************************
 function display_current_album($link_current = TRUE)
 //**************************************************
@@ -27,7 +72,7 @@ function display_current_album($link_current = TRUE)
 	{
 		$item = array_shift($items);
 		$pretty = pretty_name($item, FALSE, TRUE);
-		$name = post_sep($name) . $item;
+		$name = rig_post_sep($name) . $item;
 
 		if (!$item)
 			break;
@@ -100,7 +145,11 @@ function display_album_list()
 
 	foreach($list_albums as $dir)
 	{
-		$name = post_sep($current_album) . $dir;
+		$name = rig_post_sep($current_album) . $dir;
+
+		if (!rig_is_visible(-1, $name))
+			continue;
+
 		$pretty = pretty_name($dir, FALSE, TRUE);
 
 		$link = self_url("", $name);
@@ -117,7 +166,7 @@ function display_album_list()
 		$abs_path = "";
 		$url_path = "";
 		$res = build_album_preview($name, &$abs_path, &$url_path);
-		$url_path = encode_url_link($url_path);
+		$url_path = rig_encode_url_link($url_path);
 		if (!$res)
 		{
 			// if we can't have the preview icon, use a little album icon
@@ -177,7 +226,11 @@ function display_album_list()
 			$i = 0;
 		}
 		else
+		{
 			echo "</td>\n";
+		}
+
+		flush();
 	}
 
 	echo "</tr>\n";
@@ -211,6 +264,9 @@ function display_image_list()
 
 	foreach($list_images as $file)
 	{
+		if (!rig_is_visible(-1, -1, $file))
+			continue;
+
 		$pretty1 = pretty_name($file);
 		$pretty2 = pretty_name($file, FALSE);
 
@@ -219,7 +275,7 @@ function display_image_list()
 		$width   = $info["w"];
 		$height  = $info["h"];
 
-		$preview = encode_url_link($preview);
+		$preview = rig_encode_url_link($preview);
 
 		$link = self_url($file);
 		$title = "<center><a href=\"$link\">$pretty1</a></center><br>\n";
@@ -250,7 +306,11 @@ function display_image_list()
 			$i = 0;
 		}
 		else
+		{
 			echo "</td>\n";
+		}
+
+		flush();
 	}
 
 	echo "</tr>\n";
@@ -281,7 +341,7 @@ function display_image()
 	$icon_info = image_info($preview);
 
 	// url-encode filename
-	$preview = encode_url_link($preview);
+	$preview = rig_encode_url_link($preview);
 
 	if (is_array($icon_info) && count($icon_info) > 2)
 	{
@@ -346,19 +406,19 @@ function rig_display_jhead()
 
 	// --- use the jhead application to extract info ---
 
-	$name = $abs_album_path . prep_sep($current_album) . prep_sep($current_image);
+	$name = $abs_album_path . rig_prep_sep($current_album) . rig_prep_sep($current_image);
 
 	$retvar = 1;
 	$output = array();
 
-	$args = $pref_use_jhead . " " . shell_filename($name);
+	$args = $pref_use_jhead . " " . rig_shell_filename($name);
 
 	$res = exec($args, $output, $retvar);
 
 	// if the command failed, try a variation on the shell-escaping
 	if ($retvar == 1)
 	{
-		$args = $pref_use_jhead . " " . shell_filename2($name);
+		$args = $pref_use_jhead . " " . rig_shell_filename2($name);
 		$res = exec($args, $output, $retvar);
 	}
 
@@ -453,41 +513,173 @@ function insert_size_popup()
 //-----------------------------------------------------------------------
 
 
-//***********************************
-function insert_credits($has_credits)
-//***********************************
+//********************************************
+function rig_display_section($html_content,
+							 $color_bg   = "",
+							 $color_text = "")
+//********************************************
 {
-	global $html_text_credits;
-	global $html_show_credits;
-	global $html_credits;
-	global $color_header_bg;
+	global $color_section_bg;
+	global $color_section_text;
 
-	if ($has_credits != 'on')
-	{
-		echo "<a href=\"" . self_url(-1, -1, -1, "credits=on") . "\">$html_show_credits</a><p>";
-	}
-	else
-	{
-		?>
-			<table width="100%" bgcolor="<?= $color_header_bg ?>"><tr><td>
-				<center><b>
-					<?php echo "$html_credits" ?>
-				</b></center>
-			</td></tr></table>
-	
-			<p>
-			<?php echo "$html_text_credits" ?>
-	
-			<p>
-		<?php
-			phpinfo(INFO_CREDITS);
-	}
+	if ($color_bg == "")
+		$color_bg = $color_section_bg;
+
+	if ($color_text == "")
+		$color_text = $color_section_text;
+		
+
+	?>
+		<table width="100%" bgcolor="<?= $color_bg ?>"><tr><td>
+			<font color="<?= $color_text ?>"><center>
+				<?= $html_content ?>
+			</center></font>
+		</td></tr></table>
+	<?php
 }
 
 
-//**********************
-function insert_footer()
-//**********************
+//******************************************
+function rig_display_options($use_hr = TRUE)
+//******************************************
+{
+	global $color_section_bg;
+	global $html_options;
+
+	rig_display_section("<b>$html_options</b>");
+
+	echo "<br><table>";
+
+	rig_display_language();
+	rig_display_theme();
+
+	if ($use_hr)
+		echo "<tr><td colspan=\"2\"  height=\"2\" bgcolor=\"$color_section_bg\"></td></tr>";
+	// or use a <hr>:
+	//	echo "<tr><td colspan=\"2\"><hr></td></tr>";
+
+	echo "</table>";
+
+	if (!$use_hr)
+		echo "<p>";
+}
+
+
+//*****************************
+function rig_display_language()
+//*****************************
+{
+	global $html_desc_lang;
+	global $html_language;
+	global $current_language;
+
+	$sep = FALSE;
+
+	echo "<tr><td align=\"right\"><a name=\"lang\"><i>$html_language</i></td><td> \n";
+
+	foreach($html_desc_lang as $key => $value)
+	{
+		if ($sep)
+			echo "&nbsp;|&nbsp;";
+
+		if ($current_language == $key)
+			echo $value;
+		else
+			echo "<a href=\"" . self_url(-1, -1, -1, "lang=$key#lang") . "\">$value</a>\n";
+
+		$sep = TRUE;
+	}
+
+	echo "</td></tr>";
+}
+
+
+//**************************
+function rig_display_theme()
+//**************************
+{
+	global $html_desc_theme;
+	global $html_theme;
+	global $current_theme;
+
+	$sep = FALSE;
+
+	echo "<tr><td align=\"right\"><a name=\"theme\"><i>$html_theme</i></td><td> \n";
+
+	foreach($html_desc_theme as $key => $value)
+	{
+		if ($sep)
+			echo "&nbsp;|&nbsp;";
+
+		if ($current_theme == $key)
+			echo $value;
+		else
+			echo "<a href=\"" . self_url(-1, -1, -1, "theme=$key#theme") . "\">$value</a>\n";
+
+		$sep = TRUE;
+	}
+
+	echo "</td></tr>";
+}
+
+
+//-----------------------------------------------------------------------
+
+
+//******************************************************
+function rig_display_credits($has_credits, $has_phpinfo)
+//******************************************************
+{
+	global $html_text_credits;
+	global $html_hide_credits;
+	global $html_show_credits;
+	global $html_credits;
+
+	global $html_show_phpinfo;
+	global $html_hide_phpinfo;
+	global $html_phpinfo;
+
+	global $color_section_bg;
+
+	$v = ($has_credits == "on" ? "off" : "on");
+	$l = ($has_credits == "on" ? $html_hide_credits : $html_show_credits);
+	echo "<a name=\"credits\" href=\"" . self_url(-1, -1, -1, "credits=$v#credits") . "\" target=\"_top\">$l</a><br>";
+
+	$v = ($has_phpinfo == "on" ? "off" : "on");
+	$l = ($has_phpinfo == "on" ? $html_hide_phpinfo : $html_show_phpinfo);
+	echo "<a name=\"phpinfo\" href=\"" . self_url(-1, -1, -1, "phpinfo=$v#phpinfo") . "\" target=\"_top\">$l</a><br>";
+
+	if ($has_credits == "on")
+	{
+		?>
+			<p>
+				<?php rig_display_section("<b>$html_credits<b>") ?>
+			<p>
+				<?php echo "$html_text_credits" ?>
+			<p>
+		<?php
+	
+		phpinfo(INFO_CREDITS);
+	}
+
+	if ($has_phpinfo == "on")
+	{
+		?>
+			<p>
+				<?php rig_display_section("<b>$html_phpinfo<b>") ?>
+			<p>
+		<?php
+
+		phpinfo(INFO_ALL);
+	}
+
+	echo "<p>";
+}
+
+
+//***************************
+function rig_display_footer()
+//***************************
 {
     global $_debug_;
 	global $rig_version;
@@ -497,15 +689,16 @@ function insert_footer()
 	global $html_seconds;
 	global $html_the;
 	global $html_by;
-	global $color_header_bg;
+	global $color_section_bg;
+	global $color_section_text;
 
 	?>
-		<table width="100%" bgcolor="<?= $color_header_bg ?>"><tr><td>
-			<center><font size="-1">
+		<table width="100%" bgcolor="<?= $color_section_bg ?>"><tr><td>
+			<center><font size="-1" color="<?= $color_section_text ?>">
 				&lt;
 	<?php
 		echo "$html_generated "
-			 . time_elapsed()
+			 . rig_time_elapsed()
 			 . " $html_seconds $html_the <i>$display_date</i> $html_by <i>$display_softname $rig_version</i>"
 	?>
 				&gt;
@@ -526,9 +719,12 @@ function insert_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//
 //	Revision 1.3  2002/10/20 11:50:49  ralfoide
 //	jhead support
-//
+//	
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
 //	

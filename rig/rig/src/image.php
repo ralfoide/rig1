@@ -7,51 +7,33 @@
 // $Id$
 //**********************************************
 
-// Variables that this URL can receive:
-// album	- string
-// image	- string
 
 require_once($dir_install . $dir_src . "common.php");
 
 // Important: this page can only display an image.
 // If there is no image parameter, redirect to the album
-if (!isset($image) || !$image)
-{
-	header("Location: " . self_url(""));
-}
+// RM 20020714 disabled since this test is already performed by location/index.php
+// if (!((isset($image) && $image) || (isset($id) && rig_db_is_image_id($id))))
+// 	header("Location: " . self_url(""));
 
 enter_login(self_url());
 
-?>
-<html>
-<head>
-	<title>
-		<?php
-			prepare_image($album, $image);
-			echo "$display_title";
-		?>
-	</title>
-</head>
+rig_prepare_image($id, $album, $image);
+rig_display_header($display_title);
+rig_display_body();
 
-<body bgcolor="<?= $color_body_bg ?>" text="<?= $color_body_text ?>">
+?>
 
 <center>
 
 
 <!-- top header -->
 
-<table width="100%" bgcolor="<?= $color_header_bg ?>"><tr><td>
-	<center>
-		<font size="+2"><b>
-			<?php echo $display_title ?>
-		</b></font><br>
-			<?php echo $display_album_title ?>
-	</center>
-</td></tr></table>
-
-
-
 <?php
+	rig_display_section("<font size=\"+2\"><b> $display_title </b></font><br>$display_album_title",
+						$color_title_bg,
+						$color_title_text);
+
 	display_user_name();
 	load_album_list();
 	get_images_prev_next();
@@ -155,15 +137,18 @@ enter_login(self_url());
 </td><td width="34%">
 	<center>
 
-	<!-- image info -->
-	<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
+	<table border="0" bgcolor="<?= $color_caption_bg ?>" cellpadding="0" cellspacing="4">
 		<tr><td>
 			<center>
-				<b><?= $display_title ?></b>
-				<br>
-				<?php echo display_image_info() ?>
-				<br>
-				<?php display_current_album() ?>
+				<font color="<?= $color_caption_text ?>">
+					<b><?= $display_title ?></b>
+					<br>
+					<?php echo display_image_info() ?>
+					<br>
+				</font>
+				<font color="<?= $color_index_text ?>">
+					<?php display_current_album() ?>
+				</font>
 				<br>
 			</center>
 		</td></tr>
@@ -219,9 +204,11 @@ enter_login(self_url());
 	<td colspan=3>
 	<center>
 		<!-- jhead info -->
-		<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
+		<table border="0" bgcolor="<?= $color_caption_bg ?>" cellpadding="0" cellspacing="4">
 			<tr><td>
-				<?php rig_display_jhead() ?>
+				<font color="<?= $color_caption_text ?>">
+					<?php rig_display_jhead() ?>
+				</font>
 			</td></tr>
 		</table>
 	</center>
@@ -236,22 +223,18 @@ enter_login(self_url());
 
 <!-- options/credits/gen-time information at bottom -->
 
-<table width="100%" bgcolor="<?= $color_header_bg ?>"><tr><td>
-	<center><b>
-		<?= $html_options ?>
-	</b></center>
-</td></tr></table>
-
 <br>
-	<?= $display_language ?>&nbsp;|&nbsp;<a href="<?= self_url(-1, -1, -1, "lang=$html_symb_lang") ?>"><?= $html_desc_lang ?></a>
-<br>
+	<?php
+		rig_display_options();
+	?>
 	<a href="<?= self_url(-1, -1, TRUE) ?>"><?= $html_admin_intrfce ?></a>
 <p>
 
 
 <?php
-	insert_credits($credits);
-	insert_footer();
+	rig_display_credits($credits, $phpinfo);
+	rig_display_footer();
+	rig_terminate_db();
 ?>
 
 </body>
@@ -260,9 +243,12 @@ enter_login(self_url());
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//
 //	Revision 1.3  2002/10/20 11:50:49  ralfoide
 //	jhead support
-//
+//	
 //	Revision 1.2  2002/10/16 04:47:59  ralfoide
 //	Changed layout: prev/next links aside the image, image size at bottom
 //	

@@ -26,8 +26,7 @@ function make_image($abs_source, $abs_dest, $size, $quality = 0)
 	if ($pref_preview_timeout)
 		set_time_limit($pref_preview_timeout);
 
-	# $args = "-r \"" . shell_filename($abs_source) . "\" \"" . shell_filename($abs_dest) . "\" $size";
-	$args = "-r " . shell_filename($abs_source) . " " . shell_filename($abs_dest) . " $size";
+	$args = "-r " . rig_shell_filename($abs_source) . " " . rig_shell_filename($abs_dest) . " $size";
 
 	// add quality argument
 	if ($quality > 0)
@@ -43,13 +42,19 @@ function make_image($abs_source, $abs_dest, $size, $quality = 0)
 	// echo "<br> args = $args <br> exec = $abs_preview_exec <br>\n";
 
 	// create the preview now
-	$res = system($abs_preview_exec . " " . $args, $retvar);
+	$res = @system($abs_preview_exec . " " . $args, $retvar);
 
 	// debug
 	// echo "<br> res = $res\n";
 
 	if ($retvar)
-		html_error("Error $retvar during preview creation<br>Source: $abs_source<br>Dest: $abs_dest<br>Run string |$abs_preview_exec $args|)<br>");
+		rig_html_error("Create Thumbnail",
+					   "Error $retvar during image creation<p>" .
+					   "<b>Source:</b> $abs_source<br>" .
+					   "<b>Dest:</b> $abs_dest<br>" .
+					   "<b>Size</b> $size, <b>Quality</b> $quality<br>" .
+					   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|", 
+					   $php_errormsg);
 
 	return $retvar;
 }
@@ -101,15 +106,15 @@ function build_preview_ex($album, $file,
 	{
 		return array("r" => $dir_album,
 					 "a" => $abs_album_path,
-					 "p" => prep_sep($album) . prep_sep($file));
+					 "p" => rig_prep_sep($album) . rig_prep_sep($file));
 	}
 
 	$prev_prefix = "prev" . $size . "_";
 	$dest_file = $prev_prefix . simplify_filename($file);
 
-	$dest		= prep_sep($album)  . prep_sep($dest_file);
+	$dest		= rig_prep_sep($album)  . rig_prep_sep($dest_file);
 	$abs_dest	= $abs_preview_path . $dest;
-	$abs_source	= $abs_album_path   . prep_sep($album) . prep_sep($file);
+	$abs_source	= $abs_album_path   . rig_prep_sep($album) . rig_prep_sep($file);
 
 	if (rig_is_file($abs_source) && !rig_is_file($abs_dest) && $auto_create)
 	{
@@ -190,18 +195,26 @@ function image_info($abs_file)
 
 		// --- use the thumbnail application to extract info ---
 
-		$args = "-i " . shell_filename($abs_file) . "";
+		$args = "-i " . rig_shell_filename($abs_file) . "";
 
 		// get the info now
 		$res = exec($abs_preview_exec . " " . $args, $output, $retvar);
 
 		if ($retvar == 127)
 		{
-			html_error("Error $retvar during image info<br>$abs_preview_exec doesn't exist<br>");
+			rig_html_error("Get Image Information",
+						   "Error $retvar during image info: <em>file not found</em><p>" .
+						   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|",
+						   $abs_preview_exec,
+						   $php_errormsg);
 		}
 		else if ($retvar)
 		{
-			html_error("Error $retvar during image info<br>$abs_preview_exec $abs_file<br>Error: $res<br>");
+			rig_html_error("Get Image Information",
+						   "Unexpected error $retvar during image info<p>" .
+						   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|",
+						   $abs_preview_exec,
+						   $php_errormsg);
 		}
 		else
 		{
@@ -223,7 +236,7 @@ function build_info($album, $file)
 {
 	global $abs_album_path;
 
-	return image_info($abs_album_path . prep_sep($album) . prep_sep($file));
+	return image_info($abs_album_path . rig_prep_sep($album) . rig_prep_sep($file));
 }
 
 
@@ -249,7 +262,7 @@ function build_album_preview($album, &$abs_path, &$url_path, $use_default = TRUE
 	global $pref_empty_album;
 	global $abs_preview_path, $dir_preview;
 
-	$dest_file = prep_sep($album) . prep_sep(ALBUM_ICON);
+	$dest_file = rig_prep_sep($album) . rig_prep_sep(ALBUM_ICON);
 
 	$abs_path = $abs_preview_path  . $dest_file;
 	$url_path = $dir_preview . $dest_file;
@@ -282,8 +295,7 @@ function build_album_preview($album, &$abs_path, &$url_path, $use_default = TRUE
 
 	// otherwise, use the default icon...
 	$abs_path = realpath($dir_abs_album . $dir_images . $pref_empty_album);
-	$url_path = $pref_empty_album;
-	return FALSE;
+	$url_path = $dir_images . $pref_empty_album;	// RM 20020713 fix missing dir_images
 }
 
 
@@ -300,12 +312,15 @@ function set_album_icon($dest_album, $prev_album, $prev_image, $update_options =
 	if ($preview && rig_is_file($preview))
 	{
 		// copy it as the album icon
-		$abs_dest = $abs_preview_path . prep_sep($dest_album) . prep_sep(ALBUM_ICON);
+		$abs_dest = $abs_preview_path . rig_prep_sep($dest_album) . rig_prep_sep(ALBUM_ICON);
 
 		create_preview_dir($dest_album);
 
 		if (!copy($preview, $abs_dest))
-			html_error("Can't copy preview '$preview' to album icon '$abs_dest'!");
+			rig_html_error("Set Album Icon",
+						   "Can't copy preview '$preview' to album icon '$abs_dest'!",
+						   NULL,
+						   $php_errormsg);
 
 		// now keep that in the album options
 		if ($update_options)
@@ -362,9 +377,12 @@ function select_random_album_icon($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//
 //	Revision 1.3  2002/10/20 11:50:21  ralfoide
 //	Misc fixes
-//
+//	
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
 //	

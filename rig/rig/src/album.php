@@ -7,39 +7,26 @@
 // $Id$
 //**********************************************
 
-// Variables that this URL can receive:
-// album	- string
-// image	- string
 
 require_once($dir_install . $dir_src . "common.php");
 enter_login(self_url(""));
 
+rig_prepare_album($id, $album);
+rig_display_header($display_title);
+rig_display_body();
+
 ?>
-<html>
-<head>
-	<title>
-		<?php
-			prepare_album($album);
-			echo "$display_title";
-		?>
-	</title>
-</head>
-
-
-<body bgcolor="<?= $color_body_bg ?>" text="<?= $color_body_text ?>">
 
 <center>
 
-<table width="100%" bgcolor="<?= $color_header_bg ?>"><tr><td><center><h1>
-	<?= $display_title ?>
-</h1></center></td></tr></table>
-
 <?php
+	rig_display_section("<h1> $display_title </h1>",
+						$color_title_bg,
+						$color_title_text);
 	display_user_name();
-?>
 
-<?php
-	if ($album)
+	// RM 20020714 id: album->current_album
+	if ($current_album)
 	{
 ?>
 <p>
@@ -60,12 +47,13 @@ enter_login(self_url(""));
 		</td></tr>
 	</table>
 <?php
+		flush();
 	} // end of if album
 ?>
 <p>
 
 <?php
-	load_album_list();
+	load_album_list(TRUE);
 	if (has_albums())
 	{
 ?>
@@ -89,6 +77,7 @@ enter_login(self_url(""));
 <p>
 
 <?php
+		flush();
 	}	// end of if-has-albums
 
 	if (has_images())
@@ -114,28 +103,24 @@ enter_login(self_url(""));
 <p>
 
 <?php
+		flush();
 	}	// end of if-has-images
 
 	display_back_album();
 ?>
 
 <p>
-<table width="100%" bgcolor="<?= $color_header_bg ?>"><tr><td>
-	<center><b>
-		<?= $html_options ?>
-	</b></center>
-</td></tr></table>
-
-<br>
-	<?= $display_language ?>&nbsp;|&nbsp;<a href="<?= self_url(-1, -1, -1, "lang=$html_symb_lang") ?>"><?= $html_desc_lang ?></a>
-<br>
+	<?php
+		rig_display_options();
+	?>
 	<a href="<?= self_url(-1, -1, TRUE) ?>"><?= $html_admin_intrfce ?></a>
 <p>
 
 
 <?php
-	insert_credits($credits);
-	insert_footer();
+	rig_display_credits($credits, $phpinfo);
+	rig_display_footer();
+	rig_terminate_db();
 ?>
 
 </body>
@@ -143,9 +128,12 @@ enter_login(self_url(""));
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

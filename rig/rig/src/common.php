@@ -10,6 +10,7 @@
 /*
 	List of URL-variables:
 	----------------------
+	idn						- integers album or image indexes
 	album					- string
 	image					- string
 	credits					- boolean string 'on' or nothing
@@ -32,7 +33,8 @@
 	List of globals:
 	----------------
 	rig_version				- string
-	current_language		- string 'en' (default) or 'fr'
+	current_language		- string 'en' (default) or 'fr', 'sp', 'jp'
+	current_id				- integer
 	current_album			- string
 	current_image			- string
 	list_albums				- array of string
@@ -85,47 +87,120 @@ define("ALBUM_ICON",			"album_icon.jpg");
 define("ALBUM_OPTIONS",			"options.txt");
 
 // start timing...
-$time_start = getmicrotime();
+$time_start = rig_getmicrotime();
 
 // read site-prefs and then override with local prefs, if any
+rig_check_src_file($dir_install . $dir_globset . "prefs.php");
 require_once($dir_install . $dir_globset . "prefs.php");
+
 if (rig_is_file($dir_locset . "prefs.php"))
 	require_once($dir_locset . "prefs.php");
 
 // setup...
+rig_check_src_file($dir_install . $dir_src . "login_util.php");
 require_once($dir_install . $dir_src . "login_util.php");
-read_prefs_paths();
-handle_cookies();
 
-// include language strings, default is english ("en")
+rig_read_prefs_paths();
+rig_handle_cookies();
+
+
+// DEBUG default prefs/curr for lang and theme
+// echo "<p> pref_default_lang = "   ; var_dump($pref_default_lang);
+// echo "<p> current_language = "; var_dump($current_language);
+// echo "<p> pref_default_theme = "; var_dump($pref_default_theme);
+// echo "<p> current_theme = "   ; var_dump($current_theme);
+
+
+// include language strings
+//-------------------------
+// RM 20020714 fix: always load the str_en first
+rig_check_src_file($dir_install . $dir_src . "str_en.php");
+require_once($dir_install . $dir_src . "str_en.php");
+
+// and override with other language if not english
 // Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
-if (!file_exists($dir_install . $dir_src . "str_$current_language.php") || !$current_language)
-	$current_language = 'en';
-require_once($dir_install . $dir_src . "str_$current_language.php");
-require_once($dir_install . $dir_src . "version.php");
-setup();
-create_option_dir();
+if (!isset($current_language) || !rig_is_file($dir_install . $dir_src . "str_$current_language.php"))
+	$current_language = $pref_default_lang;
 
+if ($current_language != 'en')
+{
+	rig_check_src_file($dir_install . $dir_src . "str_$current_language.php");
+	require_once($dir_install . $dir_src . "str_$current_language.php");
+}
+
+// include theme strings
+//----------------------
+
+if (!isset($current_theme) || !rig_is_file($dir_install . $dir_src . "theme_$current_theme.php"))
+	$current_theme = $pref_default_theme;
+rig_check_src_file($dir_install . $dir_src . "theme_$current_theme.php");
+require_once($dir_install . $dir_src . "theme_$current_theme.php");
+
+
+rig_check_src_file($dir_install . $dir_src . "version.php");
+require_once($dir_install . $dir_src . "version.php");
+
+rig_setup();
+rig_create_option_dir();
+
+rig_check_src_file($dir_install . $dir_src . "common_display.php");
 require_once($dir_install . $dir_src . "common_display.php");
+rig_check_src_file($dir_install . $dir_src . "common_images.php");
 require_once($dir_install . $dir_src . "common_images.php");
+
+// RM 20021021 not for rig 062 yet
+// rig_check_src_file($dir_install . $dir_src . "common_db.php");
+// require_once($dir_install . $dir_src . "common_db.php");
+
+rig_setup_db();
+
 
 //-----------------------------------------------------------------------
 
-//**************************************
-function html_error($str, $body = FALSE)
-//**************************************
+
+//***************************************
+function rig_html_error($title_str,
+						$error_str,
+						$file_str = NULL,
+						$php_str  = NULL)
+//***************************************
 {
 	global $color_table_bg;
-	global $color_error_bg;
+	global $color_error1_bg;
+	global $color_error2_bg;
 
-	if ($body) echo "<body>\n";
+	// Trick to close the title (if we were writing the title and the header)
+	// and to close enough tables to be wide-screen. This assumes that most browser
+	// will silently ignore what is blatlantly offensive!
+	echo "</title></head></table></table></table></table>";
+	echo "<body>\n";
 
-	echo "<center><table border=1 bgcolor=\"$color_table_bg\">\n";
-	echo "<tr><td bgcolor=\"$color_error_bg\"><center><br><h3>An Error Occured</h3></center></td></tr>\n";
-	echo "<tr><td><br> $str\n <p></td></tr>\n";
-	echo "</table></center>\n";
+	if (!$title_str)
+		$title_str = "A Runtime Error Occured";
 
-	if ($body) echo "</body>\n";
+	echo "<center><table border=1 bgcolor=\"$color_error1_bg\" width=\"100%\" cellpadding=\"5\">\n";
+
+	// title
+	echo "<tr><td bgcolor=\"$color_error1_bg\"><center><font size=\"+2\">$title_str</font></center></td></tr>\n";
+
+	// description
+	echo "<tr><td bgcolor=\"$color_error2_bg\">\n $error_str\n </td></tr>\n";
+
+	// file argument
+	if ($file_str)
+		echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>File:</b> $file_str\n </td></tr>\n";
+
+	// php error msg
+	if ($php_str)
+		echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>PHP Error:</b> $php_str\n </td></tr>\n";
+
+	echo "</table></center><p>\n";
+
+	// Also assumes that browsers will continue displaying the HTML after a
+	// bad </body>.
+	echo "</body>\n";
+
+	return FALSE;
 }
 
 
@@ -138,9 +213,16 @@ function rig_is_file($name)
     return file_exists($name) && is_file($name);
 }
 
-//*********************
-function getmicrotime()
-//*********************
+//************************
+function rig_is_dir($name)
+//************************
+{
+    return file_exists($name) && is_dir($name);
+}
+
+//*************************
+function rig_getmicrotime()
+//*************************
 // extracted from PHP doc for microtime()
 {
     list($usec, $sec) = explode(" ", microtime()); 
@@ -148,18 +230,18 @@ function getmicrotime()
 } 
 
 
-//*********************
-function time_elapsed()
-//*********************
+//*************************
+function rig_time_elapsed()
+//*************************
 {
 	global $time_start;
-	return sprintf("%2.2f", getmicrotime() - $time_start);
+	return sprintf("%2.2f", rig_getmicrotime() - $time_start);
 }
 
 
-//****************************
-function print_array_str($str)
-//****************************
+//********************************
+function rig_print_array_str($str)
+//********************************
 {
 	echo "str[] = '$str'<br>\n";
 	for($i=0, $n=strlen($str); $i<$n; $i++)
@@ -170,9 +252,9 @@ function print_array_str($str)
 }
 
 
-//*********************
-function prep_sep($str)
-//*********************
+//*************************
+function rig_prep_sep($str)
+//*************************
 {
 	if ($str && $str[0] != SEP)
 		return SEP . $str;
@@ -181,9 +263,9 @@ function prep_sep($str)
 }
 
 
-//*********************
-function post_sep($str)
-//*********************
+//*************************
+function rig_post_sep($str)
+//*************************
 {
 	if ($str && $str[strlen($str)-1] != SEP)
 		return $str . SEP;
@@ -192,9 +274,9 @@ function post_sep($str)
 }
 
 
-//***********************
-function valid_ext($name)
-//***********************
+//***************************
+function rig_valid_ext($name)
+//***************************
 {
 	// get the extension
 	$dot  = strrchr($name, '.');
@@ -209,9 +291,9 @@ function valid_ext($name)
 }
 
 
-//****************************
-function decode_argument($arg)
-//****************************
+//********************************
+function rig_decode_argument($arg)
+//********************************
 // Removes shell-magic characters ( . / \ & ../ ) from album or image arguments
 // Decode arguments received from the URL line
 {
@@ -238,9 +320,9 @@ function decode_argument($arg)
 }
 
 
-//****************************
-function encode_argument($arg)
-//****************************
+//********************************
+function rig_encode_argument($arg)
+//********************************
 // Encode arguments that are used in the URL line
 {
 	// remove double-seps
@@ -279,9 +361,9 @@ function encode_argument($arg)
 }
 
 
-//****************************
-function encode_url_link($arg)
-//****************************
+//********************************
+function rig_encode_url_link($arg)
+//********************************
 // Encode IMG SRC and HREF links
 {
 	// Now protect characters that have a meaning in HTTP URLs.
@@ -290,6 +372,10 @@ function encode_url_link($arg)
 	// extra    = "!*'(),";
 	// unsafe   = " \"#%<>";
 	// safe     = "$-_.";
+
+	// RM 20020713 note: tried to encode c>=127 into &#dd;
+	// but that breaks URLs and many other things.
+	
 
 	$match = ";?:@&=+!*'(), \"#%<>";
 
@@ -308,9 +394,9 @@ function encode_url_link($arg)
 
 
 
-//***************************
-function shell_filename($str)
-//***************************
+//*******************************
+function rig_shell_filename($str)
+//*******************************
 // Encode a filename before using it in a shell argument call
 // The thumbnail app will un-backslash the full argument filename before using it
 {
@@ -321,9 +407,9 @@ function shell_filename($str)
 }
 
 
-//****************************
-function shell_filename2($str)
-//****************************
+//********************************
+function rig_shell_filename2($str)
+//********************************
 // Encode a filename before using it in a shell argument call
 // This one is more dedicated for directly unix calls.
 // Escapeshellcmd will transform ' into \' which is not always appropriate.
@@ -369,9 +455,10 @@ function pretty_name($name, $strip_numbers = TRUE,
     // We'll interpret at least 6 leading digits as a year + date
 	if ($pretty_dirname)
 	{
-	    if (ereg("^([0-9]{4})([0-9]{2})([0-9]{2})$", $name, $reg))
+	    if (ereg("^([0-9]{4})[-/]([0-9]{2})[-/]([0-9]{2})$", $name, $reg))
 		{
-            // First deal with full dates
+            // First deal with full dates with optional date separators
+            // RM 20020713 fix: added optional separators (for albums name with only a date value)
 			// --> "YYYYMMDD"
 			$name = str_replace("Y", $reg[1], $pref_date_YMD);
 			$name = str_replace("M", $reg[2], $name);
@@ -453,19 +540,19 @@ function create_preview_dir($album)
 {
 	global $pref_mkdir_mask;
 	global $abs_preview_path;
-	$album = $abs_preview_path . prep_sep($album);
+	$album = $abs_preview_path . rig_prep_sep($album);
 
 	if (is_dir($album))
 		return;
 
 	if (!mkdir($album, $pref_mkdir_mask))
-		html_error("Can't create preview directory '$album'", TRUE);
+		rig_html_error("Create Preview Directory", "Failed to create directory", $album, $php_errormsg);
 }
 
 
-//**************************
-function create_option_dir()
-//**************************
+//******************************
+function rig_create_option_dir()
+//******************************
 {
 	global $pref_mkdir_mask;
 	global $abs_option_path;
@@ -474,7 +561,15 @@ function create_option_dir()
 		return;
 
 	if (!mkdir($abs_option_path, $pref_mkdir_mask))
-		html_error("Can't create option directory", TRUE);
+    {
+        global $dir_abs_album, $dir_option;
+		rig_html_error("Create Options Directory",
+                       "Failed to create directory<br>\n" .
+                       "<b>Dir Abs Album:</b> $dir_abs_album<br>\n" . 
+                       "<b>Dir Option:</b> $dir_option\n",
+                       $abs_option_path,
+                       $php_errormsg);
+    }
 }
 
 
@@ -493,6 +588,9 @@ function self_url($in_image = -1,
 	global $album;				// from index.php url line
 	global $image;				// from index.php url line
 	global $admin;				// from index.php url line
+	global $credits;
+	global $phpinfo;
+	global $current_id;
 	global $current_album;
 	global $current_image;
 	global $PHP_SELF;
@@ -506,22 +604,22 @@ function self_url($in_image = -1,
 		$in_album = $current_album;
 
 		if (!$in_album)
-			$in_album = decode_argument($album);
+			$in_album = rig_decode_argument($album);
 	}
 
 	if ($in_album)
-		$in_album = encode_url_link($in_album);
+		$in_album = rig_encode_url_link($in_album);
 
 	if ($in_image == -1)
 	{
 		$in_image = $current_image;
 
 		if (!$in_image)
-			$in_image = decode_argument($image);
+			$in_image = rig_decode_argument($image);
 	}
 
 	if ($in_image)
-		$in_image = encode_url_link($in_image);
+		$in_image = rig_encode_url_link($in_image);
 
 	if (is_int($in_admin) && $in_admin == -1)
 	{
@@ -552,18 +650,35 @@ function self_url($in_image = -1,
 		$params .= "image=$in_image";
 	}
 
-	if ($in_extra)
-	{
-		if ($params)
-			$params .= "&";
-		$params .= "$in_extra";
-	}
-
 	if ($_debug_)
 	{
 		if ($params)
 			$params .= "&";
 		$params .= "_debug_=1";
+	}
+
+	if ($credits == 'on' && !strstr($in_extra, 'credits='))
+	{
+		if ($params)
+			$params .= "&";
+		$params .= "credits=$credits";
+	}
+
+	if ($phpinfo == 'on' && !strstr($in_extra, 'phpinfo='))
+	{
+		if ($params)
+			$params .= "&";
+		$params .= "phpinfo=$phpinfo";
+	}
+
+	// the extra must always be the last one
+	if ($in_extra)
+	{
+		// don't add the & if the extra is <a name=> jump label (#label)
+		if ($params && $in_extra[0] != '#')
+			$params .= "&";
+
+		$params .= "$in_extra";
 	}
 
 	if ($params)
@@ -576,27 +691,74 @@ function self_url($in_image = -1,
 //-----------------------------------------------------------------------
 
 
-//*************************
-function read_prefs_paths()
-//*************************
+//*****************************
+function rig_read_prefs_paths()
+//*****************************
 {
 	global $dir_abs_album;
 
 	// append a separator to the abs album dir if not already done
-	$dir_abs_album = post_sep($dir_abs_album);
+	$dir_abs_album = rig_post_sep($dir_abs_album);
 
 	// make some paths absolute
+	// RM 20021021 check these absolute paths
+
+	// --- album directory ---
+
 	global $dir_album, $abs_album_path;
 	$abs_album_path   = realpath($dir_abs_album . $dir_album);
+
+	if (!is_string($abs_album_path))
+	{
+		rig_html_error("Missing Album Directory",
+					   "Can't get absolute path for the album directory. <p>" .
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_album<br>" ,
+					   $dir_abs_album . $dir_album);
+	}
+
+	// --- previews directory ---
 
 	global $dir_preview, $abs_preview_path;
 	$abs_preview_path = realpath($dir_abs_album . $dir_preview);
 
+	if (!is_string($abs_album_path))
+	{
+		rig_html_error("Missing Previews Directory",
+					   "Can't get absolute path for the previews directory. <p>" .
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_preview<br>" ,
+					   $dir_abs_album . $dir_preview);
+	}
+
+	// --- options directory ---
+
 	global $dir_option, $abs_option_path;
 	$abs_option_path = realpath($dir_abs_album . $dir_option);
 
+	if (!is_string($abs_album_path))
+	{
+		rig_html_error("Missing Options Directory",
+					   "Can't get absolute path for the options directory. <p>" .
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_option<br>" ,
+					   $dir_abs_album . $dir_option);
+	}
+
+	// --- rig_thumbnail application ---
+
 	global $pref_preview_exec, $dir_install, $abs_preview_exec;
 	$abs_preview_exec = realpath($dir_install . $pref_preview_exec);
+
+	if (!is_string($abs_preview_exec))
+	{
+		rig_html_error("Missing rig_thumbnail application",
+					   "Can't get absolute path for rig_thumbnail application. " .
+					   "<br>Check file has actually been compiled, or check permissions.<p>" .
+					   "<b>Installation directory:</b> $dir_install<br>" .
+					   "<b>Path of exectable:</b> $pref_preview_exec<br>" ,
+					   $dir_install . $pref_preview_exec);
+	}
 }
 
 
@@ -625,11 +787,16 @@ function read_album_options($album)
 	// then grab new ones
 	global $abs_preview_path;
 
-	$abs_options = $abs_preview_path . prep_sep($album) . prep_sep(ALBUM_OPTIONS);
+	$abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+
+	// it is OK for this file not to exists! -- RM 20020713 fix
+	if (!rig_is_file($abs_options))
+		return;
 
 	$file = @fopen($abs_options, "rt");
+
 	if (!$file)
-		return;
+		return rig_html_error("Read Album Options", "Failed to read from file", $abs_options, $php_errormsg);
 
 	$var_name = "";
 	$local = array();
@@ -662,6 +829,8 @@ function read_album_options($album)
 			$local[] = $line;
 		}
 	}
+
+	fclose($file);		// RM 20020713 fix
 }
 
 
@@ -676,15 +845,15 @@ function write_album_options($album, $silent = false)
 	global $list_album_icon;
 	global $abs_preview_path;
 
-	$abs_options = $abs_preview_path . prep_sep($album) . prep_sep(ALBUM_OPTIONS);
+	$abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
 
-	$file = fopen($abs_options, "wt");
+	$file = @fopen($abs_options, "wt");
 
 	if (!$silent)
 		echo "write album '$album' options - file: $file<br>\n";
 
 	if (!$file)
-		return FALSE;
+		return rig_html_error("Write Album Options", "Failed to write to file", $abs_options, $php_errormsg);
 
 	fputs($file, "# album options - format: :var_name/val/val.../: to end\n");
 
@@ -763,15 +932,19 @@ function set_cookie_val($name, $val, $set = TRUE)
 }
 
 
-//***********************
-function handle_cookies()
-//***********************
+//***************************
+function rig_handle_cookies()
+//***************************
 // Some literature:
 // http://developer.netscape.com:80/docs/manuals/js/client/jsguide/cookies.htm
 {
 	global $lang;
 	global $rig_lang;
 	global $current_language;
+
+	global $theme;
+	global $rig_theme;
+	global $current_theme;
 
 	global $img_size;
 	global $rig_img_size;
@@ -796,6 +969,17 @@ function handle_cookies()
 	else
 	{
 		$current_language = $rig_lang;
+	}
+
+	if ($theme)
+	{
+		set_cookie_val("rig_theme", $theme);
+		$current_theme = $theme;
+		$rig_theme = $theme;
+	}
+	else
+	{
+		$current_theme = $rig_theme;
 	}
 
 	if ($img_size)
@@ -877,70 +1061,114 @@ function remove_login_cookies($is_admin)
 }
 
 
-//**************
-function setup()
-//**************
+//******************
+function rig_setup()
+//*****************
 {
 	// List of globals defined for the album page by prepare_album():
 	// $current_album		- string
-	// $display_language	- string
 	// $display_date		- string
 	// $display_softname	- string, constant
 
 	global $pref_umask;
+	global $pref_use_db;
+	global $pref_use_db_id;
+	global $pref_use_id_in_url;
 	global $current_language;
-	global $display_language;
 	global $display_date;
 	global $display_softname;
 	global $html_date;
+	global $html_desc_lang;
 
 	// -- setup umask
 
 	if ($pref_umask)
 		umask($pref_umask);
 
-	// -- setup language
-	switch($current_language)
-	{
-		case 'fr':
-			$display_language = 'Francais';
-			break;
-		case 'en':
-		default:
-			$current_language = 'en';
-			$display_language = 'English';
-	}
 
 	// -- setup date & soft name
 	$display_date = date($html_date);
 	$display_softname = SOFT_NAME;
+
+	// -- keep track of php errors with $php_errormsg (cf html_error)
+	ini_set("track_errors", "1");
+
+	// -- validate prefs use flags --
+	// RM 20021021 invalidate DB support in rig 0.6.2
+	$pref_use_db = FALSE;
+	$pref_use_db_id = FALSE;
+	$pref_use_id_in_url = FALSE;
+}
+
+
+//*********************
+function rig_setup_db()
+//*********************
+{
+	// RM 20021021 this function does nothing in rig 0.6.2
+}
+
+
+
+//*************************
+function rig_terminate_db()
+//*************************
+{
+	// RM 20021021 this function does nothing in rig 0.6.2
 }
 
 
 //-----------------------------------------------------------------------
 
 
-//***************************************
-function prepare_album($album, $title="")
-//***************************************
+//************************************************
+function rig_prepare_album($id, $album, $title="")
+//************************************************
 {
 	// List of globals defined for the album page by prepare_album():
 	// $current_album		- string
 	// $display_title		- string
 	// $display_album_title	- string
 
+	global $abs_album_path;
 	global $current_album;
+	global $current_id;
+	global $pref_use_db_id;
 	global $display_title;
 	global $display_album_title;
 	global $html_album, $html_none;
 
-	$current_album = decode_argument($album);
+	$current_album = FALSE;
+	$current_id = 0;
+
+	// first try the index argument
+	// RM 20021021 not for rig 0.6.2
+
+	// second try the named argument
+	if (!$current_album && isset($album))
+	{	
+		$current_album = rig_decode_argument($album);
+	}
+
+	// does the album really exist?
+	if ($current_album)
+	{
+		$abs_dir = $abs_album_path . rig_prep_sep($current_album);
+
+		if (!rig_is_dir($abs_dir))
+		{
+			// no, unset variables
+			$current_id = 0;
+			$current_album = "";
+		}
+		// else ... RM 20021021 not for rig 0.6.2
+	}
 
 	// -- setup title of album
 	if (!$title)
 		$title = $html_album;
 
-	if ($album)
+	if ($current_album)
 	{
 		$items = explode(SEP, $current_album);
 		$pretty = pretty_name($items[count($items)-1], FALSE, TRUE);
@@ -968,7 +1196,7 @@ function build_recursive_list($album)
 	read_album_options($album);
 
 	// get the absolute album path
-	$abs_dir = $abs_album_path . prep_sep($album);
+	$abs_dir = $abs_album_path . rig_prep_sep($album);
 
 	// get all files and dirs, recurse in dirs first
 	// display sub albums if any
@@ -980,12 +1208,12 @@ function build_recursive_list($album)
 
 		while ($file = readdir($handle))
 		{
-			if ($file != '.' && $file != '..' && is_visible($file))
+			if ($file != '.' && $file != '..' && rig_is_visible(-1, $album, $file))
 			{
-				$abs_file = $abs_dir . prep_sep($file);
+				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
-					$name = post_sep($album) . $file;
+					$name = rig_post_sep($album) . $file;
 					$res = build_recursive_list($name);
 					if (is_array($res) && count($res)>0)
 						$result = array_merge($result, $res);
@@ -994,7 +1222,7 @@ function build_recursive_list($album)
 					// (the local array will have been modified by the recursive call)
 					read_album_options($album);
 				}
-				else if (valid_ext($file))
+				else if (rig_valid_ext($file))
 				{
 					// create entry and add it
 					$entry = array($album, $file);
@@ -1033,41 +1261,45 @@ function load_album_list($show_all = FALSE)
 	global $current_album;
 	global $abs_album_path;
 
-	$abs_dir = $abs_album_path . prep_sep($current_album);
+	$abs_dir = $abs_album_path . rig_prep_sep($current_album);
 
 	// get all files and dirs, recurse in dirs first
 	// display sub albums if any
 	$list_images = array();
 	$handle = @opendir($abs_dir);
 	if (!$handle)
-		html_error("Album directory '$abs_dir' does not exist!");
+	{
+		// RM 20020713 better error codes
+		// html_error("Album directory '$abs_dir' does not exist!");
+		rig_html_error("Load Album List", "Can't open directory, probably does not exist", $abs_dir, $php_errormsg);
+	}
 	else
 	{
 		create_preview_dir($current_album);
 
 		while ($file = readdir($handle))
 		{
-			if ($file != '.' && $file != '..' && ($show_all || is_visible($file)))
+			if ($file != '.' && $file != '..')
 			{
-				$abs_file = $abs_dir . prep_sep($file);
-				if (is_dir($abs_file))
+				$abs_file = $abs_dir . rig_prep_sep($file);
+				if (is_dir($abs_file) && ($show_all || rig_is_visible(-1, $current_album . rig_prep_sep($file))))
 				{
 					$list_albums[] = $file;
 				}
-				else if (valid_ext($file))
+				else if (rig_valid_ext($file) && ($show_all || rig_is_visible(-1, -1, $file)))
 				{
 			    	$list_images[] = $file;
 			    }
 			}
 		}
 		closedir($handle);
+
+		if (count($list_albums))
+			usort($list_albums, "cmp_pretty_name");
+	
+		if (count($list_images))
+			usort($list_images, "cmp_pretty_name");
 	}
-
-	if (count($list_albums))
-		usort($list_albums, "cmp_pretty_name");
-
-	if (count($list_images))
-		usort($list_images, "cmp_pretty_name");
 }
 
 
@@ -1089,22 +1321,40 @@ function has_images()
 }
 
 
-//************************
-function is_visible($item)
-//************************
+//*********************************************************
+function rig_is_visible($id = -1, $album = -1, $image = -1)
+//*********************************************************
+// Input:
+// - if id is given, use solely that
+// - if both album and image are given, get image id from composited path
+//   (compare with current_album/image)
+// - if album is given but not image, get album id (compare with current_album)
+// - if image is given but not album, get image id in current_album
 {
+	global $current_id;
+	global $current_album;
+	global $current_image;
+	global $pref_use_db_id;
 	global $list_hide;
-	return !$list_hide || !in_array($item, $list_hide, TRUE);
+
+		// old option mechanism (rig <= 0.6.2)
+
+		if ($image != -1)
+			$item = $image;
+		else if ($album != -1)
+			$item = $album;
+
+		return !$list_hide || !in_array($item, $list_hide, TRUE);
 }
 
 //-----------------------------------------------------------------------
 
 
-//***********************************************
-function prepare_image($album, $image, $title="")
-//***********************************************
+//********************************************************
+function rig_prepare_image($id, $album, $image, $title="")
+//********************************************************
 {
-	setup();
+	rig_setup();
 
 	// List of globals defined for the album page by prepare_album():
 	// $current_image		- string
@@ -1114,16 +1364,51 @@ function prepare_image($album, $image, $title="")
 	// $display_title		- string
 	// $display_album_title	- string
 
+	global $current_id;
 	global $current_album;
 	global $current_image;
 	global $current_img_info;
+	global $pref_use_db_id;
+	global $abs_album_path;
 	global $pretty_image;
 	global $display_title;
 	global $display_album_title;
 	global $html_image;
 
-	$current_album = decode_argument($album);
-	$current_image = decode_argument($image);
+	$current_album = FALSE;
+	$current_image = FALSE;
+	$current_id = 0;
+
+	// first try the index argument
+	// RM 20021021 no db in rig 062
+
+	// second try the named argument
+	if (!$current_image && isset($image))
+	{
+		$current_album = rig_decode_argument($album);
+		$current_image = rig_decode_argument($image);
+	}
+
+	// does the image really exist?
+	if ($current_image)
+	{
+		$rel_img = $current_album . rig_prep_sep($current_image);
+		$abs_img = $abs_album_path . rig_prep_sep($current_album) . rig_prep_sep($current_image);
+
+		if (!rig_is_file($abs_img))
+		{
+			// no, unset variables
+			$current_id = 0;
+			$current_album = "";
+			$current_image = "";
+		}
+		else if ($pref_use_db_id && !$current_id)
+		{
+			// image exists, create an id if not done yet
+			$current_id = rig_db_id_for_image($rel_img, TRUE);
+		}
+	}
+
 	$pretty_image  = pretty_name($current_image, FALSE);
 
 	$current_img_info = build_info($current_album, $current_image);
@@ -1134,10 +1419,12 @@ function prepare_image($album, $image, $title="")
 
 	$display_title = $title . $pretty_image;
 
-	if ($album)
+	// RM 20020715 fix: use current_album
+	if ($current_album)
 	{
 		$items = explode(SEP, $current_album);
-		$display_album_title = pretty_name($items[count($items)-1]);
+		// RM 20020711: pretty_name with strip_numbers=FALSE
+		$display_album_title = pretty_name($items[count($items)-1], FALSE);
 	}
 
 	read_album_options($current_album);
@@ -1162,36 +1449,39 @@ function get_images_prev_next()
 	global $current_image;
 	global $list_images;
 
-	// array_search is >= PHP 4.0.5
-	//	$key = array_search($current_image, $list_images, TRUE);
-	// do it manually:
-    $key = FALSE;
-    foreach($list_images as $n => $item)
-    {
-        if ($item == $current_image)
-        {
-            $key = $n;
-            break;
-        }
-        $n++;
-    }
+
+	if (PHP_VERSION > "4.0.5")
+	{
+		# array_search is >= PHP 4.0.5
+		$key = array_search($current_image, $list_images, TRUE);
+	}
+	else
+	{
+		$key = FALSE;
+		foreach($list_images as $n => $item)
+		{
+			if ($item == $current_image)
+			{
+				$key = $n;
+				break;
+			}
+			$n++;
+		}
+	}
 
 
 	// DEBUG
 	// echo "current = $current_image -- array = $list_images -- key = $key";
 
 	if (is_bool($key) && $key == FALSE)
-	{
-		html_error("Can't find image '$current_image' in internal list!");
-		return;
-	}
+		return rig_html_error("Get Prev/Next Images", "Can't find image in internal list!", $current_image);
 
 	if ($key > 0)
 	{
 		$file = $list_images[$key-1];
 
 		$pretty = pretty_name($file, FALSE);
-		$preview = encode_url_link(build_preview($current_album, $file));
+		$preview = rig_encode_url_link(build_preview($current_album, $file));
 
 		$display_prev_link = self_url($file);
 		$display_prev_img = "<img src=\"$preview\" alt=\"$pretty\" border=0>";
@@ -1202,7 +1492,7 @@ function get_images_prev_next()
 		$file = $list_images[$key+1];
 
 		$pretty = pretty_name($file, FALSE);
-		$preview = encode_url_link(build_preview($current_album, $file));
+		$preview = rig_encode_url_link(build_preview($current_album, $file));
 
 		$display_next_link = self_url($file);
 		$display_next_img = "<img src=\"$preview\" alt=\"$pretty\" border=0>";
@@ -1215,9 +1505,12 @@ function get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//
 //	Revision 1.5  2002/10/20 11:49:37  ralfoide
 //	Added shell_filename2
-//
+//	
 //	Revision 1.4  2002/10/16 06:58:21  ralfoide
 //	Fixed typo
 //	
@@ -1234,4 +1527,8 @@ function get_images_prev_next()
 //	version 0.6 with location.php
 //	
 //-------------------------------------------------------------
+
+// IMPORTANT: the "? >" must be the LAST LINE of this file, otherwise
+// some HTTP output will be started by PHP4 and setting headers or cookies
+// will fail with a PHP error message.
 ?>

@@ -13,9 +13,9 @@ require_once($dir_install . $dir_src . "common.php");
 
 //-------------------------------------------------------------
 
-//*****************************************************
-function admin_perform_before_header($refresh_url = "")
-//*****************************************************
+//*********************************************************
+function rig_admin_perform_before_header($refresh_url = "")
+//*********************************************************
 {
 	global $admin;
 	global $current_album;
@@ -37,9 +37,10 @@ function admin_perform_before_header($refresh_url = "")
 }
 
 
-//****************************
-function admin_perform_defer()
-//****************************
+
+//********************************
+function rig_admin_perform_defer()
+//********************************
 {
 	global $admin;
 	global $item;
@@ -53,15 +54,15 @@ function admin_perform_defer()
 
 	if ($admin == "mk_all_prev")
 	{
-		create_all_previews($current_album);
+		rig_admin_mk_preview($current_album);
 	}
 	else if ($admin == "rm_all_prev")
 	{
-		delete_all_previews($current_album);
+		rig_admin_rm_previews($current_album);
 	}
 	else if ($admin == "rnm_canon")
 	{
-		rename_all_canon_images($current_album);
+		rig_admin_rename_canon($current_album);
 	}
 	else if ($admin == "set_icon" && $current_album && $current_image)
 	{
@@ -70,41 +71,53 @@ function admin_perform_defer()
 	}
 	else if ($admin == "show_album" && $show_album && $item)
 	{
-		set_album_visible($item, ($show_album == 'on'));
+		rig_admin_set_album_visible($item, ($show_album == 'on'));
 	}
 	else if ($admin == "show_image" && $show_image && $current_image)
 	{
-		set_image_visible($current_image, ($show_image == 'on'));
+		rig_admin_set_image_visible($current_image, ($show_image == 'on'));
 	}
 }
 
 //-------------------------------------------------------------
 
 
-//**********************************
-function create_all_previews($album)
-//**********************************
+//************************************************
+function rig_admin_mk_preview($album,
+							  $do_previews = TRUE,
+							  $do_images   = TRUE)
+//************************************************
+// RM 20020712 support for only previews or images
 {
 	global $abs_album_path;
 	global $pref_image_size;
 	global $pref_image_quality;
 	global $pref_preview_timeout;
 
-	$abs_dir = $abs_album_path . prep_sep($album);
+	$abs_dir = $abs_album_path . rig_prep_sep($album);
 
-	echo "Creation Previews for <b>$album</b><p></center><code>\n";
+	echo "<hr width=\"50%\">\n";
 
 	// get all files and dirs, recurse in dirs first
 	// display sub albums if any
 	$file_list = array();
 	$handle = @opendir($abs_dir);
 	if (!$handle)
-		html_error("Album directory '$abs_dir' does not exist!");
+	{
+		echo "Creation Previews for <b>$album</b><p></center>\n";
+
+		rig_html_error("Admin: Create Previews", "Failed to open album directory, probably does not exist!", $abs_dir, $php_errormsg);
+	}
 	else
 	{
+		echo "Creation Previews for <b>$album</b><br>\n";
+
 		// inform PHP this may take a while...
 		if ($pref_preview_timeout)
 			set_time_limit($pref_preview_timeout);
+
+
+		echo "</center><p><code>\n";
 
 		create_preview_dir($album);
 
@@ -114,23 +127,40 @@ function create_all_previews($album)
 		{
 			if ($file != '.' && $file != '..')
 			{
-				$abs_file = $abs_dir . prep_sep($file);
+				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
-					$name = post_sep($album) . $file;
+					$name = rig_post_sep($album) . $file;
 					echo "</code><center>\n";
-					create_all_previews($name);
+					rig_admin_mk_preview($name, $do_previews, $do_images);
 					echo "</center><code>\n";
 				}
-				else if (valid_ext($file))
+				else if (rig_valid_ext($file))
 				{
-					$t = getmicrotime();
-					$preview = build_preview($album, $file);
-					$t1 = getmicrotime() - $t;
+					// image exists, create an id if not done yet
+					// RM 20021021 not for rig 062
 
-					$t = getmicrotime();
-					$preview = build_preview($album, $file, $pref_image_size, $pref_image_quality);
-					$t2 = getmicrotime() - $t;
+					if ($do_previews)
+					{
+						$t = rig_getmicrotime();
+						$preview = build_preview($album, $file);
+						$t1 = rig_getmicrotime() - $t;
+					}
+					else
+					{
+						$t1 = 0;
+					}
+
+					if ($do_images)
+					{
+						$t = rig_getmicrotime();
+						$preview = build_preview($album, $file, $pref_image_size, $pref_image_quality);
+						$t2 = rig_getmicrotime() - $t;
+					}
+					else
+					{
+						$t2 = 0;
+					}
 
 					if ($start_table)
 					{
@@ -157,19 +187,21 @@ function create_all_previews($album)
 		}
 
 		closedir($handle);
+
+		echo "</code>\n";
 	}
 
-	echo "</code><center><p>Done<hr><p>\n";
+	echo "<center><p>Done for <i>$album</i><hr><p>\n";
 	flush();
 }
 
 
-//**********************************
-function delete_all_previews($album)
-//**********************************
+//************************************
+function rig_admin_rm_previews($album)
+//************************************
 {
 	global $abs_preview_path;
-	$abs_dir = $abs_preview_path . prep_sep($album);
+	$abs_dir = $abs_preview_path . rig_prep_sep($album);
 
 	// tell php this may take a while...
 	// (30 s is php's default for the script processing. I allow 30s
@@ -183,19 +215,21 @@ function delete_all_previews($album)
 	$n = 0;
 	$handle = @opendir($abs_dir);
 	if (!$handle)
-		html_error("Album directory '$abs_dir' does not exist!");
+	{
+		rig_html_error("Admin: Delete Previews", "Failed to open album directory, probably does not exist!", $abs_dir, $php_errormsg);
+	}
 	else
 	{
 		while ($file = readdir($handle))
 		{
 			if ($file != '.' && $file != '..')
 			{
-				$abs_file = $abs_dir . prep_sep($file);
+				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
-					$name = post_sep($album) . $file;
+					$name = rig_post_sep($album) . $file;
 					echo "</code><center>\n";
-					delete_all_previews($name);
+					rig_admin_rm_previews($name);
 					echo "</center><code>\n";
 				}
 				else if (eregi("^prev[0-9]+_", $file))
@@ -229,12 +263,12 @@ function delete_all_previews($album)
 }
 
 
-//********************************
-function clean_all_options($album)
-//********************************
+//***********************************
+function rig_admin_rm_options($album)
+//***********************************
 {
 	global $abs_preview_path;
-	$abs_dir = $abs_preview_path . prep_sep($album);
+	$abs_dir = $abs_preview_path . rig_prep_sep($album);
 
 	echo "Processing Options for for <b>$album</b><p>\n";
 
@@ -244,20 +278,22 @@ function clean_all_options($album)
 	// get all files and dirs, recurse in dirs first
 	$handle = @opendir($abs_dir);
 	if (!$handle)
-		html_error("Album directory '$abs_dir' does not exist!");
+	{
+		rig_html_error("Admin: Remove Options", "Failed to open album directory, probably does not exist!", $abs_dir, $php_errormsg);
+	}
 	else
 	{
 		while ($file = readdir($handle))
 		{
 			if ($file != '.' && $file != '..')
 			{
-				$abs_file = $abs_dir . prep_sep($file);
+				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
 					$album_list[] = $file;
 
-					$name = post_sep($album) . $file;
-					clean_all_options($name);
+					$name = rig_post_sep($album) . $file;
+					rig_admin_rm_options($name);
 				}
 				else
 				{
@@ -284,27 +320,29 @@ function clean_all_options($album)
 }
 
 
-//**************************************
-function rename_all_canon_images($album)
-//**************************************
+//*************************************
+function rig_admin_rename_canon($album)
+//*************************************
 {
 	global $abs_album_path;
 
-	$abs_dir = $abs_album_path . prep_sep($album);
+	$abs_dir = $abs_album_path . rig_prep_sep($album);
 
 	echo "Renaming Canon 100-1234_IMG.JPG for <b>$album</b><p>\n";
 
 	// get all files in this dir
 	$handle = @opendir($abs_dir);
 	if (!$handle)
-		html_error("Album directory '$abs_dir' does not exist!");
+	{
+		rig_html_error("Admin: Rename Canon Files", "Failed to open album directory, probably does not exist!", $abs_dir, $php_errormsg);
+	}
 	else
 	{
 		while ($file = readdir($handle))
 		{
 			if ($file != '.' && $file != '..')
 			{
-				$abs_file = $abs_dir . prep_sep($file);
+				$abs_file = $abs_dir . rig_prep_sep($file);
 
 				if (rig_is_file($abs_file))
 				{
@@ -314,7 +352,7 @@ function rename_all_canon_images($album)
 	
 						echo "Renaming '$file' --> '$dest'<br>\n";
 
-						$abs_dest = $abs_dir . prep_sep($dest);
+						$abs_dest = $abs_dir . rig_prep_sep($dest);
 						rename($abs_file, $abs_dest);
 				    }
 					else
@@ -332,12 +370,12 @@ function rename_all_canon_images($album)
 }
 
 
-//*****************************************************
-function recurse_preview_info($album, &$nb, &$nf, &$sz)
-//*****************************************************
+//***********************************************************
+function rig_admin_recurse_previnfo($album, &$nb, &$nf, &$sz)
+//***********************************************************
 {
 	global $abs_preview_path;
-	$abs_dir = $abs_preview_path . prep_sep($album);
+	$abs_dir = $abs_preview_path . rig_prep_sep($album);
 
 	// we're processing one more directory
 	$nf++;
@@ -350,13 +388,13 @@ function recurse_preview_info($album, &$nb, &$nf, &$sz)
 		{
 			if ($file != '.' && $file != '..')
 			{
-				$abs_file = $abs_dir . prep_sep($file);
+				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (is_dir($abs_file))
 				{
-					$name = post_sep($album) . $file;
-					recurse_preview_info($name, &$nb, &$nf, &$sz);
+					$name = rig_post_sep($album) . $file;
+					rig_admin_recurse_previnfo($name, &$nb, &$nf, &$sz);
 				}
-				else if (valid_ext($file))
+				else if (rig_valid_ext($file))
 				{
 					$nb++;
 					$sz += filesize($abs_file);
@@ -368,19 +406,20 @@ function recurse_preview_info($album, &$nb, &$nf, &$sz)
 }
 
 
-//******************************************
-function set_album_visible($album, $visible)
-//******************************************
+
+//****************************************************
+function rig_admin_set_album_visible($album, $visible)
+//****************************************************
 {
 	global $list_hide;
 	global $current_album;
 
-	echo "set album: '$album' visible: '$visible'<br>\n";
+	echo "set album: '$album' visible: " . ($visible ? "Yes" : "No") . "<br>\n";
 
 	if (!$album)
 		return;
 
-	if ($visible && !is_visible($album))
+	if ($visible && !rig_is_visible(-1, $album))
 	{
 		// remove the name from the hide list
 		foreach($list_hide as $key => $value)
@@ -394,7 +433,7 @@ function set_album_visible($album, $visible)
 
 		write_album_options($current_album);
 	}
-	else if (!$visible && is_visible($album))
+	else if (!$visible && rig_is_visible(-1, $album))
 	{
 		// add the name to the hide list
 		$list_hide[] = $album;
@@ -407,19 +446,19 @@ function set_album_visible($album, $visible)
 }
 
 
-//******************************************
-function set_image_visible($image, $visible)
-//******************************************
+//****************************************************
+function rig_admin_set_image_visible($image, $visible)
+//****************************************************
 {
 	global $list_hide;
 	global $current_album;
 
-	echo "set image: '$image' visible: '$visible'<br>\n";
+	echo "set image: '$image' visible: " . ($visible ? "Yes" : "No") . "<br>\n";
 
 	if (!$image)
 		return;
 
-	if ($visible && !is_visible($image))
+	if ($visible && !rig_is_visible(-1, -1, $image))
 	{
 		// remove the name from the hide list
 		foreach($list_hide as $key => $value)
@@ -433,7 +472,7 @@ function set_image_visible($image, $visible)
 
 		write_album_options($current_album);
 	}
-	else if (!$visible && is_visible($image))
+	else if (!$visible && rig_is_visible(-1, -1, $image))
 	{
 		// add the name to the hide list
 		$list_hide[] = $image;
@@ -446,15 +485,15 @@ function set_image_visible($image, $visible)
 }
 
 
-//*******************************
-function get_preview_info($album)
-//*******************************
+//*****************************************
+function rig_admin_get_preview_info($album)
+//*****************************************
 // Result: array{ nb_files, nb_folders, nb_bytes}
 {
 	$nb = 0;
 	$nf = 0;
 	$sz = 0;
-	recurse_preview_info($album, &$nb, &$nf, &$sz);
+	rig_admin_recurse_previnfo($album, &$nb, &$nf, &$sz);
 
 	$res = array($nb,
 				 $nf,
@@ -467,9 +506,9 @@ function get_preview_info($album)
 //-----------------------------------------------------------
 
 
-//****************************
-function display_album_admin()
-//****************************
+//********************************
+function rig_admin_display_album()
+//********************************
 {
 	global $pref_nb_col;
 	global $list_albums;
@@ -479,7 +518,7 @@ function display_album_admin()
 	global $html_hidden, $html_vis_on, $html_vis_off, $html_ok;
 	global $html_rename_album;
 	global $html_set_desc;
-	global $color_header_bg;
+	global $color_section_bg;
 	global $color_warning_bg;
 
 	$i = 0;
@@ -493,41 +532,40 @@ function display_album_admin()
 
 	foreach($list_albums as $key => $dir)
 	{
-		$name = post_sep($current_album) . $dir;
+		$name = rig_post_sep($current_album) . $dir;
 		$pretty = pretty_name($dir, FALSE);
-		$preview = encode_url_link(get_album_preview($name));
+		$preview = rig_encode_url_link(get_album_preview($name));
 
-		if (is_visible($dir))
+		if (rig_is_visible(-1, $dir))
 		{
 			$visible = $html_vis_off;
 			$vis_val = "off";
-			$header_color = $color_header_bg;
+			$header_color = $color_section_bg;
 		}
 		else
 		{
 			$visible = $html_vis_on;
 			$vis_val = "on";
 			$header_color = $color_warning_bg;
-		}
+		}		
+
+		// link to change album visibility
+		$vis_link = self_url(-1, -1, -1, "admin=show_album&item=$dir&show_album=$vis_val#$key");
 	?>
 			<td <?= $w ?>>
 			<center>
 
-				<table width="100%" bgcolor="<?= $header_color ?>">
-				  <tr><td>
-					<center>
-						<a name="<?= $key ?>">
-							<?php echo "$html_album<br><b>$pretty</b>\n" ?>
-						</a>
-					</center>
-				  </td></tr>
-				</table>
+				<?php
+					rig_display_section("<a name=\"$key\">$html_album<br><b>$pretty</b></a>\n",
+										$header_color);
+				?>
+
 				<br>
 
 				<a href="<?= self_url("", $name, TRUE) ?>"><img src="<?= $preview ?>" alt="<?= $dir ?>" border="1" ></a>
 				<br>
 
-				<a href="<?= self_url(-1, -1, -1, "admin=show_album&item=$dir&show_album=$vis_val#$key") ?>">
+				<a href="<?= $vis_link ?>">
 					<?= $visible ?>
 				</a>
 
@@ -549,9 +587,9 @@ function display_album_admin()
 }
 
 
-//****************************
-function display_image_admin()
-//****************************
+//********************************
+function rig_admin_display_image()
+//********************************
 {
 	global $pref_nb_col;
 	global $list_images;
@@ -561,7 +599,7 @@ function display_image_admin()
 	global $html_hidden, $html_vis_on, $html_vis_off, $html_ok;
 	global $html_rename_album;
 	global $html_set_desc;
-	global $color_header_bg;
+	global $color_section_bg;
 	global $color_warning_bg;
 
 	$i = 0;
@@ -576,13 +614,13 @@ function display_image_admin()
 	foreach($list_images as $key => $file)
 	{
 		$pretty = pretty_name($file, FALSE);
-		$preview = encode_url_link(build_preview($current_album, $file, -1, -1, FALSE));
+		$preview = rig_encode_url_link(build_preview($current_album, $file, -1, -1, FALSE));
 
-		if (is_visible($file))
+		if (rig_is_visible(-1, -1, $file))
 		{
 			$visible = $html_vis_off;
 			$vis_val = "off";
-			$header_color = $color_header_bg;
+			$header_color = $color_section_bg;
 		}
 		else
 		{
@@ -591,32 +629,33 @@ function display_image_admin()
 			$header_color = $color_warning_bg;
 		}
 
+		// link to change image visibility
+		$vis_link = self_url(-1, -1, TRUE, "admin=show_image&item=$dir&show_image=$vis_val#$key");
+
 		?>
 			<td <?= $w ?>>
 			<center>
 
-				<table width="100%" bgcolor="<?= $header_color ?>">
-				  <tr><td>
-					<center>
-						<a name="<?= $key ?>">
-							<?php echo "$html_image<br><b>$pretty</b>\n" ?>
-						</a>
-					</center>
-				  </td></tr>
-				</table>
+				<?php
+					rig_display_section("<a name=\"$key\">$html_image<br><b>$pretty</b></a>\n",
+										$header_color);
+				?>
+
 				<br>
 
-				<img src="<?= $preview ?>" alt="<?= $file ?>" border="1" >
-				<br>
-
-				<a href="<?= self_url($file, -1, TRUE, "admin=set_icon#$key") ?>">
-					<?= $html_use_as_icon ?>
-				</a>
-				<br>
-
-				<a href="<?= self_url($file, -1, TRUE, "admin=show_image&show_image=$vis_val#$key") ?>">
-					<?= $visible ?>
-				</a>
+				<font size="-1">
+					<a href="<?= self_url($file, -1, TRUE, "#$key") ?>"><img src="<?= $preview ?>" alt="<?= $file ?>" border="1" ></a>
+					<br>
+	
+					<a href="<?= self_url($file, -1, TRUE, "admin=set_icon#$key") ?>">
+						<?= $html_use_as_icon ?>
+					</a>
+					<br>
+	
+					<a href="<?= $vis_link ?>" target="_top">
+						<?= $visible ?>
+					</a>
+				</font>
 
 			</center>
 			</td>
@@ -636,100 +675,46 @@ function display_image_admin()
 }
 
 
+//-------------------------------------------------------------
 
 
-//********************************
-function display_image_admin_old()
-//********************************
+
+//************************************
+function rig_admin_insert_icon_popup()
+//************************************
 {
-	global $list_images;
 	global $current_album;
-	global $html_options, $html_image;
-	global $html_use_as_icon;
-	global $html_hidden, $html_visible, $html_vis_on, $html_vis_off, $html_ok;
-	global $html_rename_album;
-	global $html_set_desc;
-	global $color_header_bg;
-	global $color_warning_bg;
+	global $html_root;
 
-	foreach($list_images as $key => $file)
+	// split the path into its components
+	$list = explode(SEP, $current_album);
+
+	// the last item is the current album name
+	$n = count($list)-1;
+
+	// remove the last item
+	unset($list[$n]);
+
+	echo "<option value='0'>$html_root</option>\n";
+
+	foreach($list as $key => $item)
 	{
-		$pretty = $file;
-		$preview = encode_url_link(build_preview($current_album, $file, -1, -1, FALSE));
-		$link = self_url($file, -1, TRUE);
-
-		if (is_visible($file))
-		{
-			$check_on  = "checked";
-			$check_off = "";
-			$header_color = $color_header_bg;
-		}
-		else
-		{
-			$check_on  = "";
-			$check_off = "checked";
-			$header_color = $color_warning_bg;
-		}
-	?>
-		<tr><td width="25%" align="center">
-			<a name="<?= $key ?>">
-				<img src="<?= $preview ?>" alt="<?= $pretty ?>" border=0>
-			</a>
-			<br>
-			<?= $pretty ?>
-		</td><td>
-			<table width="100%" bgcolor="<?= $header_color ?>"><tr><td>
-				<center><b>
-					<?php echo "$html_image - $html_options" ?>
-				</b></center>
-			</td></tr></table>
-			<br>
-			<table colspan="2"><tr><td colspan="2">
-				<a href="<?= "$link&admin=set_icon" ?>">
-					<?= $html_use_as_icon ?>
-				</a>
-				<br>
-				<?= $html_rename_image ?>
-			</td></tr><tr><td>
-				<form method="POST" action="<?= $link ?>" >
-					<input type="hidden" name="admin" value="show_image">
-					<input type="hidden" name="item" value="<?= $file ?>">
-					<?= $html_visible ?>
-					<br>
-				  	<input type="radio" name="show_image" value="on" <?= $check_on ?> >
-					<?= $html_vis_on ?>
-					<br>
-				  	<input type="radio" name="show_image" value="off" <?= $check_off ?> >
-					<?= $html_vis_off ?>
-					<p>
-					<input type="submit" value="<?= $html_ok ?>" name="ok">
-				</form>
-			</td><td>
-				<form method="POST" action="<?= $link ?>" >
-					<input type="hidden" name="admin" value="set_desc">
-					<input type="hidden" name="item" value="<?= $file ?>">
-					<?= $html_set_desc ?>
-					<br>
-					<textarea rows="2" cols="40" name="set_desc">(comment system not ready yet)</textarea>
-					<p>
-					<div align="lef">
-					<input type="submit" value="<?= $html_ok ?>" name="ok">
-					</div>
-				</form>
-			</td></tr></table>
-		</td></tr>
-	<?php
+		echo "<option value='$key'>$item</option>\n";
 	}
 }
+
 
 //-------------------------------------------------------------
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/21 01:55:12  ralfoide
+//	Prefixing functions with rig_, multiple language and theme support, better error reporting
+//
 //	Revision 1.2  2002/10/16 04:46:44  ralfoide
 //	Added timeout for image preview
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	
@@ -738,3 +723,13 @@ function display_image_admin_old()
 //	
 //-------------------------------------------------------------
 ?>
+
+
+
+
+
+
+
+
+
+

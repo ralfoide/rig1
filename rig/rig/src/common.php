@@ -112,7 +112,7 @@ define("ALBUM_OPTIONS_XML",		"options.xml");
 define("DESCRIPTION_TXT",		"descript.ion");				// RM 20030713
 define("FILEINFODIZ_TXT",		"file_info.diz");
 
-define("ALBUM_CACHE_NAME",		"cache_album_");				// RM 20030809
+define("ALBUM_CACHE_NAME",		"cache_");				// RM 20030809
 define("ALBUM_CACHE_EXT",		".html");
 
 // start timing...
@@ -122,7 +122,8 @@ $time_start = rig_getmicrotime();
 require_once(rig_require_once("prefs.php", $dir_abs_globset));
 
 // $dir_abs_locset is optional: it is either an empty string or an absolute path -- RM 20030919 fixed
-if (is_string($dir_abs_locset) && $dir_abs_locset != "" && rig_is_file($dir_abs_locset . "prefs.php"))
+//	RM 20040708 fix: missing rig_post_sep
+if (is_string($dir_abs_locset) && $dir_abs_locset != "" && rig_is_file(rig_post_sep($dir_abs_locset) . "prefs.php"))
 	require_once(rig_post_sep($dir_abs_locset) . "prefs.php");
 
 // setup...
@@ -622,10 +623,45 @@ function rig_shell_filename($str)
 // Encode a filename before using it in a shell argument call
 // The thumbnail app will un-backslash the full argument filename before using it
 {
-	// RM 102201 -- escapeshellarg is "almost" a good candidate for linux
-	// but for windows we need escapeshellcmd because a path may contain backslashes too
+	if (PHP_OS == 'WINNT')
+	{
+		// RM 102201 -- escapeshellarg is "almost" a good candidate for linux
+		// but for windows we need escapeshellcmd because a path may contain backslashes too
 
-	return "\"" . escapeshellcmd($str) . "\"";
+		// RM 20040709 For some reason with a default install of PHP 4.3.7
+		// on IIS 5/Windows XP, escapeshellcmd removes all backslashes.
+		// In fact on this case escapeshellcmd seemed to not escape anything but
+		// simply remove any "dangerous" shell stuff instead. Most innapropriate.
+
+		// Escape a bunch of characters except : which is used for full DOS-like paths
+
+		$s = $str;
+		
+		$s = str_replace("\\", "\\\\", $s);
+		$s = str_replace("!", "\\!", $s);
+		$s = str_replace("@", "\\@", $s);
+		$s = str_replace("#", "\\#", $s);
+		$s = str_replace("$", "\\$", $s);
+		$s = str_replace("%", "\\%", $s);
+		$s = str_replace("^", "\\^", $s);
+		$s = str_replace("&", "\\&", $s);
+		$s = str_replace("*", "\\*", $s);
+		$s = str_replace("(", "\\(", $s);
+		$s = str_replace(")", "\\)", $s);
+		$s = str_replace("'", "\\'", $s);
+		$s = str_replace("\"", "\\\"", $s);
+		$s = str_replace(";", "\\:", $s);
+		$s = str_replace(",", "\\,", $s);
+
+		$s = "\"" . $s . "\"";
+
+	}
+	else
+	{
+		$s = "\"" . escapeshellcmd($str) . "\"";
+	}
+	
+	return $s;
 }
 
 
@@ -636,8 +672,20 @@ function rig_shell_filename2($str)
 // This one is more dedicated for directly unix calls.
 // Escapeshellcmd will transform ' into \' which is not always appropriate.
 {
-	$s = "\"" . escapeshellcmd($str) . "\"";
-	$s = str_replace("\\'", "'", $s);
+	if (PHP_OS == 'WINNT')
+	{
+		// RM 20040709 use our own escape routine
+		// $s = "\"" . escapeshellcmd($str) . "\"";
+		$s = rig_shell_filename($str);
+	
+		// $s = str_replace("\\'", "'", $s);
+	}
+	else
+	{
+		$s = "\"" . escapeshellcmd($str) . "\"";
+		$s = str_replace("\\'", "'", $s);
+	}
+	
 	return $s;
 }
 
@@ -3185,6 +3233,11 @@ function rig_begin_buffering()
 	global $dir_abs_admin_src;			// RM 20040601 v0.6.4.5 - fix: missing globals
 	global $dir_abs_globset;
 	global $dir_abs_locset;
+	global $pref_image_layout;
+	global $pref_album_layout;
+	global $pref_album_nb_col;
+	global $pref_image_nb_col;
+
 
 	global $rig_lang;
 	global $rig_theme;
@@ -3195,15 +3248,27 @@ function rig_begin_buffering()
 	// - current loggued user name (different users have different visibilities)
 	// - color theme name
 	// - language name
+	// - current preference image layout
+	// - current preference album layout
+	// - current preference album nb col
+	// - current preference image nb col
+
+	$hash =  ($current_album_page > 1 ? rig_simplify_filename($current_album_page) . 'a_' : '')
+			. ($current_image_page > 1 ? rig_simplify_filename($current_image_page) . 'i_' : '')
+			. rig_simplify_filename($rig_lang) . '_'
+			. rig_simplify_filename($rig_theme) . '_'
+			. rig_simplify_filename($rig_user)
+			. $pref_image_layout . "-"
+			. $pref_album_layout . "-"
+			. $pref_album_nb_col . "-"
+			. $pref_image_nb_col;
+
+	$hash = md5($hash);
 
 	$abs_html =   rig_post_sep($abs_album_cache_path)
 				. rig_post_sep($current_real_album)
 				. ALBUM_CACHE_NAME
-				. ($current_album_page > 1 ? rig_simplify_filename($current_album_page) . 'a_' : '')
-				. ($current_image_page > 1 ? rig_simplify_filename($current_image_page) . 'i_' : '')
-				. rig_simplify_filename($rig_lang) . '_'
-				. rig_simplify_filename($rig_theme) . '_'
-				. rig_simplify_filename($rig_user)
+				. $hash
 				. ALBUM_CACHE_EXT;
 
 	$is_valid = rig_is_file($abs_html);
@@ -3435,9 +3500,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.44  2004/07/14 06:09:41  ralfoide
+//	Renamed html caches. Minor fixes for Win32/PHP 4.3.7 support
+//
 //	Revision 1.43  2004/07/09 05:51:10  ralfoide
 //	Fixes: don't add useless parameters in URL, no pagination when only one page, etc.
-//
+//	
 //	Revision 1.42  2004/07/06 04:10:58  ralfoide
 //	Fix: using "img" query param instead of "image"
 //	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.

@@ -319,7 +319,7 @@ function rig_display_album_list()
 				</table>
 				<?php
 			}
-    }
+ 	   }
 
 		echo "</td></tr>\n";
 		echo "<tr><td>$title</td></tr>\n";
@@ -740,7 +740,7 @@ function rig_display_language()
 
 	$sep = FALSE;
 
-	echo "<tr><td align=\"right\"><a name=\"lang\"><i>$html_language</i></td><td> \n";
+	echo "<tr><td align=\"right\"><a name=\"lang\">$html_language</td><td> \n";
 
 	foreach($html_desc_lang as $key => $value)
 	{
@@ -794,7 +794,7 @@ function rig_display_theme()
 
 	$sep = FALSE;
 
-	echo "<tr><td align=\"right\"><a name=\"theme\"><i>$html_theme</i></td><td> \n";
+	echo "<tr><td align=\"right\"><a name=\"theme\">$html_theme</td><td> \n";
 
 	foreach($html_desc_theme as $key => $value)
 	{
@@ -813,6 +813,20 @@ function rig_display_theme()
 }
 
 
+//***************************************
+function rig_display_back_to_album($link)
+//***************************************
+{
+	global $html_back_to;
+	global $display_album_title;
+
+	$link = "<a href=\"$link\">$display_album_title</a>";
+
+	// replace "[name]" in the html string by the full link
+	echo str_replace("[name]", $link, $html_back_to);
+}
+
+
 //-----------------------------------------------------------------------
 
 
@@ -826,8 +840,13 @@ function rig_display_album_copyright()
 
 	if ($pref_copyright_name <> "")
 	{
-		// replace "[name]" in the $html by the $pref name
-		$str = str_replace("[name]", $pref_copyright_name, $html_album_copyrt);
+		$str = $html_album_copyrt;
+
+		// replace "[year]" in the html string by the current's year date (aka. "2003")
+		$str = str_replace("[year]", date("Y"), $str);
+
+		// replace "[name]" in the html string by the pref name
+		$str = str_replace("[name]", $pref_copyright_name, $str);
 	
 		echo $str;
 	}
@@ -959,12 +978,15 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.16  2003/05/26 17:52:55  ralfoide
+//	Removed unused language strings. Added new rig_display_back_to_album method
+//
 //	Revision 1.15  2003/03/17 08:24:43  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)
 //	Fix: missing pref_copyright_name in settings/prefs.php
 //	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//
+//	
 //	Revision 1.14  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).

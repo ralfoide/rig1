@@ -334,9 +334,8 @@ if (rig_is_visible())
 <p>
 	<?php
 		rig_display_options();
+		rig_display_back_to_album(rig_self_url("", -1, FALSE));
 	?>
-	<?= $html_back_to ?>
-	<a href="<?= rig_self_url("", -1, FALSE) ?>"><?= $display_album_title ?></a>
 <p>
 
 <?php
@@ -351,11 +350,14 @@ if (rig_is_visible())
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/05/26 17:52:56  ralfoide
+//	Removed unused language strings. Added new rig_display_back_to_album method
+//
 //	Revision 1.1  2003/03/12 07:02:07  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
 //	New pref to override the <meta> line in album/image display.
-//
+//	
 //	Revision 1.1  2002/11/09 08:55:44  ralf
 //	Re-inserted 0.6.3 files
 //	

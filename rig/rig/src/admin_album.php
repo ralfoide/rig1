@@ -143,9 +143,8 @@ rig_display_body();
 		?>
 	<br>
 	<font size="-1">
-		<?= $html_comment1 ?>
+		<?= $html_comment ?>
 	<br>
-		<!--?= $html_comment2 ?-->
 	</font>
 	<p>
 		<table colspan="<?= $pref_nb_col ?>" border="1" cellpadding="5" cellspacing="0">	<!-- colspan="2" -->
@@ -174,9 +173,8 @@ rig_display_body();
 <p>
 	<?php
 		rig_display_options();
+		rig_display_back_to_album(rig_self_url("", -1, FALSE));
 	?>
-	<?= $html_back_to ?>
-	<a href="<?= rig_self_url("", -1, RIG_SELF_URL_NORMAL) ?>"><?= $display_album_title ?></a>
 <p>
 
 <?php
@@ -191,12 +189,15 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/05/26 17:52:56  ralfoide
+//	Removed unused language strings. Added new rig_display_back_to_album method
+//
 //	Revision 1.2  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)
 //	Fix: missing pref_copyright_name in settings/prefs.php
 //	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//
+//	
 //	Revision 1.1  2003/03/12 07:02:07  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).

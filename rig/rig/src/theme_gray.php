@@ -47,13 +47,25 @@ $color_warning_bg		= '#00CC66';
 $color_error1_bg		= '#FF9966';	// '#FFFF33';
 $color_error2_bg		= '#FFFF99';	// '#FFFF33';
 
+
+// --- page colors for admin ---
+// RM 20040712 red title for admin
+
+if (isset($_GET['admin']) && $_GET['admin'])
+{
+	$color_title_bg			= '#FF3333';
+}
+
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2004/07/14 06:20:12  ralfoide
+//	Red title in admin mode to be more obvious
+//
 //	Revision 1.3  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//
+//	
 //	Revision 1.2  2003/08/18 06:10:03  ralfoide
 //	Moving on to 0.6.4.2
 //	Added color_table_desc in themes for description and dates in album view.

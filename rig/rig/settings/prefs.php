@@ -664,12 +664,16 @@ $pref_enable_access_hidden_albums = FALSE;
  *	When set to true, it possible to view hidden images by
  *	giving their exact name in the web browser's query string.
  *
- *	Note that albums matched by $pref_image_ignore_list can
+ *	Note that images matched by $pref_image_ignore_list can
  *	NEVER be accessed, even if this preference is TRUE.
+ *	Also, it is not possible to view an image which is in an
+ *	album that cannot be accessed (either because it is in the
+ *	album ignore list or because it's hidden with access hidden
+ *	albums disabled above).
  *
  ***********************************************************/
 
-$pref_enable_access_hidden_images = TRUE;
+$pref_enable_access_hidden_images = FALSE;
 
 
 /***********************************************************
@@ -797,9 +801,12 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.21  2004/02/18 07:37:01  ralfoide
+//	Allow viewing hidden images by direct access
+//
 //	Revision 1.20  2003/11/09 20:50:58  ralfoide
 //	Added pref_internal_file_types
-//
+//	
 //	Revision 1.19  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)

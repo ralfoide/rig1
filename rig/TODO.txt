@@ -114,6 +114,7 @@ Admin:
 
 [future]
 
+20040218 [1.N] License: Use GPL.
 20040217 [1.N] CVS: Move to 0.7
 20040217 [1.N] Fix: Translate all new strings in Japanese
 20040217 [1.N] Fix: Translate all new strings in Spanish
@@ -126,6 +127,7 @@ Admin:
 
 20040217 [2.N] Feature: Implement default UI language based on html-accept-language (and don't store default cookies)
 20040217 [2.N] Feature: Integrate album overview
+20040222 [2.N] Feature: Use PATH_INFO urls (i.e. encode album/image as "url path" rather than query arguments, with cookie side effects etc.)
 
 20040217 [2.N] Feature: Integrate Izumi
 20040217 [2.N] Feature: Use CSS2
@@ -681,9 +683,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.44  2004/02/23 04:10:48  ralfoide
+//	Next: use GPL. Bug fix needed.
+//
 //	Revision 1.43  2004/02/18 07:35:25  ralfoide
 //	Todo/changelog update
-//
+//	
 //	Revision 1.42  2003/12/07 19:48:37  ralfoide
 //	Updating SourceForge, tagging as tag_2003-12-07_v0644, ready to move on to 0.6.4.5
 //	

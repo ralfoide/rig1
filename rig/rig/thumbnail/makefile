@@ -1,21 +1,29 @@
-#simplified makefile for Thumbnail for Linux
-#creates ./thumbnail.exe
+# Simplified makefile for Thumbnail for Linux
+# Creates ./thumbnail.exe
+# 
+# Note RM 20030628:
+# libjpeg is no longer automatically compiled here, instead this relies on the
+# existance of -ljpeg (i.e. please install libjpeg using RPM or APT first!)
+#
+# If you don't have libjpeg on your system, try this:
+# make -f makefile-with-libjpeg
 
 CC=gcc
 CFLAGS= -O
 LDFLAGS= 
-LDLIBS= -lstdc++ -lm -lc
+LDLIBS:= -lstdc++ -lm -lc -ljpeg
 LN= $(CC)
 
-JPEG_TGZ =jpegsrc.v6b.tar.gz
-DIRJPEG1=./jpegsrc
-DIRJPEG2=./jpegsrc/jpeg-6b
-DIRJPEG3=./jpegsrc/ralf_patch
-LIBJPEG=$(DIRJPEG2)/libjpeg.a
+INCDIR:= -I. 
 
-INCDIR=-I. -I$(DIRJPEG2)
+# ----- avifile support -------
 
-CFILES=rig_thumbnail.cpp rig_rgb.cpp rig_jpeg.cpp
+LDLIBS:= $(LDLIBS) $(shell avifile-config --libs)
+INCDIR:= $(INCDIR) $(shell avifile-config --cflags)
+
+# -----------------------------
+
+CFILES=rig_thumbnail.cpp rig_rgb.cpp rig_jpeg.cpp rig_avifile.cpp
 
 OFILES=$(patsubst %.cpp,%.o,$(CFILES))
 
@@ -23,33 +31,17 @@ TARGET=rig_thumbnail.exe
 
 all: $(TARGET)
 
-$(TARGET): $(LIBJPEG) $(OFILES)
-	make -C $(DIRJPEG2) libjpeg.a
-	$(LN) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LIBJPEG) $(LDLIBS)
+$(TARGET): $(OFILES)
+	$(LN) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LDLIBS)
+
+# avitype.exe: avitype.o
+# 	$(LN) $(LDFLAGS) -o avitype.exe avitype.o $(LDLIBS)
 
 $(OFILES): %.o: %.cpp
 	$(CC) -c $(CFLAGS) $(INCDIR) $< -o $@
 
-$(LIBJPEG):
-	if [ ! -f $(DIRJPEG1)/$(JPEG_TGZ) ]; \
-	then \
-		cd $(DIRJPEG1) ; \
-		wget ftp://ftp.uu.net/graphics/jpeg/jpegsrc.v6b.tar.gz ; \
-	fi
-	if [ ! -d $(DIRJPEG2) ]; \
-	then \
-		( cd $(DIRJPEG1) ; tar xvzf $(JPEG_TGZ) ) ; \
-		cp -v $(DIRJPEG3)/*.h $(DIRJPEG3)/*.ds* $(DIRJPEG2)/ ; \
-	fi
-	if [ ! -f $(LIBJPEG) ]; \
-	then \
-		cd $(DIRJPEG2) ; \
-		./configure ; \
-	fi
-
 clean:
 	rm -fv $(OFILES)
-	make -C $(DIRJPEG) clean
 
 # --- experimental ---
 
@@ -59,6 +51,9 @@ rig_exif: rig_exif.c
 
 #
 # $Log$
+# Revision 1.2  2003/06/30 06:06:32  ralfoide
+# No longer makes libjpeg, instead use libjpeg and libavifile installed in system.
+#
 # Revision 1.1  2002/08/04 00:58:08  ralfoide
 # Uploading 0.6.2 on sourceforge.rig-thumbnail
 #

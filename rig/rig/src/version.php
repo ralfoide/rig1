@@ -7,15 +7,18 @@
 // $Id$
 //**********************************************
 
-$rig_version = "0.6.3.5";
+$rig_version = "0.6.4.0";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/08/15 07:13:23  ralfoide
+//	Started working on 0.6.4.0 (Album HTML cache, image thumbnails borders)
+//
 //	Revision 1.12  2003/07/16 07:05:37  ralfoide
 //	Bumped subversion
-//
+//	
 //	Revision 1.11  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
 //	

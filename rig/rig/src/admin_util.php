@@ -17,10 +17,9 @@ require_once($dir_install . $dir_src . "common.php");
 function rig_admin_perform_before_header($refresh_url = "")
 //*********************************************************
 {
-	global $admin;
 	global $current_album;
 
-	if ($admin == "rand_prev")
+	if (rig_get($_GET, 'admin') == "rand_prev")
 	{
 		rig_select_random_album_icon($current_album);
 	}
@@ -42,12 +41,15 @@ function rig_admin_perform_before_header($refresh_url = "")
 function rig_admin_perform_defer()
 //********************************
 {
-	global $admin;
-	global $item;
-	global $show_album;
-	global $show_image;
 	global $current_album;
 	global $current_image;
+
+	$item		= rig_get($_GET,'item'		);
+	$admin		= rig_get($_GET,'admin'		);
+	$show_album	= rig_get($_GET,'show_album');
+	$show_image	= rig_get($_GET,'show_image');
+
+
 
 	// DEBUG
 	// echo "admin defer: admin = '$admin' -- album = '$current_album' -- image = '$current_image'<br>\n";
@@ -229,7 +231,8 @@ function rig_admin_mk_preview($album,
 	{
 		$abs_path = "";
 		$url_path = "";
-		rig_build_album_preview($album, &$abs_path, &$url_path, -1, -1, TRUE, TRUE);
+
+		rig_build_album_preview($album, $abs_path, $url_path, -1, -1, TRUE, TRUE);
 	}
 
 	echo "<p>Done for <i>$album</i><hr></center><p>\n";
@@ -615,7 +618,7 @@ function rig_admin_recurse_previnfo($album, &$nb, &$nf, &$sz)
 					if (!rig_check_ignore_list($file, $pref_album_ignore_list)) // RM 20030814
 					{
 						$name = rig_post_sep($album) . $file;
-						rig_admin_recurse_previnfo($name, &$nb, &$nf, &$sz);
+						rig_admin_recurse_previnfo($name, $nb, $nf, $sz);
 					}
 				}
 				else if (!rig_check_ignore_list($file, $pref_image_ignore_list) && rig_valid_ext($file)) // RM 20030814
@@ -720,7 +723,7 @@ function rig_admin_get_preview_info($album)
 	$nf = 0;
 	$nd = 0;
 	$sz = 0;
-	rig_admin_recurse_previnfo($album, &$nf, &$nd, &$sz);
+	rig_admin_recurse_previnfo($album, $nf, $nd, $sz);
 
 	$res = array("nfil" => $nf,
 				 "ndir" => $nd,
@@ -961,9 +964,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2003/08/18 03:07:14  ralfoide
+//	PHP 4.3.x support, new runtime filetype support
+//
 //	Revision 1.14  2003/08/15 07:11:49  ralfoide
 //	Album HTML cache generation, ignore lists
-//
+//	
 //	Revision 1.13  2003/07/21 04:55:11  ralfoide
 //	Customizable size for album previews
 //	

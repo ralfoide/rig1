@@ -9,9 +9,41 @@
 
 
 require_once($dir_install . $dir_src . "common.php");
+
+// OO test -- RM 20030805
+if (isset($_GET['_test_']) && $_GET['_test_'] == 1)
+{
+	require_once($dir_install . $dir_src . "common.php");
+	require_once(rig_require_once("RUser.php", $dir_src));
+	require_once(rig_require_once("RAlbum.php", $dir_src));
+
+	// log in and get the current user
+	$rig_user = new RUser();
+
+	// path onto this album or image
+	$rig_path = new RPath($dir_album, $abs_album_path, rig_get($_GET,'album'), rig_get($_GET,'image'));
+
+	// this is always an album, initialize an instance
+	$rig_album = new RAlbum($rig_path);
+
+	// load preferences (ptions) and file lists...
+	if ($rig_album->Load())
+	{
+		// render album
+		if ($rig_album->Render())
+		{
+			// update album options (no-op right now)
+			$rig_album->Sync();
+		}
+	}
+
+	exit("");
+}
+// END OO test -- RM 20030805
+
 rig_enter_login(rig_self_url(""));
 
-rig_prepare_album($id, $album);
+rig_prepare_album(rig_get($_GET,'id', 0), rig_get($_GET,'album'));
 rig_display_header($display_title);
 rig_display_body();
 
@@ -23,6 +55,7 @@ if (is_string($n) && $n != '')
 else
 {
 	// begin output (captured by buffering)
+
 ?>
 
 <center>
@@ -148,7 +181,8 @@ else
 } // end output buffering
 
 rig_end_buffering();
-rig_display_credits($credits, $phpinfo);
+
+rig_display_credits();
 rig_display_footer();
 rig_terminate_db();
 
@@ -159,9 +193,12 @@ rig_terminate_db();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/08/18 03:07:14  ralfoide
+//	PHP 4.3.x support, new runtime filetype support
+//
 //	Revision 1.8  2003/08/15 07:12:07  ralfoide
 //	Album HTML cache generation
-//
+//	
 //	Revision 1.7  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).

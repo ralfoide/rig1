@@ -7,15 +7,20 @@
 // $Id$
 //**********************************************
 
+
 $rig_version = "0.6.4.0";
+
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/08/18 03:07:14  ralfoide
+//	PHP 4.3.x support, new runtime filetype support
+//
 //	Revision 1.13  2003/08/15 07:13:23  ralfoide
 //	Started working on 0.6.4.0 (Album HTML cache, image thumbnails borders)
-//
+//	
 //	Revision 1.12  2003/07/16 07:05:37  ralfoide
 //	Bumped subversion
 //	

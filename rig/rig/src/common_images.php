@@ -44,7 +44,7 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 	// create the preview now
 	// RM 20030628 using exec instead of system (system's output goes directly in the HTML!)
 	// $res = @system($abs_preview_exec . " " . $args, $retvar);
-	$res = exec($abs_preview_exec . " " . $args, $output, $retvar);
+	$res = @exec($abs_preview_exec . " " . $args, $output, $retvar);
 
 	// debug
 	// echo "<br> res = $res\n";
@@ -54,7 +54,8 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 					   "Error $retvar during image creation<p>" .
 					   "<b>Source:</b> $abs_source<br>" .
 					   "<b>Dest:</b> $abs_dest<br>" .
-					   "<b>Size</b> $size, <b>Quality</b> $quality<br>" .
+					   "<b>Size:</b> $size, <b>Quality:</b> $quality<br>" .
+					   "<b>CWD:</b> " . getcwd() . "<br>" .
 					   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|", 
 					   $php_errormsg);
 
@@ -219,7 +220,7 @@ function rig_build_preview_ex($album, $file,
 	else if (strncmp($type, "video/", 6) == 0)
 		return rig_build_video_type($album, $file, $size, $quality, $auto_create, $use_default);		
 
-	return null;
+	return NULL;
 }
 
 
@@ -366,7 +367,7 @@ function rig_get_album_preview($album, $use_default = TRUE)
 {
 	$abs_path = "";
 	$url_path = "";
-	rig_build_album_preview($album, &$abs_path, &$url_path, -1, -1, $use_default);
+	rig_build_album_preview($album, $abs_path, $url_path, -1, -1, $use_default);
 	return $url_path;
 }
 
@@ -389,129 +390,168 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 	global $pref_preview_size;
 	global $abs_album_path;
 	global $abs_preview_path, $dir_preview;
+	global $current_album;
 
-	// memorize if the global album options will have been changed
-	$album_options_changed = FALSE;
-	// by default, don't re create icons
-	$create_icon = FALSE;
+// DEBUG
+/*
+echo "<br><b>Current album:</b> $album -- $current_album\n";
+echo "<br><b>dir_abs_album:</b> $dir_abs_album\n";
+echo "<br><b>dir_images:</b> $dir_images\n";
+echo "<br><b>abs_path:</b> $abs_path\n";
+echo "<br><b>url_path:</b> $url_path\n";
+echo "<br><b>use_default:</b> $use_default\n";
+$check_icon_properties=TRUE;
+echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
+*/
 
-	// the target file this is all about
-	$dest_file = rig_prep_sep($album) . rig_prep_sep(ALBUM_ICON);
-
-	$abs_path = $abs_preview_path . $dest_file;
-	$url_path = $dir_preview      . $dest_file;
-
-	// -1- perform various checks
-
-	if (!rig_is_file($abs_path))
+	// the root album does not have any preview [RM 20030728]
+	if ($album != '')
 	{
-		// if there is no icon, we need to build one
-		$create_icon = TRUE;
-	}
-	else if ($check_icon_properties || ($s != -1 && $s != $pref_preview_size))
-	{
-		// check several properties of the icon: the file's date, the size, etc.
-
-		// try to get the size of the _existing_ album icon
-		$s = 0;
-		$info = rig_image_info($abs_path);
-		if (is_array($info) && isset($info['w']) && isset($info['h']))
-			$s = max($info['w'], $info['h']);
-
-		if ($s == 0)
+		// memorize if the global album options will have been changed
+		$album_options_changed = FALSE;
+		// by default, don't re create icons
+		$create_icon = FALSE;
+	
+		// the target file this is all about
+		$dest_file = rig_prep_sep($album) . rig_prep_sep(ALBUM_ICON);
+	
+		$abs_path = $abs_preview_path . $dest_file;
+		$url_path = $dir_preview      . $dest_file;
+	
+		// -1- perform various checks
+	
+		if (!rig_is_file($abs_path))
 		{
-			if ($admin)
-				echo "<br>Album icon <font color=red>does not exist!</font>\n";
-
+			// if there is no icon, we need to build one
 			$create_icon = TRUE;
 		}
-		else if ($s != $pref_preview_size)
+		else if ($check_icon_properties || ($size != -1 && $size != $pref_preview_size))
 		{
-			if ($admin)
-				echo "<br>Album icon needs to be rebuild: does not have preview size\n";
+			// check several properties of the icon: the file's date, the size, etc.
+	
+			// try to get the size of the _existing_ album icon
+			$s = 0;
+			$info = rig_image_info($abs_path);
+			if (is_array($info) && isset($info['w']) && isset($info['h']))
+				$s = max($info['w'], $info['h']);
+	
+			if ($s == 0)
+			{
+				if ($admin)
+					echo "<br>Album icon <font color=red>does not exist!</font>\n";
+	
+				$create_icon = TRUE;
+			}
+			else if ($s != $pref_preview_size)
+			{
+				if ($admin)
+					echo "<br>Album icon needs to be rebuild: does not have preview size\n";
+	
+				// need to create if size is not up-to-date
+				$create_icon = TRUE;
+			}
+			else
+			{
+				global $list_album_icon;
 
-			// need to create if size is not up-to-date
-			$create_icon = TRUE;
+				// now check the date of the album icon vs the original one
+	
+				// first the existing album icon, aka the "destination" file
+				$date_dest = filemtime($abs_path);
+
+				// if this album has information about the icon, use it
+				// make sure we have the correct album options
+				if ($album != $current_album)
+					$album_options_changed = rig_read_album_options($album);
+
+				// now get the name of the source of the icon
+				// fix: if $album is not the current album, the album's icon may be of a relative
+				// path that is already specified in $album, and thus must not be listed again.
+				$a = $list_album_icon['a'];
+				$f = $list_album_icon['f'];
+				if (substr($album, -1*strlen($a)) == $a)
+					$source_file = $abs_album_path . rig_prep_sep($album) . rig_prep_sep($f);
+				else
+					$source_file = $abs_album_path . rig_prep_sep($album) . rig_prep_sep($a) . rig_prep_sep($f);
+	
+				$admin = rig_get($_GET, 'admin', false);
+	
+				// if the source is newer or does not exist, icon needs to be updated
+				if (!rig_is_file($source_file))
+				{
+					$create_icon = TRUE;
+					if ($admin)
+					{
+						echo '<br>Album icon needs to be rebuild: source file does not exist';
+						echo '<br><b>File:</b> '          . $source_file;
+						echo '<br><b>Current album:</b> ' . $album;
+						echo '<br><b>Icon album:</b> '    . $a;
+						echo '<br><b>Icon name:</b> '	  . $f;
+					}
+				}
+				else if (filemtime($source_file) > $date_dest)
+				{
+					$create_icon = TRUE;
+					if ($admin)
+					{
+						echo '<br>Album icon needs to be rebuild: source file is newer!';
+						echo '<br><b>File:</b> '          . $source_file;
+						echo '<br><b>Current album:</b> ' . $album;
+						echo '<br><b>Icon album:</b> '    . $a;
+						echo '<br><b>Icon name:</b> '	  . $f;
+					}
+				}
+			}
 		}
-		else
+	
+		// -2- create icon as requested
+	
+		if ($create_icon)
 		{
-			// now check the date of the album icon vs the original one
-
-			// first the existing album icon, aka the "destination" file
-			$date_dest = filemtime($abs_path);
-
 			// if this album has information about the icon, use it
 			// make sure we have the correct album options
-			if ($album != $current_album)
+			if ($album != $current_album && !$album_options_changed)
 				$album_options_changed = rig_read_album_options($album);
-
-			// now get the name of the source of the icon
-			global $list_album_icon;
-			$source_file = $abs_album_path . rig_prep_sep($album) . rig_prep_sep($list_album_icon['a']) . rig_prep_sep($list_album_icon['f']);
-
-			// if the source is newer or does not exist, icon needs to be updated
-			if (!rig_is_file($source_file))
-			{
-				$create_icon = TRUE;
-				if ($admin)
-					echo "<br>Album icon needs to be rebuild: source file does not exist\n";
-			}
-			else if (filemtime($source_file) > $date_dest)
-			{
-				$create_icon = TRUE;
-				if ($admin)
-					echo "<br>Album icon needs to be rebuild: source file is newer!\n";
-			}
+	
+			global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
+			if (is_array($list_album_icon) && is_string($list_album_icon['f']))
+				$create_icon = !rig_set_album_icon($album, $album . rig_prep_sep($list_album_icon['a']), $list_album_icon['f'], FALSE);
+	
+			// if previous didn't work, try to make a default random one
+			if ($create_icon)
+				rig_select_random_album_icon($album);
 		}
-	}
-
-	// -2- create icon as requested
-
-	if ($create_icon)
-	{
-		// if this album has information about the icon, use it
-		// make sure we have the correct album options
-		if ($album != $current_album && !$album_options_changed)
-			$album_options_changed = rig_read_album_options($album);
-
-		global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
-		if (is_array($list_album_icon) && is_string($list_album_icon['f']))
-			$create_icon = !rig_set_album_icon($album, $album . rig_prep_sep($list_album_icon['a']), $list_album_icon['f'], FALSE);
-
-		// if previous didn't work, try to make a default random one
-		if ($create_icon)
-			rig_select_random_album_icon($album);
-	}
-
-	// -3- If a non-default size is requested, create the preview now
-	if ($size != -1 && $size != $pref_preview_size)
-	{
-		// if this album has information about the icon, use it
-		// make sure we have the correct album options
-		if ($album != $current_album && !$album_options_changed)
-			$album_options_changed = rig_read_album_options($album);
-
-		global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
-
-		if (is_array($list_album_icon) && is_string($list_album_icon['f']))
+	
+		// -3- If a non-default size is requested, create the preview now
+		if ($size != -1 && $size != $pref_preview_size)
 		{
-			$info = rig_build_preview_ex($album . rig_prep_sep($list_album_icon['a']),
-										 $list_album_icon['f'],
-										 $size, $quality);
-			$abs_path = rig_post_sep($info['a']) . $info['p'];
-			$url_path = rig_post_sep($info['r']) . $info['p'];
-  		}
-	}
-
-	// read the current options back if changed
-	if ($album_options_changed)
-		rig_read_album_options($current_album, $check_icon_properties);
-
-	// if there's a file, just use it
-	if (rig_is_file($abs_path) || !$use_default)
-	{
-		return TRUE;
-	}
+			// if this album has information about the icon, use it
+			// make sure we have the correct album options
+			if ($album != $current_album && !$album_options_changed)
+				$album_options_changed = rig_read_album_options($album);
+	
+			global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
+	
+			if (is_array($list_album_icon) && is_string($list_album_icon['f']))
+			{
+				$info = rig_build_preview_ex($album . rig_prep_sep($list_album_icon['a']),
+											 $list_album_icon['f'],
+											 $size, $quality);
+				$abs_path = rig_post_sep($info['a']) . $info['p'];
+				$url_path = rig_post_sep($info['r']) . $info['p'];
+	  		}
+		}
+	
+		// read the current options back if changed
+		if ($album_options_changed)
+			rig_read_album_options($current_album, $check_icon_properties);
+	
+		// if there's a file, just use it
+		if (rig_is_file($abs_path) || !$use_default)
+		{
+			return TRUE;
+		}
+	} // album <> ''
 
 	// otherwise, use the default icon...
 	$abs_path = realpath($dir_abs_album . $dir_images . $pref_empty_album);
@@ -586,7 +626,7 @@ function rig_set_album_icon($dest_album, $prev_album, $prev_image,
 				// echo "<br>rel_album = $rel_album\n";
 	
 				// create new info -- fill in global variable
-				global $list_album_icon;	// array of icon info { a:album(relative) , f:file, s:size }
+				global $list_album_icon;	// array of icon info { a:album(relative), f:file, s:size }
 				global $pref_preview_size;
 				$list_album_icon = array('a' => $rel_album,
 										 'f' => $prev_image,
@@ -619,6 +659,10 @@ function rig_select_random_album_icon($album)
 	$list = rig_build_recursive_list($album);
 	$n = count($list);
 
+	// DEBUG
+	// echo "<br>Randomize: $n";
+
+
 	// if there's only one, don't use the random ;-)
 	if ($n > 1)
 	{
@@ -636,7 +680,13 @@ function rig_select_random_album_icon($album)
 		return FALSE;
 	}
 
+	// DEBUG
+	// echo "==&gt; $n<br>";
+
 	$item = $list[$n];
+
+	// DEBUG
+	// var_dump($item);
 
 	// and use it as icon, if possible
 	if (is_array($item))
@@ -646,14 +696,61 @@ function rig_select_random_album_icon($album)
 }
 
 
+//*************************************
+function rig_runtime_filetype_support()
+//*************************************
+// Returns an array suitable for $pref_file_types or NULL
+// Uses rig_thumbnail.exe with flag -f [new RM 20030807]
+{
+	global $abs_preview_exec;
+
+	$args = "-f";
+
+	// gather filetype output now
+	// RM 20030628 using exec instead of system (system's output goes directly in the HTML!)
+	$res = @exec($abs_preview_exec . " " . $args, $output, $retvar);
+
+	// output should be an even number of lines
+
+	$filetypes = NULL;
+	$n = count($output);
+
+	if ($retvar || !is_array($output) || $n == 0 || ($n % 2) != 0)
+	{
+		rig_html_error("Runtime File Type Array Error",
+					   "Error $retvar when collection supported file type information<p>" .
+					   "<b>CWD:</b> " . getcwd() . "<br>" .
+					   "<b>Exec:</b><br>&nbsp;&nbsp;|<i>$abs_preview_exec</i><br>&nbsp;&nbsp;$args|<br>" .
+					   "<b>Error:</b>$php_errormsg",
+					   $output);
+	}
+	else
+	{
+		$filetypes = array();
+		$i = 0;
+		while($n >= 2)
+		{
+			$filetypes[$output[$i]] = $output[$i+1];
+			$i += 2;
+			$n -= 2;
+		}
+	}	
+
+	return $filetypes;
+}
+
+
 //-----------------------------------------------------------------------
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2003/08/18 03:06:23  ralfoide
+//	PHP 4.3.x support, new runtime filetype support
+//
 //	Revision 1.11  2003/07/21 04:55:37  ralfoide
 //	Customizable size for album previews
-//
+//	
 //	Revision 1.10  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
 //	

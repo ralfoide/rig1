@@ -43,7 +43,7 @@
 	display_title			- string
 	display_album_title		- string
 	display_language		- string
-	display_date			- string
+	display_exec_date		- string
 	display_softname		- string, constant
 	display_prev_link		- string
 	display_prev_img		- string
@@ -1182,16 +1182,16 @@ function rig_read_album_options($album)
 //*********************************
 function rig_get_album_date($album)
 //*********************************
-// RM 20030719 v0.3.6.5
+// RM 20030719 v0.3.6.5 using strftime
 {
 	global $abs_album_path;
-	global $html_date;
+	global $html_album_date;	// RM 20030719
 
 	$abs_dir = $abs_album_path . rig_prep_sep($album);
 
 	// read the timestamp on the file "." in the directory (aka the directory itself)
 	$tm = filemtime(rig_post_sep($abs_dir) . ".");
-	return date($html_date, $tm);	
+	return strftime($html_album_date, $tm);	
 }
 
 
@@ -1643,7 +1643,7 @@ function rig_setup()
 {
 	// List of globals defined for the album page by prepare_album():
 	// $current_album		- string
-	// $display_date		- string
+	// $display_exec_date	- string
 	// $display_softname	- string, constant
 
 	global $pref_umask;
@@ -1651,10 +1651,11 @@ function rig_setup()
 	global $pref_use_db_id;
 	global $pref_use_id_in_url;
 	global $current_language;
-	global $display_date;
+	global $display_exec_date;
 	global $display_softname;
-	global $html_date;
+	global $html_footer_date;
 	global $html_desc_lang;
+	global $lang_locale;
 
 	// -- setup umask
 
@@ -1662,12 +1663,43 @@ function rig_setup()
 		umask($pref_umask);
 
 
+	// -- setup locale
+
+	if (isset($lang_locale))
+	{
+		$l = FALSE;
+		if (is_string($lang_locale))
+		{
+			$l = setlocale(LC_TIME, $lang_locale);
+		}
+		else if (is_array($lang_locale))
+		{
+			// setlocale does not accept array before php 4.3... simulate
+			foreach($lang_locale as $name)
+			{
+				$l = setlocale(LC_TIME, $name);
+				if (is_string($l) && $l != '')
+					break;
+			}
+		}
+
+		if ($l == FALSE)
+		{
+			rig_html_error("Invalid Locale!",
+			               "The specified locale is not recognized by your system!",
+	            		   is_string($lang_locale) ? $lang_locale : implode(', ', $lang_locale) );
+		}
+	}
+
+
 	// -- setup date & soft name
-	$display_date = date($html_date);
-	$display_softname = SOFT_NAME;
+	$display_exec_date = strftime($html_footer_date);	// RM 20030719 using strftime
+	$display_softname  = SOFT_NAME;
+
 
 	// -- keep track of php errors with $php_errormsg (cf html_error)
 	ini_set("track_errors", "1");
+
 
 	// -- validate prefs use flags --
 	// RM 20021021 invalidate DB support in rig 0.6.2
@@ -2133,6 +2165,7 @@ function rig_get_images_prev_next()
 	global $display_next_img;
 	global $current_album;
 	global $current_image;
+	global $html_image;
 	global $list_images;
 
 
@@ -2170,7 +2203,7 @@ function rig_get_images_prev_next()
 		$preview = rig_encode_url_link(rig_build_preview($current_album, $file));
 
 		$display_prev_link = rig_self_url($file);
-		$display_prev_img = "<img src=\"$preview\" alt=\"$pretty\" border=0>";
+		$display_prev_img = "<img src=\"$preview\" alt=\"$pretty\" title=\"$html_image: $pretty\" border=0>";
 	}
 
 	if ($key < count($list_images)-1)
@@ -2181,7 +2214,7 @@ function rig_get_images_prev_next()
 		$preview = rig_encode_url_link(rig_build_preview($current_album, $file));
 
 		$display_next_link = rig_self_url($file);
-		$display_next_img = "<img src=\"$preview\" alt=\"$pretty\" border=0>";
+		$display_next_img = "<img src=\"$preview\" alt=\"$pretty\" title=\"$html_image: $pretty\" border=0>";
 	}
 }
 
@@ -2300,9 +2333,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.25  2003/07/21 04:56:46  ralfoide
+//	Using strftime (localizable) for dates; Ability to set locale depending on page language
+//
 //	Revision 1.24  2003/07/19 07:52:36  ralfoide
 //	Vertical layout for albums
-//
+//	
 //	Revision 1.23  2003/07/14 18:30:14  ralfoide
 //	Support for descript.ion and file_info.diz
 //	

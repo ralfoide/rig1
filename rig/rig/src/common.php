@@ -591,6 +591,8 @@ function self_url($in_image = -1,
 // in_album: -1 (use current if any) or text for album=...
 // in_admin: -1 (use current if any) or TRUE for "admin=on"
 // in_extra: extra parameters (in the form name=val&name=val etc)
+//
+// Use URL-Rewriting when defined in prefs [RM 20030107]
 {
 	global $album;				// from index.php url line
 	global $image;				// from index.php url line
@@ -602,9 +604,17 @@ function self_url($in_image = -1,
 	global $current_image;
 	global $PHP_SELF;
 	global $_debug_;
+	global $pref_url_rewrite;	// RM 20030107
 
-	$url = $PHP_SELF;
+	$use_rewrite = (is_array($pref_url_rewrite) && count($pref_url_rewrite) >= 3);
+
+	if ($use_rewrite)
+		$url = $pref_url_rewrite['index'];
+	else
+		$url = $PHP_SELF;
+
 	$params = "";
+	$param_concat_char = "?";
 
 	if ($in_album == -1)
 	{
@@ -644,17 +654,33 @@ function self_url($in_image = -1,
 
 	if ($in_album)
 	{
-		if ($params)
-			$params .= "&";
-		$params .= "album=$in_album";
+		if ($use_rewrite)
+		{
+			$url = $pref_url_rewrite['album'];
+			$param_concat_char = "&";
+		}
+		else
+		{
+			if ($params)
+				$params .= "&";
+			$params .= "album=$in_album";
+		}
 	}
 
 
 	if ($in_image)
 	{
-		if ($params)
-			$params .= "&";
-		$params .= "image=$in_image";
+		if ($use_rewrite)
+		{
+			$url = $pref_url_rewrite['image'];
+			$param_concat_char = "&";
+		}
+		else
+		{
+			if ($params)
+				$params .= "&";
+			$params .= "image=$in_image";
+		}
 	}
 
 	if ($_debug_)
@@ -688,8 +714,16 @@ function self_url($in_image = -1,
 		$params .= "$in_extra";
 	}
 
+	// [RM 20030107]
+	if ($use_rewrite)
+	{
+		// Replace %A by album name and %I by image name
+		$url = str_replace('%A', $in_album, $url);
+		$url = str_replace('%I', $in_image, $url);
+	}
+
 	if ($params)
-		return $url . "?" . $params;
+		return $url . $param_concat_char . $params;
 	else
 		return $url;
 }
@@ -1408,6 +1442,14 @@ function rig_prepare_image($id, $album, $image, $title="")
 			$current_id = 0;
 			$current_album = "";
 			$current_image = "";
+			
+			// [RM 20021225] invalidate current image
+			// and then redirect to the album
+			global $image;
+			$image = "";
+			$refresh_url = self_url();
+			header("Location: $refresh_url");
+			exit;
 		}
 		else if ($pref_use_db_id && !$current_id)
 		{
@@ -1615,9 +1657,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/01/07 18:02:01  ralfoide
+//	Support for URL-Rewrite conf array
+//
 //	Revision 1.9  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
-//
+//	
 //	Revision 1.8  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
 //	

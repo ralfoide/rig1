@@ -43,43 +43,47 @@ Not in 0.6.2, introduced in 0.6.3
 
 ==== RIG :: Generic ========================================
 
-20021020 [1.F] jhead support for un*x
-20021020 [1.F] Grayscale JPEG support in rig_thumbnail
-
-20021012 [4.F] Do mockup Spanish -- ask father
-
-20020717 [1.F] Feedback: album.php loads all album/image names and then at display time
-               check if it is visible. Combined with a flush of http, gives better feedback
-               for long-to-load albums.
-
-20020715 [3.F] Color theme support
-20020715 [3.F] Added 3 color themes: sand, khaki and egg.
-
-20020713 [3.F] Remove frame admin code
-
-20020712 [3.F] Language: make more flexible (manage N >= 2)
-20020713 [3.F] Added str_sp and str_jp
-20020713 [3.F] Using ISO-8859-1 for fr/sp/en and Shift-JIS for jp
-20020713 [0.F] Noticed that file name encoding will conflict with html encoding, can't fix right now
-               (ex: Shift-JIS file displaying using ISO-8859-1 or reverse).
-20020713 [0.F] Unicode file names are not supported under Windows (need Unicode thumbnail app)
-
-20020713 [3.F] Provide better error reporting (especially for files access rights)
-    20020713 [1.F] Better overall error reporting
-    20020713 [1.F] Prettier html for error reporting
+20021101 [1.N] Only display phpinfo if _debug_ enabled or admin mode
 
 20020712 [1.W] Rename functions using a constant rig_section_method naming
     20020712 [1.F] Renaming functions in admin_util.php
     20020712 [1.W] Renaming functions in common_display.php
     20020713 [1.W] Renaming functions in common.php
 
+20021104 [4.F] Bumped to version 0.6.2.3
+20021101 [3.F] Fixes in Spanish
+20021030 [2.F] Finalized album thumbnail table, cleaned up experimental code. Checked with IE5, IE6, NS4.7 and Mozilla 1.1
+20021030 [2.F] Experimenting with alternate table to display album thumbnails
+20021023 [2.F] Added <html lang>; now transmitting charset via http headers.
+20021023 [2.F] Fixes for international support of strings, specifically Japanese support
+20021022 [2.F] Global gamma can be changed in the site-specific pref file
+20021021 [2.F] Added local override of gamma in prefs.php
+20021020 [1.F] jhead support for un*x
+20021020 [1.F] Grayscale JPEG support in rig_thumbnail
+20021012 [4.F] Do mockup Spanish -- ask father
+20020717 [1.F] Feedback: album.php loads all album/image names and then at display time
+               check if it is visible. Combined with a flush of http, gives better feedback
+               for long-to-load albums.
+20020715 [3.F] Color theme support
+20020715 [3.F] Added 3 color themes: sand, khaki and egg.
+20020713 [3.F] Remove frame admin code
+20020712 [3.F] Language: make more flexible (manage N >= 2)
+20020713 [3.F] Added str_sp and str_jp
+20020713 [3.F] Using ISO-8859-1 for fr/sp/en and Shift-JIS for jp
+20020713 [0.F] Noticed that file name encoding will conflict with html encoding, can't fix right now
+               (ex: Shift-JIS file displaying using ISO-8859-1 or reverse).
+20020713 [0.F] Unicode file names are not supported under Windows (need Unicode thumbnail app)
+20020713 [3.F] Provide better error reporting (especially for files access rights)
+    20021020 [1.F] Display error when require_once files cannot be located
+    20020713 [1.F] Better overall error reporting
+    20020713 [1.F] Prettier html for error reporting
 20020712 [1.F] Fixed date display in album name in admin mode & back from admin mode
 20020712 [1.F] Disabled frame admin mode
 20020712 [1.F] Display phpinfo(ALL) on top of credits
 
 -- todo --
 
-20020712 [4.N] Ask Pascal about Japanese
+
 
 20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
 20020712 [2.N] Detect browser capability for DHTML
@@ -96,6 +100,9 @@ Not in 0.6.2, introduced in 0.6.3
 20020713 [6.N] Cache expiration based on time and reference count
 20020713 [9.N] Non-persistent cache for punchy/non overloaded servers
                i.e.: no cache at all or session-based cache + expiration (per album option?)
+
+
+20021012 [4.W] Ask Pascal about Japanese
 
 
 ==== RIG :: Database =======================================
@@ -305,9 +312,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/11/05 08:54:04  ralfoide
+//	Version 0.6.2.3 -- mostly fixes
+//
 //	Revision 1.2  2002/10/21 01:56:14  ralfoide
 //	Added summary of features
-//
+//	
 //	Revision 1.1.1.1  2002/06/21 20:41:46  ralfoide
 //	Initial revision, based on rig 0.6
 //	

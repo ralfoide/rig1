@@ -591,7 +591,13 @@ function rig_mkdir($base, $path, $mode)
 		
 			// create if it does not exists
 			if (!rig_is_dir($full))
-				mkdir($full, $mode);
+				if (!mkdir($full, $mode))
+				{
+					return rig_html_error( "Directory Creation Failed",
+					                       "Directory mode is $mode\n",
+			            		           $full,
+			                		       $php_errormsg);
+				}
 		}
 	}
 
@@ -1450,7 +1456,7 @@ function rig_load_album_list($show_all = FALSE)
 	global $abs_album_path;
 
 	// DEBUG
-	echo "<br>Current Album = \"$current_album\"";
+	// echo "<br>Current Album = \"$current_album\"";
 
 	$abs_dir = $abs_album_path . rig_prep_sep($current_album);
 
@@ -1815,9 +1821,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/02/16 22:42:27  ralfoide
+//	Report mkdir failure. Misc fix.
+//
 //	Revision 1.12  2003/02/16 21:30:32  ralfoide
 //	fix reading _value lines in options.txt
-//
+//	
 //	Revision 1.11  2003/02/16 20:22:54  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

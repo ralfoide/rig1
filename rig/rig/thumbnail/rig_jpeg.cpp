@@ -81,6 +81,15 @@ METHODDEF(void) rig_jpegio_error_exit (j_common_ptr cinfo)
 //---------------------------------------------------------------
 
 
+//**********************************
+void rig_jpeg_filetype_support(void)
+//**********************************
+{
+	printf("/\\.jpe?g$/i\n");
+	printf("image/jpeg\n");
+}
+
+
 //*******************************************************************
 bool rig_jpeg_info(const char* filename, int32 &width, int32 &height)
 //*******************************************************************
@@ -408,9 +417,12 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 /****************************************************************
 
 	$Log$
+	Revision 1.3  2003/08/18 02:06:16  ralfoide
+	New filetype support
+
 	Revision 1.2  2002/10/20 09:04:10  ralfoide
 	Fix for non-RGB jpeg
-
+	
 	Revision 1.1  2002/08/04 00:58:08  ralfoide
 	Uploading 0.6.2 on sourceforge.rig-thumbnail
 	

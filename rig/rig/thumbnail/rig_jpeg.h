@@ -18,6 +18,7 @@
 //---------------------------------------------------------------
 
 
+void	rig_jpeg_filetype_support(void);
 bool	rig_jpeg_info (const char* filename, int32 &width, int32 &height);
 RigRgb*	rig_jpeg_read (const char* filename);
 bool	rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool interlace);
@@ -31,9 +32,12 @@ bool	rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 /****************************************************************
 
 	$Log$
+	Revision 1.2  2003/08/18 02:06:16  ralfoide
+	New filetype support
+
 	Revision 1.1  2002/08/04 00:58:08  ralfoide
 	Uploading 0.6.2 on sourceforge.rig-thumbnail
-
+	
 	Revision 1.1  2001/11/26 00:07:40  ralf
 	Starting version 0.6: location and split of site vs album files
 	

@@ -37,6 +37,8 @@ Thumbnail Generator
 
 Usage:
 
+-v			turns verbose debug on for further operations (i.e. place first)
+
 -i in-file	reports information on file: text output, in the form
 			-	file format \n	(either "jpeg" or "unknown", without quotes)
 			-	width \n		(in pixels, "0" if unknown)
@@ -48,9 +50,26 @@ Usage:
 			for jpeg save operation, defaults to 80. Optional "gamma" for
 			changing gamma after rescaling (default to 1., which is no-op)
 
--v			turns verbose debug on for further operations (i.e. place first)
+-f			reports support file type information. The output are text lines
+			in the form: <perl-compatible regexp> \n <major/minor filetype> \n
+			For matching pattern syntax,
+			cf http://www.php.net/manual/en/function.preg-match.php
+			or http://www.perldoc.com/perl5.8.0/pod/perlre.html
+			For example for images:
+				/\.jpe?g$/i
+				image/jpeg
+			and videos:
+				/\.(avi|wmv|as[fx])$/i
+				video/avi
+				/\.(mov|qt|sdp|rtsp)$/i
+				video/quicktime
+				/\.(mpe?g[124]?|m[12]v|mp4)$/i
+				video/mpeg
 
-Important: the filename will be entirely "unslashed", i.e. every backslash
+-t			Test mode. Performs and prints some basic benchmark information.
+
+
+Important: the filenames will be entirely "unslashed", i.e. every backslash
 		   is going to be removed (pairs of backslashes are turned into one)
 
 --------------------------------------------------------------------------*/
@@ -156,6 +175,7 @@ int64 rig_system_time(void)
 	li.HighPart = ft.dwHighDateTime;
 	return (li.QuadPart/10); // since measured in 100 nanoseconds
 
+
 #else
 
 	// tms.utime returns the USER time in clocks per sec
@@ -166,9 +186,17 @@ int64 rig_system_time(void)
 
 	clock_t total = buf.tms_utime + buf.tms_stime;
 
-	// under Linux, I noticed CLOCKS_PER_SEC is 1e6 but times() returns
-	// value in 100*seconds.
-	const double clock_per_sec = 100.;	// instead of CLOCKS_PER_SEC
+	// RM 20030807 need to invert the #if/#else test to make it specific
+	// for Linux (libc version?) when CLOCKS_PER_SEC is wrong
+
+	#if __CYGWIN__ || (defined(CLOCKS_PER_SEC) && (CLOCKS_PER_SEC <= 1000 ))
+		// CLOCKS_PER_SEC is correct under Cygwin
+		const double clock_per_sec = (double) CLOCKS_PER_SEC;
+	#else
+		// Under Linux, I noticed CLOCKS_PER_SEC is 1e6 but times() returns
+		// value in 100*seconds (that's not 100% Posix).
+		const double clock_per_sec = 100.;	// instead of CLOCKS_PER_SEC
+	#endif
 
 	return (int64)(1e6 * (double)buf.tms_utime / clock_per_sec);
 
@@ -213,8 +241,6 @@ char * rig_unslash(const char *filename)
 	return res;
 }
 
-
-#ifndef RIG_EXCLUDE_AVIFILE
 
 //**************************************
 void rig_video_frame(RigRgb *in_out_rgb)
@@ -285,8 +311,6 @@ void rig_video_frame(RigRgb *in_out_rgb)
 	}
 }
 
-#endif // RIG_EXCLUDE_AVIFILE
-
 
 
 //---------------------------------------------------------------------------------
@@ -296,6 +320,20 @@ void rig_video_frame(RigRgb *in_out_rgb)
 //
 //---------------------------------------------------------------------------------
 
+
+//***********************************
+void rig_print_filetype_support(void)
+//***********************************
+{
+
+	rig_jpeg_filetype_support();
+
+#ifndef RIG_EXCLUDE_AVIFILE
+
+	rig_avifile_filetype_support();
+
+#endif
+}
 
 
 //*******************************************
@@ -427,14 +465,16 @@ void rig_resize_image(const char * in_filename,
 void rig_test(void)
 //*****************
 {
-	const char *f_in = "in.jpg";
+	const char *f_in  = "in.jpg";
 	const char *f_out = "out.jpg";
 	
-	int32 qual = 75;
-	int32 size = 64;
-	int32 nmax = 15;
+	const int32 qual =  75;
+	const int32 size = 128;	// 64 is the default size but 128 is a more common thumbnail size
+	const int32 nmax =  20;
 
 	printf("Starting test... please wait\n");
+
+	// Resize image with Gamma 1.0 (no-op) or 1.6 (normal op)
 
 	for(double gamma=1.; gamma <= 1.6; gamma += .6)
 	{
@@ -443,18 +483,47 @@ void rig_test(void)
 		double start = rig_system_time() / 1e6;
 
 		for(int32 i=0; i<nmax; i++)
-		{
 			rig_resize_image(f_in, f_out, size, qual, gamma);
-		}
 
 		double t = rig_system_time() / 1e6 - start;
 
-		printf("loop %d times -> %.2f s -> %.2lf i/s -- %.1lf ms/i\n",
+		printf("  loop %d times -> %.2f s -> %.2lf i/s -- %.1lf ms/i\n",
 				nmax,
 				t,
 				(double)nmax/(double)t,
 				1000.*(double)t/(double)nmax);
 	}
+
+	// Add "video frame" around a thumbnail
+	// Read the output from last test (thumbnail in max size*size pixels)
+	
+	RigRgb *rgb = rig_jpeg_read(f_out);
+
+	const int32 fmax = 20000;
+
+	if (rgb)
+	{
+		printf("Video Frame\n");
+
+		double start = rig_system_time() / 1e6;
+
+		for(int32 i=0; i<fmax; i++)
+			rig_video_frame(rgb);
+		
+		double t = rig_system_time() / 1e6 - start;
+
+		printf("  loop %d times -> %.2f s -> %.2lf i/s -- %.1lf ms/i\n",
+				fmax,
+				t,
+				(double)fmax/(double)t,
+				1000.*(double)t/(double)fmax);
+
+		delete rgb;
+		rgb = NULL;
+	}
+	
+
+
 }
 
 
@@ -502,21 +571,30 @@ int main(int argc, char *argv[])
 		{
 			if (!strcmp(argv[i], "-v"))
 			{
+				// operation: verbose
 				rig_dprintf_verbose = true;
 			}
 			else if (!strcmp(argv[i], "-i") && i<argc-1)
 			{
+				// operation: report image info
 				rig_print_info(argv[++i]);
 			}
 			else if (!strcmp(argv[i], "-r") && i<argc-3)
 			{
+				// operation: resize image
 				rig_resize_image(argv[i+1], argv[i+2],
 							 atol(argv[i+3]),
 							 (i+4<argc && isdigit(argv[i+4][0])) ? atol(argv[i+4]) : 80,
 							 (i+5<argc && isdigit(argv[i+5][0])) ? atof(argv[i+5]) : 1.);
 			}
+			else if (!strcmp(argv[i], "-f"))
+			{
+				// operation: report supported file types
+				rig_print_filetype_support();
+			}
 			else if (!strcmp(argv[i], "-t"))
 			{
+				// operation: test/benchmark
 				rig_dprintf_verbose = false;
 				rig_test();
 			}
@@ -547,9 +625,12 @@ int main(int argc, char *argv[])
 /*****************************************************************************
 
 	$Log$
+	Revision 1.5  2003/08/18 02:06:16  ralfoide
+	New filetype support
+
 	Revision 1.4  2003/07/16 06:46:23  ralfoide
 	Made video support optional
-
+	
 	Revision 1.3  2003/07/14 18:42:01  ralfoide
 	Frame in video thumbnail
 	
@@ -576,6 +657,5 @@ int main(int argc, char *argv[])
 	
 	Revision 1.2  2001/09/05 05:43:53  ralf
 	fix for marc
-	
 	
 ****************************************************************************/

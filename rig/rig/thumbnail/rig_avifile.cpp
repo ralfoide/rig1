@@ -44,6 +44,21 @@
 //---------------------------------------------------------------
 
 
+
+
+//*************************************
+void rig_avifile_filetype_support(void)
+//*************************************
+{
+	printf("/\\.(avi|wmv|as[fx])$/i\n");
+	printf("video/avi\n");
+	printf("/\\.(mov|qt|sdp|rtsp)$/i\n");
+	printf("video/quicktime\n");
+	printf("/\\.(mpe?g[124]?|m[12]v|mp4)$/i\n");
+	printf("video/mpeg\n");
+}
+
+
 //**********************************************************************
 bool rig_avifile_info(const char* filename, int32 &width, int32 &height)
 //**********************************************************************
@@ -102,12 +117,13 @@ RigRgb * rig_avifile_read(const char* filename)
 			avm::IReadStream* stream = aviFile->GetStream(0, avm::IStream::Video);
 			if (stream)
 			{
-DPRINTF(("\nstream = %p\n", stream));
+				DPRINTF(("\nstream = %p\n", stream));
 
 				if (stream->StartStreaming(NULL) >= 0)
 				{
 					avm::CImage* image = stream->GetFrame(true); // must dispose afterwards
-	DPRINTF(("\nimage = %p\n", image));
+
+					DPRINTF(("\nimage = %p\n", image));
 
 					// stop the stream once we got the first image
 					stream->StopStreaming();
@@ -151,7 +167,7 @@ DPRINTF(("\nstream = %p\n", stream));
 								m += delta;
 							}
 	
-						}
+						} // if rgb
 	
 					} // if image
 				} // if start stream
@@ -160,7 +176,7 @@ DPRINTF(("\nstream = %p\n", stream));
 	} // if avifile
 
 	// ---
-DPRINTF(("\n end rg = %p\n", rgb));
+	DPRINTF(("\n end rg = %p\n", rgb));
 
 	return rgb;
 
@@ -177,9 +193,12 @@ DPRINTF(("\n end rg = %p\n", rgb));
 /****************************************************************
 
 	$Log$
+	Revision 1.4  2003/08/18 02:06:16  ralfoide
+	New filetype support
+
 	Revision 1.3  2003/07/16 06:46:23  ralfoide
 	Made video support optional
-
+	
 	Revision 1.2  2003/07/11 15:56:38  ralfoide
 	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
 	

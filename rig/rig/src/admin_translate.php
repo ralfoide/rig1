@@ -95,7 +95,7 @@ rig_display_body();
 								{
 									$line = fgets($file, 1023);
 									echo htmlspecialchars($line, ENT_QUOTES, $html_encoding);
-									flush();
+									rig_flush();
 								}
 								fclose($file);
 							?></textarea>
@@ -181,9 +181,12 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2003/08/15 07:11:27  ralfoide
+//	Album HTML cache generation
+//
 //	Revision 1.2  2003/05/26 17:52:56  ralfoide
 //	Removed unused language strings. Added new rig_display_back_to_album method
-//
+//	
 //	Revision 1.1  2003/03/12 07:02:07  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).

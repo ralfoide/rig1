@@ -15,6 +15,14 @@ rig_prepare_album($id, $album);
 rig_display_header($display_title);
 rig_display_body();
 
+$n = rig_begin_buffering(); // returns html filename to include or TRUE to start buffering and output or FALSE on errors
+if (is_string($n) && $n != '')
+{
+	include($n);
+}
+else
+{
+	// begin output (captured by buffering)
 ?>
 
 <center>
@@ -47,7 +55,7 @@ rig_display_body();
 		</td></tr>
 	</table>
 <?php
-		flush();
+		rig_flush();
 	} // end of if album
 ?>
 <p>
@@ -86,7 +94,7 @@ rig_display_body();
 <p>
 
 <?php
-		flush();
+		rig_flush();
 	}	// end of if-has-albums
 
 	if (rig_has_images())
@@ -121,7 +129,7 @@ rig_display_body();
 <p>
 
 <?php
-		flush();
+		rig_flush();
 	}	// end of if-has-images
 
 	rig_display_back_album();
@@ -136,9 +144,14 @@ rig_display_body();
 
 
 <?php
-	rig_display_credits($credits, $phpinfo);
-	rig_display_footer();
-	rig_terminate_db();
+
+} // end output buffering
+
+rig_end_buffering();
+rig_display_credits($credits, $phpinfo);
+rig_display_footer();
+rig_terminate_db();
+
 ?>
 
 </body>
@@ -146,11 +159,14 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/08/15 07:12:07  ralfoide
+//	Album HTML cache generation
+//
 //	Revision 1.7  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
 //	New pref to override the <meta> line in album/image display.
-//
+//	
 //	Revision 1.6  2003/02/16 20:22:54  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

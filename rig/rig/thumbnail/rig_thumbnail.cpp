@@ -21,6 +21,10 @@
 #include <string.h>
 
 #ifdef WIN32
+
+	// Prevent WinSock 1 header from being used, it conflicts with WinSock 2 header.
+	#define _WINSOCKAPI_
+
 	#include <time.h>
 	#include <Windows.h>	// for SystemTimeToFileTime
 #else
@@ -711,9 +715,12 @@ int main(int argc, char *argv[])
 /*****************************************************************************
 
 	$Log$
+	Revision 1.8  2004/07/14 06:20:40  ralfoide
+	Fix for Win32: avoid including header from WinSock 1
+
 	Revision 1.7  2004/07/09 05:54:33  ralfoide
 	Better command line processing. Added timeout alarm signal.
-
+	
 	Revision 1.6  2003/11/25 05:02:04  ralfoide
 	Video: report the video codec
 	

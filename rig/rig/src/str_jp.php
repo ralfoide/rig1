@@ -59,15 +59,15 @@ $html_num_th_sep	= ',';		// separator for thousand (ex 1,000 in English)
 // Second= 0x79D2 = 31186
 // Note that %A does not work under Windows
 if (PHP_OS == 'WINNT')
-	$html_img_date		= '%Y&#24180;%m&#26376;%d&#26085; %H&#26178;%M&#20998;%S&#31186;';
+	$html_img_date		= '%Y&#24180;%m&#26376;%d&#26085;&nbsp;%H&#26178;%M&#20998;%S&#31186;';
 else
-	$html_img_date		= '%Y&#24180;%m&#26376;%d&#26085; %A %H&#26178;%M&#20998;%S&#31186;';
+	$html_img_date		= '%Y&#24180;%m&#26376;%d&#26085;&nbsp;%A&nbsp;%H&#26178;%M&#20998;%S&#31186;';
 
 
 // Album date displayed
 // cf http://www.php.net/manual/en/function.strftime.php
 
-$html_album_date	= '%Y&#24180; %m&#26376;';
+$html_album_date	= '%Y&#24180;&nbsp;%m&#26376;';
 // The following works under Debian GNU/Linux but not Windows (%B is not recognized)
 // $html_album_date	= '%Y&#24180; %B';
 
@@ -98,9 +98,12 @@ rig_parse_string_data('data_jpu8.bin');
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2004/02/29 08:07:08  ralfoide
+//	Real Japanese translations for video strings rom Tatsuo
+//
 //	Revision 1.7  2003/08/18 04:24:26  ralfoide
 //	Fixed month display in html_album_date
-//
+//	
 //	Revision 1.6  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

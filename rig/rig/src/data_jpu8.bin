@@ -282,19 +282,19 @@ $html_image_count
 // RM 20040222 - v0.6.4.5
 
 $html_video_codec_detail
-フォーマットのビデオ: <i>[codec_name]</i>
+ビデオのフォーマット: <i>[codec_name]</i>
 // Video format: <i>[codec_name]</i>
 
 $html_video_install_named_player
-[&nbsp;<a href="[url]">[name]をインストールする</a>&nbsp;] 
+[&nbsp;<a href="[url]">[name]をインストール</a>&nbsp;] 
 // [&nbsp;<a href=\"[url]\">Install&nbsp;[name]</a>&nbsp;] (<- extra space at the end)
 
 $html_video_install_unnamed_player
-[&nbsp;<a href="[url]">プレーヤーをインストールする</a>&nbsp;]
+[&nbsp;<a href="[url]">プレーヤーをインストール</a>&nbsp;]
 // [&nbsp;<a href=\"[url]\">Install&nbsp;the&nbsp;player</a>&nbsp;]
 
 $html_video_download
-[&nbsp;<a title="ダウンロードして 展示する" href="[url]">ダウンロードする</a>&nbsp;]
+[&nbsp;<a title="ビデオをダウンロードして再生" href="[url]">ダウンロード</a>&nbsp;]
 // [&nbsp;<a title=\"Download video and play on your computer\" href=\"[url]\">Download</a>&nbsp;]
 
 

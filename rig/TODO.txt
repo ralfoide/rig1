@@ -117,14 +117,13 @@ Admin:
 
 20040218 [1.N] License: Use GPL.
 20040217 [1.N] CVS: Move to 0.7
-20040226 [1.N] Fix: Need real Japanese translations for Tatsuo
 20040217 [1.N] Fix: Can't handle album name with é accent in it
 20031129 [1.N] Fix: WMF video doesn't play under Win/Mozilla
 20031129 [1.N] Fix: Disable pagination display if there's only one page
 
 20040217 [2.N] Feature: Implement default UI language based on html-accept-language
 20040217 [2.N] Fix: Don't store default cookies (for first time visitors)
-20040217 [2.N] Feature: Integrate album overview
+20040217 [2.N] Feature: Integrate album overview (needs some more work)
 20040222 [2.N] Feature: Use PATH_INFO urls (i.e. encode album/image as "url path" rather than query arguments, with cookie side effects etc.)
 
 20040217 [2.N] Feature: Integrate Izumi
@@ -137,6 +136,7 @@ Admin:
 20030119 [2.N] Bug/URL-rewrite: cookie path should use the real URL, not the rewritten one (use a pref?)
 20030119 [2.N] Templates: Move structural html in template, not in rig code! (cf album/image tables)
 
+20040226 [3.N] Exp: DHTML popup showing the content of an album (when mouse over an album thumbnail)
 20040217 [3.N] Feature: Alternate thumbnail.sh using ImageMagic and/or PHP builtin
 20030819 [3.N] Feature: Template system [sum] [RM Note: make non-OO, worse is better]
 20030802 [3.N] Images: Slideshow using HTML refresh ('low-tech')
@@ -203,6 +203,7 @@ Admin:
 
 [0.6.4.5]
 
+20040228 [1.F] Fix: Need real Japanese translations from Tatsuo
 20040226 [2.F] Fix: Minor fixes in phpUnit
 20040226 [1.F] Fix: Translate all new strings in French, Spanish and Japanese
 20040224 [2.F] Test: Testing strings are correctly translated using phpUnit
@@ -690,9 +691,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.47  2004/02/29 08:07:07  ralfoide
+//	Real Japanese translations for video strings rom Tatsuo
+//
 //	Revision 1.46  2004/02/27 09:04:21  ralfoide
 //	Fixed a typo and a missing cvs tag
-//
+//	
 //	Revision 1.45  2004/02/27 08:51:03  ralfoide
 //	Strings for video, translated and unit testing for these strings
 //	

@@ -214,6 +214,8 @@ char * rig_unslash(const char *filename)
 }
 
 
+#ifndef RIG_EXCLUDE_AVIFILE
+
 //**************************************
 void rig_video_frame(RigRgb *in_out_rgb)
 //**************************************
@@ -283,6 +285,8 @@ void rig_video_frame(RigRgb *in_out_rgb)
 	}
 }
 
+#endif // RIG_EXCLUDE_AVIFILE
+
 
 
 //---------------------------------------------------------------------------------
@@ -306,10 +310,12 @@ void rig_print_info(const char * in_filename)
 	{
 		printf("[rig-thumbnail-result] jpeg %ld %ld\n", width, height);
 	}
+#ifndef RIG_EXCLUDE_AVIFILE
 	else if (rig_avifile_info(name, width, height))
 	{
 		printf("[rig-thumbnail-result] video %ld %ld\n", width, height);
 	}
+#endif
 	else
 	{
 		printf("[rig-thumbnail-result] unknown 0 0\n");
@@ -327,7 +333,6 @@ void rig_resize_image(const char * in_filename,
 {
 	int32 wsrc, hsrc;
 	int32 wdst, hdst;
-	bool  is_video = false;
 	RigRgb *in_rgb = NULL;
 	RigRgb *out_rgb = NULL;
 
@@ -342,12 +347,16 @@ void rig_resize_image(const char * in_filename,
 
 		in_rgb = rig_jpeg_read(name);
 
+#ifndef RIG_EXCLUDE_AVIFILE
+		bool  is_video = false;
+
 		if (!in_rgb)
 		{
 			in_rgb = rig_avifile_read(name);
 			is_video = (in_rgb != NULL);
 		}
-
+#endif
+		
 		if (!in_rgb)
 			throw("rig_resize_image: could not read image.\n");
 		rig_throwifnot(in_rgb);
@@ -389,9 +398,11 @@ void rig_resize_image(const char * in_filename,
 
 		// apply decorations
 		
+#ifndef RIG_EXCLUDE_AVIFILE
 		if (is_video)
 			rig_video_frame(out_rgb);
-
+#endif
+		
 		// write output image
 
 		rig_jpeg_write(rig_unslash(out_filename), out_rgb, quality, true);
@@ -536,9 +547,12 @@ int main(int argc, char *argv[])
 /*****************************************************************************
 
 	$Log$
+	Revision 1.4  2003/07/16 06:46:23  ralfoide
+	Made video support optional
+
 	Revision 1.3  2003/07/14 18:42:01  ralfoide
 	Frame in video thumbnail
-
+	
 	Revision 1.2  2003/06/30 06:05:59  ralfoide
 	Avifile support (get info and thumbnail for videos)
 	

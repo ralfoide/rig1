@@ -10,7 +10,6 @@
 
 	Inspired from libavifile's sample source code:
 	: avitype.cc -- Print info about a .AVI file
-	: $Id$
 	: Copyright (C) 2001  Tom Pavel <pavel@alum.mit.edu>
 
 *****************************************************************************/
@@ -19,6 +18,7 @@
 #include "rig_rgb.h"
 #include "rig_avifile.h"
 
+#ifndef RIG_EXCLUDE_AVIFILE
 
 //----------------------------------------------------------------------------
 // libavifile headers
@@ -168,16 +168,21 @@ DPRINTF(("\n end rg = %p\n", rgb));
 
 
 
+//---------------------------------------------------------------
 
+#endif // RIG_EXCLUDE_AVIFILE
 
 //---------------------------------------------------------------
 
 /****************************************************************
 
 	$Log$
+	Revision 1.3  2003/07/16 06:46:23  ralfoide
+	Made video support optional
+
 	Revision 1.2  2003/07/11 15:56:38  ralfoide
 	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
-
+	
 	Revision 1.1  2003/06/30 06:05:59  ralfoide
 	Avifile support (get info and thumbnail for videos)
 	

@@ -52,7 +52,7 @@ export CVSROOT=:ext:ralfoide@cvs.rig-thumbnail.sourceforge.net:/cvsroot/rig-thum
 cvs -z3 checkout $TAG rig
 
 # remove CVS dirs
-find "$RIG" -name "CVS" -exec rm -rfv '{}' ";"
+find . -name "CVS" -exec rm -rfv '{}' ";"
 
 echo
 echo "########## Creating TGZ $RIG ################"

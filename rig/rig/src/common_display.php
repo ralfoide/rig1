@@ -331,6 +331,90 @@ function display_image_info()
 
 
 //**************************
+function rig_display_jhead()
+//**************************
+// RM 20021020 Added jhead support
+// $pref_use_jhead is a string. When set to an empty string, nothing is printed.
+// Otherwise it is the path of the jhead command on the current system.
+// This function calls the command using exec and prints out each result line.
+{
+	global $current_album;
+	global $current_image;
+	global $abs_album_path;
+	global $pref_use_jhead;
+	global $display_title;
+
+	// --- use the jhead application to extract info ---
+
+	$name = $abs_album_path . prep_sep($current_album) . prep_sep($current_image);
+
+	$retvar = 1;
+	$output = array();
+
+	$args = $pref_use_jhead . " " . shell_filename($name);
+
+	$res = exec($args, $output, $retvar);
+
+	// if the command failed, try a variation on the shell-escaping
+	if ($retvar == 1)
+	{
+		$args = $pref_use_jhead . " " . shell_filename2($name);
+		$res = exec($args, $output, $retvar);
+	}
+
+	// DEBUG
+	// echo "<p> res -> ";    var_dump($res);
+	// echo "<p> retvar -> "; var_dump($retvar);
+	// echo "<p> args -> "  ; var_dump($args);
+	// echo "<p> output-> " ; var_dump($output);
+
+	// --- use output if jhead was successful ---
+
+	if ($retvar == 0)
+	{
+		// Output every line except the one called "File name" (usually the first one)
+		// which we'll replace by the pretty name of the image
+
+		echo "<table>";
+
+		foreach($output as $n => $line)
+		{
+			// Each line is in the format "Name : Value"
+			$p = strpos($line, ":");
+
+			if ($p <= 0)
+			{
+				// separator did not exist, just use the string
+				echo "<tr><td colspan=2>" . $line . "</td><tr>\n";
+			}
+			else
+			{
+				// separator was found, use the fancy string
+				if (strncmp($line, "File name", 9) == 0)
+				{
+					// only use up to 60 characters of the display title
+					$s = $display_title;
+					if (strlen($s) > 60)
+					{
+						$s = substr($s, 0, 40) . "...";
+					}
+
+					echo "<tr><td><b>" . substr($line, 0, $p-1) . " : </b></td><td>" . $s . "</td></tr>\n";
+				}
+				else
+				{
+					echo "<tr><td><b>" . substr($line, 0, $p-1) . " : </b></td><td>" . substr($line, $p+1) . "</td></tr>\n";
+				}
+			} // if
+		} // foreach
+
+		echo "</table>";
+
+	} // if
+}
+
+
+//**************************
 function insert_size_popup()
 //**************************
 {
@@ -442,9 +526,12 @@ function insert_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/20 11:50:49  ralfoide
+//	jhead support
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

@@ -210,6 +210,25 @@ enter_login(self_url());
 		</center></td></tr></table>
 	</div>
 </td>
+<?php
+	// If the use of jhead is enabled, output jhead's output here -- RM 20021020
+	if ($pref_use_jhead != "")
+	{
+?>
+</tr><tr>
+	<td colspan=3>
+	<center>
+		<!-- jhead info -->
+		<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
+			<tr><td>
+				<?php rig_display_jhead() ?>
+			</td></tr>
+		</table>
+	</center>
+	</td>
+<?php
+	}
+?>
 </tr></table>
 
 
@@ -241,9 +260,12 @@ enter_login(self_url());
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/20 11:50:49  ralfoide
+//	jhead support
+//
 //	Revision 1.2  2002/10/16 04:47:59  ralfoide
 //	Changed layout: prev/next links aside the image, image size at bottom
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

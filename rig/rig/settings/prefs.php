@@ -11,21 +11,37 @@
 
 if (PHP_OS == 'WINNT')
 {
-	// image generator
+	// --- rig-thumbnail.exe options ---
 	$pref_preview_exec		= "thumbnail\\Release\\rig_thumbnail.exe";
 	$pref_mkdir_mask		= 0777;
 	$pref_umask				= 0022;
-	// customization of cookie host (defaults to empty if not set)
+
+	// --- customization of cookies ---
+	// cookie hostname (defaults to empty if not set)
     $pref_cookie_host       = "";
+
+	// --- pages rendering options ---
+	// RM 20021020 Added jhead support
+	// The path to jhead or an empty string to disable it's usage.
+	// Disabled by default under Windows.
+	$pref_use_jhead			= "";
 }
 else // Un*x
 {
-	// image generator
+	// --- rig-thumbnail.exe options ---
 	$pref_preview_exec		= "thumbnail/rig_thumbnail.exe";
 	$pref_mkdir_mask		= 0777;
 	$pref_umask				= 0022;
-	// customization of cookie host (defaults to empty if not set)
+
+	// --- customization of cookies ---
+	// cookie hostname (defaults to empty if not set)
     $pref_cookie_host       = "";
+
+	// --- page rendering options ---
+	// RM 20021020 Added jhead support
+	// The path to jhead or an empty string to disable it's usage.
+	// Use either exec("which jhead") or a path like "/usr/bin/jhead"
+	$pref_use_jhead			= exec("which jhead");
 }
 
 
@@ -42,6 +58,8 @@ $pref_size_popup		= array(256, 300, 384, 400, 512, 640, 800, 1024, 1280, 1600);
 $pref_empty_album		= "empty_album.gif";
 
 $pref_global_gamma		= 1.0;	// use 1.0 for no-op
+
+
 
 
 // --- login options ---
@@ -74,9 +92,12 @@ $pref_date_sep          = " - ";            // separator between date and descri
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2002/10/20 11:48:42  ralfoide
+//	jhead support
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//
+//	
 //	Revision 1.2  2001/11/26 04:35:17  ralf
 //	version 0.6 with location.php
 //	

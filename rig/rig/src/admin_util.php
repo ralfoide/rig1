@@ -734,15 +734,12 @@ function rig_admin_display_album()
 	global $current_album;
 	global $list_hide;
 	global $list_albums;
-	global $list_albums_count;		// RM 20030125
 	global $html_options, $html_album;
 	global $html_hidden, $html_vis_on, $html_vis_off, $html_ok;
 	global $html_rename_album;
 	global $html_set_desc;
 	global $color_section_bg;
 	global $color_warning_bg;
-
-	$list_albums_count = 0;
 
 	$i = 0;
 	$n = $pref_nb_col;
@@ -757,9 +754,6 @@ function rig_admin_display_album()
 		$name = rig_post_sep($current_album) . $dir;
 		$pretty = rig_pretty_name($dir, FALSE);
 		$preview = rig_encode_url_link(rig_get_album_preview($name));
-
-		// count visible albums
-		$list_albums_count++;
 
 		if (rig_is_visible(-1, $dir))
 		{
@@ -944,11 +938,17 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/03/17 08:24:42  ralfoide
+//	Fix: added pref_disable_web_translate_interface (disabled by default)
+//	Fix: added pref_disable_album_borders (enabled by default)
+//	Fix: missing pref_copyright_name in settings/prefs.php
+//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
+//
 //	Revision 1.10  2003/03/12 07:02:07  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
 //	New pref to override the <meta> line in album/image display.
-//
+//	
 //	Revision 1.9  2003/02/17 07:47:01  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
 //	

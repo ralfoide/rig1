@@ -21,7 +21,6 @@ if (PHP_OS == 'WINNT')
     $pref_cookie_host       = "";
 
 	// --- pages rendering options ---
-	// RM 20021020 Added jhead support
 	// The path to jhead or an empty string to disable it's usage.
 	// Disabled by default under Windows.
 	$pref_use_jhead			= "";
@@ -38,7 +37,6 @@ else // Un*x
     $pref_cookie_host       = "";
 
 	// --- page rendering options ---
-	// RM 20021020 Added jhead support
 	// The path to jhead or an empty string to disable it's usage.
 	// Use either exec("which jhead") or a path like "/usr/bin/jhead"
 	$pref_use_jhead			= exec("which jhead");
@@ -84,7 +82,7 @@ $pref_guest_username	= "guest";			// must be in the user_list.txt file
 // --- default language & theme ---
 
 $pref_default_lang		= 'en';				// choices are en, fr, sp, jp
-$pref_default_theme		= 'blue';			// choices are blue, sand
+$pref_default_theme		= 'blue';			// choices are blue, gray, khaki, egg, sand
 
 
 // --- dates at beginning of album names ---
@@ -95,6 +93,15 @@ $pref_date_YM						= 'M/Y';	// format for short dates. M & Y must appear.
 /* French   */ // $pref_date_YMD	= 'D/N/Y';	// format for long dates. D & M & Y must appear.
 $pref_date_sep						= ' - ';	// separator between date and description
 
+// ---- Copyright Name for albums & images ----
+
+// Format is HTML. Use HTML-compliant characters (like &eacute; or &#129;)
+// Important: if you want to insert Japanese here, add a line in data_jpu8.bin
+// or use UTF-8 bytes directly in hexa.
+// This should ideally be overriden by album-specific prefs.php files
+
+$pref_copyright_name = '';
+
 
 // --- meta tags for album/image pages ---
 // Each album's pref can override this. The default is here.
@@ -102,15 +109,41 @@ $pref_date_sep						= ' - ';	// separator between date and description
 $pref_html_meta = "<meta name=\"robots\" content=\"noindex, nofollow\">";
 
 
+// --- Global display preferences ---
+// WARNING: these are mostly development hacks that will be removed later!!!
+
+// -------------
+// Disable album thumbnails borders. Necessary for Mozilla 1.0 lovers, since it doesn't render the
+// actualy table correctly. Will be fixed later (Note that Mozilla 1.2 works just fine!)
+// -------------
+// Default: line commented or value 0. Uncomment and set to 1 to disable image border.
+
+$pref_disable_album_borders = 0;
+
+
+// -------------
+// Disable web-interface for translating language.
+// This is the site-wide setting. If you want to enable it, please do so in the album prefs.php!
+// -------------
+// Default: line with value 1. Set to 0 to enable language translation by admins directly in the web interface.
+
+$pref_disable_web_translate_interface = 1;
+
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/03/17 08:24:42  ralfoide
+//	Fix: added pref_disable_web_translate_interface (disabled by default)
+//	Fix: added pref_disable_album_borders (enabled by default)
+//	Fix: missing pref_copyright_name in settings/prefs.php
+//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
+//
 //	Revision 1.6  2003/03/12 07:03:16  ralfoide
 //	Prefs can override <meta> in album/image display
-//
+//	
 //	Revision 1.5  2003/02/16 20:10:35  ralfoide
 //	Update. Version 0.6.3.1
 //	

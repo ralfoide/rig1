@@ -104,8 +104,8 @@ $html_chg_user		= 'change user';
 $html_guest_login	= '\'Guest\' Mode';
 
 // RM 20030119 - v0.6.3
-$html_album_copyrt	= 'All images &copy; [name]';	// [name] will become $pref_album_copyright_name
-$html_image_copyrt	= 'Image &copy; [name]';		// [name] will become $pref_album_copyright_name
+$html_album_copyrt	= 'All images &copy; [name]';	// [name] will become $pref_copyright_name
+$html_image_copyrt	= 'Image &copy; [name]';		// [name] will become $pref_copyright_name
 $html_album_count	= '[count] albums';
 $html_image_count	= '[count] images';
 
@@ -148,9 +148,15 @@ $html_img_date		= 'l\, F d\, Y\, g:m A';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/03/17 08:24:43  ralfoide
+//	Fix: added pref_disable_web_translate_interface (disabled by default)
+//	Fix: added pref_disable_album_borders (enabled by default)
+//	Fix: missing pref_copyright_name in settings/prefs.php
+//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
+//
 //	Revision 1.9  2003/02/21 09:03:03  ralfoide
 //	Added gray theme color
-//
+//	
 //	Revision 1.8  2003/02/16 20:22:57  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

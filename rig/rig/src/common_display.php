@@ -51,7 +51,7 @@ function rig_display_header($title)
 
 	// prepare the meta tags line
 	$meta = "";
-	
+
 	if (!$admin && $pref_html_meta)
 		$meta = $pref_html_meta;
 
@@ -163,16 +163,14 @@ function rig_display_album_list()
 	global $pref_preview_size;
 	global $abs_preview_path;
 	global $list_albums;
-	global $list_albums_count;		// RM 20030119
 	global $current_album;
+	global $pref_disable_album_borders;
 
 	// name of album-border images
 	$box_tr = $dir_images . "box_tr.gif";
 	$box_br = $dir_images . "box_br.gif";
 	$line_b = $dir_images . "line_b.gif";
 	$line_r = $dir_images . "line_r.gif";
-
-	$list_albums_count = 0;
 
 	$i = 0;
 	$n = $pref_nb_col;
@@ -191,9 +189,6 @@ function rig_display_album_list()
 
 		if (!rig_is_visible(-1, $dir))
 			continue;
-
-		// count visible albums
-		$list_albums_count++;
 
 		$pretty = rig_pretty_name($dir, FALSE, TRUE);
 
@@ -256,54 +251,74 @@ function rig_display_album_list()
 			// RM 20021101 important: the various <img> and the title must have the </td>
 			// immediately after without any new-line in between (most browsers would insert
 			// a vertical space otherwise)
-			
-			?>
-			<table border="0" cellspacing="0" cellpadding="0">
-				<!-- top row -->
-				<tr>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-				</tr>
-				<!-- center rows -->
-				<tr>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
-					<td><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
-					    <tr>
-						    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
-					    </tr>
-					</table></td>
-					<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
-					<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
-				</tr>
-				<tr>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-					<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
-					<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-					<td><img src="<?= $line_r ?>" width="3" height="3"></td>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-				</tr>
-				<tr>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-					<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
-					<td><img src="<?= $line_b ?>" width="3" height="3"></td>
-					<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-				</tr>
-				<!-- bottom row -->
-				<tr>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-					<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-				</tr>
-			</table>
-			<?php
 
+			if (isset($pref_disable_album_borders) && $pref_disable_album_borders)
+			{
+				// Disable the picture borders around the image
+				// This is for Mozilla 1.0 lovers since it doesn't handle it correctly.
+
+				$x2 = ($dx-$sx-2)/2;
+				$y2 = ($dy-$sy-2)/2;
+
+				?>
+				<table width="<?= $dx ?>" height="<?= $dy ?>" border="0">
+					<tr>
+						<td align="center" valign="middle"><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="1"></a></td>
+					</tr>
+				</table>
+				<?php
+			}
+			else
+			{
+				// New layout. Still not perfect but will do right now.
+
+				?>
+				<table border="0" cellspacing="0" cellpadding="0">
+					<!-- top row -->
+					<tr>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+					</tr>
+					<!-- center rows -->
+					<tr>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
+						<td><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
+						    <tr>
+							    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
+						    </tr>
+						</table></td>
+						<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
+						<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
+					</tr>
+					<tr>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+						<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
+						<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+						<td><img src="<?= $line_r ?>" width="3" height="3"></td>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+					</tr>
+					<tr>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+						<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
+						<td><img src="<?= $line_b ?>" width="3" height="3"></td>
+						<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+					</tr>
+					<!-- bottom row -->
+					<tr>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+						<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+					</tr>
+				</table>
+				<?php
+			}
     }
 
 		echo "</td></tr>\n";
@@ -339,12 +354,9 @@ function rig_display_image_list()
 
 	global $pref_nb_col;
 	global $list_images;
-	global $list_images_count;		// RM 20030119
 	global $current_album;
 	global $pref_preview_size;
 
-	$list_images_count = 0;
-	
 	$i = 0;
 	$n = $pref_nb_col;
 	$m = count($list_images);
@@ -360,9 +372,6 @@ function rig_display_image_list()
 	{
 		if (!rig_is_visible(-1, -1, $file))
 			continue;
-
-		// count visible images
-		$list_images_count++;
 
 		// is this the last line? [RM 20021101]
 		$is_last_line = ($index >= $m-$n);
@@ -436,7 +445,7 @@ function rig_display_album_count()
 // because most of the time the table won't be large enough
 {
 	global $html_album_count;
-	global $list_albums_count;	// updated in rig_display_album_list()
+	global $list_albums_count;	// updated in rig_has_albums()
 
 	if ($list_albums_count >= 3)
 	{
@@ -727,6 +736,7 @@ function rig_display_language()
 	global $html_desc_lang;
 	global $html_language;
 	global $current_language;
+	global $pref_disable_web_translate_interface;
 
 	$sep = FALSE;
 
@@ -739,20 +749,27 @@ function rig_display_language()
 
 		if ($current_language == $key)
 		{
-			// if in admin mode and not already in translate mode, display the edit language link
-			// RM 20030308 TBT -- Translate "Edit"
-			if ($admin && !$translate)
+			if (isset($pref_disable_web_translate_interface) && $pref_disable_web_translate_interface)
 			{
-				echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_TRANSLATE, "lang=$key#lang") . "\">Edit $value</a>] \n";
-			}
-			else if ($admin && $translate)
-			{
-				echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_TRANSLATE, "lang=$key#lang") . "\">Reload $value</a>] \n";
-				echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "lang=$key#lang") . "\">Exit Edit $value</a>] \n";
+				echo $value;
 			}
 			else
 			{
-				echo $value;
+				// if in admin mode and not already in translate mode, display the edit language link
+				// RM 20030308 TBT -- Translate "Edit"
+				if ($admin && !$translate)
+				{
+					echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_TRANSLATE, "lang=$key#lang") . "\">Edit $value</a>] \n";
+				}
+				else if ($admin && $translate)
+				{
+					echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_TRANSLATE, "lang=$key#lang") . "\">Reload $value</a>] \n";
+					echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "lang=$key#lang") . "\">Exit Edit $value</a>] \n";
+				}
+				else
+				{
+					echo $value;
+				}
 			}
 		}
 		else
@@ -942,11 +959,17 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2003/03/17 08:24:43  ralfoide
+//	Fix: added pref_disable_web_translate_interface (disabled by default)
+//	Fix: added pref_disable_album_borders (enabled by default)
+//	Fix: missing pref_copyright_name in settings/prefs.php
+//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
+//
 //	Revision 1.14  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
 //	New pref to override the <meta> line in album/image display.
-//
+//	
 //	Revision 1.13  2003/02/17 07:47:03  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
 //	

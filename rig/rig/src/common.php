@@ -1667,21 +1667,94 @@ function rig_load_album_list($show_all = FALSE)
 }
 
 
-//***********************
-function rig_has_albums()
-//***********************
+//*********************************************
+function rig_has_albums($exclude_hidden = TRUE)
+//*********************************************
+// Indicates how many albums there are.
+// If $exclude_hidden is TRUE, which is the default, only indicates
+// how many visible albums there are. If false, also count hidden albums.
 {
 	global $list_albums;
-	return (count($list_albums) >= 1);
+	global $list_albums_count;
+
+	// Is there any albums at all?
+	if (count($list_albums) >= 1)
+	{
+		if ($exclude_hidden)
+		{
+			// There are albums. But some are hidden.
+			// Find how many are visible. Do this only once.
+			if (!isset($list_albums_count))
+			{
+				$list_albums_count = 0;
+				foreach($list_albums as $dir)
+				{
+					// count visible albums
+					if (rig_is_visible(-1, $dir))
+						$list_albums_count++;
+				}
+			}
+		}
+		else
+		{
+			// count everything
+			$list_albums_count = $list_albums;
+		}
+
+		return ($list_albums_count > 0);
+	}
+
+	// by default count everything
+	$list_albums_count = $list_albums;
+
+	// None at all, so that's a positive false
+	return false;
 }
 
 
-//***********************
-function rig_has_images()
-//***********************
+//*********************************************
+function rig_has_images($exclude_hidden = TRUE)
+//*********************************************
+// Indicates how many images there are.
+// If $exclude_hidden is TRUE, which is the default, only indicates
+// how many visible images there are. If false, also count hidden images.
 {
 	global $list_images;
-	return (count($list_images) >= 1);
+	global $list_images_count;
+
+	// Is there any images at all?
+	if (count($list_images) >= 1)
+	{
+		if ($exclude_hidden)
+		{
+			// There are images. But some are hidden.
+			// Find how many are visible. Do this only once.
+			if (!isset($list_images_count))
+			{
+				$list_images_count = 0;
+
+				foreach($list_images as $index => $file)
+				{
+					// count visible images
+					if (rig_is_visible(-1, -1, $file))
+						$list_images_count++;
+				}
+			}
+		}
+		else
+		{
+			// count everything
+			$list_images_count = $list_images;
+		}
+
+		return ($list_images_count > 0);
+	}
+
+	// by default count everything
+	$list_images_count = $list_images;
+
+	// None at all, so that's a positive false
+	return false;
 }
 
 
@@ -1990,11 +2063,17 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.20  2003/03/17 08:24:42  ralfoide
+//	Fix: added pref_disable_web_translate_interface (disabled by default)
+//	Fix: added pref_disable_album_borders (enabled by default)
+//	Fix: missing pref_copyright_name in settings/prefs.php
+//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
+//
 //	Revision 1.19  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
 //	New pref to override the <meta> line in album/image display.
-//
+//	
 //	Revision 1.18  2003/02/23 10:18:36  ralfoide
 //	plain vs crypt vs MD5 password in the password file
 //	

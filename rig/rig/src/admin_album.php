@@ -104,7 +104,7 @@ rig_display_body();
 
 <?php
 	rig_load_album_list(TRUE);
-	if (rig_has_albums())
+	if (rig_has_albums(FALSE))
 	{
 ?>
 	<p>
@@ -133,7 +133,7 @@ rig_display_body();
 <?php
 	}
 
-	if (rig_has_images())
+	if (rig_has_images(FALSE))
 	{
 ?>
 
@@ -191,11 +191,17 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/03/17 08:24:42  ralfoide
+//	Fix: added pref_disable_web_translate_interface (disabled by default)
+//	Fix: added pref_disable_album_borders (enabled by default)
+//	Fix: missing pref_copyright_name in settings/prefs.php
+//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
+//
 //	Revision 1.1  2003/03/12 07:02:07  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).
 //	New pref to override the <meta> line in album/image display.
-//
+//	
 //	Revision 1.7  2003/02/17 07:47:00  ralfoide
 //	Debugging. Fixed album visibility not being used correctly
 //	

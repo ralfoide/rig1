@@ -28,7 +28,7 @@ $pref_global_gamma		= 1.0;	            // use 1.0 for no-op
 // Important: if you want to insert Japanese here, add a line in data_jpu8.bin
 // or use UTF-8 bytes directly in hexa.
 
-$pref_album_copyright_name = 'Your Name Here';
+$pref_copyright_name = 'Your Name Here';
 
 
 
@@ -68,9 +68,15 @@ $pref_album_copyright_name = 'Your Name Here';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/03/17 08:24:42  ralfoide
+//	Fix: added pref_disable_web_translate_interface (disabled by default)
+//	Fix: added pref_disable_album_borders (enabled by default)
+//	Fix: missing pref_copyright_name in settings/prefs.php
+//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
+//
 //	Revision 1.7  2003/03/12 07:11:45  ralfoide
 //	New upload dirs, new entry_point, new meta override
-//
+//	
 //	Revision 1.6  2003/02/16 20:09:40  ralfoide
 //	Update. Version 0.6.3.1
 //	

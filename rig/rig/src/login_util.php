@@ -187,6 +187,13 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 				if (!is_string($line) || $line == '' || $line[0] == '#')
 					continue;
 
+				// RM 20040104 fix: remove trailing \n \r if any
+				if (substr($line, -1) == "\n")
+					$line = substr($line, 0, -1);
+
+				if (substr($line, -1) == "\r")
+					$line = substr($line, 0, -1);
+
 				// see comments in function header for line format
 				$a = split(':', $line, 4);
 				
@@ -329,6 +336,9 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2004/02/18 07:39:48  ralfoide
+//	Fixes for \r\n in passwd files
+//
 //	Revision 1.11  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)
@@ -336,7 +346,7 @@ function rig_display_user_name($user = "")
 //	Fix: Changed credit line
 //	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
 //	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//
+//	
 //	Revision 1.10  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
 //	

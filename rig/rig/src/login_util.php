@@ -18,9 +18,9 @@
 // Global variable this module can set:
 // display_user	- displayed username
 
-//****************************************
-function enter_login($url, $admin = FALSE)
-//****************************************
+//********************************************
+function rig_enter_login($url, $admin = FALSE)
+//********************************************
 {
 	global $dir_install,	$dir_src;
 	global $html_login,		$html_rig_admin;
@@ -38,14 +38,14 @@ function enter_login($url, $admin = FALSE)
 
 	if ($admin)
 	{
-		$valid    = test_user_pwd($admin, &$rig_adm_user, &$rig_adm_passwd);
+		$valid    = rig_test_user_pwd($admin, &$rig_adm_user, &$rig_adm_passwd);
 		$var_user = "admusr";
 		$var_pwd  = "admpwd";
 		$title    = "$html_rig_admin $html_login";
 	}
 	else
 	{
-		$valid    = test_user_pwd($admin, &$rig_user, &$rig_passwd);
+		$valid    = rig_test_user_pwd($admin, &$rig_user, &$rig_passwd);
 		$var_user = "user";
 		$var_pwd  = "passwd";
 		$title    = "$html_login";
@@ -61,13 +61,13 @@ function enter_login($url, $admin = FALSE)
 	{
 		$rig_user = $pref_guest_username;
 		$rig_passwd = "";
-		$valid = test_user_pwd($admin, &$rig_user, &$rig_passwd);
+		$valid = rig_test_user_pwd($admin, &$rig_user, &$rig_passwd);
 	}
 
 	if ($force_login || !$valid)
 	{
-		remove_login_cookies($admin);
-		nocache_headers();
+		rig_remove_login_cookies($admin);
+		rig_nocache_headers();
 		if ($force_login != "force") $force_login = "fail";
 		include($dir_install . $dir_src . "login.php");
 		exit;
@@ -75,9 +75,9 @@ function enter_login($url, $admin = FALSE)
 }
 
 
-//**********************************************
-function test_user_pwd($admin, &$user, &$passwd)
-//**********************************************
+//**************************************************
+function rig_test_user_pwd($admin, &$user, &$passwd)
+//**************************************************
 // returns TRUE if user/passwd is valid
 // returns FALSE otherwise and clear the user/passwd variables
 {
@@ -141,9 +141,9 @@ function test_user_pwd($admin, &$user, &$passwd)
 }
 
 
-//************************************
-function display_user_name($user = "")
-//************************************
+//****************************************
+function rig_display_user_name($user = "")
+//****************************************
 {
 	global $html_welcome;
 	global $html_chg_user;
@@ -160,7 +160,7 @@ function display_user_name($user = "")
 	if ($user)
 	{
 		$s = str_replace("[name]", $user, $html_welcome);
-		$s = str_replace("[change-link]", "<a href=\"" . self_url(-1, -1, -1, "force_login=force") . "\">$html_chg_user</a>", $s);
+		$s = str_replace("[change-link]", "<a href=\"" . rig_self_url(-1, -1, -1, "force_login=force") . "\">$html_chg_user</a>", $s);
 		echo $s;
 	}
 }
@@ -170,9 +170,17 @@ function display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/02/16 20:22:56  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.5  2002/10/24 23:57:49  ralfoide
 //	Fix for end-of-file
-//
+//	
 //	Revision 1.4  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

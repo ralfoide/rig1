@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -14,15 +14,15 @@
 require_once($dir_install . $dir_src . "common.php");
 require_once($dir_install . $dir_src . "admin_util.php");
 
-enter_login(self_url(), TRUE);
-nocache_headers();
+rig_enter_login(rig_self_url(), TRUE);
+rig_nocache_headers();
 
 if ($image)
 	rig_prepare_image(-1, $album, $image, $html_admin);
 else
 	rig_prepare_album(-1, $album, $html_admin);
 
-rig_admin_perform_before_header(self_url());
+rig_admin_perform_before_header(rig_self_url());
 
 rig_display_header($html_rig_admin);
 rig_display_body();
@@ -37,23 +37,28 @@ rig_display_body();
 						$color_title_bg,
 						$color_title_text);
 
-	display_user_name($rig_adm_user);
+	rig_display_user_name($rig_adm_user);
 	if ($album)
 	{
 ?>
 		<p>
-		<img src="<?= rig_encode_url_link(get_album_preview($current_album, TRUE)) ?>">
+		<img src="<?= rig_encode_url_link(rig_get_album_preview($current_album, TRUE)) ?>">
 		<br>
 		<font color="<?= $color_index_text ?>">
-			<?php display_current_album() ?>
+			<?php rig_display_current_album() ?>
 		</font>
 		<p>
 <?php
 	}
-	echo "<p>";
+?>
+<p>
+</center>
 
+<?php
 	rig_admin_perform_defer();
 ?>
+
+<center>
 
 <p>
 	<?= $html_comment_stats ?>
@@ -70,26 +75,28 @@ rig_display_body();
 		rig_display_section("<b> $html_actions </b>");
 	?>
 <br>
-<a href="<?= self_url("") . "&admin=mk_all_prev" ?>">
-	<?= $html_mk_previews ?>
-</a>
+<?= $html_act_create ?>
+&nbsp;
+  <a href="<?= rig_self_url("") . "&admin=mk_previews" ?>"><?= $html_act_previews ?></a>
+| <a href="<?= rig_self_url("") . "&admin=mk_images"   ?>"><?= $html_act_images ?></a>
+| <a href="<?= rig_self_url("") . "&admin=mk_prev_img" ?>"><?= $html_act_prev_img ?></a>
 <br>
-<a href="<?= self_url("") . "&admin=rm_all_prev" ?>">
-	<?= $html_rm_previews ?>
-</a>
+<?= $html_act_delete ?>
+&nbsp;
+  <a href="<?= rig_self_url("") . "&admin=rm_previews" ?>"><?= $html_act_previews ?></a>
+| <a href="<?= rig_self_url("") . "&admin=rm_images"   ?>"><?= $html_act_images ?></a>
+| <a href="<?= rig_self_url("") . "&admin=rm_prev_img" ?>"><?= $html_act_prev_img ?></a>
 <br>
-<a href="<?= self_url("") . "&admin=rand_prev" ?>">
-	<?= $html_rand_previews ?>
-</a>
+  <a href="<?= rig_self_url("") . "&admin=rand_prev"   ?>"><?= $html_act_rnd_prev ?></a>
 <br>
-<a href="<?= self_url("") . "&admin=rnm_canon" ?>">
-	<?= $html_rename_canon ?>
-</a>
+  <a href="<?= rig_self_url("") . "&admin=rnm_canon"   ?>"><?= $html_act_canon ?></a>
+<br>
+  <a href="<?= rig_self_url("") . "&admin=fix_options"   ?>">Fix Options</a>
 <br>
 
 <?php
-	load_album_list(TRUE);
-	if (has_albums())
+	rig_load_album_list(TRUE);
+	if (rig_has_albums())
 	{
 ?>
 	<p>
@@ -99,16 +106,26 @@ rig_display_body();
 	<br>
 		<table colspan="<?= $pref_nb_col ?>" border="1" cellpadding="5" cellspacing="0">
 			<?php rig_admin_display_album() ?>
+			<tr><td colspan="<?= $pref_nb_col ?>">
+			<table width="100%" border="0" cellpadding="5" cellspacing="0">
+				<tr><td width="80%">
+					<div align="left"><?php rig_display_album_copyright() ?></div>
+				</td>
+				<td width="20%">
+					<div align="right"><?php rig_display_album_count() ?></div>
+				</td></tr>
+			</table>
+			</td></tr>
 		</table>
 		<hr width="10%">
 		<font color="<?= $color_index_text ?>">
-			<?php display_current_album() ?>
+			<?php rig_display_current_album() ?>
 		</font>
 	<br>
 <?php
 	}
 
-	if (has_images())
+	if (rig_has_images())
 	{
 ?>
 
@@ -125,10 +142,20 @@ rig_display_body();
 	<p>
 		<table colspan="<?= $pref_nb_col ?>" border="1" cellpadding="5" cellspacing="0">	<!-- colspan="2" -->
 			<?php rig_admin_display_image() ?>
+			<tr><td colspan="<?= $pref_nb_col ?>">
+			<table width="100%" border="0" cellpadding="5" cellspacing="0">
+				<tr><td width="80%">
+					<div align="left"><?php rig_display_album_copyright() ?></div>
+				</td>
+				<td width="20%">
+					<div align="right"><?php rig_display_image_count() ?></div>
+				</td></tr>
+			</table>
+			</td></tr>
 		</table>
 		<hr width="10%">
 		<font color="<?= $color_index_text ?>">
-			<?php display_current_album() ?>
+			<?php rig_display_current_album() ?>
 		</font>
 	<p>
 
@@ -141,7 +168,7 @@ rig_display_body();
 		rig_display_options();
 	?>
 	<?= $html_back_to ?>
-	<a href="<?= self_url("", -1, FALSE) ?>"><?= $display_album_title ?></a>
+	<a href="<?= rig_self_url("", -1, FALSE) ?>"><?= $display_album_title ?></a>
 <p>
 
 <?php
@@ -156,9 +183,17 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/02/16 20:22:53  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.5  2002/10/23 08:39:34  ralfoide
 //	Fixes for internationalization of strings
-//
+//	
 //	Revision 1.4  2002/10/21 07:33:59  ralfoide
 //	Admin page which respect themes
 //	

@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -150,10 +150,18 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/02/16 20:22:57  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.8  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.
-//
+//	
 //	Revision 1.7  2002/11/02 04:09:32  ralfoide
 //	Fixes for URLs in international strings
 //	

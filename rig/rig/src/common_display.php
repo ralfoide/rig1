@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -88,22 +88,22 @@ function rig_display_body()
 //-----------------------------------------------------------------------
 
 
-//**************************************************
-function display_current_album($link_current = TRUE)
-//**************************************************
+//******************************************************
+function rig_display_current_album($link_current = TRUE)
+//******************************************************
 {
 	global $current_album;
 	global $html_root;
 
 	$sep = CURRENT_ALBUM_ARROW;
 
-	echo "<a href=\"" . self_url("", "") . "\">[$html_root]</a>\n";
+	echo "<a href=\"" . rig_self_url("", "") . "\">[$html_root]</a>\n";
 	$name = "";
 	$items = explode(SEP, $current_album);
 	while($items)
 	{
 		$item = array_shift($items);
-		$pretty = pretty_name($item, FALSE, TRUE);
+		$pretty = rig_pretty_name($item, FALSE, TRUE);
 		$name = rig_post_sep($name) . $item;
 
 		if (!$item)
@@ -111,12 +111,12 @@ function display_current_album($link_current = TRUE)
 
 		if ($items)	// if not last...
 		{
-			echo "$sep<i><a href=\"" . self_url("", $name). "\">$pretty</a></i>\n";
+			echo "$sep<i><a href=\"" . rig_self_url("", $name). "\">$pretty</a></i>\n";
 		}
 		else
 		{
 			if ($link_current)
-				echo "$sep<b><a href=\"" . self_url("", $name) . "\">$pretty</a></b>\n";
+				echo "$sep<b><a href=\"" . rig_self_url("", $name) . "\">$pretty</a></b>\n";
 			else
 				echo "$sep<b>$pretty</b>\n";
 		}
@@ -124,9 +124,9 @@ function display_current_album($link_current = TRUE)
 }
 
 
-//***************************
-function display_back_album()
-//***************************
+//*******************************
+function rig_display_back_album()
+//*******************************
 {
 	global $html_back_previous;
 	global $current_album;
@@ -141,14 +141,14 @@ function display_back_album()
 		$path = implode(SEP, $items);
 
 		// write the link
-		echo "<a href=\"" . self_url("", $path) . "\">$html_back_previous</a>\n";
+		echo "<a href=\"" . rig_self_url("", $path) . "\">$html_back_previous</a>\n";
 	}
 }
 
 
-//***************************
-function display_album_list()
-//***************************
+//*******************************
+function rig_display_album_list()
+//*******************************
 {
 	global $dir_images;
 	global $pref_nb_col;
@@ -187,9 +187,9 @@ function display_album_list()
 		// count visible albums
 		$list_albums_count++;
 
-		$pretty = pretty_name($dir, FALSE, TRUE);
+		$pretty = rig_pretty_name($dir, FALSE, TRUE);
 
-		$link = self_url("", $name);
+		$link = rig_self_url("", $name);
 
 		// prepare title
 		$title = "<center><a href=\"$link\">$pretty</a></center>\n";
@@ -203,7 +203,7 @@ function display_album_list()
 		// get the relative and absolute path to the preview icon
 		$abs_path = "";
 		$url_path = "";
-		$res = build_album_preview($name, &$abs_path, &$url_path);
+		$res = rig_build_album_preview($name, &$abs_path, &$url_path);
 		$url_path = rig_encode_url_link($url_path);
 		if (!$res)
 		{
@@ -221,7 +221,7 @@ function display_album_list()
 			$dx = $pref_preview_size;
 			$dy = $pref_preview_size;
 
-			$icon_info = image_info($abs_path);
+			$icon_info = rig_image_info($abs_path);
 			if (is_array($icon_info) && count($icon_info) > 2)
 			{
 				$sx = $icon_info["w"];
@@ -320,9 +320,9 @@ function display_album_list()
 }
 
 
-//***************************
-function display_image_list()
-//***************************
+//*******************************
+function rig_display_image_list()
+//*******************************
 {
 	// output should be like:
     // <!-- tr>
@@ -359,10 +359,10 @@ function display_image_list()
 		// is this the last line? [RM 20021101]
 		$is_last_line = ($index >= $m-$n);
 
-		$pretty1 = pretty_name($file);
-		$pretty2 = pretty_name($file, FALSE);
+		$pretty1 = rig_pretty_name($file);
+		$pretty2 = rig_pretty_name($file, FALSE);
 
-		$info = build_preview_info($current_album, $file);
+		$info = rig_build_preview_info($current_album, $file);
 		$preview = $info["p"];
 		$width   = $info["w"];
 		$height  = $info["h"];
@@ -375,7 +375,7 @@ function display_image_list()
 		// For everything but the last line, add a <br> in the title to create an
 		// extra space between rows or images.
 
-		$link = self_url($file);
+		$link = rig_self_url($file);
 		$title = "<center><a href=\"$link\">$pretty1</a></center>";
 		
 		if (!$is_last_line)
@@ -420,15 +420,15 @@ function display_image_list()
 
 
 
-//****************************
-function display_album_count()
-//****************************
+//********************************
+function rig_display_album_count()
+//********************************
 // RM 20030119 v0.6.3
 // Don't display the album count if there is less than 3 albums
 // because most of the time the table won't be large enough
 {
 	global $html_album_count;
-	global $list_albums_count;	// updated in display_album_list()
+	global $list_albums_count;	// updated in rig_display_album_list()
 
 	if ($list_albums_count >= 3)
 	{
@@ -441,15 +441,15 @@ function display_album_count()
 
 
 
-//****************************
-function display_image_count()
-//****************************
+//********************************
+function rig_display_image_count()
+//********************************
 // RM 20030119 v0.6.3
 // Don't display the image count if there is less than 3 albums
 // because most of the time the table won't be large enough
 {
 	global $html_image_count;
-	global $list_images_count;	// updated in display_image_list()
+	global $list_images_count;	// updated in rig_display_image_list()
 
 	if ($list_images_count >= 3)
 	{
@@ -464,9 +464,9 @@ function display_image_count()
 //-----------------------------------------------------------------------
 
 
-//**********************
-function display_image()
-//**********************
+//**************************
+function rig_display_image()
+//**************************
 {
 	global $current_album;
 	global $current_image;
@@ -479,11 +479,11 @@ function display_image()
 		$rig_img_size = $pref_image_size;
 
 	// get image (build resized preview if necessary)
-	$preview = build_preview($current_album, $current_image, $rig_img_size, $pref_image_quality);
+	$preview = rig_build_preview($current_album, $current_image, $rig_img_size, $pref_image_quality);
 
 	// RM 110801 -- use size of image in img tag if available
 	// get actual size of image
-	$icon_info = image_info($preview);
+	$icon_info = rig_image_info($preview);
 
 	// url-encode filename
 	$preview = rig_encode_url_link($preview);
@@ -509,9 +509,9 @@ function display_image()
 }
 
 
-//***************************
-function display_image_info()
-//***************************
+//*******************************
+function rig_display_image_info()
+//*******************************
 {
 	global $current_album;
 	global $current_image;
@@ -521,7 +521,7 @@ function display_image_info()
 	if ($current_img_info)
 		$res = $current_img_info;
 	else
-		$res = build_info($current_album, $current_image);
+		$res = rig_build_info($current_album, $current_image);
 
 	$s  = $res["f"] . " $html_image2" . ", " . $res["w"] . "x" . $res["h"] . " $html_pixels";
 
@@ -619,9 +619,9 @@ function rig_display_jhead()
 }
 
 
-//**************************
-function insert_size_popup()
-//**************************
+//******************************
+function rig_insert_size_popup()
+//******************************
 {
 	global $pref_size_popup;
 	global $html_original;
@@ -730,7 +730,7 @@ function rig_display_language()
 		if ($current_language == $key)
 			echo $value;
 		else
-			echo "<a href=\"" . self_url(-1, -1, -1, "lang=$key#lang") . "\">$value</a>\n";
+			echo "<a href=\"" . rig_self_url(-1, -1, -1, "lang=$key#lang") . "\">$value</a>\n";
 
 		$sep = TRUE;
 	}
@@ -759,7 +759,7 @@ function rig_display_theme()
 		if ($current_theme == $key)
 			echo $value;
 		else
-			echo "<a href=\"" . self_url(-1, -1, -1, "theme=$key#theme") . "\">$value</a>\n";
+			echo "<a href=\"" . rig_self_url(-1, -1, -1, "theme=$key#theme") . "\">$value</a>\n";
 
 		$sep = TRUE;
 	}
@@ -771,9 +771,9 @@ function rig_display_theme()
 //-----------------------------------------------------------------------
 
 
-//********************************
-function display_album_copyright()
-//********************************
+//************************************
+function rig_display_album_copyright()
+//************************************
 // RM 20030119 v0.6.3
 {
 	global $html_album_copyrt;
@@ -789,9 +789,9 @@ function display_album_copyright()
 }
 
 
-//********************************
-function display_image_copyright()
-//********************************
+//************************************
+function rig_display_image_copyright()
+//************************************
 // RM 20030119 v0.6.3
 {
 	global $html_image_copyrt;
@@ -829,7 +829,7 @@ function rig_display_credits($has_credits, $has_phpinfo)
 	// link to show or hide the credits
 	$v = ($has_credits == "on" ? "off" : "on");
 	$l = ($has_credits == "on" ? $html_hide_credits : $html_show_credits);
-	echo "<a name=\"credits\" href=\"" . self_url(-1, -1, -1, "credits=$v#credits") . "\" target=\"_top\">$l</a><br>";
+	echo "<a name=\"credits\" href=\"" . rig_self_url(-1, -1, -1, "credits=$v#credits") . "\" target=\"_top\">$l</a><br>";
 
 	// link to show or hide the PHP Info
 	// RM 20030118 this is only available in _debug_ or admin, not longuer in normal mode
@@ -837,7 +837,7 @@ function rig_display_credits($has_credits, $has_phpinfo)
 	{
 		$v = ($has_phpinfo == "on" ? "off" : "on");
 		$l = ($has_phpinfo == "on" ? $html_hide_phpinfo : $html_show_phpinfo);
-		echo "<a name=\"phpinfo\" href=\"" . self_url(-1, -1, -1, "phpinfo=$v#phpinfo") . "\" target=\"_top\">$l</a><br>";
+		echo "<a name=\"phpinfo\" href=\"" . rig_self_url(-1, -1, -1, "phpinfo=$v#phpinfo") . "\" target=\"_top\">$l</a><br>";
 	}
 
 	// actually display the credits if activated
@@ -914,10 +914,18 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2003/02/16 20:22:55  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.11  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.
-//
+//	
 //	Revision 1.10  2002/11/02 04:08:46  ralfoide
 //	Removed empty line after last row of thumbnails in image list.
 //	

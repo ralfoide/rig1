@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -63,7 +63,7 @@
 	List of globals (from album options):
 	-------------------------------------
 	list_hide				- array of filename
-	list_album_icon			- array of icon info { album , file }
+	list_album_icon			- array of icon info { a:album(relative) , f:file, s:size }
 
 */
 //-----------------------------------------------------------------------
@@ -148,7 +148,7 @@ rig_check_src_file($dir_install . $dir_src . "version.php");
 require_once($dir_install . $dir_src . "version.php");
 
 rig_setup();
-rig_create_option_dir();
+rig_create_option_dir("");
 
 rig_check_src_file($dir_install . $dir_src . "common_display.php");
 require_once($dir_install . $dir_src . "common_display.php");
@@ -427,9 +427,9 @@ function rig_shell_filename2($str)
 }
 
 
-//*******************************
-function simplify_filename($name)
-//*******************************
+//***********************************
+function rig_simplify_filename($name)
+//***********************************
 {
 	$name = trim($name);
 	// replace weird characters by underscores
@@ -438,10 +438,11 @@ function simplify_filename($name)
 }
 
 
-//**************************************************
-function pretty_name($name, $strip_numbers = TRUE,
-                            $pretty_dirname = FALSE)
-//**************************************************
+//***********************************************
+function rig_pretty_name($name,
+						 $strip_numbers = TRUE,
+						 $pretty_dirname = FALSE)
+//***********************************************
 {
 	global $html_image;
 	global $pref_date_YM;
@@ -541,51 +542,109 @@ function pretty_name($name, $strip_numbers = TRUE,
 }
 
 
-//*********************************
-function create_preview_dir($album)
-//*********************************
+//*************************************
+function rig_mkdir($base, $path, $mode)
+//*************************************
+// RM 20030124
+// This function creates a full path, recursively if needed.
+//
+// This function adds a bit of checking on the base directory.
+// One has to exist since RIG never changes base directories.
+{
+	// first, explode the path
+	$dirs = explode(SEP, $path);
+
+	$n = count($dirs);
+
+	// if there are no directories to create, do nothing
+	if ($n < 1 || ($n == 1 && $dirs[0] == ""))
+		return TRUE;
+
+	// the very first part must always exists and be a directory
+	// RIG does not create root directories, by security
+	$full = $base;
+	if (!rig_is_dir($base))
+    {
+		return rig_html_error( "Create Directory",
+		                       "Non-existant base directory<br>\n" .
+    		                   "RIG does not create base directories, by security.\n",
+            		           $base,
+                		       $php_errormsg);
+    }
+
+	// check for or create all the intermediary paths
+	foreach($dirs as $dir)
+	{
+		// reject ".." directories, ignore "." and empty directories
+		if ($dir == "..")
+		{
+			return rig_html_error( "Create Directory",
+			                       "Invalid \"..\" directory name in path<br>\n",
+	            		           $path,
+	                		       $php_errormsg);
+	    }
+
+		if ($dir != "." && $dir != "")
+		{
+			// get the full path up to the current component
+			$full = $full . rig_prep_sep($dir);
+		
+			// create if it does not exists
+			if (!rig_is_dir($full))
+				mkdir($full, $mode);
+		}
+	}
+
+	return TRUE;
+} 
+
+//*************************************
+function rig_create_preview_dir($album)
+//*************************************
 {
 	global $pref_mkdir_mask;
 	global $abs_preview_path;
-	$album = $abs_preview_path . rig_prep_sep($album);
 
-	if (is_dir($album))
-		return;
+	if (!rig_mkdir($abs_preview_path, $album, $pref_mkdir_mask))
+	{
+		return rig_html_error("Create Preview Directory",
+					   "Failed to create directory",
+					   $album,
+					   $php_errormsg);
+	}
 
-	if (!mkdir($album, $pref_mkdir_mask))
-		rig_html_error("Create Preview Directory", "Failed to create directory", $album, $php_errormsg);
+	return TRUE;
 }
 
 
-//******************************
-function rig_create_option_dir()
-//******************************
+//************************************
+function rig_create_option_dir($album)
+//************************************
 {
 	global $pref_mkdir_mask;
 	global $abs_option_path;
 
-	if (is_dir($abs_option_path))
-		return;
-
-	if (!mkdir($abs_option_path, $pref_mkdir_mask))
+	if (!rig_mkdir($abs_option_path, $album, $pref_mkdir_mask))
     {
         global $dir_abs_album, $dir_option;
-		rig_html_error("Create Options Directory",
-                       "Failed to create directory<br>\n" .
-                       "<b>Dir Abs Album:</b> $dir_abs_album<br>\n" . 
-                       "<b>Dir Option:</b> $dir_option\n",
-                       $abs_option_path,
-                       $php_errormsg);
+		return rig_html_error( "Create Options Directory",
+		                       "Failed to create directory<br>\n" .
+    		                   "<b>Dir Abs Album:</b> $dir_abs_album<br>\n" . 
+        		               "<b>Dir Option:</b> $dir_option\n",
+            		           $album,
+                		       $php_errormsg);
     }
+
+	return TRUE;
 }
 
 
-//*************************************************************
-function self_url($in_image = -1,
-				  $in_album = -1,
-				  $in_admin = -1,
-				  $in_extra = "")
-//*************************************************************
+//*****************************************************************
+function rig_self_url($in_image = -1,
+					  $in_album = -1,
+					  $in_admin = -1,
+					  $in_extra = "")
+//*****************************************************************
 // encode album/image name as url links
 // in_image: -1 (use current if any) or text for image=...
 // in_album: -1 (use current if any) or text for album=...
@@ -803,12 +862,12 @@ function rig_read_prefs_paths()
 }
 
 
-//****************************
-function clear_album_options()
-//****************************
+//********************************
+function rig_clear_album_options()
+//********************************
 // Currently clears:
 //	list_hide				- array of filename
-//	list_album_icon			- array of icon info { album , file }
+//	list_album_icon			- array of icon info { a:album(relative) , f:file, s:size }
 {
 	global $list_hide;
 	global $list_album_icon;
@@ -818,21 +877,35 @@ function clear_album_options()
 }
 
 
-//*********************************
-function read_album_options($album)
-//*********************************
+//*************************************
+function rig_read_album_options($album)
+//*************************************
 {
 	// first clear current options
-	clear_album_options();
+	rig_clear_album_options();
 
 	// then grab new ones
-	global $abs_preview_path;
+	global $abs_preview_path;	// old location for options was with previews
+	global $abs_option_path;	// new options have their own base directory (may be shared with previews anyway)
 
-	$abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+	// make sure the directory exists
+	// don't output an error message, the create function does it for us
+	if (!rig_create_option_dir($album))
+		return FALSE;
 
-	// it is OK for this file not to exists! -- RM 20020713 fix
+	// RM 20030121 moving options to option's dir -- amazin design isn't it?
+	// first try to get options at the new location
+	$abs_options = $abs_option_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+
 	if (!rig_is_file($abs_options))
-		return;
+	{
+		// if that fails, try the old location
+		$abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+	
+		// silently abort if the file does not exist
+		if (!rig_is_file($abs_options))
+			return FALSE;
+	}
 
 	$file = @fopen($abs_options, "rt");
 
@@ -867,55 +940,116 @@ function read_album_options($album)
 		}
 		else if ($line)
 		{
-			$local[] = $line;
+			$key = -1;
+			$c = substr($line, 0, 1);
+			if ($c == '[')
+			{
+				// format is "[key]value"
+				if (ereg("^\[(.*)\](.*)", $line, $reg) && is_string($reg[1]))
+				{
+					$key   = $reg[1];
+					// the reg-exp will return false if nothing can be matched for the second part
+					if ($reg[2] === FALSE)
+						$value = "";
+					else
+						$value = $reg[2];
+				}
+			}
+			else if ($c == '_')
+			{
+				// format is "_value"
+				$line = substr($line, 1, -1);
+			}
+
+			if ($key == -1)
+				$local[] = $line;
+			else
+				$local[$key] = $value;
 		}
 	}
 
 	fclose($file);		// RM 20020713 fix
+	return TRUE;
 }
 
 
-//***************************************************
-function write_album_options($album, $silent = false)
-//***************************************************
+//*******************************************************
+function rig_write_album_options($album, $silent = FALSE)
+//*******************************************************
 // Currently writes:
 //	list_hide				- array of filename
-//	list_album_icon			- array of icon info { album , file }
+//	list_album_icon			- array of icon info { a:album(relative) , f:file, s:size }
+// RM 20030121 moving options to option's dir -- amazin design isn't it?
+// RM 20030121 always writing header for the array name even if the array is empty or missing
+// RM 20030121 not ready to move to XML yet (DomXml is only in PHP 4.2.1+ experimental yet)
 {
 	global $list_hide;
 	global $list_album_icon;
-	global $abs_preview_path;
+	global $rig_version;
+	global $abs_option_path;
 
-	$abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+	// DEBUG
+	// echo "<p> rig_write_album_options( $album, $silent )\n";
+	// echo "<br>list_album_icon = \n"; var_dump($list_album_icon);
+	// echo "<p> abs_options = $abs_options\n";
 
-	$file = @fopen($abs_options, "wt");
+	// make sure the directory exists
+	// don't output an error message, the create function does it for us
+	if (!rig_create_option_dir($album))
+		return FALSE;
 
-	if (!$silent)
-		echo "write album '$album' options - file: $file<br>\n";
+	// $abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+	$abs_options = $abs_option_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS);
+
+	// make sure the directory exists
+
+	$file = fopen($abs_options, "wt");
 
 	if (!$file)
-		return rig_html_error("Write Album Options", "Failed to write to file", $abs_options, $php_errormsg);
-
-	fputs($file, "# album options - format: :var_name/val/val.../: to end\n");
-
-	if (count($list_hide) > 0)
 	{
-		if (!$silent)
-			echo "write album options - list_hide: " . count($list_hide) . " items<br>\n";
-
-		fputs($file, ":list_hide\n");
-		foreach($list_hide as $str)
-			fputs($file, $str . "\n");
+		return rig_html_error("Write Album Options",
+							  "Failed to write to file",
+							  $abs_options,
+							  $php_errormsg);
 	}
 
-	if (count($list_album_icon) > 0)
+	if (!$silent)
+		echo "<p>Write album <b>'$album'</b> options - file: <b>$file</b>\n";
+
+	// ------
+
+	fputs($file, "# Album options - RIG $rig_version\n");
+	fputs($file, "# Format: :var_name/val/val.../: to end\n");
+	fputs($file, "# Values: one entry per line, either _String\\n or [Key]String\\n\n");
+
+	// ------
+
+	// DEBUG
+	// echo "<p> list_hide = \n"; var_dump($list_hide);
+
+	fputs($file, ":list_hide\n");
+	if (is_array($list_hide))
 	{
 		if (!$silent)
-			echo "write album options - list_album_icon: " . count($list_album_icon) . " items<br>\n";
+			echo "<br>Write album options - list_hide: " . count($list_hide) . " items\n";
 
-		fputs($file, ":list_album_icon\n");
-		foreach($list_album_icon as $str)
-			fputs($file, $str . "\n");
+		foreach($list_hide as $str)
+			fputs($file, '_' . $str . "\n");
+	}
+
+	// ------
+
+	// DEBUG
+	//echo "<p> list_album_icon = \n"; var_dump($list_album_icon);
+
+	fputs($file, ":list_album_icon\n");
+	if (is_array($list_album_icon))
+	{
+		if (!$silent)
+			echo "<br>Write album options - list_album_icon: " . count($list_album_icon) . " items\n";
+
+		foreach($list_album_icon as $key => $str)
+			fputs($file, '[' . $key . ']' . $str . "\n");
 	}
 
 	fputs($file, ":\n");
@@ -927,9 +1061,9 @@ function write_album_options($album, $silent = false)
 
 //-----------------------------------------------------------------------
 
-//************************
-function nocache_headers()
-//************************
+//****************************
+function rig_nocache_headers()
+//****************************
 // used by the admin pages to prevent caching
 // RM see HTTP doc to determine if html vs. img can be cached selectively (IMG tag?)
 {
@@ -940,9 +1074,9 @@ function nocache_headers()
 }
 
 
-//***********************************************
-function set_cookie_val($name, $val, $set = TRUE)
-//***********************************************
+//***************************************************
+function rig_set_cookie_val($name, $val, $set = TRUE)
+//***************************************************
 // $set: TRUE to set cookie, FALSE to delete cookie
 {
 	global $HTTP_HOST;
@@ -1003,7 +1137,7 @@ function rig_handle_cookies()
 
 	if ($lang)
 	{
-		set_cookie_val("rig_lang", $lang);
+		rig_set_cookie_val("rig_lang", $lang);
 		$current_language = $lang;
 		$rig_lang = $lang;
 	}
@@ -1014,7 +1148,7 @@ function rig_handle_cookies()
 
 	if ($theme)
 	{
-		set_cookie_val("rig_theme", $theme);
+		rig_set_cookie_val("rig_theme", $theme);
 		$current_theme = $theme;
 		$rig_theme = $theme;
 	}
@@ -1026,7 +1160,7 @@ function rig_handle_cookies()
 	if ($img_size)
 	{
 		// an img_size of '0' or less means to use the original image size
-		set_cookie_val("rig_img_size", (int)$img_size);
+		rig_set_cookie_val("rig_img_size", (int)$img_size);
 		$rig_img_size = (int)$img_size;
 	}
 	else if (!$rig_img_size)
@@ -1037,13 +1171,13 @@ function rig_handle_cookies()
 	if (!$force_login && $user)
 	{
 		// first erase existing cookie (set time to past value)
-		set_cookie_val("rig_user"  , $rig_user,	  false);
-		set_cookie_val("rig_passwd", $rig_passwd, false);
+		rig_set_cookie_val("rig_user"  , $rig_user,	  false);
+		rig_set_cookie_val("rig_passwd", $rig_passwd, false);
 
 		$rig_user   = $user;
 		$rig_passwd = crypt($passwd);
 
-		if (test_user_pwd(FALSE, &$rig_user, &$rig_passwd))
+		if (rig_test_user_pwd(FALSE, &$rig_user, &$rig_passwd))
 		{
 			// set the expiration date to +1 year if we want to keep it,
 			// or 0 if it's only for this session
@@ -1052,21 +1186,21 @@ function rig_handle_cookies()
 			else
 				$t = 0;
 
-			set_cookie_val("rig_user"  , $rig_user);
-			set_cookie_val("rig_passwd", $rig_passwd);
+			rig_set_cookie_val("rig_user"  , $rig_user);
+			rig_set_cookie_val("rig_passwd", $rig_passwd);
 		}
 	}
 
 	if (!$force_login && $admusr && isset($admpwd))
 	{
 		// first erase existing cookie (set time to past value)
-		set_cookie_val("rig_adm_user"  , $rig_adm_user  , false);
-		set_cookie_val("rig_adm_passwd", $rig_adm_passwd, false);
+		rig_set_cookie_val("rig_adm_user"  , $rig_adm_user  , false);
+		rig_set_cookie_val("rig_adm_passwd", $rig_adm_passwd, false);
 
 		$rig_adm_user   = $admusr;
 		$rig_adm_passwd = crypt($admpwd);
 
-		if (test_user_pwd(TRUE, &$rig_adm_user, &$rig_adm_passwd))
+		if (rig_test_user_pwd(TRUE, &$rig_adm_user, &$rig_adm_passwd))
 		{
 			// set the expiration date to +1 year if we want to keep it,
 			// or 0 if it's only for this session
@@ -1075,29 +1209,29 @@ function rig_handle_cookies()
 			else
 				$t = 0;
 
-			set_cookie_val("rig_adm_user"  , $rig_adm_user);
-			set_cookie_val("rig_adm_passwd", $rig_adm_passwd);
+			rig_set_cookie_val("rig_adm_user"  , $rig_adm_user);
+			rig_set_cookie_val("rig_adm_passwd", $rig_adm_passwd);
 		}
 	}
 }
 
 
-//**************************************
-function remove_login_cookies($is_admin)
-//**************************************
+//******************************************
+function rig_remove_login_cookies($is_admin)
+//******************************************
 {
 	// debug
     // echo "remove login cookies $is_admin<br>\n";
 
 	if ($is_admin)
 	{
-		set_cookie_val("rig_adm_user"  , $rig_adm_user  , false);
-		set_cookie_val("rig_adm_passwd", $rig_adm_passwd, false);
+		rig_set_cookie_val("rig_adm_user"  , $rig_adm_user  , false);
+		rig_set_cookie_val("rig_adm_passwd", $rig_adm_passwd, false);
 	}
 	else
 	{
-		set_cookie_val("rig_user"  , $rig_user  , false);
-		set_cookie_val("rig_passwd", $rig_passwd, false);
+		rig_set_cookie_val("rig_user"  , $rig_user  , false);
+		rig_set_cookie_val("rig_passwd", $rig_passwd, false);
 	}
 }
 
@@ -1212,7 +1346,7 @@ function rig_prepare_album($id, $album, $title="")
 	if ($current_album)
 	{
 		$items = explode(SEP, $current_album);
-		$pretty = pretty_name($items[count($items)-1], FALSE, TRUE);
+		$pretty = rig_pretty_name($items[count($items)-1], FALSE, TRUE);
 		$display_title = "$title - " . $pretty;
 		$display_album_title = "$html_album - " . $pretty;
 	}
@@ -1222,19 +1356,19 @@ function rig_prepare_album($id, $album, $title="")
 		$display_album_title = "$html_album - $html_none";
 	}
 
-	read_album_options($current_album);
+	rig_read_album_options($current_album);
 }
 
 
-//***********************************
-function build_recursive_list($album)
-//***********************************
-// returns a list with pairs ($album, $file)
+//***************************************
+function rig_build_recursive_list($album)
+//***************************************
+// returns a list with pairs { a:$album, f:$file }
 {
 	global $abs_album_path;
 
 	// make sure we have the options for this album
-	read_album_options($album);
+	rig_read_album_options($album);
 
 	// get the absolute album path
 	$abs_dir = $abs_album_path . rig_prep_sep($album);
@@ -1245,28 +1379,28 @@ function build_recursive_list($album)
 	$handle = @opendir($abs_dir);
 	if ($handle)
 	{
-		create_preview_dir($album);
+		rig_create_preview_dir($album);
 
-		while ($file = readdir($handle))
+		while (($file = readdir($handle)) !== FALSE)
 		{
 			if ($file != '.' && $file != '..' && rig_is_visible(-1, $album, $file))
 			{
 				$abs_file = $abs_dir . rig_prep_sep($file);
-				if (is_dir($abs_file))
+				if (rig_is_dir($abs_file))
 				{
 					$name = rig_post_sep($album) . $file;
-					$res = build_recursive_list($name);
+					$res = rig_build_recursive_list($name);
 					if (is_array($res) && count($res)>0)
 						$result = array_merge($result, $res);
 
 					// restore the options for this album
 					// (the local array will have been modified by the recursive call)
-					read_album_options($album);
+					rig_read_album_options($album);
 				}
 				else if (rig_valid_ext($file))
 				{
 					// create entry and add it
-					$entry = array($album, $file);
+					$entry = array('a' => $album, 'f' => $file);
 					$result[] = $entry;
 			    }
 			}
@@ -1279,19 +1413,19 @@ function build_recursive_list($album)
 
 
 
-//******************************
-function cmp_pretty_name($a, $b)
-//******************************
+//**********************************
+function rig_cmp_pretty_name($a, $b)
+//**********************************
 {
-	// $a = pretty_name($a);
-	// $b = pretty_name($b);
+	// $a = rig_pretty_name($a);
+	// $b = rig_pretty_name($b);
 	return strcasecmp($a, $b);
 }
 
 
-//*****************************************
-function load_album_list($show_all = FALSE)
-//*****************************************
+//*********************************************
+function rig_load_album_list($show_all = FALSE)
+//*********************************************
 {
 	// This function populates the folowing 
 	// $list_albums			- array of string
@@ -1302,6 +1436,9 @@ function load_album_list($show_all = FALSE)
 	global $current_album;
 	global $abs_album_path;
 
+	// DEBUG
+	echo "<br>Current Album = \"$current_album\"";
+
 	$abs_dir = $abs_album_path . rig_prep_sep($current_album);
 
 	// get all files and dirs, recurse in dirs first
@@ -1311,51 +1448,59 @@ function load_album_list($show_all = FALSE)
 	if (!$handle)
 	{
 		// RM 20020713 better error codes
-		// html_error("Album directory '$abs_dir' does not exist!");
-		rig_html_error("Load Album List", "Can't open directory, probably does not exist", $abs_dir, $php_errormsg);
+		rig_html_error("Load Album List",
+					   "Can't open directory, probably does not exist",
+					   $abs_dir,
+					   $php_errormsg);
 	}
 	else
 	{
-		create_preview_dir($current_album);
+		rig_create_preview_dir($current_album);
 
-		while ($file = readdir($handle))
+		while (($file = readdir($handle)) !== FALSE)
 		{
 			if ($file != '.' && $file != '..')
 			{
 				$abs_file = $abs_dir . rig_prep_sep($file);
-				if (is_dir($abs_file) && ($show_all || rig_is_visible(-1, $current_album . rig_prep_sep($file))))
+				if (rig_is_dir($abs_file) && ($show_all || rig_is_visible(-1, $current_album . rig_prep_sep($file))))
 				{
 					$list_albums[] = $file;
+
+					// DEBUG
+					// echo "<br>Album: $file";
 				}
 				else if (rig_valid_ext($file) && ($show_all || rig_is_visible(-1, -1, $file)))
 				{
 			    	$list_images[] = $file;
+
+					// DEBUG
+					// echo "<br>Image: $file";
 			    }
 			}
 		}
 		closedir($handle);
 
 		if (count($list_albums))
-			usort($list_albums, "cmp_pretty_name");
+			usort($list_albums, "rig_cmp_pretty_name");
 	
 		if (count($list_images))
-			usort($list_images, "cmp_pretty_name");
+			usort($list_images, "rig_cmp_pretty_name");
 	}
 }
 
 
-//*******************
-function has_albums()
-//*******************
+//***********************
+function rig_has_albums()
+//***********************
 {
 	global $list_albums;
 	return (count($list_albums) >= 1);
 }
 
 
-//*******************
-function has_images()
-//*******************
+//***********************
+function rig_has_images()
+//***********************
 {
 	global $list_images;
 	return (count($list_images) >= 1);
@@ -1447,7 +1592,7 @@ function rig_prepare_image($id, $album, $image, $title="")
 			// and then redirect to the album
 			global $image;
 			$image = "";
-			$refresh_url = self_url();
+			$refresh_url = rig_self_url();
 			header("Location: $refresh_url");
 			exit;
 		}
@@ -1458,9 +1603,9 @@ function rig_prepare_image($id, $album, $image, $title="")
 		}
 	}
 
-	$pretty_image  = pretty_name($current_image, FALSE);
+	$pretty_image  = rig_pretty_name($current_image, FALSE);
 
-	$current_img_info = build_info($current_album, $current_image);
+	$current_img_info = rig_build_info($current_album, $current_image);
 
 	// -- setup title of album
 	if ($title)
@@ -1472,17 +1617,17 @@ function rig_prepare_image($id, $album, $image, $title="")
 	if ($current_album)
 	{
 		$items = explode(SEP, $current_album);
-		// RM 20020711: pretty_name with strip_numbers=FALSE
-		$display_album_title = pretty_name($items[count($items)-1], FALSE);
+		// RM 20020711: rig_pretty_name with strip_numbers=FALSE
+		$display_album_title = rig_pretty_name($items[count($items)-1], FALSE);
 	}
 
-	read_album_options($current_album);
+	rig_read_album_options($current_album);
 }
 
 
-//*****************************
-function get_images_prev_next()
-//*****************************
+//*********************************
+function rig_get_images_prev_next()
+//*********************************
 {
 	// this function exports the following variables:
 	// display_prev_link	- string
@@ -1529,10 +1674,10 @@ function get_images_prev_next()
 	{
 		$file = $list_images[$key-1];
 
-		$pretty = pretty_name($file, FALSE);
-		$preview = rig_encode_url_link(build_preview($current_album, $file));
+		$pretty = rig_pretty_name($file, FALSE);
+		$preview = rig_encode_url_link(rig_build_preview($current_album, $file));
 
-		$display_prev_link = self_url($file);
+		$display_prev_link = rig_self_url($file);
 		$display_prev_img = "<img src=\"$preview\" alt=\"$pretty\" border=0>";
 	}
 
@@ -1540,10 +1685,10 @@ function get_images_prev_next()
 	{
 		$file = $list_images[$key+1];
 
-		$pretty = pretty_name($file, FALSE);
-		$preview = rig_encode_url_link(build_preview($current_album, $file));
+		$pretty = rig_pretty_name($file, FALSE);
+		$preview = rig_encode_url_link(rig_build_preview($current_album, $file));
 
-		$display_next_link = self_url($file);
+		$display_next_link = rig_self_url($file);
 		$display_next_img = "<img src=\"$preview\" alt=\"$pretty\" border=0>";
 	}
 }
@@ -1657,9 +1802,17 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/02/16 20:22:54  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.10  2003/01/07 18:02:01  ralfoide
 //	Support for URL-Rewrite conf array
-//
+//	
 //	Revision 1.9  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

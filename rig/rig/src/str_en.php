@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -57,10 +57,14 @@ $html_rig_admin		= 'RIG Administration Interface';
 $html_comment_stats	= 'Stats for album and sub-albums:';
 $html_album_stat	= '[bytes] bytes used by [files] files in [folders] folders';
 $html_actions		= 'Actions';
-$html_mk_previews	= 'Create All Previews';
-$html_rm_previews	= 'Delete All Previews';
-$html_rand_previews	= 'Change Album Random Icon';
-$html_rename_canon	= 'Rename Canon 100-1234_img.jpg files';
+// RM 20030120 splitting Mk/Del / All Previews / All Images / Both
+$html_act_create	= 'Create:';
+$html_act_delete	= 'Delete:';
+$html_act_previews	= 'All Previews';
+$html_act_images	= 'All Images';
+$html_act_prev_img	= 'All Previews &amp; Images';
+$html_act_rnd_prev	= 'Change Album Random Icon';
+$html_act_canon		= 'Rename Canon 100-1234_img.jpg files';
 $html_hide_album	= 'Hide Album';
 $html_show_album	= 'Show Album';
 $html_use_as_icon	= 'Use as album icon';
@@ -143,10 +147,18 @@ $html_img_date		= 'l\, F d\, Y\, g:m A';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/02/16 20:22:57  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.7  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.
-//
+//	
 //	Revision 1.6  2002/11/02 04:09:32  ralfoide
 //	Fixes for URLs in international strings
 //	

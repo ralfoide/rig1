@@ -1,10 +1,10 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 // $Id$
 
-//******************
-function http_auth()
-//******************
+//**********************
+function rig_http_auth()
+//**********************
 {
 	if(!isset($PHP_AUTH_USER))
 	{
@@ -34,9 +34,9 @@ function rig_print_array_str($str)
 }
 
 
-//*******************
-function read_prefs()
-//*******************
+//***********************
+function rig_read_prefs()
+//***********************
 {
 	//use @ to prevent any error from being reported
 	$fp = @fopen(PREF_FILE_NAME, 'r');
@@ -75,9 +75,9 @@ function read_prefs()
 }
 
 
-//*************************
-function show_album($album)
-//*************************
+//*****************************
+function rig_show_album($album)
+//*****************************
 {
 	global $abs_album_path;
 	$abs_dir = $abs_album_path . rig_prep_sep($album);
@@ -104,7 +104,7 @@ function show_album($album)
 				$tag = 'b';
 			echo "&nbsp;|&nbsp;";
 			$name = rig_post_sep($name) . $item;
-			$pretty = pretty_name($item);
+			$pretty = rig_pretty_name($item);
 			echo "<$tag><a href=\"./album.php?album=$name\">$pretty</a></$tag>\n";
 		}
 		echo "<p>\n";
@@ -119,7 +119,7 @@ function show_album($album)
 		rig_html_error("Album", "Album directory does not exist!", $abs_dir, $php_errormsg);
 	else
 	{
-		create_preview_dir($album);
+		rig_create_preview_dir($album);
 
 		$n = 0;
 		while ($file = readdir($handle))
@@ -134,7 +134,7 @@ function show_album($album)
 						echo "<h2>Albums</h2><p>\n";
 
 					$name = rig_post_sep($album) . $file;
-					$pretty = pretty_name($file);
+					$pretty = rig_pretty_name($file);
 					echo "<a href=\"./album.php?album=$name\">$pretty</a><br>\n";
 				}
 				else if (rig_valid_ext($file))
@@ -164,7 +164,7 @@ function show_album($album)
 		foreach($file_list as $file)
 		{
 			$album_file = rig_post_sep($album) . $file;
-			$pretty = pretty_name($file);
+			$pretty = rig_pretty_name($file);
 			$preview = preview_file($album_file);
 			$link = "\"./image.php?album=$name&image=$file\"";
 			echo "<center><a href=$link><img src=\"$preview\" alt=\"$pretty\" border=0></a><br>\n";
@@ -194,9 +194,17 @@ function show_album($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2003/02/16 20:22:57  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.4  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
-//
+//	
 //	Revision 1.3  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
 //	

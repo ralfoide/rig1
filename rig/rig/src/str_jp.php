@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -63,9 +63,17 @@ rig_parse_string_data('data_jpu8.bin');
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/02/16 20:22:58  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.3  2002/10/23 16:01:00  ralfoide
 //	Added <html lang>; now transmitting charset via http headers.
-//
+//	
 //	Revision 1.2  2002/10/23 08:41:03  ralfoide
 //	Fixes for internation support of strings, specifically Japanese support
 //	

@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -9,7 +9,7 @@
 
 
 require_once($dir_install . $dir_src . "common.php");
-enter_login(self_url(""));
+rig_enter_login(rig_self_url(""));
 
 rig_prepare_album($id, $album);
 rig_display_header($display_title);
@@ -23,7 +23,7 @@ rig_display_body();
 	rig_display_section("<h1> $display_title </h1>",
 						$color_title_bg,
 						$color_title_text);
-	display_user_name();
+	rig_display_user_name();
 
 	// RM 20020714 id: album->current_album
 	if ($current_album)
@@ -40,7 +40,7 @@ rig_display_body();
 				</td></tr>
 				<tr><td bgcolor="<?= $color_table_bg ?>">
 					<center><font color="<?= $color_index_text ?>">
-						<?php display_current_album(FALSE) ?>
+						<?php rig_display_current_album(FALSE) ?>
 					</font></center>
 				</td></tr>
 			</table>
@@ -53,8 +53,8 @@ rig_display_body();
 <p>
 
 <?php
-	load_album_list(TRUE);
-	if (has_albums())
+	rig_load_album_list(TRUE);
+	if (rig_has_albums())
 	{
 ?>
 
@@ -68,15 +68,15 @@ rig_display_body();
 				</td></tr>
 				<tr><td width="100%" bgcolor="<?= $color_table_bg ?>">
 					<table width="100%" border="0" cellpadding="0" cellspacing="0">
-						<?php display_album_list() ?>
+						<?php rig_display_album_list() ?>
 					</table>
 					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tr><td>&nbsp;</td></tr>
 						<tr><td width="80%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
-							<div align="left"><?php display_album_copyright() ?></div>
+							<div align="left"><?php rig_display_album_copyright() ?></div>
 						</font></td>
 						<td width="20%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
-							<div align="right"><?php display_album_count() ?></div>
+							<div align="right"><?php rig_display_album_count() ?></div>
 						</font></td></tr>
 					</table>
 				</td></tr>
@@ -89,7 +89,7 @@ rig_display_body();
 		flush();
 	}	// end of if-has-albums
 
-	if (has_images())
+	if (rig_has_images())
 	{
 ?>
 
@@ -103,14 +103,14 @@ rig_display_body();
 				</td></tr>
 				<tr><td bgcolor="<?= $color_table_bg ?>">
 					<table width="100%" border="0" cellpadding="10" cellspacing="0">
-						<?php display_image_list() ?>
+						<?php rig_display_image_list() ?>
 					</table>
 					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tr><td width="80%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
-							<div align="left"><?php display_album_copyright() ?></div>
+							<div align="left"><?php rig_display_album_copyright() ?></div>
 						</font></td>
 						<td width="20%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
-							<div align="right"><?php display_image_count() ?></div>
+							<div align="right"><?php rig_display_image_count() ?></div>
 						</font></td></tr>
 					</table>
 					</table>
@@ -124,14 +124,14 @@ rig_display_body();
 		flush();
 	}	// end of if-has-images
 
-	display_back_album();
+	rig_display_back_album();
 ?>
 
 <p>
 	<?php
 		rig_display_options();
 	?>
-	<a href="<?= self_url(-1, -1, TRUE) ?>"><?= $html_admin_intrfce ?></a>
+	<a href="<?= rig_self_url(-1, -1, TRUE) ?>"><?= $html_admin_intrfce ?></a>
 <p>
 
 
@@ -146,10 +146,18 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/02/16 20:22:54  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.5  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.
-//
+//	
 //	Revision 1.4  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

@@ -1,5 +1,5 @@
 <?php
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001 Ralf
@@ -14,9 +14,9 @@ require_once($dir_install . $dir_src . "common.php");
 // If there is no image parameter, redirect to the album
 // RM 20020714 disabled since this test is already performed by location/index.php
 // if (!((isset($image) && $image) || (isset($id) && rig_db_is_image_id($id))))
-// 	header("Location: " . self_url(""));
+// 	header("Location: " . rig_self_url(""));
 
-enter_login(self_url());
+rig_enter_login(rig_self_url());
 
 rig_prepare_image($id, $album, $image);
 rig_display_header($display_title);
@@ -34,9 +34,9 @@ rig_display_body();
 						$color_title_bg,
 						$color_title_text);
 
-	display_user_name();
-	load_album_list();
-	get_images_prev_next();
+	rig_display_user_name();
+	rig_load_album_list();
+	rig_get_images_prev_next();
 ?>
 
 
@@ -60,7 +60,7 @@ rig_display_body();
 				else
 				{
 			?>
-					<a href="<?= self_url("") ?>">
+					<a href="<?= rig_self_url("") ?>">
 						<?= $html_back_album ?>
 					</a>
 			<?php
@@ -71,18 +71,18 @@ rig_display_body();
 </td><td width="34%" valign="top">
 	<center>
 
-	<!-- a href="<?= self_url("") ?>"><?= $html_back_album ?></a -->
+	<!-- a href="<?= rig_self_url("") ?>"><?= $html_back_album ?></a -->
 	
 	<!-- display image itself -->
 	
 	<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
 
-		<tr><td><center><?php display_image() ?></center></td></tr>
+		<tr><td><center><?php rig_display_image() ?></center></td></tr>
 
 		<!-- RM 20030119 v0.6.3 display copyright -->
 			<!--tr><td>&nbsp;</td></tr -->
 			<tr><td bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
-				<div align="left"><?php display_image_copyright() ?></div>
+				<div align="left"><?php rig_display_image_copyright() ?></div>
 			</font></td></tr>
 
 	</table>
@@ -103,7 +103,7 @@ rig_display_body();
 				else
 				{
 			?>
-					<a href="<?= self_url("") ?>"><?= $html_back_album ?></a>
+					<a href="<?= rig_self_url("") ?>"><?= $html_back_album ?></a>
 			<?php
 				}
 			?>
@@ -134,7 +134,7 @@ rig_display_body();
 				else
 				{
 			?>
-					<a href="<?= self_url("") ?>">
+					<a href="<?= rig_self_url("") ?>">
 						<?= $html_back_album ?>
 					</a>
 			<?php
@@ -151,11 +151,11 @@ rig_display_body();
 				<font color="<?= $color_caption_text ?>">
 					<b><?= $display_title ?></b>
 					<br>
-					<?php echo display_image_info() ?>
+					<?php echo rig_display_image_info() ?>
 					<br>
 				</font>
 				<font color="<?= $color_index_text ?>">
-					<?php display_current_album() ?>
+					<?php rig_display_current_album() ?>
 				</font>
 				<br>
 			</center>
@@ -164,17 +164,17 @@ rig_display_body();
 	
 	<p>
 	
-	<a href="<?= self_url("") ?>">
+	<a href="<?= rig_self_url("") ?>">
 		<?= $html_back_album ?>
 	</a>
 
 	<p>
 
 	<!-- RM 20021014 moved image resize below image info -->
-	<form method="POST" action="<?= self_url() ?>">
+	<form method="POST" action="<?= rig_self_url() ?>">
 		<?= "$html_img_size" ?>
 		<select size="1" name="img_size">
-		<?php insert_size_popup() ?>
+		<?php rig_insert_size_popup() ?>
 		</select>
 		<input type="submit" value="<?= $html_ok ?>" name="ok">
 	</form>
@@ -196,7 +196,7 @@ rig_display_body();
 				else
 				{
 			?>
-					<a href="<?= self_url("") ?>"><?= $html_back_album ?></a>
+					<a href="<?= rig_self_url("") ?>"><?= $html_back_album ?></a>
 			<?php
 				}
 			?>
@@ -235,7 +235,7 @@ rig_display_body();
 	<?php
 		rig_display_options();
 	?>
-	<a href="<?= self_url(-1, -1, TRUE) ?>"><?= $html_admin_intrfce ?></a>
+	<a href="<?= rig_self_url(-1, -1, TRUE) ?>"><?= $html_admin_intrfce ?></a>
 <p>
 
 
@@ -251,10 +251,18 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/02/16 20:22:56  ralfoide
+//	New in 0.6.3:
+//	- Display copyright in image page, display number of images/albums in tables
+//	- Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 (experimental)
+//	- Using rig_options directory
+//	- Renamed src function with rig_ prefix everywhere
+//	- Only display phpinfo if _debug_ enabled or admin mode
+//
 //	Revision 1.6  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.
-//
+//	
 //	Revision 1.5  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

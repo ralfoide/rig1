@@ -45,6 +45,7 @@ else // Un*x
 }
 
 
+
 // --- DB-links options ---
 
 $pref_use_db			= FALSE;			// not for rig062 yet
@@ -64,7 +65,6 @@ $pref_size_popup		= array(256, 300, 384, 400, 512, 640, 800, 1024, 1280, 1600);
 $pref_empty_album		= "empty_album.gif";
 
 $pref_global_gamma		= 1.0;	// use 1.0 for no-op
-
 
 
 
@@ -93,9 +93,12 @@ $pref_date_sep						= ' - ';	// separator between date and description
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/01/07 17:54:03  ralfoide
+//	Moved URL-Rewrite conf array from global pref file to album-local pref file
+//
 //	Revision 1.3  2002/10/21 01:51:36  ralfoide
 //	Multiple language and theme support
-//
+//	
 //	Revision 1.2  2002/10/20 11:48:42  ralfoide
 //	jhead support
 //	

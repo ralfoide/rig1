@@ -692,15 +692,16 @@ function rig_display_footer()
 	global $color_section_bg;
 	global $color_section_text;
 
+	$sgen = str_replace("[time]", rig_time_elapsed(), $html_generated);
+	$sgen = str_replace("[date]", $display_date, $sgen);
+	$sgen = str_replace("[rig-version]", $display_softname . " " . $rig_version, $sgen);
+
+
 	?>
 		<table width="100%" bgcolor="<?= $color_section_bg ?>"><tr><td>
 			<center><font size="-1" color="<?= $color_section_text ?>">
 				&lt;
-	<?php
-		echo "$html_generated "
-			 . rig_time_elapsed()
-			 . " $html_seconds $html_the <i>$display_date</i> $html_by <i>$display_softname $rig_version</i>"
-	?>
+				<?= $sgen ?>
 				&gt;
 			</font></center>
 		</td></tr></table>
@@ -719,9 +720,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2002/10/23 08:41:03  ralfoide
+//	Fixes for internation support of strings, specifically Japanese support
+//
 //	Revision 1.4  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
-//
+//	
 //	Revision 1.3  2002/10/20 11:50:49  ralfoide
 //	jhead support
 //	

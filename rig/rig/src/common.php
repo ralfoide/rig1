@@ -1506,15 +1506,121 @@ function get_images_prev_next()
 	}
 }
 
+//-----------------------------------------------------------------------
+
+//***************************************
+function rig_parse_string_data($filename)
+//***************************************
+// Parses a data file for foreign strings
+//
+// Format of the file:
+// - entries are composed of 2 lines:
+//	1- the variable to set (with the $ like in PHP)
+//	2- the string value for the variable
+// The scanner looks for lines starting with $ or @ and use the first word as the variable name
+// If the line was starting with @$, the second word will be the named index in an array
+// It then reads the *next* line, whatever it's content being, except the ending linefeed
+//
+// As a side effect, empty lines or lines starting with // or # will be ignored.
+//
+// The prefered line separator is the Unix mode, i.e. only LF (/n) as linefeed.
+{
+	global $dir_install, $dir_src;
+
+
+	// get the installation-relative path of the file
+	$filename = $dir_install . $dir_src . $filename;
+
+	// open the file
+	$file = @fopen($filename, "rt");
+
+	// make sure the file exist or display an error to the user	
+	if (!$file)
+	{
+		rig_html_error("Can't read i18n string file",
+					   "Failed to read from file",
+					   $filename,
+					   $php_errormsg);
+
+		// just for the sake of it, present the error again :-p
+		return rig_check_src_file($filename);
+	}
+
+	$tok_sep = " \t\n\r";
+
+	// for every line...
+	while(!feof($file))
+	{
+		$line = fgets($file, 1023);
+
+		// if the line is empty, we skip it
+		if (!is_string($line) || !$line || $line == EOF)
+			continue;
+
+		// if the line does not start with @$ or $, we skip it
+		if ($line[0] != '@' && $line[0] != '$')
+			continue;
+
+		$is_array = ($line[0] == '@');
+		if ($is_array && $line[1] != '$')
+			continue;
+
+		// get the variable name
+		$var_name = strtok(substr($line, $is_array ? 2 : 1), $tok_sep);
+
+		if (is_string($var_name))
+		{
+			// acces the global variable
+			global $$var_name;
+
+			// if an array, get the array index name
+			if ($is_array)
+			{
+				$index_name = strtok($tok_sep);
+				
+				if (!is_string($index_name))
+					continue;
+			}
+
+			// read the actual data line
+			$data = fgets($file, 1023);
+
+			if (is_string($data))
+			{
+				// strip end-of-line
+				if (substr($data, -1) == "\n")
+					$data = substr($data, 0, -1);
+				if (substr($data, -1) == "\r")
+					$data = substr($data, 0, -1);
+
+				// DEBUG
+				// echo "<br> [$var_name] + [$index_name] = $data";
+
+				// set the value
+				if ($is_array)
+					$$var_name[$index_name] = $data;
+				else
+					$$var_name = $data;
+			}
+		} // if var_name
+	} // while !eof
+
+	fclose($file);		// RM 20020713 fix
+	return true;
+}
+
 
 //-----------------------------------------------------------------------
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2002/10/23 08:41:03  ralfoide
+//	Fixes for internation support of strings, specifically Japanese support
+//
 //	Revision 1.7  2002/10/21 07:33:33  ralfoide
 //	debug stuff
-//
+//	
 //	Revision 1.6  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
 //	

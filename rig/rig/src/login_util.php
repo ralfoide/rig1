@@ -158,9 +158,11 @@ function display_user_name($user = "")
 		$user = $rig_user;
 
 	if ($user)
-		printf ($html_welcome,
-				$user,
-				"<a href=\"" . self_url(-1, -1, -1, "force_login=force") . "\">$html_chg_user</a>");
+	{
+		$s = str_replace("[name]", $user, $html_welcome);
+		$s = str_replace("[change-link]", "<a href=\"" . self_url(-1, -1, -1, "force_login=force") . "\">$html_chg_user</a>", $s);
+		echo $s;
+	}
 }
 
 
@@ -168,9 +170,12 @@ function display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2002/10/23 08:41:03  ralfoide
+//	Fixes for internation support of strings, specifically Japanese support
+//
 //	Revision 1.2  2002/10/16 04:48:37  ralfoide
 //	Version 0.6.2.1
-//
+//	
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
 //	

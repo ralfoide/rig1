@@ -489,18 +489,39 @@ function rig_admin_set_image_visible($image, $visible)
 //*****************************************
 function rig_admin_get_preview_info($album)
 //*****************************************
-// Result: array{ nb_files, nb_folders, nb_bytes}
+// Result array:
+// [nfil] = nb_files,
+// [ndir] = nb_directories
+// [size] = nb_bytes (size)
 {
-	$nb = 0;
 	$nf = 0;
+	$nd = 0;
 	$sz = 0;
-	rig_admin_recurse_previnfo($album, &$nb, &$nf, &$sz);
+	rig_admin_recurse_previnfo($album, &$nf, &$nd, &$sz);
 
-	$res = array($nb,
-				 $nf,
-				 $sz);
+	$res = array("nfil" => $nf,
+				 "ndir" => $nd,
+				 "size" => $sz);
 
 	return $res;
+}
+
+
+//************************************************
+function rig_admin_display_album_stat($html, $res)
+//************************************************
+{
+	global $html_num_dec_sep, $html_num_th_sep;
+
+	$size = number_format($res["size"], 0, $html_num_dec_sep, $html_num_th_sep);
+	$nfil = number_format($res["nfil"], 0, $html_num_dec_sep, $html_num_th_sep);
+	$ndir = number_format($res["ndir"], 0, $html_num_dec_sep, $html_num_th_sep);
+
+	$s = str_replace("[bytes]",   $size, $html);
+	$s = str_replace("[files]",   $nfil, $s);
+	$s = str_replace("[folders]", $ndir, $s);
+
+	echo $s;
 }
 
 
@@ -711,9 +732,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2002/10/23 08:41:03  ralfoide
+//	Fixes for internation support of strings, specifically Japanese support
+//
 //	Revision 1.5  2002/10/22 08:37:47  ralfoide
 //	Fix for chaning image visibility
-//
+//	
 //	Revision 1.4  2002/10/21 07:34:16  ralfoide
 //	Comment about end-of-file
 //	

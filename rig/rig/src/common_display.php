@@ -177,6 +177,7 @@ function rig_display_album_list()
 	global $pref_album_layout;				// RM 20030718 'grid' or 'vert'
 	global $pref_album_with_description_layout;	// RM 20030720 auto-switch
 	global $pref_use_album_border;			// RM 20030814
+	global $color_table_desc;				// RM 20030817
 
 	$i = 0;
 
@@ -433,7 +434,7 @@ function rig_display_album_list()
 			<td width="100%" align="left">
 				<table width="100%" border="0">
 				<td align="left"><?= $title ?></td>
-				<td align="right"><font size="-1"><?= $album_date ?></font></td>
+				<td align="right"><font color="<?= $color_table_desc ?>" size="-1"><?= $album_date ?></font></td>
 				</table>
 			<?php
 			if ($sub_count > 0)
@@ -449,8 +450,8 @@ function rig_display_album_list()
 		{
 			echo "</td></tr>\n";
 			echo "<tr><td><center>$title</center></td></tr>\n";
-			echo "<tr><td title=\"Last updated: $album_date\"><center><font size=\"-1\"><span>$album_date</span></font></center></td></tr>\n";
-			echo "<tr><td><center>$desc</center></td></tr>\n";
+			echo "<tr><td title=\"Last updated: $album_date\"><center><font color=\"$color_table_desc\" size=\"-1\"><span>$album_date</span></font></center></td></tr>\n";
+			echo "<tr><td><center><font color=\"$color_table_desc\">$desc</font></center></td></tr>\n";
 			echo "</table>";
 
 			$i++;
@@ -1843,9 +1844,13 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.24  2003/08/18 06:10:02  ralfoide
+//	Moving on to 0.6.4.2
+//	Added color_table_desc in themes for description and dates in album view.
+//
 //	Revision 1.23  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//
+//	
 //	Revision 1.22  2003/08/15 07:14:02  ralfoide
 //	Album HTML cache generation, image thumbnail borders
 //	

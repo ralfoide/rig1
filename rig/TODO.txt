@@ -18,7 +18,15 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
+- in 0.6.4.2:
+- in 0.6.4.1:
+[1.F] Checking code to run with IIS 5 + PHP 4.3.2
+[1.F] Rewrote access to globals to comply with PHP 4.3.2 installation defaults
+[1.F] Many small fixes
 - in 0.6.4.0:
+[1.F] New INSTALL.html and INSTALL.txt (already obsolete --sigh-- )
+[1.F] New album HTML cache generation
+[1.F] New fancy border for image thumbnails in album view
 - in 0.6.3.5:
 [1.F] Translation of dates in web pages
 [1.F] Albums: Display album modification date in grid layout
@@ -147,9 +155,14 @@ Admin:
 
 -- done --
 
+[0.6.4.1]
+
+20030817 [1.F] Fix: Added color_table_desc in themes for description and dates in album view.
+20030817 [1.F] CVS: Moving on to 0.6.4.2
 
 [0.6.4.1]
 
+20030817 [1.F] CVS: Added tags tag_2003-08-16_v0640 and tag_2003-08-17_v0641
 20030817 [1.F] Fix: Expire album HTML cache if album options have changed
 20030817 [1.F] CVS: Moving rig/htdocs/album-sample into rig/htdocs (thus invalidated fresh INSTALL.txt, -sigh-)
 20030817 [1.F] CVS: uploaded to CVS
@@ -582,9 +595,13 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.32  2003/08/18 06:09:59  ralfoide
+//	Moving on to 0.6.4.2
+//	Added color_table_desc in themes for description and dates in album view.
+//
 //	Revision 1.31  2003/08/18 04:33:47  ralfoide
 //	Tagging 0.6.4.0 and 0.6.4.1, ready to move on 0.6.4.2
-//
+//	
 //	Revision 1.30  2003/08/18 03:07:55  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
 //	

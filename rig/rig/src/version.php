@@ -8,16 +8,20 @@
 //**********************************************
 
 
-$rig_version = "0.6.4.1";
+$rig_version = "0.6.4.2";
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.16  2003/08/18 06:10:03  ralfoide
+//	Moving on to 0.6.4.2
+//	Added color_table_desc in themes for description and dates in album view.
+//
 //	Revision 1.15  2003/08/18 04:24:02  ralfoide
 //	Bumped to 0.6.4.1 (PHP 4.3, album HTML cache, fixes)
-//
+//	
 //	Revision 1.14  2003/08/18 03:07:14  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
 //	

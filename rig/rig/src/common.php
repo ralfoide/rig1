@@ -34,8 +34,8 @@
 	----------------
 	rig_version				- string
 	current_language		- string 'en' (default) or 'fr', 'sp', 'jp'
-	current_id				- integer
 	current_album			- string
+	current_real_album		= sttring					-- RM 20030907
 	current_image			- string
 	current_type			- string 'image' or 'video' -- RM 20030713
 	list_albums				- array of string
@@ -808,7 +808,6 @@ function rig_self_url($in_image = -1,
 //
 // Use URL-Rewriting when defined in prefs [RM 20030107]
 {
-	global $current_id;
 	global $current_album;
 	global $current_image;
 	global $pref_url_rewrite;	// RM 20030107
@@ -1898,6 +1897,119 @@ function rig_get_parent_album($album)
 }
 
 
+//***********************************************
+function rig_check_album_access($abs_dir, $album)
+//***********************************************
+{
+	global $pref_enable_access_hidden_albums;
+
+	// If pref_enable_access_hidden_albums is FALSE and the album
+	// exists yet it is hidden, album is not accessible.
+
+	// If pref_enable_access_hidden_albums is TRUE and the album
+	// exists yet it is hidden, allow access to it.
+
+	$can_access = rig_is_dir($abs_dir);
+
+	if (    $album != ''
+		&&  $can_access
+		&& !$pref_enable_access_hidden_albums)
+	{
+		// To know if the album is visible, we must load its parents
+		// options. We do that only if access to hidden albums is
+		// disabled and this is not the top album (which can never
+		// be hidden, by design).
+		// Now maybe the current album is visible but one of its
+		// parents is hidden... in which case this album is to be
+		// considered hidden too. So we need to explore all the
+		// way up to make sure it's all valid.
+		
+		$curr = $album;
+		while($curr && $can_access)
+		{
+			$parent = rig_get_parent_album($curr);
+
+			$can_access = rig_read_album_options($parent);
+
+			if ($can_access)
+				$can_access = rig_is_visible(-1, $curr);
+				
+			$curr = $parent;
+		}
+	}
+
+	return $can_access;
+}
+
+
+//********************************************************************************
+function rig_follow_album_symlink($abs_dir, &$current_album, &$current_real_album)
+//********************************************************************************
+// Returns FALSE if access to the album should be denied
+// Returns TRUE and update current_album and current_real_album directly if it is
+// a symlink that must be followed.
+// Returns TRUE and does not change current_album and current_real_album if it is
+// a symlink that must NOT be followed.
+{
+	global $pref_follow_album_symlinks;
+	global $abs_album_path;
+
+
+	if (   $pref_follow_album_symlinks
+		&& $current_album
+		&& rig_is_dir($abs_dir)
+		&& is_link($abs_dir))
+	{
+		// ok so abs_dir is a directory and it is a symlink
+		// get the real directory it points to:
+
+		$rp = realpath($abs_dir);
+
+		// now $abs_album_path is the root of the album and
+		// it is a real path too. The symlink points onto
+		// the same album if $abs_album_path is exactly
+		// present at the beginning of $rp
+		
+		if (strncmp($rp, $abs_album_path, strlen($abs_album_path)) == 0)
+		{
+			// if so, the rest of the rp string gives the linked-to
+			// album, and there should be a directory separator too
+			// that we can ignore
+			
+			$s_album = substr($rp, strlen($abs_album_path));
+
+			// check the string contains at least the directory separator
+			// and some more
+			
+			if (strlen($s_album) > 1 && ($s_album[0] == SEP || $s_album[0] == SEP2))
+			{
+				// strip the directory sep
+				$s_album = substr($s_album, 1);
+				
+				// we got ourselves our candidate new album...
+				// check this album can be accessed
+
+				$can_access = rig_check_album_access($rp, $s_album);
+		
+				if (!$can_access)
+				{
+					return FALSE;
+				}
+				else
+				{
+					// access allowed, remap physical access variables
+
+					$current_real_album = $s_album;
+				}
+			}
+		}
+	}
+
+	return TRUE;
+
+} // follow symlink
+
+
 //************************************************
 function rig_prepare_album($id, $album, $title="")
 //************************************************
@@ -1909,17 +2021,16 @@ function rig_prepare_album($id, $album, $title="")
 
 	global $abs_album_path;
 	global $current_album;
-	global $current_id;
+	global $current_real_album;					// RM 20030907
 	global $pref_use_db_id;
 	global $display_title;
 	global $display_album_title;
 	global $html_album, $html_none;
-	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
-	global $pref_enable_access_hidden_albums;
-	global $pref_follow_album_symlinks;	// RM 20030901 - v0.6.4.3
+	global $pref_album_ignore_list;				// RM 20030813 - v0.6.3.5
 
-	$current_album = FALSE;
-	$current_id = 0;
+	$current_album		= FALSE;
+	$current_real_album = FALSE;
+	$can_access			= FALSE;
 
 	// first try the index argument
 	// RM 20021021 not for rig 0.6.2
@@ -1942,97 +2053,40 @@ function rig_prepare_album($id, $album, $title="")
 	{
 		$abs_dir = $abs_album_path . rig_prep_sep($current_album);
 
-
-		// If pref_enable_access_hidden_albums is FALSE and the image
-		// exists yet it is hidden, redirect to the album.
-		// If pref_enable_access_hidden_albums is TRUE and the image
-		// exists yet it is hidden, allow access to it.
-
-		$can_access = rig_is_dir($abs_dir);
-
-		if (    $current_album != ''
-			&&  $can_access
-			&& !$pref_enable_access_hidden_albums)
-		{
-			// To know if the album is visible, we must load its parents
-			// options. We do that only if access to hidden albums is
-			// disabled and this is not the top album (which can never
-			// be hidden, by design).
-			// Now maybe the current album is visible but one of its
-			// parents is hidden... in which case this album is to be
-			// considered hidden too. So we need to explore all the
-			// way up to make sure it's all valid.
-			
-			$curr = $current_album;
-			while($curr && $can_access)
-			{
-				$parent = rig_get_parent_album($curr);
-
-				$can_access = rig_read_album_options($parent);
-
-				if ($can_access)
-					$can_access = rig_is_visible(-1, $curr);
-					
-				$curr = $parent;
-			}
-		}
+		$can_access = rig_check_album_access($abs_dir, $current_album);
 
 		if (!$can_access)
 		{
 			// access denied, unset variables
-			$current_id = 0;
-			$current_album = '';
-			$abs_dir = '';
+			$current_album		= '';
+			$current_real_album	= '';
+			$abs_dir			= '';
+		}
+		else
+		{
+			// access allowed
+			
+			$current_real_album = $current_album;
 		}
 	}
 	
 	
 	// -- follow album symlinks
-	
-	if (   $pref_follow_album_symlinks
-		&& $current_album
-		&& rig_is_dir($abs_dir)
-		&& is_link($abs_dir))
+
+	if (!rig_follow_album_symlink($abs_dir, $current_album, $current_real_album))
 	{
-		// ok so abs_dir is a directory and it is a symlink
-		// get the real directory it points to:
+		// if the function returns false, access to the album should be denied
+		// the function modifies current_album and current_real_album directly
 
-		$rp = realpath($abs_dir);
-
-		// now $abs_album_path is the root of the album and
-		// it is a real path too. The symlink points onto
-		// the same album if $abs_album_path is exactly
-		// present at the beginning of $rp
-		
-		if (strncmp($rp, $abs_album_path, strlen($abs_album_path)) == 0)
-		{
-			// if so, the rest of the rp string gives the linked-to
-			// album, and there should be a directory separator too
-			// that we can ignore
-			
-			$album = substr($rp, strlen($abs_album_path));
-
-			// check the string contains at least the directory separator
-			// and some more
-			
-			if (strlen($album) > 1 && ($album[0] == SEP || $album[0] == SEP2))
-			{
-				// strip the directory sep
-				$album = substr($album, 1);
-				
-				// we got ourselves our candidate new album...
-				// process it (use this function recursively)
-				
-				rig_prepare_album(0, $album, $title);
-				
-				// and exit
-				return;
-			}
-		}
+		// access denied, unset variables
+		$current_album		= '';
+		$current_real_album	= '';
+		$abs_dir			= '';
 	}
 	
 
 	// -- setup title of album
+	
 	if (!$title)
 		$title = $html_album;
 
@@ -2050,7 +2104,7 @@ function rig_prepare_album($id, $album, $title="")
 	}
 
 	// Read this album's options right now
-	rig_read_album_options($current_album);
+	rig_read_album_options($current_real_album);
 }
 
 
@@ -2147,12 +2201,13 @@ function rig_load_album_list($show_all = FALSE)
 	global $pref_image_ignore_list;
 	
 	global $current_album;
+	global $current_real_album;			// RM 20030907
 	global $abs_album_path;
 
 	// DEBUG
-	// echo "<br>Current Album = \"$current_album\"";
+	// echo "<br>Current Album = \"$current_album\" -- Real Album = \"$current_real_album\"";
 
-	$abs_dir = $abs_album_path . rig_prep_sep($current_album);
+	$abs_dir = $abs_album_path . rig_prep_sep($current_real_album);
 
 	// get all files and dirs, recurse in dirs first
 	// display sub albums if any
@@ -2168,7 +2223,7 @@ function rig_load_album_list($show_all = FALSE)
 	}
 	else
 	{
-		rig_create_preview_dir($current_album);
+		rig_create_preview_dir($current_real_album);
 
 		while (($file = readdir($handle)) !== FALSE)
 		{
@@ -2214,7 +2269,7 @@ function rig_load_album_list($show_all = FALSE)
 			usort($list_images, "rig_cmp_pretty_name");
 	}
 	
-	rig_read_album_descriptions($current_album);
+	rig_read_album_descriptions($current_real_album);
 }
 
 
@@ -2319,7 +2374,6 @@ function rig_is_visible($id = -1, $album = -1, $image = -1)
 // - if album is given but not image, get album id (compare with current_album)
 // - if image is given but not album, get image id in current_album
 {
-	global $current_id;
 	global $current_album;
 	global $current_image;
 	global $pref_use_db_id;
@@ -2353,14 +2407,15 @@ function rig_prepare_image($id, $album, $image, $title="")
 	// $current_image		- string
 	// $pretty_image		- string
 	// $current_album		- string
+	// $current_real_album	- string
 	// $current_img_info	- array of {format, width, height}
 	// $display_title		- string
 	// $display_album_title	- string
 
-	global $current_id;
 	global $current_album;
+	global $current_real_album;			// RM 20030907
 	global $current_image;
-	global $current_type;		// RM 20030713
+	global $current_type;				// RM 20030713
 	global $current_img_info;
 	global $pref_use_db_id;
 	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
@@ -2373,41 +2428,60 @@ function rig_prepare_image($id, $album, $image, $title="")
 	global $html_image;
 
 
-	$current_album = FALSE;
-	$current_image = FALSE;
-	$current_type = "";
-	$current_id = 0;
+	$current_album		= FALSE;
+	$current_image		= FALSE;
+	$current_real_album	= FALSE;
+	$current_type		= '';
 
-	// first try the index argument
-	// RM 20021021 no db in rig 062
+	$can_album			= FALSE;
+	$can_access_album	= FALSE;
 
-	// second try the named argument
+	// try the named argument from the GET query string
+	
 	if (!$current_image && isset($image))
 	{
 		$current_album = rig_decode_argument($album);
 		$current_image = rig_decode_argument($image);
+		
+		$current_real_album = $current_album;
 	}
 
 	// check the ignore lists and invalidate names if necessary
 	if ($current_album && rig_check_ignore_list($current_album, $pref_album_ignore_list))
 	{
-		$album = '';
-		$current_album = '';
+		$album				= '';
+		$current_album		= '';
+		$current_real_album = '';
 	}
 
-	if ($current_image && rig_check_ignore_list($current_album, $pref_image_ignore_list))
+	if ($current_image && rig_check_ignore_list($current_image, $pref_image_ignore_list))		// RM 20030907 fix: was testing current-album name against image-ignore-list
 	{
-		$image = '';
-		$current_image = '';
+		$image			= '';
+		$current_image	= '';
+	}
+
+
+	// -- validate album and follow album symlinks
+
+	if ($current_album)
+	{
+		$abs_dir = $abs_album_path . rig_prep_sep($current_album);
+
+		$can_access = rig_check_album_access($abs_dir, $current_album);
+
+		if ($can_access)
+			$can_access = rig_follow_album_symlink($abs_dir, $current_album, $current_real_album);
+
+		$can_access_album = $can_access;
 	}
 	
 
 	// does the image really exist?
 	// is the image hidden?
-	if ($current_image)
+	if ($current_image && $can_access)
 	{
-		$rel_img = $current_album . rig_prep_sep($current_image);
-		$abs_img = $abs_album_path . rig_prep_sep($current_album) . rig_prep_sep($current_image);
+		$rel_img = $current_real_album  . rig_prep_sep($current_image);
+		$abs_img = $abs_album_path      . rig_prep_sep($current_real_album) . rig_prep_sep($current_image);
 
 		// If pref_enable_access_hidden_images is FALSE and the image
 		// exists yet it is hidden, redirect to the album.
@@ -2417,27 +2491,31 @@ function rig_prepare_image($id, $album, $image, $title="")
 		$can_access = rig_is_file($abs_img);
 		if ($can_access && !rig_is_visible(-1, -1, $current_image))
 			$can_access = $pref_enable_access_hidden_images;
+	}
 
-		if (!$can_access)
+	if (!$can_access)
+	{
+		// access denied, unset variables
+		// invalidate current image and then redirect to the album
+
+		global $image;
+		$image			= '';
+		$current_image	= '';
+
+		// if the album is invalid, remove to so that the page
+		// be redirected to the album root
+		
+		if (!$can_access_album)
 		{
-			// access denied, unset variables
-			$current_id = 0;
-			$current_album = "";
-			$current_image = "";
-			
-			// [RM 20021225] invalidate current image
-			// and then redirect to the album
-			global $image;
-			$image = "";
-			$refresh_url = rig_self_url();
-			header("Location: $refresh_url");
-			exit;
+			$current_album		= '';
+			$current_real_album	= '';
 		}
-		else if ($pref_use_db_id && !$current_id)
-		{
-			// image exists, create an id if not done yet
-			$current_id = rig_db_id_for_image($rel_img, TRUE);
-		}
+
+		// redirect
+
+		$refresh_url = rig_self_url();
+		header("Location: $refresh_url");
+		exit;
 	}
 
 	$pretty_image  = rig_pretty_name($current_image, FALSE);
@@ -2463,7 +2541,7 @@ function rig_prepare_image($id, $album, $image, $title="")
 		$display_album_title = rig_pretty_name($items[count($items)-1], FALSE);
 	}
 
-	rig_read_album_options($current_album);
+	rig_read_album_options($current_real_album);
 }
 
 
@@ -2481,7 +2559,7 @@ function rig_get_images_prev_next()
 	global $display_prev_img;
 	global $display_next_link;
 	global $display_next_img;
-	global $current_album;
+	global $current_real_album;		// RM 20030907
 	global $current_image;
 	global $html_image;
 	global $list_images;
@@ -2518,7 +2596,7 @@ function rig_get_images_prev_next()
 		$file = $list_images[$key-1];
 
 		$pretty = rig_pretty_name($file, FALSE);
-		$preview = rig_encode_url_link(rig_build_preview($current_album, $file));
+		$preview = rig_encode_url_link(rig_build_preview($current_real_album, $file));
 
 		$display_prev_link = rig_self_url($file);
 		$display_prev_img = "<img src=\"$preview\" alt=\"$pretty\" title=\"$html_image: $pretty\" border=0>";
@@ -2529,7 +2607,7 @@ function rig_get_images_prev_next()
 		$file = $list_images[$key+1];
 
 		$pretty = rig_pretty_name($file, FALSE);
-		$preview = rig_encode_url_link(rig_build_preview($current_album, $file));
+		$preview = rig_encode_url_link(rig_build_preview($current_real_album, $file));
 
 		$display_next_link = rig_self_url($file);
 		$display_next_img = "<img src=\"$preview\" alt=\"$pretty\" title=\"$html_image: $pretty\" border=0>";
@@ -2752,7 +2830,9 @@ function rig_begin_buffering()
 	global $rig_tmp_cache;
 
 	// Is the feature enabled? [RM 20030821]
+
 	global $pref_enable_album_html_cache;
+
 	if (!$pref_enable_album_html_cache)
 	{
 		$rig_abs_cache = FALSE;
@@ -2760,9 +2840,7 @@ function rig_begin_buffering()
 		return FALSE;
 	}
 	
-	
-
-	global $current_album;
+	global $current_real_album;			// RM 20030907
 	global $abs_album_path;
 	global $abs_album_cache_path;
 	global $abs_option_path;
@@ -2781,7 +2859,7 @@ function rig_begin_buffering()
 	// - language name
 
 	$abs_html =   rig_post_sep($abs_album_cache_path)
-				. rig_post_sep($current_album)
+				. rig_post_sep($current_real_album)
 				. ALBUM_CACHE_NAME
 				. rig_simplify_filename($rig_lang) . '_'
 				. rig_simplify_filename($rig_theme) . '_'
@@ -2803,8 +2881,8 @@ function rig_begin_buffering()
 		$tm_html   = rig_modif_date($abs_html);
 
 		// set the list of files or folders to check
-		$check_list = array($abs_album_path  . rig_prep_sep($current_album),
-							$abs_option_path . rig_prep_sep($current_album),
+		$check_list = array($abs_album_path  . rig_prep_sep($current_real_album),
+							$abs_option_path . rig_prep_sep($current_real_album),
 							$dir_abs_src);
 
 		if ($dir_abs_src != $dir_abs_admin_src)
@@ -3013,9 +3091,13 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.33  2003/09/08 03:54:35  ralfoide
+//	Re-implemented follow-album-symlink the proper way, by separating
+//	current_album (the symlink source) from current_real_album (the symlink dest)
+//
 //	Revision 1.32  2003/09/01 20:54:52  ralfoide
 //	Implemented pref_follow_album_symlinks
-//
+//	
 //	Revision 1.31  2003/08/21 20:19:30  ralfoide
 //	New dir/path variables, new enable prefs (album/image hidden, descriptions, album cache), updated rig_require_once
 //	

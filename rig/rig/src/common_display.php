@@ -480,7 +480,7 @@ function rig_display_image_list()
 	global $dir_images;
 	global $list_images;
 	global $html_image;
-	global $current_album;
+	global $current_real_album;				// RM 20030907
 	global $list_description;				// RM 20030713
 	global $pref_preview_size;
 	global $pref_use_image_border;			// RM 20030814
@@ -507,7 +507,7 @@ function rig_display_image_list()
 		$pretty1 = rig_pretty_name($file);
 		$pretty2 = rig_pretty_name($file, FALSE);
 
-		$info = rig_build_preview_info($current_album, $file);
+		$info = rig_build_preview_info($current_real_album, $file);
 		$preview = $info["p"];
 
 		if (isset($info["w"]))
@@ -731,7 +731,7 @@ function rig_display_image()
 {
 	global $dir_album;
 	global $abs_album_path;
-	global $current_album;
+	global $current_real_album;		// RM 20030907
 	global $current_image;
 	global $pretty_image;
 	global $rig_img_size;
@@ -750,7 +750,7 @@ function rig_display_image()
 	if (strncmp($type, "image/", 6) == 0)
 	{
 		// get image (build resized preview if necessary)
-		$preview = rig_build_preview($current_album, $current_image, $rig_img_size, $pref_image_quality);
+		$preview = rig_build_preview($current_real_album, $current_image, $rig_img_size, $pref_image_quality);
 	
 		// RM 110801 -- use size of image in img tag if available
 		// get actual size of image
@@ -779,10 +779,10 @@ function rig_display_image()
 		// RM 20030628 v0.6.3.4
 
 		// get the full relative URL to the media file
-		$full = rig_post_sep($dir_album) . rig_post_sep($current_album) . $current_image;
+		$full = rig_post_sep($dir_album) . rig_post_sep($current_real_album) . $current_image;
 
 		// get actual size of media
-		$abs = rig_post_sep($abs_album_path) . rig_post_sep($current_album) . $current_image;
+		$abs = rig_post_sep($abs_album_path) . rig_post_sep($current_real_album) . $current_image;
 		$info = rig_image_info($abs);
 		
 		if (isset($info["w"]))
@@ -1114,7 +1114,7 @@ function rig_display_jhead()
 // Otherwise it is the path of the jhead command on the current system.
 // This function calls the command using exec and prints out each result line.
 {
-	global $current_album;
+	global $current_real_album;		// RM 20030907
 	global $current_image;
 	global $abs_album_path;
 	global $pref_use_jhead;
@@ -1122,7 +1122,7 @@ function rig_display_jhead()
 
 	// --- use the jhead application to extract info ---
 
-	$name = $abs_album_path . rig_prep_sep($current_album) . rig_prep_sep($current_image);
+	$name = $abs_album_path . rig_prep_sep($current_real_album) . rig_prep_sep($current_image);
 
 	$retvar = 1;
 	$output = array();
@@ -1837,9 +1837,13 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.26  2003/09/08 03:54:35  ralfoide
+//	Re-implemented follow-album-symlink the proper way, by separating
+//	current_album (the symlink source) from current_real_album (the symlink dest)
+//
 //	Revision 1.25  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//
+//	
 //	Revision 1.24  2003/08/18 06:10:02  ralfoide
 //	Moving on to 0.6.4.2
 //	Added color_table_desc in themes for description and dates in album view.

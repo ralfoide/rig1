@@ -389,12 +389,13 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 	global $pref_empty_album;
 	global $pref_preview_size;
 	global $abs_album_path;
-	global $abs_image_cache_path, $dir_image_cache;
-	global $current_album;
+	global $abs_image_cache_path;
+	global $dir_image_cache;
+	global $current_real_album;			// RM 20030907
 
 // DEBUG
 /*
-echo "<br><b>Current album:</b> $album -- $current_album\n";
+echo "<br><b>Current (real) album:</b> $album -- $current_real_album\n";
 echo "<br><b>dir_abs_album:</b> $dir_abs_album\n";
 echo "<br><b>dir_images:</b> $dir_images\n";
 echo "<br><b>abs_path:</b> $abs_path\n";
@@ -461,7 +462,7 @@ echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
 
 				// if this album has information about the icon, use it
 				// make sure we have the correct album options
-				if ($album != $current_album)
+				if ($album != $current_real_album)
 					$album_options_changed = rig_read_album_options($album);
 
 				// now get the name of the source of the icon
@@ -510,7 +511,7 @@ echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
 		{
 			// if this album has information about the icon, use it
 			// make sure we have the correct album options
-			if ($album != $current_album && !$album_options_changed)
+			if ($album != $current_real_album && !$album_options_changed)
 				$album_options_changed = rig_read_album_options($album);
 	
 			global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
@@ -527,7 +528,7 @@ echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
 		{
 			// if this album has information about the icon, use it
 			// make sure we have the correct album options
-			if ($album != $current_album && !$album_options_changed)
+			if ($album != $current_real_album && !$album_options_changed)
 				$album_options_changed = rig_read_album_options($album);
 	
 			global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
@@ -544,7 +545,7 @@ echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
 	
 		// read the current options back if changed
 		if ($album_options_changed)
-			rig_read_album_options($current_album, $check_icon_properties);
+			rig_read_album_options($current_real_album, $check_icon_properties);
 	
 		// if there's a file, just use it
 		if (rig_is_file($abs_path) || !$use_default)
@@ -745,9 +746,13 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/09/08 03:54:35  ralfoide
+//	Re-implemented follow-album-symlink the proper way, by separating
+//	current_album (the symlink source) from current_real_album (the symlink dest)
+//
 //	Revision 1.13  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//
+//	
 //	Revision 1.12  2003/08/18 03:06:23  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
 //	

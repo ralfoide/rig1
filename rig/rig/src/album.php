@@ -66,7 +66,6 @@ else
 						$color_title_text);
 	rig_display_user_name();
 
-	// RM 20020714 id: album->current_album
 	if ($current_album)
 	{
 ?>
@@ -193,9 +192,13 @@ rig_terminate_db();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/09/08 03:54:35  ralfoide
+//	Re-implemented follow-album-symlink the proper way, by separating
+//	current_album (the symlink source) from current_real_album (the symlink dest)
+//
 //	Revision 1.10  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//
+//	
 //	Revision 1.9  2003/08/18 03:07:14  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
 //	

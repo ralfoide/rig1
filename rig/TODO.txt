@@ -146,6 +146,7 @@ Admin:
 [0.6.4]
 
 [0.6.3.3]
+20030526 [2.F] Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
 20030321 [2.F] Pref: add a pref to have image.php display next/prev images on top of main image, as before (for MM).
                (Note: later this should become a different layout theme)
 20030321 [1.F] Fix: album/image count was not correctly displayed on admin page.
@@ -497,10 +498,13 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.20  2003/05/26 17:53:46  ralfoide
+//	Removed unused language strings. Updated Japanese. New rig_display_back_to_album.
+//
 //	Revision 1.19  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.
-//
+//	
 //	Revision 1.18  2003/03/17 08:57:37  ralfoide
 //	new CHANGELOG.html
 //	

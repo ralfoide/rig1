@@ -7,15 +7,19 @@
 // $Id$
 //**********************************************
 
-$rig_version = "0.6.2.4";
+$rig_version = "0.6.3";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/01/20 12:39:51  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//
 //	Revision 1.5  2003/01/07 18:03:09  ralfoide
 //	Version 0.6.2.4 with URL-Rewrite
-//
+//	
 //	Revision 1.4  2002/11/05 08:54:05  ralfoide
 //	Version 0.6.2.3 -- mostly fixes
 //	

@@ -76,7 +76,15 @@ rig_display_body();
 	<!-- display image itself -->
 	
 	<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
-	<tr><td><center><?php display_image() ?></center></td></tr>
+
+		<tr><td><center><?php display_image() ?></center></td></tr>
+
+		<!-- RM 20030119 v0.6.3 display copyright -->
+			<!--tr><td>&nbsp;</td></tr -->
+			<tr><td bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+				<div align="left"><?php display_image_copyright() ?></div>
+			</font></td></tr>
+
 	</table>
 	
 	</center>
@@ -243,9 +251,13 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/01/20 12:39:51  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//
 //	Revision 1.5  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
-//
+//	
 //	Revision 1.4  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
 //	

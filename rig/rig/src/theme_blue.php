@@ -34,6 +34,7 @@ $color_header_text		= '#FFFFCC';
 
 $color_table_border		= '#000000';
 $color_table_bg			= '#FFFFFF';
+$color_table_infos		= '#BBBBBB';
 
 $color_image_border		= $color_table_bg;
 $color_caption_bg		= $color_table_bg;
@@ -49,9 +50,13 @@ $color_error2_bg		= '#FFFF99';	// '#FFFF33';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/01/20 12:39:51  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//
 //	Revision 1.1  2002/10/21 01:52:48  ralfoide
 //	Multiple language and theme support
-//
+//	
 //	Revision 1.1  2002/10/14 07:05:17  ralf
 //	Update 0.6.3 build 1
 //	

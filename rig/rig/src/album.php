@@ -67,8 +67,17 @@ rig_display_body();
 					</b></font></center>
 				</td></tr>
 				<tr><td width="100%" bgcolor="<?= $color_table_bg ?>">
-					<table width="100%" border="0" cellpadding="10" cellspacing="0">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<?php display_album_list() ?>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr><td>&nbsp;</td></tr>
+						<tr><td width="80%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+							<div align="left"><?php display_album_copyright() ?></div>
+						</font></td>
+						<td width="20%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+							<div align="right"><?php display_album_count() ?></div>
+						</font></td></tr>
 					</table>
 				</td></tr>
 			</table>
@@ -95,6 +104,15 @@ rig_display_body();
 				<tr><td bgcolor="<?= $color_table_bg ?>">
 					<table width="100%" border="0" cellpadding="10" cellspacing="0">
 						<?php display_image_list() ?>
+					</table>
+					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+						<tr><td width="80%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+							<div align="left"><?php display_album_copyright() ?></div>
+						</font></td>
+						<td width="20%" bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
+							<div align="right"><?php display_image_count() ?></div>
+						</font></td></tr>
+					</table>
 					</table>
 				</td></tr>
 			</table>
@@ -128,9 +146,13 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2003/01/20 12:39:51  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//
 //	Revision 1.4  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
-//
+//	
 //	Revision 1.3  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
 //	

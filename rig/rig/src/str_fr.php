@@ -79,7 +79,7 @@ $html_vis_off		= 'Masquer';
 $html_credits		= 'Cr&eacute;dits';
 $html_show_credits	= 'Afficher les cr&eacute;dits de RIG et PHP';
 $html_hide_credits	= 'Masquer les cr&eacute;dits';
-$html_text_credits	= '<a href="http://rig.powerpulsar.com">RIG</a> &copy; 2001 par R\'alf<br>';
+$html_text_credits	= 'R\'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 par R\'alf<br>';
 $html_text_credits .= 'RIG est diffus&eacute; sous les conditions de la <a href="LICENSE.html">license RIG</a>.<br>';
 $html_text_credits .= 'Bas&eacute; sur <a href="http://www.php.net">PHP</a> et ';
 $html_text_credits .= 'la <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>';
@@ -96,6 +96,12 @@ $html_password		= 'Mot de passe';
 $html_welcome		= 'Bienvenue <b>[name]</b> ! ([change-link])';
 $html_chg_user		= 'changer d\'utilisateur';
 $html_guest_login	= 'Mode \'invit&eacute;\'';
+
+// RM 20030119 - v0.6.3
+$html_album_copyrt	= 'Images &copy; [name]';
+$html_image_copyrt	= 'Image &copy; [name]';
+$html_album_count	= '[count] albums';
+$html_image_count	= '[count] images';
 
 // Contenu des Scripts
 //--------------------
@@ -144,9 +150,13 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/01/20 12:39:51  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//
 //	Revision 1.7  2002/11/02 04:09:32  ralfoide
 //	Fixes for URLs in international strings
-//
+//	
 //	Revision 1.6  2002/10/24 21:32:46  ralfoide
 //	dos2unix fix
 //	

@@ -80,7 +80,7 @@ $html_vis_off		= 'Hide';
 $html_credits		= 'Credits';
 $html_show_credits	= 'Display RIG & PHP Credits';
 $html_hide_credits	= 'Hide Credits';
-$html_text_credits	= '<a href="http://rig.powerpulsar.com">RIG</a> &copy; 2001 by R\'alf<br>';
+$html_text_credits	= 'R\'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 by R\'alf<br>';
 $html_text_credits .= 'RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a>.<br>';
 $html_text_credits .= 'Based on <a href="http://www.php.net">PHP</a> and ';
 $html_text_credits .= 'the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>';
@@ -97,6 +97,13 @@ $html_password		= 'Password';
 $html_welcome		= 'Welcome <b>[name]</b>! ([change-link])';
 $html_chg_user		= 'change user';
 $html_guest_login	= '\'Guest\' Mode';
+
+// RM 20030119 - v0.6.3
+$html_album_copyrt	= 'All images &copy; [name]';	// [name] will become $pref_album_copyright_name
+$html_image_copyrt	= 'Image &copy; [name]';		// [name] will become $pref_album_copyright_name
+$html_album_count	= '[count] albums';
+$html_image_count	= '[count] images';
+
 
 // Script Content
 //---------------
@@ -136,9 +143,13 @@ $html_img_date		= 'l\, F d\, Y\, g:m A';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/01/20 12:39:51  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//
 //	Revision 1.6  2002/11/02 04:09:32  ralfoide
 //	Fixes for URLs in international strings
-//
+//	
 //	Revision 1.5  2002/10/23 16:01:01  ralfoide
 //	Added <html lang>; now transmitting charset via http headers.
 //	

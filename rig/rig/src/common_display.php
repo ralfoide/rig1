@@ -155,6 +155,7 @@ function display_album_list()
 	global $pref_preview_size;
 	global $abs_preview_path;
 	global $list_albums;
+	global $list_albums_count;		// RM 20030119
 	global $current_album;
 
 	// name of album-border images
@@ -163,6 +164,7 @@ function display_album_list()
 	$line_b = $dir_images . "line_b.gif";
 	$line_r = $dir_images . "line_r.gif";
 
+	$list_albums_count = 0;
 
 	$i = 0;
 	$n = $pref_nb_col;
@@ -181,6 +183,9 @@ function display_album_list()
 
 		if (!rig_is_visible(-1, $name))
 			continue;
+
+		// count visible albums
+		$list_albums_count++;
 
 		$pretty = pretty_name($dir, FALSE, TRUE);
 
@@ -326,8 +331,11 @@ function display_image_list()
 
 	global $pref_nb_col;
 	global $list_images;
+	global $list_images_count;		// RM 20030119
 	global $current_album;
 	global $pref_preview_size;
+
+	$list_images_count = 0;
 	
 	$i = 0;
 	$n = $pref_nb_col;
@@ -344,6 +352,9 @@ function display_image_list()
 	{
 		if (!rig_is_visible(-1, -1, $file))
 			continue;
+
+		// count visible images
+		$list_images_count++;
 
 		// is this the last line? [RM 20021101]
 		$is_last_line = ($index >= $m-$n);
@@ -406,6 +417,49 @@ function display_image_list()
 
 	echo "</tr>\n";
 }
+
+
+
+//****************************
+function display_album_count()
+//****************************
+// RM 20030119 v0.6.3
+// Don't display the album count if there is less than 3 albums
+// because most of the time the table won't be large enough
+{
+	global $html_album_count;
+	global $list_albums_count;	// updated in display_album_list()
+
+	if ($list_albums_count >= 3)
+	{
+		// replace "[count]" in the $html by the number
+		$str = str_replace("[count]", $list_albums_count, $html_album_count);
+
+		echo $str;
+	}
+}
+
+
+
+//****************************
+function display_image_count()
+//****************************
+// RM 20030119 v0.6.3
+// Don't display the image count if there is less than 3 albums
+// because most of the time the table won't be large enough
+{
+	global $html_image_count;
+	global $list_images_count;	// updated in display_image_list()
+
+	if ($list_images_count >= 3)
+	{
+		// replace "[count]" in the $html by the number
+		$str = str_replace("[count]", $list_images_count, $html_image_count);
+		
+		echo $str;
+	}
+}
+
 
 //-----------------------------------------------------------------------
 
@@ -717,10 +771,50 @@ function rig_display_theme()
 //-----------------------------------------------------------------------
 
 
+//********************************
+function display_album_copyright()
+//********************************
+// RM 20030119 v0.6.3
+{
+	global $html_album_copyrt;
+	global $pref_copyright_name;
+
+	if ($pref_copyright_name <> "")
+	{
+		// replace "[name]" in the $html by the $pref name
+		$str = str_replace("[name]", $pref_copyright_name, $html_album_copyrt);
+	
+		echo $str;
+	}
+}
+
+
+//********************************
+function display_image_copyright()
+//********************************
+// RM 20030119 v0.6.3
+{
+	global $html_image_copyrt;
+	global $pref_copyright_name;
+
+	if ($pref_copyright_name <> "")
+	{
+		// replace "[name]" in the $html by the $pref name
+		$str = str_replace("[name]", $pref_copyright_name, $html_image_copyrt);
+	
+		echo $str;
+	}
+}
+
+
+//-----------------------------------------------------------------------
+
 //******************************************************
 function rig_display_credits($has_credits, $has_phpinfo)
 //******************************************************
 {
+	global $admin;
+	global $_debug_;
 	global $html_text_credits;
 	global $html_hide_credits;
 	global $html_show_credits;
@@ -732,14 +826,21 @@ function rig_display_credits($has_credits, $has_phpinfo)
 
 	global $color_section_bg;
 
+	// link to show or hide the credits
 	$v = ($has_credits == "on" ? "off" : "on");
 	$l = ($has_credits == "on" ? $html_hide_credits : $html_show_credits);
 	echo "<a name=\"credits\" href=\"" . self_url(-1, -1, -1, "credits=$v#credits") . "\" target=\"_top\">$l</a><br>";
 
-	$v = ($has_phpinfo == "on" ? "off" : "on");
-	$l = ($has_phpinfo == "on" ? $html_hide_phpinfo : $html_show_phpinfo);
-	echo "<a name=\"phpinfo\" href=\"" . self_url(-1, -1, -1, "phpinfo=$v#phpinfo") . "\" target=\"_top\">$l</a><br>";
+	// link to show or hide the PHP Info
+	// RM 20030118 this is only available in _debug_ or admin, not longuer in normal mode
+	if ($_debug_ || $admin)
+	{
+		$v = ($has_phpinfo == "on" ? "off" : "on");
+		$l = ($has_phpinfo == "on" ? $html_hide_phpinfo : $html_show_phpinfo);
+		echo "<a name=\"phpinfo\" href=\"" . self_url(-1, -1, -1, "phpinfo=$v#phpinfo") . "\" target=\"_top\">$l</a><br>";
+	}
 
+	// actually display the credits if activated
 	if ($has_credits == "on")
 	{
 		?>
@@ -753,6 +854,7 @@ function rig_display_credits($has_credits, $has_phpinfo)
 		phpinfo(INFO_CREDITS);
 	}
 
+	// actually display the PHP info if activated
 	if ($has_phpinfo == "on")
 	{
 		?>
@@ -799,11 +901,12 @@ function rig_display_footer()
 	<?php
 
 	// debug
-    if ($_debug_)
-    {
-	    phpinfo(INFO_VARIABLES);
-        phpinfo(INFO_ENVIRONMENT);
-    }
+	// RM 20030119 obsolete since it can be done directly from the page now
+    // if ($_debug_)
+    // {
+	//     phpinfo(INFO_VARIABLES);
+    //     phpinfo(INFO_ENVIRONMENT);
+    // }
 }
 
 //-----------------------------------------------------------------------
@@ -811,9 +914,13 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/01/20 12:39:51  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//
 //	Revision 1.10  2002/11/02 04:08:46  ralfoide
 //	Removed empty line after last row of thumbnails in image list.
-//
+//	
 //	Revision 1.9  2002/10/30 09:12:29  ralfoide
 //	Finalized album thumbnail table, cleaned up experimental code. Checked with IE5, IE6, NS4.7 and Mozilla 1.1
 //	

@@ -209,7 +209,7 @@ $html_hide_credits
 // Hide Credits
 
 $html_text_credits
-<a href="http://rig.powerpulsar.com">RIG</a> © 2001 by R'alf<br>RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a>.<br>Based on <a href="http://www.php.net">PHP</a> and the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>
+R'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) © 2001-2003 by R'alf<br>RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a>.<br>Based on <a href="http://www.php.net">PHP</a> and the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>
 
 $html_phpinfo
 PHP サーバー情報 
@@ -257,6 +257,24 @@ $html_guest_login
 // 'Guest' Mode
 
 
+// RM 20030119 - v0.6.3
+$html_album_copyrt
+© [name]のすべての像の版権
+// All images &copy; [name]
+
+$html_image_copyrt
+© [name]の像の版権
+// Image &copy; [name]
+
+$html_album_count
+[count] 冊のアルバム
+// [count] albums
+
+$html_image_count
+[count] つの像
+// [count] images
+
+
 // Script Content
 //---------------
 
@@ -289,7 +307,8 @@ $html_image
 // Image
 
 $html_prev
-前// Previous
+前
+// Previous
 
 $html_next
 次に

@@ -53,6 +53,13 @@ Admin:
 -- todo --
 
 [0.6.4]
+20030119 [4.N] Experiment: can the PHP code get the browser's window size via JavaScript? (for a full screen view)
+20030119 [4.N] Templates: second display image template, with no link images and tiny header line (good for a full screen view)
+20030119 [3.N] Templates: create HTML templates, using keywords instead of PHP code
+20030118 [1.N] Cookies: don't store the full path in the cookie (stop at or before "index.php?")
+20030118 [1.N] Cookies: use only one cookie for user+passwd (one admin, one normal)
+20030118 [1.N] Cookies: don't store image size cookie if default size (remove existing cookie)
+20030118 [1.N] Cookies: don't store a cookie for the guest mode (remove existing cookie)
 20030112 [0.N] Idea is instead of hacking DB support in 0.6.3-exp, keep it for later when a class
                will be used to manipulate files. Also classify parts of the source code if useful.
 20030112 [1.N] Document album/image workflow (i.e. when and how names are used)
@@ -66,12 +73,12 @@ Admin:
 20030112 [5.N] Revise the TODO file strucutre -- separating Generic/Admin/DB doesn't really work for me.
 
 [for 0.6.3]
+20030119 [1.N] Bug: cookie path should use the real URL, not the rewritten one (use a pref?)
 20030118 [1.N] Album pref to customize the <meta name="robots" content="noindex, nofollow">
 20030118 [1.N] Make CVS tag_2003-01-DD_v063
 20030111 [1.N] Learn how to make a Debian package. Actually make one.
 20030108 [1.N] Make SourceForge file package for 0.6.3 and move on to 0.6.4
 20030108 [1.N] 0.6.2.4 considered stable enough to become 0.6.3
-20021101 [1.N] Only display phpinfo if _debug_ enabled or admin mode
 
 [for 0.6.2]
 20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
@@ -103,6 +110,9 @@ Admin:
 [0.6.4]
 
 [0.6.3]
+20030119 [1.F] Display: show number of albums or images in table view.
+20030119 [1.F] Display: *must* display credits in images or album mode (aka "All images (c) Ralf"). Language dependant.
+20021101 [1.F] Only display phpinfo if _debug_ enabled or admin mode
 20021012 [4.F] Ask Pascal about Japanese -> [20030112] gave up getting help
 [0.6.2.4]
 20030118 [1.F] Make CVS tag_2003-01-18_v0624
@@ -363,9 +373,13 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/01/20 12:39:50  ralfoide
+//	Started version 0.6.3. Display: show number of albums or images in table view.
+//	Display: display copyright in images or album mode with pref name and language strings.
+//
 //	Revision 1.5  2003/01/19 01:23:45  ralfoide
 //	Update
-//
+//	
 //	Revision 1.4  2003/01/07 17:39:41  ralfoide
 //	URL-Rewrite. Version 0.6.2.4
 //	

@@ -879,8 +879,11 @@ function rig_display_paginator($curr_page, $max_page, $is_album = TRUE)
 
 	$last = 0;
 
-	global $paginator_index;
-	$paginator_index++;
+	// RM 20040708 test: temporarily removed the paginator_index, forcing the links to
+	// always go to the top paginator
+	// global $paginator_index;
+	// $paginator_index++;
+	$paginator_index = '';
 	$pname = "pag" . $paginator_index . ($is_album ? "a" : "i");
 	echo "<a name=\"$pname\"></a>";
 	$pname = "#" . $pname;
@@ -889,7 +892,7 @@ function rig_display_paginator($curr_page, $max_page, $is_album = TRUE)
 	{
 		$last = $curr_page-1;
 		$u = rig_self_url(-1, -1, -1, $pname, ($is_album ? $last : -1), ($is_album ? -1 : $last));
-		echo "<a href=\"$u\">Prev</a>";
+		echo "<a href=\"$u\">Prev</a>&nbsp;";
 	}		
 
 	// and display links
@@ -903,13 +906,14 @@ function rig_display_paginator($curr_page, $max_page, $is_album = TRUE)
 		
 		if ($n == $curr_page)
 		{
-			echo $n;
+			// RM 20040708 test: force 2 more non-breakable spaces around
+			echo "&nbsp;&lt;$n&gt;&nbsp;";
 		}
 		else
 		{
 			$u = rig_self_url(-1, -1, -1, $pname, ($is_album ? $n : -1), ($is_album ? -1 : $n));
-//var_dump($u);
-			echo "<a href=\"$u\">$n</a>";
+			// RM 20040708 test: force 2 more non-breakable spaces around
+			echo "<a href=\"$u\">&nbsp;$n&nbsp;</a>";
 		}
 		
 		$last = $n;
@@ -922,7 +926,7 @@ function rig_display_paginator($curr_page, $max_page, $is_album = TRUE)
 		
 		$last = $curr_page+1;
 		$u = rig_self_url(-1, -1, -1, $pname, ($is_album ? $last : -1), ($is_album ? -1 : $last));
-		echo "<a href=\"$u\">Next</a>";
+		echo "&nbsp;<a href=\"$u\">Next</a>";
 	}		
 
 }
@@ -1456,9 +1460,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.36  2004/07/09 05:51:35  ralfoide
+//	Fixes for pagination
+//
 //	Revision 1.35  2004/06/03 14:14:47  ralfoide
 //	Fixes to support PHP 4.3.6
-//
+//	
 //	Revision 1.34  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

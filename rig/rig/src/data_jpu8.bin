@@ -1,4 +1,4 @@
-// vim: set expandtab tabstop=4 shiftwidth=4: //
+// vim: set tabstop=4 shiftwidth=4: //
 //**********************************************
 // RIG version 1.0
 // Copyright (c) 2001-2002 Ralf
@@ -50,7 +50,7 @@ Français
 Español
 
 @$html_desc_lang jp
-日本語 (UTF-8)
+日本語 (UTF-8) [Experimental Translation]
 
 
 // Themes available
@@ -82,34 +82,34 @@ None
 //-------------
 
 $html_current_album
-現在のアルバム';
+現在のアルバム'; [Experimental Translation]
 // Current Album
 
 $html_albums
-利用できるアルバム'
+利用できるアルバム' [Experimental Translation]
 // Available Albums
 
 $html_images
-像
+像 [Experimental Translation]
 // Images
 
 $html_options
-選択
+選択 [Experimental Translation]
 // Options
 
 $html_generated
 発生させる [time] 秒 - <i>[date]</i> によって <i>[rig-version]</i>
 
 $html_admin_intrfce
-管理インターフェイス
+管理インターフェイス [Experimental Translation]
 // Administration Interface
 
 $html_rig_admin
-RIG の管理インターフェイス
+RIG の管理インターフェイス [Experimental Translation]
 // RIG Administration Interface
 
 $html_comment_stats
-アルバムと補助的アルバムのための統計量:
+アルバムと補助的アルバムのための統計量: [Experimental Translation]
 // Stats for album and sub-albums
 
 $html_album_stat
@@ -117,7 +117,7 @@ $html_album_stat
 // [bytes] bytes occupied by [files] files in [folders] folders
 
 $html_actions
-行為
+行為 [Experimental Translation]
 // Actions
 
 $html_mk_previews
@@ -157,11 +157,11 @@ $html_set_desc
 // Set Description
 
 $html_avail_albums
-利用できるアルバム
+利用できるアルバム [Experimental Translation]
 // Available Albums
 
 $html_avail_prevws
-利用できる下検分
+利用できる下検分 [Experimental Translation]
 // Available Previews
 
 $html_comment1
@@ -225,7 +225,7 @@ $html_hide_phpinfo
 
 
 $html_login
-ログオン
+ログオン [Experimental Translation]
 // Login
 
 $html_validate
@@ -282,28 +282,28 @@ $html_image_count
 // Album Title
 
 $html_album
-アルバム
+アルバム [Experimental Translation]
 // Album
 
 $html_admin
-管理
+管理 [Experimental Translation]
 // Admin
 
 $html_none
-開始
+開始 [Experimental Translation]
 // Start
 
 
 // Current Album
 
 $html_root
-開始
+開始 [Experimental Translation]
 // Start
 
 // Images
 
 $html_image
-像
+像 
 // Image
 
 $html_prev

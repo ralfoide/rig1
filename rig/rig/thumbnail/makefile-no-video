@@ -1,8 +1,8 @@
-#simplified makefile for Thumbnail for Linux
-#creates ./thumbnail.exe
+# Simplified makefile for RIG Thumbnail for Linux
+# Creates ./rig_thumbnail.exe with libjpeg support only (no video)
 
 CC     = gcc
-CFLAGS = -O -DRIG_EXCLUDE_AVIFILE
+CFLAGS = -O3 -DRIG_EXCLUDE_AVIFILE
 LDFLAGS= 
 LDLIBS = -lstdc++ -lm -lc
 LN     = $(CC)
@@ -29,7 +29,7 @@ TARGET = rig_thumbnail.exe
 
 all: libjpeg $(TARGET)
 
-$(TARGET): libjpeg $(OFILES)
+$(TARGET): $(OFILES)
 	$(LN) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LIBJPEG) $(LDLIBS)
 
 $(OFILES): %.o: %.cpp
@@ -43,13 +43,16 @@ libjpeg:
 # -----------------------------
 
 clean:
-	rm -fv $(OFILES)
+	rm -f $(OFILES)
 	make -f makefile-libjpeg clean
 
 # -----------------------------
 
 #
 # $Log$
+# Revision 1.2  2003/08/18 02:05:09  ralfoide
+# Added O3
+#
 # Revision 1.1  2003/07/16 07:04:59  ralfoide
 # Separating with-video/no-video makefiles
 #

@@ -1698,7 +1698,7 @@ function rig_has_albums($exclude_hidden = TRUE)
 		else
 		{
 			// count everything
-			$list_albums_count = $list_albums;
+			$list_albums_count = count($list_albums);
 		}
 
 		return ($list_albums_count > 0);
@@ -1744,7 +1744,7 @@ function rig_has_images($exclude_hidden = TRUE)
 		else
 		{
 			// count everything
-			$list_images_count = $list_images;
+			$list_images_count = count($list_images);
 		}
 
 		return ($list_images_count > 0);
@@ -2063,12 +2063,16 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.21  2003/03/22 01:22:56  ralfoide
+//	Fixed album/image count display in admin mode
+//	Added "old" layout for image display, with image layout pref variable.
+//
 //	Revision 1.20  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)
 //	Fix: missing pref_copyright_name in settings/prefs.php
 //	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//
+//	
 //	Revision 1.19  2003/03/12 07:02:08  ralfoide
 //	New admin image vs album (alpha version not finished).
 //	New admin translate page (alpha version not finished).

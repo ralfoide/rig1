@@ -130,17 +130,30 @@ $pref_disable_album_borders = 0;
 $pref_disable_web_translate_interface = 1;
 
 
+// -------------
+// Select the default image page layout.
+// Default is "1". Current choices are "1" ro "2".
+// WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
+// -------------
+$pref_image_layout = "1";
+
+
+
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/03/22 01:22:56  ralfoide
+//	Fixed album/image count display in admin mode
+//	Added "old" layout for image display, with image layout pref variable.
+//
 //	Revision 1.7  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)
 //	Fix: missing pref_copyright_name in settings/prefs.php
 //	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
-//
+//	
 //	Revision 1.6  2003/03/12 07:03:16  ralfoide
 //	Prefs can override <meta> in album/image display
 //	

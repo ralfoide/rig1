@@ -39,195 +39,23 @@ rig_display_body();
 	rig_get_images_prev_next();
 ?>
 
+</center>
 
-<!-- prev/size/next link on top of image -->
-
-<p>
-
-<table width="100%" border=0><tr>
-<td width="33%" valign="top">
-	<div align="left">
-		<table><tr><td><center>
-			<?php
-				if ($display_prev_link)
-				{
-			?>
-					<a href="<?= $display_prev_link ?>"><?= $display_prev_img ?></a>
-					</center></td></tr><tr><td><center>
-					<a href="<?= $display_prev_link ?>"><?= $html_prev ?></a>
-			<?php
-				}
-				else
-				{
-			?>
-					<a href="<?= rig_self_url("") ?>">
-						<?= $html_back_album ?>
-					</a>
-			<?php
-				}
-			?>
-		</center></td></tr></table>
-	</div>
-</td><td width="34%" valign="top">
-	<center>
-
-	<!-- a href="<?= rig_self_url("") ?>"><?= $html_back_album ?></a -->
-	
-	<!-- display image itself -->
-	
-	<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
-
-		<tr><td><center><?php rig_display_image() ?></center></td></tr>
-
-		<!-- RM 20030119 v0.6.3 display copyright -->
-			<!--tr><td>&nbsp;</td></tr -->
-			<tr><td bgcolor="<?= $color_table_bg ?>"><font color="<?= $color_table_infos ?>">
-				<div align="left"><?php rig_display_image_copyright() ?></div>
-			</font></td></tr>
-
-	</table>
-	
-	</center>
-</td><td width="33%" valign="top">
-	<div align="right">
-		<table><tr><td><center>
-			<?php
-				if ($display_next_link)
-				{
-			?>
-					<a href="<?= $display_next_link ?>"><?= $display_next_img ?></a>
-					</center></td></tr><tr><td><center>
-					<a href="<?= $display_next_link ?>"><?= $html_next ?></a>
-			<?php
-				}
-				else
-				{
-			?>
-					<a href="<?= rig_self_url("") ?>"><?= $html_back_album ?></a>
-			<?php
-				}
-			?>
-		</center></td></tr></table>
-	</div>
-</td>
-</tr></table>
-
-
-<p>
-
-<!-- prev/info/next link below image -->
-
-
-<table width="100%" border=0><tr>
-<td width="33%" valign="bottom">
-	<div align="left">
-		<table><tr><td><center>
-			<?php
-				if ($display_prev_link)
-				{
-			?>
-					<a href="<?= $display_prev_link ?>"><?= $display_prev_img ?></a>
-					</center></td></tr><tr><td><center>
-					<a href="<?= $display_prev_link ?>"><?= $html_prev ?></a>
-			<?php
-				}
-				else
-				{
-			?>
-					<a href="<?= rig_self_url("") ?>">
-						<?= $html_back_album ?>
-					</a>
-			<?php
-				}
-			?>
-		</center></td></tr></table>
-	</div>
-</td><td width="34%">
-	<center>
-
-	<table border="0" bgcolor="<?= $color_caption_bg ?>" cellpadding="0" cellspacing="4">
-		<tr><td>
-			<center>
-				<font color="<?= $color_caption_text ?>">
-					<b><?= $display_title ?></b>
-					<br>
-					<?php echo rig_display_image_info() ?>
-					<br>
-				</font>
-				<font color="<?= $color_index_text ?>">
-					<?php rig_display_current_album() ?>
-				</font>
-				<br>
-			</center>
-		</td></tr>
-	</table>
-	
-	<p>
-	
-	<a href="<?= rig_self_url("") ?>">
-		<?= $html_back_album ?>
-	</a>
-
-	<p>
-
-	<!-- RM 20021014 moved image resize below image info -->
-	<form method="POST" action="<?= rig_self_url() ?>">
-		<?= "$html_img_size" ?>
-		<select size="1" name="img_size">
-		<?php rig_insert_size_popup() ?>
-		</select>
-		<input type="submit" value="<?= $html_ok ?>" name="ok">
-	</form>
-
-	
-	</center>
-</td><td width="33%" valign="bottom">
-	<div align="right">
-		<table><tr><td><center>
-			<?php
-				if ($display_next_link)
-				{
-			?>
-					<a href="<?= $display_next_link ?>"><?= $display_next_img ?></a>
-					</center></td></tr><tr><td><center>
-					<a href="<?= $display_next_link ?>"><?= $html_next ?></a>
-			<?php
-				}
-				else
-				{
-			?>
-					<a href="<?= rig_self_url("") ?>"><?= $html_back_album ?></a>
-			<?php
-				}
-			?>
-		</center></td></tr></table>
-	</div>
-</td>
 <?php
-	// If the use of jhead is enabled, output jhead's output here -- RM 20021020
-	if ($pref_use_jhead != "")
+
+	// get layout preference
+	if (!isset($pref_image_layout) || !rig_is_file($dir_install . $dir_src . "image_layout_$pref_image_layout.php"))
+	    $pref_image_layout = '1';
+
+	if (is_string($pref_image_layout))
 	{
-?>
-</tr><tr>
-	<td colspan=3>
-	<center>
-		<!-- jhead info -->
-		<table border="0" bgcolor="<?= $color_caption_bg ?>" cellpadding="0" cellspacing="4">
-			<tr><td>
-				<font color="<?= $color_caption_text ?>">
-					<?php rig_display_jhead() ?>
-				</font>
-			</td></tr>
-		</table>
-	</center>
-	</td>
-<?php
+	    require_once(rig_require_once("image_layout_$pref_image_layout.php", $dir_src, $abs_upload_src_path));
 	}
+		
+
 ?>
-</tr></table>
 
-
-<p>
+<center>
 
 <!-- options/credits/gen-time information at bottom -->
 
@@ -251,6 +79,10 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/03/22 01:22:56  ralfoide
+//	Fixed album/image count display in admin mode
+//	Added "old" layout for image display, with image layout pref variable.
+//
 //	Revision 1.7  2003/02/16 20:22:56  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -258,7 +90,7 @@ rig_display_body();
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.6  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.

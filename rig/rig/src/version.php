@@ -7,15 +7,18 @@
 // $Id$
 //**********************************************
 
-$rig_version = "0.6.2.3";
+$rig_version = "0.6.2.4";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2003/01/07 18:03:09  ralfoide
+//	Version 0.6.2.4 with URL-Rewrite
+//
 //	Revision 1.4  2002/11/05 08:54:05  ralfoide
 //	Version 0.6.2.3 -- mostly fixes
-//
+//	
 //	Revision 1.3  2002/10/20 12:07:27  ralfoide
 //	Version 0.6.2.2: jhead support, grayscale support, error reporting in index.php
 //	

@@ -140,9 +140,9 @@ $ chmod 0777 rig_thumbnail.exe
 Edit the file /home/user/public_html/myalbum/location.php:
 
 Change the line
-	$dir_install = "/home/ralf/rig/";
+	$dir_abs_install = "/home/ralf/rig/";
 to reflect the location of the site directory where the "rig" directory from the archive is located. If you used the paths presented above, this should be 
-	$dir_install = "/home/user/rig_version/rig/";
+	$dir_abs_install = "/home/user/rig_version/rig/";
 
 Note that the directory path MUST end with a slash "/".
 The other directories defined in location.php are relative to the base directory above or the album directory. Unless you renamed any of these default folders present in the archive, you need not change those.
@@ -326,6 +326,9 @@ If no errors occurred, you should now have a file
 End
 
 $Log$
+Revision 1.4  2003/08/21 20:14:49  ralfoide
+Reflected new dir_abs_install variable.
+
 Revision 1.3  2003/08/16 23:15:26  ralfoide
 New install doc, txt & html
 

@@ -211,6 +211,9 @@ Admin:
 
 [0.6.5]
 
+20040712 [1.F] Themes: Red title block for admin mode [Request: AR]
+20040711 [1.F] Feature: Remove all HTML caches action in Admin album page
+20040711 [1.F] Exp: Detect palm-size devices screen size in the HTTP User Agent
 20040708 [1.F] Fix: Don't put ipage/apage=1 in URL as it's a default
 20040708 [1.F] Fix: Disable pagination display if there's only one page
 20040707 [1.F] Fix: rig_thumnail use sig alarm/kill if locked in libavi processing (currently locks on Cinepak reader)
@@ -712,9 +715,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.54  2004/07/14 06:25:02  ralfoide
+//	Palm-size test, html cache admin option, red title in admin mode
+//
 //	Revision 1.53  2004/07/09 05:58:32  ralfoide
 //	Fixes for pagination, etc.
-//
+//	
 //	Revision 1.52  2004/07/06 04:56:46  ralfoide
 //	Preparing to tag 0.6.4.5
 //	

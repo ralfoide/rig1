@@ -18,13 +18,12 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
-- in 0.6.4:
-[1.N] Drop DB support and dump 0.6.3-exp
-- in 0.6.3.6:
+- in 0.6.4.0:
 - in 0.6.3.5:
 [1.F] Translation of dates in web pages
 [1.F] Albums: Display album modification date in grid layout
 [1.F] Albums: Grid vs Vertical layout
+[1.F] Feature: "ignore lists" for albums/images (patterns of files to be ignored)
 - in 0.6.3.4:
 [2.F] Introduced support for videos (display and rig_thumbnail.exe)
 [1.F] Added movie frame to video thumbnails
@@ -158,7 +157,15 @@ Admin:
 
 -- done --
 
-[0.6.4]
+[0.6.4.0]
+
+20030814 [1.F] Feature: Album HTML cache generation (backported from 0.6.4.1)
+20030814 [1.F] Fix: Commented out use of xml options files (buggy, not finished)
+20030814 [1.F] Fix: Admin mode was not using ignore lists
+20030814 [1.F] Feature: Pref to enable album/image thumbnail in album view
+20030814 [1.F] Feature: Border for image thumbnails in album view
+20030813 [1.F] Bumped version to 0.6.4.0 (stable)
+
 
 [0.6.3.5]
 
@@ -559,9 +566,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.29  2003/08/15 07:16:13  ralfoide
+//	Album HTML cache generation, image thumbnail borders, etc.
+//
 //	Revision 1.28  2003/08/14 04:42:08  ralfoide
 //	Album & Image ignore lists
-//
+//	
 //	Revision 1.27  2003/07/21 21:48:41  ralfoide
 //	Updated makefile-with-video for gcc-3.3
 //	

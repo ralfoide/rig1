@@ -341,6 +341,16 @@ $html_original
 // Original
 
 
+// -- Tooltips ---
+
+$html_image_tooltip
+[type]: [name]
+
+$html_album_tooltip
+[type]: [name]; 最終更新: [date]
+// [type]: [name]; Last Updated: [date]
+
+
 
 
 // end

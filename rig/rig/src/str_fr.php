@@ -144,6 +144,10 @@ $html_ok			= 'Changer';
 $html_img_size		= 'Taille d\'image';
 $html_original		= 'Originale';
 
+// Tooltips
+$html_image_tooltip	= '[type]: [name]';
+$html_album_tooltip	= '[type]: [name]; Mise &agrave; jour: [date]';
+
 // Format des nombres
 $html_num_dec_sep	= ',';		// separateur des decimales (ex 25,00)
 $html_num_th_sep	= ' ';		// separateur des milliers  (ex 1 000)
@@ -170,9 +174,12 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/07/23 01:19:13  ralfoide
+//	Language: strings for tooltip details
+//
 //	Revision 1.13  2003/07/21 04:54:45  ralfoide
 //	Added date format for album display; changed dates format to strftime (localizable); setting locale
-//
+//	
 //	Revision 1.12  2003/06/15 19:09:49  ralfoide
 //	Version 0.6.3.3: Japanese translation completed
 //	

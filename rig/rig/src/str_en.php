@@ -146,6 +146,11 @@ $html_ok			= 'Change';
 $html_img_size		= 'Image Size';
 $html_original		= 'Original';
 
+// Tooltips
+$html_image_tooltip	= '[type]: [name]';
+$html_album_tooltip	= '[type]: [name]; Last Updated: [date]';
+
+
 // Number formating
 $html_num_dec_sep	= '.';		// separator for decimals (ex 25.00 in English)
 $html_num_th_sep	= ',';		// separator for thousand (ex 1,000 in English)
@@ -163,9 +168,12 @@ $html_album_date	= '%B %Y';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/07/23 01:19:13  ralfoide
+//	Language: strings for tooltip details
+//
 //	Revision 1.13  2003/07/21 04:54:45  ralfoide
 //	Added date format for album display; changed dates format to strftime (localizable); setting locale
-//
+//	
 //	Revision 1.12  2003/06/15 19:09:49  ralfoide
 //	Version 0.6.3.3: Japanese translation completed
 //	

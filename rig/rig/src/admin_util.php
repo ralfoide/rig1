@@ -709,9 +709,12 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2002/10/21 07:34:16  ralfoide
+//	Comment about end-of-file
+//
 //	Revision 1.3  2002/10/21 01:55:12  ralfoide
 //	Prefixing functions with rig_, multiple language and theme support, better error reporting
-//
+//	
 //	Revision 1.2  2002/10/16 04:46:44  ralfoide
 //	Added timeout for image preview
 //	
@@ -722,14 +725,8 @@ function rig_admin_insert_icon_popup()
 //	version 0.6 with location.php
 //	
 //-------------------------------------------------------------
+
+// IMPORTANT: the "? >" must be the LAST LINE of this file, otherwise
+// some HTTP output will be started by PHP4 and setting headers or cookies
+// will fail with a PHP error message.
 ?>
-
-
-
-
-
-
-
-
-
-

@@ -228,7 +228,8 @@ function display_album_list()
 				$sy = $dy;
 			}
 
-			// space around the album thumbnail and the shadow.
+			// space around the album thumbnail and the shadow (to take into account the fact that
+			// the thumbnail may be actually smaller than the expected default thumbnail size)
 			// dx/dy is the default thumbnail size
 			// sx/sy is the real thumbail size of this thumbnail
 			// -8 is because the thumbnail has a 1-pixel border (*2) and the two shadows are 3 pixels each
@@ -238,6 +239,10 @@ function display_album_list()
 			// make sure this size is positive non nul
 			if ($x2 <= 0) $x2 = 1;
 			if ($y2 <= 0) $y2 = 1;
+
+			// RM 20021101 important: the various <img> and the title must have the </td>
+			// immediately after without any new-line in between (most browsers would insert
+			// a vertical space otherwise)
 			
 			?>
 			<table border="0" cellspacing="0" cellpadding="0">
@@ -335,10 +340,13 @@ function display_image_list()
 
 	echo "<tr>\n";
 
-	foreach($list_images as $file)
+	foreach($list_images as $index => $file)
 	{
 		if (!rig_is_visible(-1, -1, $file))
 			continue;
+
+		// is this the last line? [RM 20021101]
+		$is_last_line = ($index >= $m-$n);
 
 		$pretty1 = pretty_name($file);
 		$pretty2 = pretty_name($file, FALSE);
@@ -350,10 +358,20 @@ function display_image_list()
 
 		$preview = rig_encode_url_link($preview);
 
+		// RM 20021101 important: the <img> and the title must have the </td>
+		// immediately after without any new-line in between (most browsers would insert
+		// a vertical space otherwise).
+		// For everything but the last line, add a <br> in the title to create an
+		// extra space between rows or images.
+
 		$link = self_url($file);
-		$title = "<center><a href=\"$link\">$pretty1</a></center><br>\n";
+		$title = "<center><a href=\"$link\">$pretty1</a></center>";
+		
+		if (!$is_last_line)
+			$title .= "<br>";
 
 		$square_size = $pref_preview_size + 8;
+
 
 		?>
 			<td <?= $w ?>>
@@ -366,9 +384,9 @@ function display_image_list()
 						</table>
 	
 					</td></tr>
-					<tr><td>
-						<?= $title ?>
-					</td></tr>
+					<tr>
+						<td><?= $title ?></td>
+					</tr>
 				</table>
 		<?php
 
@@ -793,9 +811,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2002/11/02 04:08:46  ralfoide
+//	Removed empty line after last row of thumbnails in image list.
+//
 //	Revision 1.9  2002/10/30 09:12:29  ralfoide
 //	Finalized album thumbnail table, cleaned up experimental code. Checked with IE5, IE6, NS4.7 and Mozilla 1.1
-//
+//	
 //	Revision 1.8  2002/10/30 09:06:18  ralfoide
 //	Experimenting with alternate table to display album thumbnails
 //	

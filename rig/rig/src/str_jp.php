@@ -67,8 +67,8 @@ else
 // Album date displayed
 // cf http://www.php.net/manual/en/function.strftime.php
 
-$html_album_date	= '%Y&#24180; %b&#26376;';
-// The following works under GNU/Linux but not Windows (%B is not recognized)
+$html_album_date	= '%Y&#24180; %m&#26376;';
+// The following works under Debian GNU/Linux but not Windows (%B is not recognized)
 // $html_album_date	= '%Y&#24180; %B';
 
 
@@ -98,9 +98,12 @@ rig_parse_string_data('data_jpu8.bin');
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/08/18 04:24:26  ralfoide
+//	Fixed month display in html_album_date
+//
 //	Revision 1.6  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//
+//	
 //	Revision 1.5  2003/07/21 04:54:45  ralfoide
 //	Added date format for album display; changed dates format to strftime (localizable); setting locale
 //	

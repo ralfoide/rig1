@@ -18,9 +18,9 @@ rig_enter_login(rig_self_url(), TRUE);
 rig_nocache_headers();
 
 if (isset($_GET['image']) && $_GET['image'])
-	rig_prepare_image(-1, rig_get($_GET,'album'), rig_get($_GET,'image'), $html_admin);
+	rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'image'), $html_admin);
 else
-	rig_prepare_album(-1, rig_get($_GET,'album'), $html_admin);
+	rig_prepare_album(rig_get($_GET,'album'), -1, -1, $html_admin);
 
 rig_admin_perform_before_header(rig_self_url());
 
@@ -112,9 +112,9 @@ rig_display_body();
 			rig_display_section("<b> $html_avail_albums </b>");
 		?>
 	<br>
-		<table colspan="<?= $pref_nb_col ?>" border="1" cellpadding="5" cellspacing="0">
+		<table colspan="<?= $pref_album_nb_col ?>" border="1" cellpadding="5" cellspacing="0">
 			<?php rig_admin_display_album() ?>
-			<tr><td colspan="<?= $pref_nb_col ?>">
+			<tr><td colspan="<?= $pref_album_nb_col ?>">
 			<table width="100%" border="0" cellpadding="5" cellspacing="0">
 				<tr><td width="80%">
 					<div align="left"><?php rig_display_album_copyright() ?></div>
@@ -147,12 +147,12 @@ rig_display_body();
 	<br>
 	</font>
 	<p>
-		<table colspan="<?= $pref_nb_col ?>" border="1" cellpadding="5" cellspacing="0">	<!-- colspan="2" -->
+		<table colspan="<?= $pref_image_nb_col ?>" border="1" cellpadding="5" cellspacing="0">	<!-- colspan="2" -->
 			<?php rig_admin_display_image() ?>
-			<tr><td colspan="<?= $pref_nb_col ?>">
+			<tr><td colspan="<?= $pref_image_nb_col ?>">
 			<table width="100%" border="0" cellpadding="5" cellspacing="0">
 				<tr><td width="80%">
-					<div align="left"><?php rig_display_album_copyright() ?></div>
+					<div align="left"><?php rig_display_image_copyright() ?></div>
 				</td>
 				<td width="20%">
 					<div align="right"><?php rig_display_image_count() ?></div>
@@ -189,9 +189,13 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.1  2003/08/21 20:15:32  ralfoide
 //	Moved admin src into separate folder
-//
+//	
 //	Revision 1.4  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

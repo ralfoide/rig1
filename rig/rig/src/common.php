@@ -20,6 +20,8 @@
 	passwd					- string passwd (clear)
 	admusr					- string username
 	admpwd					- string passwd (clear)
+	apage					- integer (-1: disable, 0: default, 1..N: select page, cf rig_prepare_album for comments)
+	ipage					- integer (-1: disable, 0: default, 1..N: select page, cf rig_prepare_album for comments)
 
 	List of cookies:
 	----------------
@@ -38,6 +40,8 @@
 	current_real_album		= sttring					-- RM 20030907
 	current_image			- string
 	current_type			- string 'image' or 'video' -- RM 20030713
+	current_album_page		- integer (-1, 0, 1..N: cf rig_prepare_album for comments -- RM 20030908) 
+	current_image_page		- integer (-1, 0, 1..N: cf rig_prepare_album for comments -- RM 20030908) 
 	list_albums				- array of string
 	list_images				- array of filename
 	display_title			- string
@@ -348,6 +352,42 @@ function rig_time_elapsed()
 {
 	global $time_start;
 	return sprintf("%2.2f", rig_getmicrotime() - $time_start);
+}
+
+
+//***************************************
+function rig_php_array_search($val, $arr)
+//***************************************
+// Simulates array_search for PHP <= 4.0.5
+// Searches for value "val" in array "arr" and return the array's key
+{
+	if (PHP_VERSION > "4.0.5")
+	{
+		# array_search is >= PHP 4.0.5
+		$k = array_search($val, $arr, TRUE);
+		
+		// http://www.php.net/manual/en/function.array-search.php
+		// "prior to PHP 4.2.0, array_search returns NULL instead of FALSE"
+		if ($k === NULL)
+			$k = FALSE;
+		
+		return $k;
+	}
+	else
+	{
+		$key = FALSE;
+		foreach($arr as $n => $item)
+		{
+			if ($item == $val)
+			{
+				return $n;
+				break;
+			}
+			$n++;
+		}
+	}
+
+	return FALSE;
 }
 
 
@@ -797,8 +837,10 @@ define("RIG_SELF_URL_TRANSLATE",	3);	// translate *admin* view
 //*****************************************************************
 function rig_self_url($in_image = -1,
 					  $in_album = -1,
-					  $in_page = -1,
-					  $in_extra = "")
+					  $in_page  = -1,
+					  $in_extra = "",
+					  $in_apage = -1,
+					  $in_ipage = -1)
 //*****************************************************************
 // encode album/image name as url links
 // in_image: -1 (use current if any) or text for image=...
@@ -810,7 +852,9 @@ function rig_self_url($in_image = -1,
 {
 	global $current_album;
 	global $current_image;
-	global $pref_url_rewrite;	// RM 20030107
+	global $current_album_page;		// RM 20030908
+	global $current_image_page;		// RM 20030908
+	global $pref_url_rewrite;		// RM 20030107
 
 
 	$image		= rig_get($_GET,'image'		);
@@ -873,17 +917,17 @@ function rig_self_url($in_image = -1,
 	switch($in_page)
 	{
 		case RIG_SELF_URL_ADMIN:
-			rig_url_add_param($params, 'admin', 'on');
+			rig_url_add_param($params, 'admin',		'on');
 			break;
 
 		case RIG_SELF_URL_TRANSLATE:
-			rig_url_add_param($params, 'admin', 'on');
+			rig_url_add_param($params, 'admin',		'on');
 			rig_url_add_param($params, 'translate', 'on');
 			break;
 
 		case RIG_SELF_URL_UPLOAD:
-			rig_url_add_param($params, 'admin', 'on');
-			rig_url_add_param($params, 'upload', 'on');
+			rig_url_add_param($params, 'admin',		'on');
+			rig_url_add_param($params, 'upload',	'on');
 			break;
 	}
 
@@ -914,6 +958,27 @@ function rig_self_url($in_image = -1,
 			rig_url_add_param($params, 'image', $in_image);
 		}
 	}
+
+	// RM 20030908
+	if ($in_apage > -1)
+	{
+		rig_url_add_param($params, 'apage', $in_apage);
+	}
+	else if (is_integer($current_album_page) && $current_album_page > 0)
+	{
+		rig_url_add_param($params, 'apage', $current_album_page);
+	}
+
+	if ($in_ipage > -1)
+	{
+		rig_url_add_param($params, 'ipage', $in_ipage);
+	}
+	else if (is_integer($current_image_page) && $current_image_page > 0)
+	{
+		rig_url_add_param($params, 'ipage', $current_image_page);
+	}
+
+	// ---
 
 	if ($_debug_)
 		rig_url_add_param($params, '_debug_', '1');
@@ -2010,9 +2075,9 @@ function rig_follow_album_symlink($abs_dir, &$current_album, &$current_real_albu
 } // follow symlink
 
 
-//************************************************
-function rig_prepare_album($id, $album, $title="")
-//************************************************
+//*****************************************************************
+function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
+//******************************************************************
 {
 	// List of globals defined for the album page by prepare_album():
 	// $current_album		- string
@@ -2022,15 +2087,21 @@ function rig_prepare_album($id, $album, $title="")
 	global $abs_album_path;
 	global $current_album;
 	global $current_real_album;					// RM 20030907
+	global $current_album_page;					// RM 20030908
+	global $current_image_page;					// RM 20030908
 	global $pref_use_db_id;
 	global $display_title;
 	global $display_album_title;
 	global $html_album, $html_none;
 	global $pref_album_ignore_list;				// RM 20030813 - v0.6.3.5
+	global $pref_enable_album_pagination;		// RM 20030908 - v0.6.4.3
 
 	$current_album		= FALSE;
 	$current_real_album = FALSE;
 	$can_access			= FALSE;
+	$current_album_page	= -1;
+	$current_image_page	= -1;
+	
 
 	// first try the index argument
 	// RM 20021021 not for rig 0.6.2
@@ -2082,6 +2153,22 @@ function rig_prepare_album($id, $album, $title="")
 		$current_album		= '';
 		$current_real_album	= '';
 		$abs_dir			= '';
+	}
+
+	// -- setup page indexes
+	
+	if ($pref_enable_album_pagination)
+	{
+		// the list of images or sub-albums is unknown yet
+		// so the values are just accepted as-is and will be
+		// adjusted later when the count of image/albums is known
+		// cf rig_has_album() and rig_has_images().
+
+		if ($apage >= 0)
+			$current_album_page = $apage;
+
+		if ($ipage >= 0)
+			$current_image_page = $ipage;
 	}
 	
 
@@ -2273,6 +2360,111 @@ function rig_load_album_list($show_all = FALSE)
 }
 
 
+//*****************************************************
+function rig_max_album_page($nb_col = -1, $nb_row = -1)
+//*****************************************************
+// This function computes $max_album_page 
+// It also adjusts $current_album_page
+// And it returns the number of thumbnails per page, or 0
+{
+	global $max_album_page;
+	global $current_album_page;
+	global $list_albums_count;
+	global $pref_album_nb_col;
+	global $pref_album_nb_row;
+
+	$nb = 0;
+	$max_album_page = 0;
+
+	// adjust the number of pages needed for the album list
+	
+	if ($list_albums_count < 1)
+	{
+		$current_album_page = 0;
+	}
+	else if ($current_album_page >= 0)
+	{
+		if ($nb_col == -1)
+			$nb_col = $pref_album_nb_col;
+
+		if ($nb_row == -1)
+			$nb_row = $pref_album_nb_row;
+
+		if ($nb_col > 0 && $nb_row > 0)
+		{
+			$nb = ($nb_col * $nb_row);
+			$max_album_page = (int)ceil($list_albums_count / $nb);
+
+			// don't walk past the last page
+			if ($current_album_page > $max_album_page)
+				$current_album_page = $max_album_page;
+			
+			// if more than one page, enable pagination
+			if ($current_album_page == 0 && $max_album_page > 0)
+				$current_album_page = 1;
+		}
+		else
+		{
+			// deactive pagination if nb_col/row invalid
+			$current_album_page = -1;
+		}
+	}
+
+	return $nb;
+}
+
+
+//*****************************************************
+function rig_max_image_page($nb_col = -1, $nb_row = -1)
+//*****************************************************
+{
+	global $max_image_page;
+	global $current_image_page;
+	global $list_images_count;
+	global $pref_image_nb_col;
+	global $pref_image_nb_row;
+
+	$max_image_page = 0;
+
+	// adjust the number of pages needed for the image list
+	
+	if ($list_images_count < 1)
+	{
+		$current_image_page = 0;
+	}
+	else if ($current_image_page >= 0)
+	{
+		if ($nb_col == -1)
+			$nb_col = $pref_image_nb_col;
+
+		if ($nb_row == -1)
+			$nb_row = $pref_image_nb_row;
+
+		if ($nb_col > 0 && $nb_row > 0)
+		{
+			$nb = ($nb_col * $nb_row);
+			$max_image_page = (int)ceil($list_images_count / $nb);
+
+			// don't walk past the last page
+			if ($current_image_page > $max_image_page)
+				$current_image_page = $max_image_page;
+			
+			// if more than one page, enable pagination
+			if ($current_image_page == 0 && $max_image_page > 0)
+				$current_image_page = 1;
+		}
+		else
+		{
+			// deactive pagination if nb_col/row invalid
+			$current_image_page = -1;
+		}
+	}
+
+	return $nb;
+}
+
+
+
 //*********************************************
 function rig_has_albums($exclude_hidden = TRUE)
 //*********************************************
@@ -2310,10 +2502,8 @@ function rig_has_albums($exclude_hidden = TRUE)
 		return ($list_albums_count > 0);
 	}
 
-	// by default count everything
-	$list_albums_count = $list_albums;
-
 	// None at all, so that's a positive false
+	$list_albums_count = 0;
 	return false;
 }
 
@@ -2397,9 +2587,14 @@ function rig_is_visible($id = -1, $album = -1, $image = -1)
 //-----------------------------------------------------------------------
 
 
-//********************************************************
-function rig_prepare_image($id, $album, $image, $title="")
-//********************************************************
+//***************************************************
+function rig_prepare_image($album, $image, $title="")
+//***************************************************
+// $page is an integer:
+// -1: the pagination must be disabled (even if enabled in the preferences)
+//  0: default page must be shown (typically the first one) and there is
+//	   no need to generate the page display if there's only one page
+// 1..N: display page N, generate the page HTML display, pass back in URLs, etc.
 {
 	rig_setup();
 
@@ -2565,24 +2760,8 @@ function rig_get_images_prev_next()
 	global $list_images;
 
 
-	if (PHP_VERSION > "4.0.5")
-	{
-		# array_search is >= PHP 4.0.5
-		$key = array_search($current_image, $list_images, TRUE);
-	}
-	else
-	{
-		$key = FALSE;
-		foreach($list_images as $n => $item)
-		{
-			if ($item == $current_image)
-			{
-				$key = $n;
-				break;
-			}
-			$n++;
-		}
-	}
+	// find the index of the current image in the array
+	$key = rig_php_array_search($current_image, $list_images);
 
 
 	// DEBUG
@@ -2841,6 +3020,8 @@ function rig_begin_buffering()
 	}
 	
 	global $current_real_album;			// RM 20030907
+	global $current_album_page;
+	global $current_image_page;			// RM 20030908
 	global $abs_album_path;
 	global $abs_album_cache_path;
 	global $abs_option_path;
@@ -2861,6 +3042,8 @@ function rig_begin_buffering()
 	$abs_html =   rig_post_sep($abs_album_cache_path)
 				. rig_post_sep($current_real_album)
 				. ALBUM_CACHE_NAME
+				. ($current_album_page > 1 ? rig_simplify_filename($current_album_page) . 'a_' : '')
+				. ($current_image_page > 1 ? rig_simplify_filename($current_image_page) . 'i_' : '')
 				. rig_simplify_filename($rig_lang) . '_'
 				. rig_simplify_filename($rig_theme) . '_'
 				. rig_simplify_filename($rig_user)
@@ -3091,10 +3274,14 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.34  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.33  2003/09/08 03:54:35  ralfoide
 //	Re-implemented follow-album-symlink the proper way, by separating
 //	current_album (the symlink source) from current_real_album (the symlink dest)
-//
+//	
 //	Revision 1.32  2003/09/01 20:54:52  ralfoide
 //	Implemented pref_follow_album_symlinks
 //	

@@ -43,7 +43,7 @@ if (isset($_GET['_test_']) && $_GET['_test_'] == 1)
 
 rig_enter_login(rig_self_url(""));
 
-rig_prepare_album(rig_get($_GET,'id', 0), rig_get($_GET,'album'));
+rig_prepare_album(rig_get($_GET,'album'), rig_get($_GET,'apage', 0), rig_get($_GET,'ipage', 0));
 rig_display_header($display_title);
 rig_display_body();
 
@@ -192,10 +192,14 @@ rig_terminate_db();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.11  2003/09/08 03:54:35  ralfoide
 //	Re-implemented follow-album-symlink the proper way, by separating
 //	current_album (the symlink source) from current_real_album (the symlink dest)
-//
+//	
 //	Revision 1.10  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
 //	

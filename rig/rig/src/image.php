@@ -18,7 +18,7 @@ require_once($dir_abs_src . "common.php");
 
 rig_enter_login(rig_self_url());
 
-rig_prepare_image(rig_get($_GET, 'id', 0), rig_get($_GET,'album'), rig_get($_GET,'image'));
+rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'image'));
 rig_display_header($display_title);
 rig_display_body();
 
@@ -91,9 +91,13 @@ document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>")
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/09/13 21:55:55  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.12  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
-//
+//	
 //	Revision 1.11  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

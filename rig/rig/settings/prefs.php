@@ -453,13 +453,13 @@ $pref_image_layout = '1';
  *	        Album lists are presented in a N-per-row grid.
  *	        Image lists are presented in a N-per-row grid.
  *	        There are as many row as necessary to display all the visible items.
- *	        N is defined by $pref_nb_col, described below (default: 5)
+ *	        N is defined by $pref_album_nb_col, described below (default: 5)
  *
  *	'vert': An alternate vertical layout for albums.
  *	        Album lists are presented one per line, vertically.
  *	        Image lists are presented in a N-per-row grid like in 'grid' layout.
  *	        There are as many row as necessary to display all the visible items.
- *	        N is defined by $pref_nb_col, described below (default: 5)
+ *	        N is defined by $pref_album_nb_col, described below (default: 5)
  *
  *	WARNING: this is a TEMPORARY hack whilst waiting for more powerful template-based layout pages
  *	This is the reason why you cannot choose the layout in live. I'll add that later.
@@ -493,20 +493,83 @@ $pref_album_with_description_layout = 'vert';
 
 /***********************************************************
  *
- *	Setting: 		$pref_nb_col
+ *	Setting: 		$pref_album_nb_col
  *	Type:			Integer >= 1
  *	Default:		5
  *	
- *	Selects the number of album or images per line/row in grid layout.
+ *	Selects the number of album per row in grid layout.
+ 
  *
  ***********************************************************/
 
-$pref_nb_col		= 5;
+$pref_album_nb_col		= 5;
+
 
 
 /***********************************************************
  *
- *	Setting: 		$pref_use_album_border
+ *	Setting: 		$pref_image_nb_col
+ *	Type:			Integer >= 1
+ *	Default:		5
+ *	
+ *	Selects the number of images per row in grid layout.
+ *
+ ***********************************************************/
+
+$pref_image_nb_col		= 5;
+
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_enable_album_pagination
+ *	Type:			Boolean (TRUE of FALSE)
+ *	Default:		TRUE
+ *	
+ *	Enable use of the pagination in the album display.
+ *	When enabled, an album page displays a maximum
+ *	of $pref_album_nb_row lines of thumbnails, both in
+ *	grid and vertical layouts.
+ *
+ ***********************************************************/
+
+$pref_enable_album_pagination = TRUE;
+
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_album_nb_row
+ *	Type:			Integer >= 1
+ *	Default:		5
+ *	
+ *	Selects the maximum number of rows in the list of sub-album
+ *	in grid layout.
+ *
+ ***********************************************************/
+
+$pref_album_nb_row = 5;
+
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_image_nb_row
+ *	Type:			Integer >= 1
+ *	Default:		5
+ *	
+ *	Selects the maximum number of rows in the list of images
+ *	in grid layout.
+ *
+ ***********************************************************/
+
+$pref_image_nb_row = $pref_album_nb_row;
+
+
+
+/***********************************************************
+ *
+ *	Setting: 		$pref_enable_album_border
  *	Type:			Boolean (TRUE or FALSE)
  *	Default:		TRUE
  *	
@@ -515,12 +578,13 @@ $pref_nb_col		= 5;
  *
  ***********************************************************/
 
-$pref_use_album_border	= TRUE;
+$pref_enable_album_border	= TRUE;
+
 
 
 /***********************************************************
  *
- *	Setting: 		$pref_use_image_border
+ *	Setting: 		$pref_enable_image_border
  *	Type:			Boolean (TRUE or FALSE)
  *	Default:		TRUE
  *	
@@ -529,7 +593,7 @@ $pref_use_album_border	= TRUE;
  *
  ***********************************************************/
 
-$pref_use_image_border	= TRUE;
+$pref_enable_image_border	= TRUE;
 
 
 
@@ -705,10 +769,14 @@ $pref_file_types		= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.19  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.18  2003/09/01 20:54:24  ralfoide
 //	More variable descriptions.
 //	Added pref_follow_album/image_symlinks
-//
+//	
 //	Revision 1.17  2003/08/21 20:20:52  ralfoide
 //	New enable prefs (album/image hidden, descriptions, album cache)
 //	

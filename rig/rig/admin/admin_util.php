@@ -758,7 +758,7 @@ function rig_admin_display_album_stat($html, $res)
 function rig_admin_display_album()
 //********************************
 {
-	global $pref_nb_col;
+	global $pref_album_nb_col;
 	global $current_album;
 	global $list_hide;
 	global $list_albums;
@@ -769,7 +769,7 @@ function rig_admin_display_album()
 	global $color_warning_bg;
 
 	$i = 0;
-	$n = $pref_nb_col;
+	$n = $pref_album_nb_col;
 
 	$p = (int)(100/$n);
 	$w = " width=\"$p%\" valign=\"top\" align=\"center\"";
@@ -839,7 +839,7 @@ function rig_admin_display_album()
 function rig_admin_display_image()
 //********************************
 {
-	global $pref_nb_col;
+	global $pref_image_nb_col;
 	global $current_album;
 	global $list_images;
 	global $list_images_count;		// RM 20030125
@@ -853,7 +853,7 @@ function rig_admin_display_image()
 	$list_images_count = 0;
 	
 	$i = 0;
-	$n = $pref_nb_col;
+	$n = $pref_image_nb_col;
 
 	$p = (int)(100/$n);
 	$w = " width=\"$p%\" valign=\"top\" align=\"center\"";
@@ -964,9 +964,13 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.1  2003/08/21 20:15:32  ralfoide
 //	Moved admin src into separate folder
-//
+//	
 //	Revision 1.15  2003/08/18 03:07:14  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
 //	

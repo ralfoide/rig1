@@ -15,7 +15,7 @@ require_once($dir_abs_admin_src . "admin_util.php");
 rig_enter_login(rig_self_url(), TRUE);
 rig_nocache_headers();
 
-rig_prepare_image(-1, rig_get($_GET,'album'), rig_get($_GET,'image'), $html_admin);
+rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'image'), $html_admin);
 
 rig_admin_perform_before_header(rig_self_url());
 
@@ -350,9 +350,13 @@ if (rig_is_visible())
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.1  2003/08/21 20:15:32  ralfoide
 //	Moved admin src into separate folder
-//
+//	
 //	Revision 1.3  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

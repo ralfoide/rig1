@@ -157,22 +157,24 @@ function rig_display_album_list()
 //*******************************
 {
 	global $dir_images;
-	global $pref_nb_col;
-	global $pref_preview_size;
-	global $pref_preview_quality;
-	global $pref_small_preview_size;		// RM 20030720 for 'vert' layout
-	global $pref_small_preview_quality;
 	global $html_images;
 	global $list_albums;
 	global $html_album;
 	global $current_album;
-	global $list_description;				// RM 20030713
-	global $pref_album_layout;				// RM 20030718 'grid' or 'vert'
+	global $list_description;					// RM 20030713
+	global $list_albums_count;
+	global $current_album_page;					// RM 20030908
+	global $max_album_page;						// RM 20030908
+	global $pref_album_nb_col;
+	global $pref_preview_size;
+	global $pref_preview_quality;
+	global $pref_small_preview_size;			// RM 20030720 for 'vert' layout
+	global $pref_small_preview_quality;
+	global $pref_album_layout;					// RM 20030718 'grid' or 'vert'
 	global $pref_album_with_description_layout;	// RM 20030720 auto-switch
-	global $pref_use_album_border;			// RM 20030814
-	global $color_table_desc;				// RM 20030817
+	global $pref_enable_album_border;			// RM 20030814
+	global $color_table_desc;					// RM 20030817
 
-	$i = 0;
 
 	// select the layout
 	// - by default, $pref_album_layout is used
@@ -188,25 +190,25 @@ function rig_display_album_list()
 		$layout = $pref_album_with_description_layout;
 	}
 
+	$m = is_integer($list_albums_count) ? $list_albums_count : count($list_albums);
+
 	// only one item per line if not in grid layout
+
 	if ($layout != 'grid')
 	{
 		$n = 1;
 		$p = $pref_preview_size;
 		$w_td = " width=\"$p\" valign=\"top\" align=\"center\"";
-
 	}
 	else
 	{
-		$n = $pref_nb_col;
+		$n = $pref_album_nb_col;
 
-		$m = count($list_albums);
 		if ($m < $n)
 			$n = $m;
 	
 		$p = (int)(100/$n);
 		$w_td = " width=\"$p%\" valign=\"top\" align=\"center\"";
-		
 	}
 
 	if ($layout == 'vert')
@@ -222,15 +224,62 @@ function rig_display_album_list()
 		$preview_quality = $pref_preview_quality;
 	}
 
+
+	// -- pagination info --
+
+	// use the number of columns ($n) to get the current and
+	// max number of pages ($current_album_page / $max_album_page)
+	$thumb_per_page = rig_max_album_page($n);
+
+	if ($thumb_per_page > 0 && $current_album_page > 0)
+	{
+		$min_index = $thumb_per_page * ($current_album_page - 1);
+		$max_index = $min_index + $thumb_per_page - 1;
+	}
+	else
+	{
+		$min_index = 0;
+		$max_index = $m - 1;
+	}
+
+	// --
+
+	if ($current_album_page > 0)
+	{
+		echo "<tr><td colspan=\"$n\" align=\"right\">Page: \n";
+		rig_display_paginator($current_album_page, $max_album_page, TRUE);
+		echo "</td></tr>\n";
+	}
 	
 	echo "<tr>\n";
+
+	$i = 0;
+	
+	// RM 20030913 note: foreach($list as $index => $val) is not used
+	// as there is no guarantee the first item index be 0 or 1 (by construction
+	// it should be 1 though that may change later...). So let's use our own counter.
+	$item_index = -1;
 
 	foreach($list_albums as $dir)
 	{
 		$name = rig_post_sep($current_album) . $dir;
 
+		// continue if thumbnail is visible
+
 		if (!rig_is_visible(-1, $dir))
 			continue;
+
+		// continue if thumbnail fits in current page
+
+		$item_index++;
+
+		if ($item_index < $min_index)
+			continue;
+
+		if ($item_index > $max_index)
+			break;
+
+		// in page and visible... continue
 
 		$pretty = rig_pretty_name($dir, FALSE, TRUE);
 
@@ -347,7 +396,7 @@ function rig_display_album_list()
 			// immediately after without any new-line in between (most browsers would insert
 			// a vertical space otherwise)
 
-			if (isset($pref_use_album_border) && !$pref_use_album_border)
+			if (isset($pref_enable_album_border) && !$pref_enable_album_border)
 			{
 				// Do not display any border around the thumbnail
 
@@ -476,33 +525,80 @@ function rig_display_image_list()
     //	<td width="20%" align="center">img1</td>
 	// </tr -->
 
-	global $pref_nb_col;
+	global $pref_image_nb_col;
 	global $dir_images;
 	global $list_images;
 	global $html_image;
-	global $current_real_album;				// RM 20030907
-	global $list_description;				// RM 20030713
+	global $current_real_album;					// RM 20030907
+	global $list_description;					// RM 20030713
+	global $list_images_count;
+	global $current_image_page;					// RM 20030908
+	global $max_image_page;
 	global $pref_preview_size;
-	global $pref_use_image_border;			// RM 20030814
+	global $pref_enable_image_border;			// RM 20030814
 
 	$i = 0;
-	$n = $pref_nb_col;
-	$m = count($list_images);
+	$n = $pref_image_nb_col;
+	$m = is_integer($list_images_count) ? $list_images_count : count($list_images);
 	if ($m < $n)
 		$n = $m;
 
 	$p = (int)(100/$n);
 	$w = " width=\"$p%\" valign=\"top\" align=\"center\"";
 
+	// -- pagination info --
+
+	// use the number of columns ($n) to get the current and
+	// max number of pages ($current_image_page / $max_image_page)
+	$thumb_per_page = rig_max_image_page($n);
+
+	if ($thumb_per_page > 0 && $current_image_page > 0)
+	{
+		$min_index = $thumb_per_page * ($current_image_page - 1);
+		$max_index = $min_index + $thumb_per_page - 1;
+	}
+	else
+	{
+		$min_index = 0;
+		$max_index = $m - 1;
+	}
+
+	// --
+
+	if ($current_image_page > 0)
+	{
+		echo "<tr><td colspan=\"$n\" align=\"right\">Page: \n";
+		rig_display_paginator($current_image_page, $max_image_page, FALSE);
+		echo "</td></tr>\n";
+	}
+
 	echo "<tr>\n";
 
-	foreach($list_images as $index => $file)
+	// RM 20030913 note: foreach($list as $index => $val) is not used
+	// as there is no guarantee the first item index be 0 or 1 (by construction
+	// it should be 1 though that may change later...). So let's use our own counter.
+	$item_index = -1;
+
+	foreach($list_images as $file)
 	{
+		// continue if thumbnail is visible
+
 		if (!rig_is_visible(-1, -1, $file))
 			continue;
 
+		// continue if thumbnail fits in current page
+		
+		$item_index++;
+
+		if ($item_index < $min_index)
+			continue;
+
+		if ($item_index > $max_index)
+			break;
+
+
 		// is this the last line? [RM 20021101]
-		$is_last_line = ($index >= $m-$n);
+		$is_last_line = ($item_index >= $max_index - $n);
 
 		$pretty1 = rig_pretty_name($file);
 		$pretty2 = rig_pretty_name($file, FALSE);
@@ -552,7 +648,7 @@ function rig_display_image_list()
 				<table border="0">
 					<tr><td align="center" valing="center" height="<?= $square_size ?>">
 					<?php
-						if (isset($pref_use_image_border) && !$pref_use_image_border)
+						if (isset($pref_enable_image_border) && !$pref_enable_image_border)
 						{
 							// Do not display any border around the thumbnail
 					?>
@@ -677,6 +773,16 @@ function rig_display_image_list()
 	}
 
 	echo "</tr>\n";
+
+	// --
+
+	if ($current_image_page > 0)
+	{
+		echo "<tr><td colspan=\"$n\" align=\"right\">Page: \n";
+		rig_display_paginator($current_image_page, $max_image_page, FALSE);
+		echo "</td></tr>\n";
+	}
+
 }
 
 
@@ -719,6 +825,96 @@ function rig_display_image_count()
 		
 		echo $str;
 	}
+}
+
+
+
+//*********************************************************************
+function rig_display_paginator($curr_page, $max_page, $is_album = TRUE)
+//*********************************************************************
+{
+	// nothing to do if not at least positionned on page 1
+	if ($curr_page < 1)
+		return;
+
+	$v = @array();
+
+	// build an array of 'interesting' values:
+	// - always page 1
+	// - always last page
+	// - always pages -10 / -5 / -2 / -1 / 0 / +1 / +2 / +5 / +10
+
+	$v[] = 1;
+
+	if ($max_page > 1)
+		$v[] = $max_page;
+
+	$p = array(-10, -5, -2, -1, 0, 1, 2, 5, 10,15,20,30,40,50);
+	foreach($p as $d)
+	{
+		$n = $curr_page + $d;
+		if ($n > 0 && $n <= $max_page)
+		{
+			$k = rig_php_array_search($n, $v);
+
+			if ($k === FALSE)
+				$v[] = $n;
+		}
+	}
+
+	// sort numbers now
+	sort($v);
+
+	// display prev
+
+	$last = 0;
+
+	global $paginator_index;
+	$paginator_index++;
+	$pname = "pag" . $paginator_index . ($is_album ? "a" : "i");
+	echo "<a name=\"$pname\"></a>";
+	$pname = "#" . $pname;
+
+	if ($curr_page > 1)
+	{
+		$last = $curr_page-1;
+		$u = rig_self_url(-1, -1, -1, $pname, ($is_album ? $last : -1), ($is_album ? -1 : $last));
+		echo "<a href=\"$u\">Prev</a>";
+	}		
+
+	// and display links
+	foreach($v as $n)
+	{
+		if ($last > 0)
+			if ($n > $last+1)
+				echo "&nbsp;...&nbsp;";
+			else
+				echo "&nbsp;|&nbsp;";
+		
+		if ($n == $curr_page)
+		{
+			echo $n;
+		}
+		else
+		{
+			$u = rig_self_url(-1, -1, -1, $pname, ($is_album ? $n : -1), ($is_album ? -1 : $n));
+//var_dump($u);
+			echo "<a href=\"$u\">$n</a>";
+		}
+		
+		$last = $n;
+	}
+
+	if ($curr_page < $max_page)
+	{
+		if ($last > 0)
+			echo "&nbsp;|&nbsp;";
+		
+		$last = $curr_page+1;
+		$u = rig_self_url(-1, -1, -1, $pname, ($is_album ? $last : -1), ($is_album ? -1 : $last));
+		echo "<a href=\"$u\">Next</a>";
+	}		
+
 }
 
 
@@ -1837,10 +2033,14 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.27  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.26  2003/09/08 03:54:35  ralfoide
 //	Re-implemented follow-album-symlink the proper way, by separating
 //	current_album (the symlink source) from current_real_album (the symlink dest)
-//
+//	
 //	Revision 1.25  2003/08/21 20:18:02  ralfoide
 //	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
 //	

@@ -18,9 +18,9 @@ rig_enter_login(rig_self_url(), TRUE);
 rig_nocache_headers();
 
 if (isset($_GET['image']) && $_GET['image'])
-	rig_prepare_image(-1, rig_get($_GET,'album'), rig_get($_GET,'image'), $html_admin);
+	rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'image'), $html_admin);
 else
-	rig_prepare_album(-1, rig_get($_GET,'album'), $html_admin);
+	rig_prepare_album(rig_get($_GET,'album'), -1, -1, $html_admin);
 
 rig_display_header($html_rig_admin);			
 rig_display_body();
@@ -181,9 +181,13 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//
 //	Revision 1.1  2003/08/21 20:15:32  ralfoide
 //	Moved admin src into separate folder
-//
+//	
 //	Revision 1.4  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

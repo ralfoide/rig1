@@ -79,18 +79,16 @@ Admin:
 20030112 [1.N] Document album/image workflow (i.e. when and how names are used)
 20030112 [1.N] Class RigItem (struct mAlbum + mImage + helper accessors like is_image/is_album)
 20030112 [1.N] Implement the freaking password page for once!
-20030112 [2.N] Make sure options can be stored with images (rig-option link) or folders created.
+20030112 [2.W] Make sure options can be stored with images (rig-option link) or folders created.
 20030112 [2.N] Make options XML files.
 20030112 [3.N] Admin-album page vs Admin-image page (use these from 0.6.3-exp)
-20030112 [3.N] Admin action to recompute all previews (to adjust size, etc.)
-20030112 [5.N] Revise the TODO file strucutre -- separating Generic/Admin/DB doesn't really work for me.
+20030112 [5.N] Revise the TODO file structure -- separating Generic/Admin/DB doesn't really work for me.
 
 [for 0.6.3]
 20030126 [2.N] Must not display album images borders with Mozilla 1.0 (broken)
 20030126 [2.N] Need javascript to detect browser (if javascript supported)
 20030119 [1.N] Bug/URL-rewrite: cookie path should use the real URL, not the rewritten one (use a pref?)
 20030118 [1.N] Album pref to customize the <meta name="robots" content="noindex, nofollow">
-20030118 [1.N] Make CVS tag_2003-01-DD_v063
 20030111 [1.N] Learn how to make a Debian package. Actually make one.
 20030108 [1.N] Make SourceForge file package for 0.6.3 and move on to 0.6.4
 20030108 [1.N] 0.6.2.4 considered stable enough to become 0.6.3
@@ -403,9 +401,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/02/18 08:16:32  ralfoide
+//	update
+//
 //	Revision 1.9  2003/02/17 08:18:38  ralfoide
 //	Version 0.6.3.1 started...
-//
+//	
 //	Revision 1.8  2003/02/16 20:23:56  ralfoide
 //	Version 0.6.3 updated to CVS, going on with 0.6.3.1
 //	

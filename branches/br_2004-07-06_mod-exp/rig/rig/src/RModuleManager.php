@@ -196,7 +196,7 @@ class RModuleManager
 		{
 			rig_html_error("Load Module List",
 						   "Can't open module directory, make sure directory exist and can be accessed",
-						   $dir_abs_modr,
+						   $dir_abs_mod,
 						   $php_errormsg);
 		}
 		else
@@ -315,9 +315,12 @@ class RModuleManager
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3.2.1  2004/07/09 05:49:37  ralfoide
+//	Fixed typo in dir mod variable
+//
 //	Revision 1.3  2004/07/07 03:26:04  ralfoide
 //	Experimental modules
-//
+//	
 //	Revision 1.1  2004/06/03 14:16:24  ralfoide
 //	Experimenting with module classes
 //	

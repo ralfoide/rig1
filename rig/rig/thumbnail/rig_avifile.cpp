@@ -35,7 +35,7 @@
 //----------------------------------------------------------------------------
 // Debug macro utility
 
-#if 0
+#if 1
 	#define DPRINTF(s) rig_dprintf s
 #else
 	#define DPRINTF(s)
@@ -65,7 +65,7 @@ void rig_avifile_filetype_support(void)
 bool rig_avifile_info(const char* filename, int32 &width, int32 &height, uint32 &codec)
 //*************************************************************************************
 {
-	DPRINTF(("rig_avifile_info: '%s'\n", filename));
+	DPRINTF(("[rig] rig_avifile_info: '%s'\n", filename));
 
 	avm::IReadFile* aviFile = avm::CreateReadFile(filename);
 
@@ -100,86 +100,161 @@ bool rig_avifile_info(const char* filename, int32 &width, int32 &height, uint32 
 //---------------------------------------------------------------
 
 
+//******************************************************
+static framepos_t rig_avi_closest_key(framepos_t target,
+									  framepos_t key1,
+									  framepos_t key2,
+									  framepos_t key3)
+//******************************************************
+{
+	#define RIG_DIST(x, y) (x < y ? y-x : x-y)
+	
+	framepos_t d1 = RIG_DIST(target, key1);
+	framepos_t d2 = RIG_DIST(target, key2);
+	framepos_t d3 = RIG_DIST(target, key3);
+	
+	if (d2 < d1)
+	{
+		if (d3 < d2)
+			return key3;
+		else
+			return key2;
+	}
+	else
+	{
+		if (d3 < d1)
+			return key3;
+		else
+			return key1;
+	}
+}
+
+
 //*********************************************
 RigRgb * rig_avifile_read(const char* filename)
 //*********************************************
 {
-	RigRgb *rgb = NULL;
+	avm::IReadFile *	aviFile	= NULL;
+	avm::IReadStream *	stream	= NULL;
+	avm::CImage *		image	= NULL;
+	RigRgb *			rgb		= NULL;
 
 	if (!filename)
 		return NULL;
 
-	DPRINTF(("rig_avifile_info: '%s'\n", filename));
+	DPRINTF(("[rig] rig_avifile_read: '%s'\n", filename));
 
-	avm::IReadFile* aviFile = avm::CreateReadFile(filename);
-
-   	if (aviFile)
+	try
 	{
-		if (aviFile->VideoStreamCount() > 0)
+		aviFile = avm::CreateReadFile(filename);
+	
+	   	if (aviFile)
 		{
-			avm::IReadStream* stream = aviFile->GetStream(0, avm::IStream::Video);
-			if (stream)
+			if (aviFile->VideoStreamCount() > 0)
 			{
-				DPRINTF(("\nstream = %p\n", stream));
-
-				if (stream->StartStreaming(NULL) >= 0)
+				stream = aviFile->GetStream(0, avm::IStream::Video);
+				if (stream)
 				{
-					avm::CImage* image = stream->GetFrame(true); // must dispose afterwards
+					DPRINTF(("[rig] -- stream = %p\n", stream));
 
-					DPRINTF(("\nimage = %p\n", image));
+					// Get the length of the stream and seek to 10% of the length
+					framepos_t frame_len = stream->GetLength();
+					DPRINTF(("[rig] -- length = %d frames (%.3f s)\n", frame_len, stream->GetLengthTime()));
 
-					// stop the stream once we got the first image
-					stream->StopStreaming();
+					framepos_t key1 = stream->GetNextKeyFrame();
+					DPRINTF(("[rig] -- key1 = %d frame\n", key1));
 
-					if (image)
+					framepos_t key2 = stream->GetNextKeyFrame(key1);
+					DPRINTF(("[rig] -- key2 = %d frame\n", key2));
+
+					// Start at 10% of the length
+					if (frame_len > 0)
 					{
-						// whatever the read image format being, convert it to BGR 24 bits
-						// IMPORTANT: the format will be B-G-R, not R-G-B!
-	
-						CImage image2(image, 24);
-						
-						// dispose the original image
-						
-						delete image;
-						image = NULL;
-					
-						int32 w = image2.Width();
-						int32 h = image2.Height();
-						
-						// bytes to skip at end of each line (ideally zero)
-						int32 delta = image2.Bpl() - 3*w;
-	
-						rgb = new RigRgb(w, h);
-						if (rgb)
-						{
-							uint8 *r = rgb->R();
-							uint8 *g = rgb->G();
-							uint8 *b = rgb->B();
+						framepos_t target = frame_len / 10;
+						DPRINTF(("[rig] -- target = %d frame\n", target));
 
-							// convert RGB24 into RGB triplets
-							uint8 *m = image2.Data();
-							for(int32 y=0; y<h; y++)
+						framepos_t key3 = stream->GetNextKeyFrame(target);
+						DPRINTF(("[rig] -- key3 = %d frame\n", key3));
+
+						target = rig_avi_closest_key(target, key1, key2, key3);
+
+						int sk = stream->Seek(target);
+						DPRINTF(("[rig] -- seek %d res= %d\n", target, sk));
+					}
+					
+
+					// Start streaming	
+					if (stream->StartStreaming(NULL) >= 0)
+					{
+						DPRINTF(("[rig] -- current time = %.3f s\n", stream->GetTime()));
+
+						image = stream->GetFrame(true); // must dispose afterwards
+						DPRINTF(("[rig] -- image = %p\n", image));
+	
+						// stop the stream once we got the first image
+						stream->StopStreaming();
+
+						if (image)
+						{
+							// whatever the read image format being, convert it to BGR 24 bits
+							// IMPORTANT: the format will be B-G-R, not R-G-B!
+		
+							CImage image2(image, 24);
+							
+							// dispose the original image
+							
+							delete image;
+							image = NULL;
+						
+							int32 w = image2.Width();
+							int32 h = image2.Height();
+							
+							// bytes to skip at end of each line (ideally zero)
+							int32 delta = image2.Bpl() - 3*w;
+		
+							rgb = new RigRgb(w, h);
+							if (rgb)
 							{
-								for(int32 x=0; x<w; x++)
+								uint8 *r = rgb->R();
+								uint8 *g = rgb->G();
+								uint8 *b = rgb->B();
+	
+								// convert RGB24 into RGB triplets
+								uint8 *m = image2.Data();
+								for(int32 y=0; y<h; y++)
 								{
-									// IMPORTANT: the source is B-G-R, not R-G-B!
-									*(b++) = *(m++);
-									*(g++) = *(m++);
-									*(r++) = *(m++);
+									for(int32 x=0; x<w; x++)
+									{
+										// IMPORTANT: the source is B-G-R, not R-G-B!
+										*(b++) = *(m++);
+										*(g++) = *(m++);
+										*(r++) = *(m++);
+									}
+									m += delta;
 								}
-								m += delta;
-							}
-	
-						} // if rgb
-	
-					} // if image
-				} // if start stream
-			} // if stream
-		} // if has videostreams
-	} // if avifile
+		
+							} // if rgb
+		
+						} // if image
+					} // if start stream
+				} // if stream
+			} // if has videostreams
+		} // if avifile
+	}
+	catch(...)
+	{
+		DPRINTF(("[rig] Unexpected exception\n"));
+	}
+
+	// RM 20040707: these objects are not deleted on purpose.
+	// At least deleting the aviFile generates a seg fault.
+	// Leave the 3 lines commented, understand why it crashes later.
+	// delete image;
+	// delete stream;
+	// delete aviFile;
 
 	// ---
-	DPRINTF(("\n end rg = %p\n", rgb));
+	DPRINTF(("[rig] -- end rgb = %p\n", rgb));
 
 	return rgb;
 
@@ -196,9 +271,12 @@ RigRgb * rig_avifile_read(const char* filename)
 /****************************************************************
 
 	$Log$
+	Revision 1.7  2004/07/09 05:55:28  ralfoide
+	Thumbnail for video is now based on the closest keyframe to 10% of the length of movie.
+
 	Revision 1.6  2003/11/25 05:02:05  ralfoide
 	Video: report the video codec
-
+	
 	Revision 1.5  2003/08/18 03:22:19  ralfoide
 	Fixed missing include
 	

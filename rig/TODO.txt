@@ -181,6 +181,9 @@ Admin:
 -- done --
 
 [0.6.4.4]
+
+20031124 [1.F] Video: Use the video codec to display a specific codec/player install link
+20031110 [1.F] rig_thumbnail: Report the video codec
 20031109 [1.F] CVS: Moving on to 0.6.4.4
 
 [0.6.4.3]
@@ -646,6 +649,9 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.39  2003/11/25 05:06:23  ralfoide
+//	New display of video codec. New video display common file.
+//
 //	Revision 1.38  2003/11/09 20:52:52  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Comments (edit page, organizing workflow)
@@ -653,7 +659,7 @@ No tabs, use spaces for alignment (for viewcvs)
 //	Fix: Changed credit line
 //	Feature: Split album pages in several pages with H*V max grid size (or V max if vertical)
 //	Source: rewrote follow-album-symlinks to read synlinked album yet stay in current album
-//
+//	
 //	Revision 1.37  2003/09/13 21:55:54  ralfoide
 //	New prefs album nb col vs image nb col, album nb row vs image nb row.
 //	New pagination system (several pages for image/album grids if too many items)

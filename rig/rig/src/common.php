@@ -97,6 +97,9 @@ define("ALBUM_OPTIONS_XML",		"options.xml");
 define("DESCRIPTION_TXT",		"descript.ion");		// RM 20030713
 define("FILEINFODIZ_TXT",		"file_info.diz");
 
+define("ALBUM_CACHE_NAME",		"cache_album_");			// RM 20030809
+define("ALBUM_CACHE_EXT",		".html");
+
 // start timing...
 $time_start = rig_getmicrotime();
 
@@ -1061,10 +1064,12 @@ function rig_read_album_options($album)
 	// first clear current options
 	rig_clear_album_options();
 
+/* RM 20030814 -- disabled, not fully implemented and buggy
 	// if XML options are available, just read them
 	if (rig_xml_read_options($album))
 		return TRUE;
-		
+*/
+	
 	// then grab new ones
 	global $abs_preview_path;	// old location for options was with previews
 	global $abs_option_path;	// new options have their own base directory (may be shared with previews anyway)
@@ -2379,6 +2384,230 @@ function rig_parse_string_data($filename)
 }
 
 
+
+
+//-----------------------------------------------------------------------
+
+
+//****************************
+function rig_begin_buffering()
+//****************************
+// returns html filename to include or TRUE to start buffering and output or FALSE on errors
+// RM 20030809 v0.6.4.1
+{
+	global $rig_abs_cache;
+	global $rig_tmp_cache;
+
+	global $current_album;
+	global $abs_album_path;
+	global $abs_preview_path;
+	global $abs_option_path;
+	global $dir_install;
+	global $dir_src;		// relative to $dir_install
+	global $dir_globset;	// relative to $dir_install
+	global $dir_locset;
+
+	global $rig_lang;
+	global $rig_theme;
+	global $rig_user;
+
+	// Get the absolute cache filename
+	// Note that the cache file depends on the follwing variables:
+	// - current loggued user name (different users have different visibilities)
+	// - color theme name
+	// - language name
+
+	$abs_html =   rig_post_sep($abs_preview_path)
+				. rig_post_sep($current_album)
+				. ALBUM_CACHE_NAME
+				. rig_simplify_filename($rig_lang) . '_'
+				. rig_simplify_filename($rig_theme) . '_'
+				. rig_simplify_filename($rig_user)
+				. ALBUM_CACHE_EXT;
+
+	$is_valid = rig_is_file($abs_html);
+
+	if ($is_valid)
+	{
+		// To be valid, the cache must exist and must be older than:
+		// - the album folder
+		// - the option folder for this album         (can affect album visibility)
+		// - the local  pref folder modification date (can affect album visibility)
+		// - the global pref folder modification date (can affect album visibility)
+		// - the RIG source  folder modification date (can affect album content)
+		// (in that order, most likely to change tested first)
+	
+		$tm_html   = filemtime($abs_html);	
+		$tm_album  = filemtime($abs_album_path  . rig_prep_sep($current_album));
+		$tm_option = filemtime($abs_option_path . rig_prep_sep($current_album));
+		$tm_src    = filemtime($dir_install     . rig_prep_sep($dir_src));
+		$tm_global = filemtime($dir_install     . rig_prep_sep($dir_globset));
+		$tm_local  = filemtime($dir_locset);
+
+		$is_valid =    ($tm_html >= $tm_album)
+		            && ($tm_html >= $tm_option)
+					&& ($tm_html >= $tm_local)
+					&& ($tm_html >= $tm_global)
+					&& ($tm_html >= $tm_src);
+
+		// if cache is no longer valid, remove existing cache file
+		if (!$is_valid)
+			unlink($abs_html);
+	}
+
+	if ($is_valid)
+	{
+		// no buffering is going one
+		$rig_abs_cache = FALSE;
+
+		// return the filename of the cached html
+		return $abs_html;
+	}
+	else
+	{
+		// memorize the cached filename
+		$rig_abs_cache = $abs_html;
+
+		// Simple version:
+		// - Make sure that PHP ini's "implicit_flush" is off
+		// - Use ob_start
+		// when stopping:
+		// - Get everything from ob_get_contents into the cache html file
+		// - Use ob_end_flush
+
+		// Advanced version:
+		// - Use a callback to flush output regularly
+		// - Regularly copy this output to a temporary file
+		// - When stopped, swap the temp file with the destination file
+		//   (using system's move, dest file must be on same volume)
+
+		// RM 20030809 => Implementation of advanced version
+
+		// the temp file is the destination file plus a unique id
+		// [RM 20030809] originally I want to use posix_getpid() but the posix functions
+		// do not seem to be available at least under Windows with the default PHP 4.3.2
+		$rig_tmp_cache = $rig_abs_cache . uniqid('_');
+		if (rig_is_file($rig_tmp_cache))
+			unlink($rig_tmp_cache);
+
+		ob_implicit_flush(0);
+		ob_start();
+
+
+		// indicate should start output
+		return TRUE;
+	}
+	
+	// errors... should never get here
+	return FALSE;
+}
+
+
+//**************************
+function rig_end_buffering()
+//**************************
+// RM 20030809 v0.6.4.1
+{
+	global $rig_abs_cache;
+	global $rig_tmp_cache;
+
+	// implement the output for the simplified caching mode
+	if (!is_string($rig_tmp_cache) || $rig_tmp_cache == '')
+	{
+		if (is_string($rig_abs_cache) && $rig_abs_cache != '')
+		{
+			// w=write to new to file, create as needed
+			// b=binary (output whatever the script outputs, don't reinterpret end-of-lines)
+			$file = fopen($rig_abs_cache, "wb");
+			
+			if ($file)
+			{
+				fwrite($file, ob_get_contents());
+				fclose($file);
+			}
+	
+			ob_end_flush();
+			$rig_abs_cache = FALSE;
+		}
+	}
+	else
+	{
+		rig_flush();
+		ob_end_flush();
+
+		// by design the target cache file should not be present
+		// (if it was, it has been erased when the cache was invalidated)
+		// if present, that may mean another RIG process is building the same
+		// directory, so let's give up on that one
+
+		if (rig_is_file($rig_abs_cache))
+		{
+			// remove the temp cache, no longuer needed
+			unlink($rig_tmp_cache);
+		}
+		else
+		{
+			// move the temp cache to the destination cache
+			rename($rig_tmp_cache, $rig_abs_cache);
+		}
+		
+		$rig_abs_cache = FALSE;
+		$rig_tmp_cache = FALSE;
+	}
+
+	return TRUE;
+}
+
+
+//******************
+function rig_flush()
+//******************
+{
+	global $rig_abs_cache;
+	global $rig_tmp_cache;
+
+
+	// implements callbacks for advanced cache mechanism
+
+	if (   is_string($rig_tmp_cache) && $rig_tmp_cache != ''
+		&& is_string($rig_abs_cache) && $rig_abs_cache != '')
+	{
+		$str = ob_get_contents();
+		if (is_string($str) && strlen($str))
+		{
+			// append str to temp file
+			
+			// a=append at end of file, create as needed
+			// b=binary (output whatever the script outputs, don't reinterpret end-of-lines)
+			$file = fopen($rig_tmp_cache, "ab");
+			
+			if ($file)
+			{
+				fwrite($file, $str);
+				fclose($file);
+			}
+		}
+
+		// ob_flush only starts with PHP 4.2.0
+		if (PHP_VERSION >= "4.2.0")
+		{
+			ob_flush();
+		}
+		else
+		{
+			// simulate ob_flush on older PHPs
+			ob_end_flush();
+			ob_start();
+		}
+	}
+	else
+	{
+		flush();
+	}
+
+}
+
+
 //-----------------------------------------------------------------------
 
 
@@ -2403,9 +2632,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.27  2003/08/15 07:12:44  ralfoide
+//	Album HTML cache generation, disabled xml read options
+//
 //	Revision 1.26  2003/08/14 04:42:08  ralfoide
 //	Album & Image ignore lists
-//
+//	
 //	Revision 1.25  2003/07/21 04:56:46  ralfoide
 //	Using strftime (localizable) for dates; Ability to set locale depending on page language
 //	

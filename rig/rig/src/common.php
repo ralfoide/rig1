@@ -1482,7 +1482,7 @@ function rig_load_album_list($show_all = FALSE)
 			if ($file != '.' && $file != '..')
 			{
 				$abs_file = $abs_dir . rig_prep_sep($file);
-				if (rig_is_dir($abs_file) && ($show_all || rig_is_visible(-1, $current_album . rig_prep_sep($file))))
+				if (rig_is_dir($abs_file) && ($show_all || rig_is_visible(-1, $current_album, $file)))
 				{
 					$list_albums[] = $file;
 
@@ -1543,14 +1543,18 @@ function rig_is_visible($id = -1, $album = -1, $image = -1)
 	global $pref_use_db_id;
 	global $list_hide;
 
-		// old option mechanism (rig <= 0.6.2)
+	// DEBUG
+	// echo "<p><b>rig_is_visible</b>(id = $id, album = $album, image = $image)<br>";
+	// echo "<p><b>list_hide</b>"; var_dump($list_hide);
 
-		if ($image != -1)
-			$item = $image;
-		else if ($album != -1)
-			$item = $album;
+	// old option mechanism (rig <= 0.6.2)
 
-		return !$list_hide || !in_array($item, $list_hide, TRUE);
+	if ($image != -1)
+		$item = $image;
+	else if ($album != -1)
+		$item = $album;
+
+	return !$list_hide || !in_array($item, $list_hide, TRUE);
 }
 
 //-----------------------------------------------------------------------
@@ -1822,9 +1826,12 @@ function rig_parse_string_data($filename)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2003/02/17 07:47:01  ralfoide
+//	Debugging. Fixed album visibility not being used correctly
+//
 //	Revision 1.14  2003/02/17 07:34:54  ralfoide
 //	Conditional debuggin
-//
+//	
 //	Revision 1.13  2003/02/16 22:42:27  ralfoide
 //	Report mkdir failure. Misc fix.
 //	

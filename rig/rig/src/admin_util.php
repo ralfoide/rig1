@@ -53,9 +53,12 @@ function rig_admin_perform_defer()
 	// echo "admin defer: admin = '$admin' -- album = '$current_album' -- image = '$current_image'<br>\n";
 
 //------
-	if ($admin == "fix_options")
+	if ($admin == "fix_option")
 	{
-		// rig_admin_fix_options($current_album);			// non recursive version
+		rig_admin_fix_options($current_album);			// non recursive version
+	}
+	else if ($admin == "fix_options")
+	{
 		rig_admin_fix_all_options($current_album);	// recursive version
 	}
 //-------
@@ -941,6 +944,9 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/02/17 07:47:01  ralfoide
+//	Debugging. Fixed album visibility not being used correctly
+//
 //	Revision 1.8  2003/02/16 20:22:54  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -948,7 +954,7 @@ function rig_admin_insert_icon_popup()
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.7  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

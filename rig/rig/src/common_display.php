@@ -181,7 +181,7 @@ function rig_display_album_list()
 	{
 		$name = rig_post_sep($current_album) . $dir;
 
-		if (!rig_is_visible(-1, $name))
+		if (!rig_is_visible(-1, $dir))
 			continue;
 
 		// count visible albums
@@ -914,6 +914,9 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/02/17 07:47:03  ralfoide
+//	Debugging. Fixed album visibility not being used correctly
+//
 //	Revision 1.12  2003/02/16 20:22:55  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -921,7 +924,7 @@ function rig_display_footer()
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.11  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.

@@ -180,6 +180,7 @@ function rig_image_info($abs_file)
 //********************************
 // Returns an array of strings:
 // { f:format, w:width, h:height, d:date }
+// Returns an empty array if file does not exists
 {
 	global $html_img_date;
 	global $abs_preview_exec;
@@ -294,7 +295,11 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 		if (is_array($info) && isset($info['w']) && isset($info['h']))
 			$s = max($info['w'], $info['h']);
 
-		if ($s != $pref_preview_size)
+		if ($s == 0)
+		{
+			echo "<br>Album icon <font color=red>does not exist!</font>\n";
+		}
+		else if ($s != $pref_preview_size)
 		{
 			echo "<br>Album icon needs to be rebuild: does not have preview size\n";
 
@@ -414,7 +419,7 @@ function rig_set_album_icon($dest_album, $prev_album, $prev_image, $update_optio
 
 
 			// remove existing settings if any
-			// not the trick here -- in PHP4 unset will always delete the "local" variable
+			// note the trick here -- in PHP4 unset will always delete the "local" variable
 			// cf http://www.php.net/manual/en/function.unset.php
 			unset($GLOBALS['list_album_icon']);
 
@@ -435,11 +440,13 @@ function rig_set_album_icon($dest_album, $prev_album, $prev_image, $update_optio
 									 's' => $pref_preview_size);
 
 			// write the options back
-			rig_write_album_options($dest_album, TRUE);	// use FALSE to debug
+			return rig_write_album_options($dest_album, TRUE);	// use FALSE to debug
 		}
+
+		return TRUE;
 	}
 
-	return TRUE;
+	return FALSE;		// RM 20030215 fix: return FALSE on error, not TRUE!
 }
 
 
@@ -487,6 +494,9 @@ function rig_select_random_album_icon($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2003/02/17 07:47:04  ralfoide
+//	Debugging. Fixed album visibility not being used correctly
+//
 //	Revision 1.7  2003/02/16 20:22:55  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -494,7 +504,7 @@ function rig_select_random_album_icon($album)
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.6  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

@@ -90,8 +90,16 @@ rig_display_body();
   <a href="<?= rig_self_url("") . "&admin=rand_prev"   ?>"><?= $html_act_rnd_prev ?></a>
 <br>
   <a href="<?= rig_self_url("") . "&admin=rnm_canon"   ?>"><?= $html_act_canon ?></a>
+<?php
+	if ($_debug_)
+	{
+?>
 <br>
-  <a href="<?= rig_self_url("") . "&admin=fix_options"   ?>">Fix Options</a>
+  <a href="<?= rig_self_url("") . "&admin=fix_option"   ?>">Fix Current Option</a>
+| <a href="<?= rig_self_url("") . "&admin=fix_options"   ?>">Fix All Options</a>
+<?php
+}
+?>
 <br>
 
 <?php
@@ -183,6 +191,9 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/02/17 07:47:00  ralfoide
+//	Debugging. Fixed album visibility not being used correctly
+//
 //	Revision 1.6  2003/02/16 20:22:53  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -190,7 +201,7 @@ rig_display_body();
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.5  2002/10/23 08:39:34  ralfoide
 //	Fixes for internationalization of strings
 //	

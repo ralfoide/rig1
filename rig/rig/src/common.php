@@ -55,11 +55,12 @@
 	dir_abs_album
 	dir_images
 	dir_album
-	dir_preview
+	dir_image_cache
+	dir_album_cache
 	dir_option
 	abs_images_path
 	abs_album_path
-	abs_preview_path
+	abs_image_cache_path
 	abs_option_path
 	abs_preview_exec
 	abs_upload_src_path
@@ -104,14 +105,14 @@ define("ALBUM_CACHE_EXT",		".html");
 $time_start = rig_getmicrotime();
 
 // read site-prefs and then override with local prefs, if any
-require_once(rig_require_once("prefs.php", $dir_globset));
+require_once(rig_require_once("prefs.php", $dir_abs_globset));
 
-if (rig_is_file ($dir_locset . "prefs.php"))
-	require_once($dir_locset . "prefs.php");
+if (rig_is_file ($dir_abs_locset . "prefs.php"))
+	require_once($dir_abs_locset . "prefs.php");
 
 // setup...
-require_once(rig_require_once("version.php",    $dir_src));
-require_once(rig_require_once("login_util.php", $dir_src));
+require_once(rig_require_once("version.php"));
+require_once(rig_require_once("login_util.php"));
 
 rig_read_prefs_paths();
 rig_handle_cookies();
@@ -128,43 +129,44 @@ rig_handle_cookies();
 // include language strings
 //-------------------------
 // RM 20020714 fix: always load the str_en first
-require_once(rig_require_once("str_en.php", $dir_src, $abs_upload_src_path));
+require_once(rig_require_once("str_en.php", $dir_abs_src, $abs_upload_src_path));
 
 // and override with other language if not english
 
 // DEBUG
-// rig_check_src_file($dir_install . $dir_src . "str_$current_language.php");
+// rig_check_src_file($dir_abs_src . "str_$current_language.php");
 
 
 // Fix (Paul S. 20021013): if requested lang doesn't exist, revert to english
-if (!isset($current_language) || !rig_is_file($dir_install . $dir_src . "str_$current_language.php"))
+if (!isset($current_language) || !rig_is_file($dir_abs_src . "str_$current_language.php"))
 	$current_language = $pref_default_lang;
 
 if (is_string($current_language) && $current_language != 'en')
 {
-	require_once(rig_require_once("str_$current_language.php", $dir_src, $abs_upload_src_path));
+	require_once(rig_require_once("str_$current_language.php", $dir_abs_src, $abs_upload_src_path));
 }
 
 // include theme strings
 //----------------------
 
 // DEBUG
-// rig_check_src_file($dir_install . $dir_src . "theme_$current_theme.php");
+// rig_check_src_file($dir_abs_src . "theme_$current_theme.php");
 
-if (!isset($current_theme) || !rig_is_file($dir_install . $dir_src . "theme_$current_theme.php"))
+if (!isset($current_theme) || !rig_is_file($dir_abs_src . "theme_$current_theme.php"))
 	$current_theme = $pref_default_theme;
-require_once(rig_require_once("theme_$current_theme.php", $dir_src, $abs_upload_src_path));
+
+require_once(rig_require_once("theme_$current_theme.php", $dir_abs_src, $abs_upload_src_path));
 
 // load common source code -- note these do not use the src_upload override
-require_once(rig_require_once("common_display.php", $dir_src));
-require_once(rig_require_once("common_images.php",  $dir_src));
-require_once(rig_require_once("common_xml.php",     $dir_src));			// RM 20030216
+require_once(rig_require_once("common_display.php"));
+require_once(rig_require_once("common_images.php"));
+require_once(rig_require_once("common_xml.php"));			// RM 20030216
 
 rig_setup();
 rig_create_option_dir("");
 
 // RM 20021021 not for rig 062 yet
-// require_once(rig_require_once("common_db.php",  $dir_src));
+// require_once(rig_require_once("common_db.php"));
 
 rig_setup_db();
 
@@ -242,14 +244,17 @@ function rig_html_error($title_str,
 //-----------------------------------------------------------------------
 
 
-//*********************************************************************
-function rig_require_once($filename, $main_dir, $abs_override_dir = "")
-//*********************************************************************
+//*****************************************************************************
+function rig_require_once($filename, $abs_main_dir = "", $abs_override_dir = "")
+//******************************************************************************
 // RM 20030308
 //
-// Includes a PHP source file, looking in $dir_install + $main_dir
+// Includes a PHP source file, looking in $abs_$main_dir
 // or $abs_override_dir. The override dir is checked FIRST and is ABSOLUTE!
 // it's purpose is to override the main file with the overriding one.
+//
+// If $abs_main_dir is not specified, it defaults to $dir_abs_src from location.php
+// simply because this function is most generally used to include source files.
 //
 // It is ok for the override dir not to exist or not contain the file.
 // It is mandatory that the main dir exists and contains the file.
@@ -259,13 +264,20 @@ function rig_require_once($filename, $main_dir, $abs_override_dir = "")
 // thus this function actually returns a string with the file to be
 // required and it's up to the caller to actually perform the require_once().
 {
-	global $dir_install, $abs_upload_src_path;
+	global $dir_abs_src, $abs_upload_src_path;
 
 	// DEBUG
-	// echo "<p>rig_require_once: filename='$filename', main_dir='$main_dir', abs_override_dir='$abs_override_dir' \n";
+	// echo "<p>rig_require_once: filename='$filename', abs_main_dir='$abs_main_dir', abs_override_dir='$abs_override_dir' \n";
 
-	$main = rig_post_sep($dir_install) . rig_post_sep($main_dir);
-	$over = rig_post_sep($abs_override_dir);
+	if (is_string($abs_main_dir) && $abs_main_dir != "")
+		$main = rig_post_sep($abs_main_dir);
+	else
+		$main = $dir_abs_src;
+
+	if (is_string($abs_override_dir) && $abs_override_dir != "")
+		$over = rig_post_sep($abs_override_dir);
+	else
+		$over = "";
 
 	// check params
 
@@ -273,23 +285,16 @@ function rig_require_once($filename, $main_dir, $abs_override_dir = "")
 	{
 		return rig_html_error("Invalid parameter!",
 			                  "Empty 'filename' argument in function rig_require_once!",
-	            		      $main_dir);
-	}
-
-	if (!$main_dir)
-	{
-		return rig_html_error("Invalid parameter!",
-			                  "Empty 'main_dir' argument in function rig_require_once!",
-	            		      $filename);
+	            		      $main);
 	}
 
 	// check main file exists -- it must, even if we're going to use the override
 
-	if (!rig_check_src_file($main . $filename))
+	if (!(@file_exists(rig_check_src_file($main . $filename))))
 		return FALSE;
 
 	// check override file and use it exists
-	if ($abs_override_dir && rig_is_file($over . $filename))
+	if ($over && rig_is_file($over . $filename))
 	{
 		return $over . $filename;
 	}
@@ -301,7 +306,9 @@ function rig_require_once($filename, $main_dir, $abs_override_dir = "")
 
 //-----------------------------------------------------------------------
 
+//**********************************************
 function rig_get($array, $name, $default = NULL)
+//**********************************************
 {
 	if (isset($array) && isset($name) && isset($array[$name]))
 		return $array[$name];
@@ -733,14 +740,26 @@ function rig_create_preview_dir($album)
 //*************************************
 {
 	global $pref_mkdir_mask;
-	global $abs_preview_path;
+	global $abs_image_cache_path;
+	global $abs_album_cache_path;
 
-	if (!rig_mkdir($abs_preview_path, $album, $pref_mkdir_mask))
+	if (!rig_mkdir($abs_image_cache_path, $album, $pref_mkdir_mask))
 	{
-		return rig_html_error("Create Preview Directory",
-					   "Failed to create directory",
-					   $album,
-					   $php_errormsg);
+		return rig_html_error("Create Image Cache Directory",
+							  "Failed to create directory",
+							  $album,
+							  $php_errormsg);
+	}
+
+	if ($abs_album_cache_path != $abs_image_cache_path)
+	{
+		if (!rig_mkdir($abs_album_cache_path, $album, $pref_mkdir_mask))
+		{
+			return rig_html_error("Create Album Cache Directory",
+								  "Failed to create directory",
+								  $album,
+								  $php_errormsg);
+		}
 	}
 
 	return TRUE;
@@ -1003,18 +1022,30 @@ function rig_read_prefs_paths()
 					   $dir_abs_album . $dir_album);
 	}
 
-	// --- previews directory ---
+	// --- cache directory ---
 
-	global $dir_preview, $abs_preview_path;
-	$abs_preview_path = realpath($dir_abs_album . $dir_preview);
+	global $dir_image_cache, $abs_image_cache_path;
+	$abs_image_cache_path = realpath($dir_abs_album . $dir_image_cache);
 
-	if (!is_string($abs_preview_path))
+	if (!is_string($abs_image_cache_path))
 	{
-		rig_html_error("Missing Previews Directory",
+		rig_html_error("Missing Image Cache Directory",
 					   "Can't get absolute path for the previews directory. <p>" .
 					   "<b>Base directory:</b> $dir_abs_album<br>" .
-					   "<b>Target directory:</b> $dir_preview<br>" ,
-					   $dir_abs_album . $dir_preview);
+					   "<b>Target directory:</b> $dir_image_cache<br>" ,
+					   $dir_abs_album . $dir_image_cache);
+	}
+
+	global $dir_album_cache, $abs_album_cache_path;
+	$abs_album_cache_path = realpath($dir_abs_album . $dir_album_cache);
+
+	if (!is_string($abs_album_cache_path))
+	{
+		rig_html_error("Missing Album Cache Directory",
+					   "Can't get absolute path for the previews directory. <p>" .
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_album_cache<br>" ,
+					   $dir_abs_album . $dir_album_cache);
 	}
 
 	// --- options directory ---
@@ -1061,17 +1092,17 @@ function rig_read_prefs_paths()
 
 	// --- rig_thumbnail application ---
 
-	global $pref_preview_exec, $dir_install, $abs_preview_exec;
-	$abs_preview_exec = realpath($dir_install . $pref_preview_exec);
+	global $pref_preview_exec, $dir_abs_install, $abs_preview_exec;
+	$abs_preview_exec = realpath($dir_abs_install . $pref_preview_exec);
 
 	if (!is_string($abs_preview_exec))
 	{
 		rig_html_error("Missing rig_thumbnail application",
 					   "Can't get absolute path for rig_thumbnail application. " .
 					   "<br>Check file has actually been compiled, or check permissions.<p>" .
-					   "<b>Installation directory:</b> $dir_install<br>" .
+					   "<b>Installation directory:</b> $dir_abs_install<br>" .
 					   "<b>Path of exectable:</b> $pref_preview_exec<br>" ,
-					   $dir_install . $pref_preview_exec);
+					   $dir_abs_install . $pref_preview_exec);
 	}
 }
 
@@ -1111,8 +1142,8 @@ function rig_read_album_options($album)
 */
 	
 	// then grab new ones
-	global $abs_preview_path;	// old location for options was with previews
-	global $abs_option_path;	// new options have their own base directory (may be shared with previews anyway)
+	global $abs_image_cache_path;	// old location for options was with previews
+	global $abs_option_path;		// new options have their own base directory (may be shared with previews anyway)
 
 	// make sure the directory exists
 	// don't output an error message, the create function does it for us
@@ -1126,7 +1157,7 @@ function rig_read_album_options($album)
 	if (!rig_is_file($abs_options))
 	{
 		// if that fails, try the old location
-		$abs_options = $abs_preview_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS_TXT);
+		$abs_options = $abs_image_cache_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS_TXT);
 	
 		// silently abort if the file does not exist
 		if (!rig_is_file($abs_options))
@@ -1349,6 +1380,12 @@ function rig_read_album_descriptions($album)
 // Reloads the content of $list_description
 //	list_description		- array of [filename] => description (text and/or html) -- RM 20030713
 {
+	// Is the feature enabled? [RM 20030821]
+	global $pref_enable_descriptions;
+	if (!$pref_enable_descriptions)
+		return TRUE;
+	
+	
 	global $abs_album_path;		// descriptions
 	global $abs_option_path;	// new options have their own base directory (may be shared with previews anyway)
 
@@ -1837,6 +1874,30 @@ function rig_terminate_db()
 //-----------------------------------------------------------------------
 
 
+
+//***********************************
+function rig_get_parent_album($album)
+//***********************************
+// Returns the parent album path, or '' if already at the top.
+{
+	if ($album)
+	{
+		$items = explode(SEP, $album);
+	
+		if (count($items) > 0)
+		{
+			// remove the last item
+			unset($items[count($items)-1]);
+			
+			// glue it back
+			return implode(SEP, $items);
+		}
+	}
+
+	return '';
+}
+
+
 //************************************************
 function rig_prepare_album($id, $album, $title="")
 //************************************************
@@ -1854,6 +1915,7 @@ function rig_prepare_album($id, $album, $title="")
 	global $display_album_title;
 	global $html_album, $html_none;
 	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
+	global $pref_enable_access_hidden_albums;
 
 	$current_album = FALSE;
 	$current_id = 0;
@@ -1867,18 +1929,59 @@ function rig_prepare_album($id, $album, $title="")
 		$current_album = rig_decode_argument($album);
 	}
 
+	// check the ignore lists and invalidate names if necessary
+	if ($current_album && rig_check_ignore_list($current_album, $pref_album_ignore_list))
+	{
+		$album = '';
+		$current_album = '';
+	}
+
 	// does the album really exist?
 	if ($current_album)
 	{
 		$abs_dir = $abs_album_path . rig_prep_sep($current_album);
 
-		if (rig_check_ignore_list($current_album, $pref_album_ignore_list) || !rig_is_dir($abs_dir))
+
+		// If pref_enable_access_hidden_albums is FALSE and the image
+		// exists yet it is hidden, redirect to the album.
+		// If pref_enable_access_hidden_albums is TRUE and the image
+		// exists yet it is hidden, allow access to it.
+
+		$can_access = rig_is_dir($abs_dir);
+
+		if (    $current_album != ''
+			&&  $can_access
+			&& !$pref_enable_access_hidden_albums)
 		{
-			// directory doesn't exist or is to be ignored => unset variables
-			$current_id = 0;
-			$current_album = "";
+			// To know if the album is visible, we must load its parents
+			// options. We do that only if access to hidden albums is
+			// disabled and this is not the top album (which can never
+			// be hidden, by design).
+			// Now maybe the current album is visible but one of its
+			// parents is hidden... in which case this album is to be
+			// considered hidden too. So we need to explore all the
+			// way up to make sure it's all valid.
+			
+			$curr = $current_album;
+			while($curr && $can_access)
+			{
+				$parent = rig_get_parent_album($curr);
+
+				$can_access = rig_read_album_options($parent);
+
+				if ($can_access)
+					$can_access = rig_is_visible(-1, $curr);
+					
+				$curr = $parent;
+			}
 		}
-		// else ... RM 20021021 not for rig 0.6.2
+
+		if (!$can_access)
+		{
+			// access denied, unset variables
+			$current_id = 0;
+			$current_album = '';
+		}
 	}
 
 	// -- setup title of album
@@ -1898,6 +2001,7 @@ function rig_prepare_album($id, $album, $title="")
 		$display_album_title = "$html_album - $html_none";
 	}
 
+	// Read this album's options right now
 	rig_read_album_options($current_album);
 }
 
@@ -2211,14 +2315,15 @@ function rig_prepare_image($id, $album, $image, $title="")
 	global $current_type;		// RM 20030713
 	global $current_img_info;
 	global $pref_use_db_id;
+	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
+	global $pref_image_ignore_list;
+	global $pref_enable_access_hidden_images;
 	global $abs_album_path;
 	global $pretty_image;
 	global $display_title;
 	global $display_album_title;
 	global $html_image;
 
-	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
-	global $pref_image_ignore_list;
 
 	$current_album = FALSE;
 	$current_image = FALSE;
@@ -2256,13 +2361,18 @@ function rig_prepare_image($id, $album, $image, $title="")
 		$rel_img = $current_album . rig_prep_sep($current_image);
 		$abs_img = $abs_album_path . rig_prep_sep($current_album) . rig_prep_sep($current_image);
 
-		// RM 20030713 if the image is hidden, redirect to the album
-		// to prevent viewing hidden images by using a direct name
-		// Note: for albums, this is allowed (on purpose). That's just the way I feel it.
+		// If pref_enable_access_hidden_images is FALSE and the image
+		// exists yet it is hidden, redirect to the album.
+		// If pref_enable_access_hidden_images is TRUE and the image
+		// exists yet it is hidden, allow access to it.
 
-		if (!rig_is_file($abs_img) || !rig_is_visible(-1, -1, $current_image))
+		$can_access = rig_is_file($abs_img);
+		if ($can_access && !rig_is_visible(-1, -1, $current_image))
+			$can_access = $pref_enable_access_hidden_images;
+
+		if (!$can_access)
 		{
-			// no, unset variables
+			// access denied, unset variables
 			$current_id = 0;
 			$current_album = "";
 			$current_image = "";
@@ -2399,12 +2509,12 @@ function rig_parse_string_data($filename)
 //
 // The prefered line separator is the Unix mode, i.e. only LF (/n) as linefeed.
 {
-	global $dir_install, $dir_src, $abs_upload_src_path;
+	global $dir_abs_src, $abs_upload_src_path;
 
 
 	// get the installation-relative path of the file
-	$file1 = rig_post_sep($dir_install . $dir_src) . $filename;
-	$file2 = rig_post_sep($abs_upload_src_path)    . $filename;
+	$file1 = rig_post_sep($dir_abs_src) . $filename;
+	$file2 = rig_post_sep($abs_upload_src_path) . $filename;
 
 	if (rig_is_file($file2))
 		$filename = $file2;
@@ -2423,7 +2533,8 @@ function rig_parse_string_data($filename)
 					   $php_errormsg);
 
 		// just for the sake of it, present the error again :-p
-		return rig_check_src_file($filename);
+		rig_check_src_file($filename);
+		return FALSE;
 	}
 
 	$tok_sep = " \t\n\r";
@@ -2499,30 +2610,117 @@ function rig_parse_string_data($filename)
 function rig_modif_date($path)
 //****************************
 {
-	if (rig_is_dir($path) || rig_is_file($path))
+	if (is_string($path) && (rig_is_dir($path) || rig_is_file($path)))
 		return filemtime($path);
 	else
 		return 0;
 }
 
 
+//****************************************************
+function rig_check_expired($compare_date, &$path_list)
+//****************************************************
+// This function checks to see if any of the path in the path_list
+// contains something newer than compare_date. If yes, the comparison
+// date is expired and TRUE is returned. If no, the comparison date
+// is valid and FALSE is returned.
+//
+// The path_list may contain either folders or files paths.
+// When a folder is given, the folder's modif date is compared and
+// then all its first-level files are compared.
+// Note that no implicit recursion is used.
+// Note that if a similar path is given twice, it will be checked twice.
+//
+// On a filesystem, the modification date of a folder will reflect
+// folder's content update (i.e. files deletes, added, etc.). It will
+// not reflect if the *inside* of a file is modified.
+{
+	foreach($path_list as $path)
+	{
+		if (!is_string($path) || $path == '')
+			continue;
+
+		if (rig_is_file($path))
+		{
+			// check if file date is newer
+
+			$tm = filemtime($path);
+			
+			if ($tm > $compare_date)
+				return TRUE;
+		}
+		else if (rig_is_dir($path))
+		{
+			// check if dir modif date is newer
+			
+			$tm = filemtime($path);
+
+			if ($tm > $compare_date)
+				return TRUE;
+
+			// if not, check all files in the directory (no recursion)
+			// note that since there is no semantic associated to the path,
+			// so it is not possible to exclude files based on the content
+			// of pref_album_ignore_list or pref_image_ignore_list.
+
+			$path = rig_post_sep($path);
+
+			$handle = @opendir($path);
+			if ($handle)
+			{
+				while (($file = readdir($handle)) !== FALSE)
+				{
+					// check if file date is newer
+		
+					$tm = filemtime($path . $file);
+					
+					if ($tm > $compare_date)
+					{
+						closedir($handle);
+						return TRUE;				
+					}
+				}
+				
+				closedir($handle);
+			}
+		}
+	}
+	
+	// comparison date not expired
+	return FALSE;
+}
+
+
+
 //****************************
 function rig_begin_buffering()
 //****************************
-// returns html filename to include or TRUE to start buffering and output or FALSE on errors
 // RM 20030809 v0.6.4.1
+// Returns html filename to include or TRUE to start buffering and output or FALSE on errors
+// When FALSE is returned, the caller should proceed generating the page is if with buffering
+// except no buffering will occur.
 {
 	global $rig_abs_cache;
 	global $rig_tmp_cache;
 
+	// Is the feature enabled? [RM 20030821]
+	global $pref_enable_album_html_cache;
+	if (!$pref_enable_album_html_cache)
+	{
+		$rig_abs_cache = FALSE;
+		$rig_tmp_cache = FALSE;
+		return FALSE;
+	}
+	
+	
+
 	global $current_album;
 	global $abs_album_path;
-	global $abs_preview_path;
+	global $abs_album_cache_path;
 	global $abs_option_path;
-	global $dir_install;
-	global $dir_src;		// relative to $dir_install
-	global $dir_globset;	// relative to $dir_install
-	global $dir_locset;
+	global $dir_abs_src;
+	global $dir_abs_globset;
+	global $dir_abs_locset;
 
 	global $rig_lang;
 	global $rig_theme;
@@ -2534,7 +2732,7 @@ function rig_begin_buffering()
 	// - color theme name
 	// - language name
 
-	$abs_html =   rig_post_sep($abs_preview_path)
+	$abs_html =   rig_post_sep($abs_album_cache_path)
 				. rig_post_sep($current_album)
 				. ALBUM_CACHE_NAME
 				. rig_simplify_filename($rig_lang) . '_'
@@ -2553,21 +2751,25 @@ function rig_begin_buffering()
 		// - the global pref folder modification date (can affect album visibility)
 		// - the RIG source  folder modification date (can affect album content)
 		// (in that order, most likely to change tested first)
-	
-		$tm_html   = rig_modif_date($abs_html);	
-		$tm_album  = rig_modif_date($abs_album_path  . rig_prep_sep($current_album));
-		$tm_option = rig_modif_date($abs_option_path . rig_prep_sep($current_album) . rig_prep_sep(ALBUM_OPTIONS_TXT));
-		$tm_optxml = rig_modif_date($abs_option_path . rig_prep_sep($current_album) . rig_prep_sep(ALBUM_OPTIONS_XML));
-		$tm_src    = rig_modif_date($dir_install     . rig_prep_sep($dir_src));
-		$tm_global = rig_modif_date($dir_install     . rig_prep_sep($dir_globset));
-		$tm_local  = is_string($dir_locset) ? rig_modif_date($dir_locset) : 0;
 
-		$is_valid =    ($tm_html >= $tm_album)
-		            && ($tm_html >= $tm_option)
-		            && ($tm_html >= $tm_optxml)
-					&& ($tm_html >= $tm_local)
-					&& ($tm_html >= $tm_global)
-					&& ($tm_html >= $tm_src);
+		$tm_html   = rig_modif_date($abs_html);
+
+		// set the list of files or folders to check
+		$check_list = array($abs_album_path  . rig_prep_sep($current_album),
+							$abs_option_path . rig_prep_sep($current_album),
+							$dir_abs_src);
+
+		if ($dir_abs_src != $dir_abs_admin_src)
+			$check_list[] = $dir_abs_admin_src;
+
+		if ($dir_abs_src != $dir_abs_globset)
+			$check_list[] = $dir_abs_globset;
+
+		if ($dir_abs_src != $dir_abs_locset)
+			$check_list[] = $dir_abs_locset;
+
+		// cache is valid if not expired
+		$is_valid  = !rig_check_expired($tm_html, $check_list);
 
 		// if cache is no longer valid, remove existing cache file
 		if (!$is_valid)
@@ -2576,7 +2778,7 @@ function rig_begin_buffering()
 
 	if ($is_valid)
 	{
-		// no buffering is going one
+		// no buffering is going on
 		$rig_abs_cache = FALSE;
 
 		// return the filename of the cached html
@@ -2630,11 +2832,17 @@ function rig_end_buffering()
 	global $rig_abs_cache;
 	global $rig_tmp_cache;
 
-	// implement the output for the simplified caching mode
-	if (!is_string($rig_tmp_cache) || $rig_tmp_cache == '')
+
+	rig_flush();
+
+
+	// if cache buffering is activated...
+	if (is_string($rig_abs_cache) && $rig_abs_cache != '')
 	{
-		if (is_string($rig_abs_cache) && $rig_abs_cache != '')
+		if (!is_string($rig_tmp_cache) || $rig_tmp_cache == '')
 		{
+			// implement the output for the simplified caching mode
+	
 			// w=write to new to file, create as needed
 			// b=binary (output whatever the script outputs, don't reinterpret end-of-lines)
 			$file = fopen($rig_abs_cache, "wb");
@@ -2646,33 +2854,36 @@ function rig_end_buffering()
 			}
 	
 			ob_end_flush();
-			$rig_abs_cache = FALSE;
-		}
-	}
-	else
-	{
-		rig_flush();
-		ob_end_flush();
-
-		// by design the target cache file should not be present
-		// (if it was, it has been erased when the cache was invalidated)
-		// if present, that may mean another RIG process is building the same
-		// directory, so let's give up on that one
-
-		if (rig_is_file($rig_abs_cache))
-		{
-			// remove the temp cache, no longuer needed
-			unlink($rig_tmp_cache);
 		}
 		else
 		{
-			// move the temp cache to the destination cache
-			rename($rig_tmp_cache, $rig_abs_cache);
+			// implements end-of-buffering for advanced cache mechanism
+	
+			ob_end_flush();
+	
+			// by design the target cache file should not be present
+			// (if it was, it has been erased when the cache was invalidated)
+			// if present, that may mean another RIG process is building the same
+			// directory, so let's give up on that one
+	
+			if (rig_is_file($rig_abs_cache))
+			{
+				// remove the temp cache, no longuer needed
+				unlink($rig_tmp_cache);
+			}
+			else
+			{
+				// move the temp cache to the destination cache
+				rename($rig_tmp_cache, $rig_abs_cache);
+			}
+
 		}
-		
-		$rig_abs_cache = FALSE;
-		$rig_tmp_cache = FALSE;
+
 	}
+
+	// disable buffering
+	$rig_abs_cache = FALSE;
+	$rig_tmp_cache = FALSE;
 
 	return TRUE;
 }
@@ -2686,7 +2897,7 @@ function rig_flush()
 	global $rig_tmp_cache;
 
 
-	// implements callbacks for advanced cache mechanism
+	// implements callback for advanced cache mechanism
 
 	if (   is_string($rig_tmp_cache) && $rig_tmp_cache != ''
 		&& is_string($rig_abs_cache) && $rig_abs_cache != '')
@@ -2721,6 +2932,8 @@ function rig_flush()
 	}
 	else
 	{
+		// cache buffering not activated, or the simplified one...
+		
 		flush();
 	}
 
@@ -2752,9 +2965,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.31  2003/08/21 20:19:30  ralfoide
+//	New dir/path variables, new enable prefs (album/image hidden, descriptions, album cache), updated rig_require_once
+//
 //	Revision 1.30  2003/08/18 04:25:30  ralfoide
 //	Expire album cache when album option change. Capitalize album month name.
-//
+//	
 //	Revision 1.29  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

@@ -60,8 +60,10 @@ enter_login(self_url());
 
 <!-- prev/size/next link on top of image -->
 
+<p>
+
 <table width="100%" border=0><tr>
-<td width="33%">
+<td width="33%" valign="top">
 	<div align="left">
 		<table><tr><td><center>
 			<?php
@@ -84,21 +86,19 @@ enter_login(self_url());
 			?>
 		</center></td></tr></table>
 	</div>
-</td><td width="34%">
+</td><td width="34%" valign="top">
 	<center>
 
-	<form method="POST" action="<?= self_url() ?>">
-		<?= "$html_img_size" ?>
-		<select size="1" name="img_size">
-		<?php insert_size_popup() ?>
-		</select>
-		<input type="submit" value="<?= $html_ok ?>" name="ok">
-	</form>
-
-	<a href="<?= self_url("") ?>"><?= $html_back_album ?></a>
+	<!-- a href="<?= self_url("") ?>"><?= $html_back_album ?></a -->
+	
+	<!-- display image itself -->
+	
+	<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
+	<tr><td><center><?php display_image() ?></center></td></tr>
+	</table>
 	
 	</center>
-</td><td width="33%">
+</td><td width="33%" valign="top">
 	<div align="right">
 		<table><tr><td><center>
 			<?php
@@ -123,19 +123,13 @@ enter_login(self_url());
 </tr></table>
 
 
-<!-- display image itself -->
-
-<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
-<tr><td><center><?php display_image() ?></center></td></tr>
-</table>
 <p>
-
 
 <!-- prev/info/next link below image -->
 
 
 <table width="100%" border=0><tr>
-<td width="33%">
+<td width="33%" valign="bottom">
 	<div align="left">
 		<table><tr><td><center>
 			<?php
@@ -161,6 +155,7 @@ enter_login(self_url());
 </td><td width="34%">
 	<center>
 
+	<!-- image info -->
 	<table border="0" bgcolor="<?= $color_table_bg ?>" cellpadding="0" cellspacing="4">
 		<tr><td>
 			<center>
@@ -179,9 +174,21 @@ enter_login(self_url());
 	<a href="<?= self_url("") ?>">
 		<?= $html_back_album ?>
 	</a>
+
+	<p>
+
+	<!-- RM 20021014 moved image resize below image info -->
+	<form method="POST" action="<?= self_url() ?>">
+		<?= "$html_img_size" ?>
+		<select size="1" name="img_size">
+		<?php insert_size_popup() ?>
+		</select>
+		<input type="submit" value="<?= $html_ok ?>" name="ok">
+	</form>
+
 	
 	</center>
-</td><td width="33%">
+</td><td width="33%" valign="bottom">
 	<div align="right">
 		<table><tr><td><center>
 			<?php
@@ -230,46 +237,21 @@ enter_login(self_url());
 
 </body>
 </html>
+
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2002/10/16 04:47:59  ralfoide
+//	Changed layout: prev/next links aside the image, image size at bottom
+//
 //	Revision 1.1  2002/08/04 00:58:08  ralfoide
 //	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//
+//	
 //	Revision 1.3  2001/11/26 06:40:50  ralf
 //	fix for diaply credits
 //	
 //	Revision 1.2  2001/11/26 04:35:20  ralf
 //	version 0.6 with location.php
-//	
-//	Revision 1.1  2001/11/26 00:07:37  ralf
-//	Starting version 0.6: location and split of site vs album files
-//	
-//	Revision 1.9  2001/11/09 06:40:18  ralf
-//	rig 0.5.1: image mode: adds width/height attr in img tag. adds prev/next links below image too.
-//	
-//	Revision 1.8  2001/08/27 08:47:56  ralf
-//	several updates
-//	
-//	Revision 1.7  2001/08/14 17:48:07  ralf
-//	Fixes: login can appear in both languages.
-//	Feature: added the guest mode in user login (not admin).
-//	
-//	Revision 1.6  2001/08/13 05:37:36  ralf
-//	Fixes in preview creation, added back album links, etc.
-//	
-//	Revision 1.5  2001/08/13 01:43:35  ralf
-//	Changed appareance of album table
-//	
-//	Revision 1.4  2001/08/07 09:04:30  ralf
-//	Updated ID and VIM tag
-//	
-//	Revision 1.3  2001/08/07 09:01:17  ralf
-//	Added globals for the html colors (in pref).
-//	Fixed &lang in the language change URL
-//	
-//	Revision 1.2  2001/08/07 08:04:17  ralf
-//	Added a cvs log entry
 //	
 //-------------------------------------------------------------
 ?>

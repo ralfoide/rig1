@@ -162,6 +162,7 @@ Admin:
 
 [0.6.3.5]
 
+20030813 [1.F] Feature: Add "ignore lists" for albums/images (regexp patterns of files to be ignored) [Request from AR]
 20030721 [1.F] rig_thumbnail: Detects and uses gcc-3.3 (required for latest libavifile 0.7.33)
 20030720 [1.F] Albums: Auto-switch between grid and vertical layout (if descriptions present)
 20030720 [1.F] Albums: Smaller preview thumbnails for vertical layout mode
@@ -558,9 +559,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.28  2003/08/14 04:42:08  ralfoide
+//	Album & Image ignore lists
+//
 //	Revision 1.27  2003/07/21 21:48:41  ralfoide
 //	Updated makefile-with-video for gcc-3.3
-//
+//	
 //	Revision 1.26  2003/07/21 05:00:17  ralfoide
 //	Album dates; Dates format localizable; Setting locale on language; Album layout auto-switch.
 //	

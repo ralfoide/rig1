@@ -1209,9 +1209,6 @@ function rig_read_album_descriptions($album)
 	global $list_description;
 	unset($list_description);
 
-	// if XML options are available, just read them
-	if (rig_xml_read_options($album))
-		return TRUE;
 		
 	// then grab new ones
 	//
@@ -1745,6 +1742,7 @@ function rig_prepare_album($id, $album, $title="")
 	global $display_title;
 	global $display_album_title;
 	global $html_album, $html_none;
+	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
 
 	$current_album = FALSE;
 	$current_id = 0;
@@ -1763,9 +1761,9 @@ function rig_prepare_album($id, $album, $title="")
 	{
 		$abs_dir = $abs_album_path . rig_prep_sep($current_album);
 
-		if (!rig_is_dir($abs_dir))
+		if (rig_check_ignore_list($current_album, $pref_album_ignore_list) || !rig_is_dir($abs_dir))
 		{
-			// no, unset variables
+			// directory doesn't exist or is to be ignored => unset variables
 			$current_id = 0;
 			$current_album = "";
 		}
@@ -1800,6 +1798,10 @@ function rig_build_recursive_list($album)
 {
 	global $abs_album_path;
 
+	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
+	global $pref_image_ignore_list;
+
+
 	// make sure we have the options for this album
 	rig_read_album_options($album);
 
@@ -1821,21 +1823,32 @@ function rig_build_recursive_list($album)
 				$abs_file = $abs_dir . rig_prep_sep($file);
 				if (rig_is_dir($abs_file))
 				{
-					$name = rig_post_sep($album) . $file;
-					$res = rig_build_recursive_list($name);
-					if (is_array($res) && count($res)>0)
-						$result = array_merge($result, $res);
-
-					// restore the options for this album
-					// (the local array will have been modified by the recursive call)
-					rig_read_album_options($album);
+					// it is a directory
+					if (!rig_check_ignore_list($file, $pref_album_ignore_list))
+					{
+						$name = rig_post_sep($album) . $file;
+						$res = rig_build_recursive_list($name);
+						if (is_array($res) && count($res)>0)
+							$result = array_merge($result, $res);
+	
+						// restore the options for this album
+						// (the local array will have been modified by the recursive call)
+						rig_read_album_options($album);
+					}
 				}
-				else if (rig_valid_ext($file))
+				else
 				{
-					// create entry and add it
-					$entry = array('a' => $album, 'f' => $file);
-					$result[] = $entry;
-			    }
+					// it is a file
+					if (!rig_check_ignore_list($file, $pref_image_ignore_list))
+					{
+						if (rig_valid_ext($file))
+						{
+							// create entry and add it
+							$entry = array('a' => $album, 'f' => $file);
+							$result[] = $entry;
+					    }
+					}
+				}
 			}
 		}
 		closedir($handle);
@@ -1866,6 +1879,10 @@ function rig_load_album_list($show_all = FALSE)
 
 	global $list_albums;
 	global $list_images;
+
+	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
+	global $pref_image_ignore_list;
+	
 	global $current_album;
 	global $abs_album_path;
 
@@ -1895,20 +1912,34 @@ function rig_load_album_list($show_all = FALSE)
 			if ($file != '.' && $file != '..')
 			{
 				$abs_file = $abs_dir . rig_prep_sep($file);
-				if (rig_is_dir($abs_file) && ($show_all || rig_is_visible(-1, $current_album, $file)))
+				if (rig_is_dir($abs_file))
 				{
-					$list_albums[] = $file;
-
-					// DEBUG
-					// echo "<br>Album: $file";
+					// it is a directory
+					if (!rig_check_ignore_list($file, $pref_album_ignore_list))
+					{
+						if ($show_all || rig_is_visible(-1, $current_album, $file))
+						{
+							$list_albums[] = $file;
+		
+							// DEBUG
+							// echo "<br>Album: $file";
+						}
+					}
 				}
-				else if (rig_valid_ext($file) && ($show_all || rig_is_visible(-1, -1, $file)))
+				else
 				{
-			    	$list_images[] = $file;
-
-					// DEBUG
-					// echo "<br>Image: $file";
-			    }
+					// it is a file
+					if (!rig_check_ignore_list($file, $pref_image_ignore_list))
+					{
+						if (rig_valid_ext($file) && ($show_all || rig_is_visible(-1, -1, $file)))
+						{
+					    	$list_images[] = $file;
+		
+							// DEBUG
+							// echo "<br>Image: $file";
+					    }
+					}
+				}
 			}
 		}
 		closedir($handle);
@@ -2031,6 +2062,7 @@ function rig_is_visible($id = -1, $album = -1, $image = -1)
 	global $pref_use_db_id;
 	global $list_hide;
 
+
 	// DEBUG
 	// echo "<p><b>rig_is_visible</b>(id = $id, album = $album, image = $image)<br>";
 	// echo "<p><b>list_hide</b>"; var_dump($list_hide);
@@ -2074,6 +2106,9 @@ function rig_prepare_image($id, $album, $image, $title="")
 	global $display_album_title;
 	global $html_image;
 
+	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
+	global $pref_image_ignore_list;
+
 	$current_album = FALSE;
 	$current_image = FALSE;
 	$current_type = "";
@@ -2088,6 +2123,20 @@ function rig_prepare_image($id, $album, $image, $title="")
 		$current_album = rig_decode_argument($album);
 		$current_image = rig_decode_argument($image);
 	}
+
+	// check the ignore lists and invalidate names if necessary
+	if ($current_album && rig_check_ignore_list($current_album, $pref_album_ignore_list))
+	{
+		$album = '';
+		$current_album = '';
+	}
+
+	if ($current_image && rig_check_ignore_list($current_album, $pref_image_ignore_list))
+	{
+		$image = '';
+		$current_image = '';
+	}
+	
 
 	// does the image really exist?
 	// is the image hidden?
@@ -2218,7 +2267,9 @@ function rig_get_images_prev_next()
 	}
 }
 
+
 //-----------------------------------------------------------------------
+
 
 //***************************************
 function rig_parse_string_data($filename)
@@ -2329,13 +2380,35 @@ function rig_parse_string_data($filename)
 
 
 //-----------------------------------------------------------------------
+
+
+//*************************************************
+function rig_check_ignore_list($name, $ignore_list)
+//*************************************************
+// Returns TRUE if the name is to be ignore, FALSE if to be accepted
+// RM 20030813 - v0.6.3.5
+{
+	if (is_array($ignore_list) && count($ignore_list) > 0)
+		foreach($ignore_list as $pattern)
+			if (preg_match($pattern, $name) == 1)
+				return TRUE;
+	
+	return FALSE;
+}
+
+
+
+//-----------------------------------------------------------------------
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.26  2003/08/14 04:42:08  ralfoide
+//	Album & Image ignore lists
+//
 //	Revision 1.25  2003/07/21 04:56:46  ralfoide
 //	Using strftime (localizable) for dates; Ability to set locale depending on page language
-//
+//	
 //	Revision 1.24  2003/07/19 07:52:36  ralfoide
 //	Vertical layout for albums
 //	

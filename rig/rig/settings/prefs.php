@@ -289,6 +289,39 @@ $pref_file_types		= array("/\.jpe?g$/i"					 => 'image/jpeg',
 								"/\.(mpe?g[124]?|m[12]v|mp4)$/i" => 'video/mpeg');
 								
 
+// --- files and albums ignore list [RM 20030813 v0.6.3.5] ---
+
+// TBDL: comment on this
+// Quick notes: these arrays list reg-exp patterns of names to avoid for images and albums.
+// The ignore list is taken into account when reading the filesystem's content. That means
+// that filenames ignored here are never seen *ever* (not even in admin mode!) and are
+// never accessed by RIG. As far as RIG is concerned, they do not exist.
+//
+// Arrays can be affected NULL or FALSE or the empty string or the empty array if you want to
+// disable the feature.
+//
+// Typical pattenrs:
+// - "/^foo$/" matched a filename being _exactly_ "foo"
+// - "/^foo.*/" matches any filename starting by "foo".
+// - "/\bfoo\b/" matches any filename with the word "foo" (word-boundary check)
+// - "/foo/i" matches any filename containing "foo" or "FOO" or "FoO" anywhere in the name
+//   (i means case-insenstive)
+
+$pref_album_ignore_list	= NULL;
+$pref_image_ignore_list	= NULL;
+
+/* Example:
+
+$pref_album_ignore_list	= array("/^CVS$/",
+								"/AlbumToBeIgnored/");
+
+$pref_image_ignore_list	= array("/fuzzy/",
+								"/ImageToBeIgnored/",
+								"/^temp_/i");
+*/
+
+
+
 // --- admin viewing options ---
 
 $pref_admin_size		= 256;
@@ -507,10 +540,13 @@ $pref_nb_col		= 5;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/08/14 04:42:08  ralfoide
+//	Album & Image ignore lists
+//
 //	Revision 1.13  2003/07/21 04:59:29  ralfoide
 //	Alternate album layout for description.
 //	Auto-swithc album layout on description presence.
-//
+//	
 //	Revision 1.12  2003/07/19 07:52:36  ralfoide
 //	Vertical layout for albums
 //	

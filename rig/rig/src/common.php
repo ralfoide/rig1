@@ -2143,7 +2143,9 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 	global $pref_use_db_id;
 	global $display_title;
 	global $display_album_title;
-	global $html_album, $html_none;
+	global $html_album_title;
+	global $html_image_title;
+	global $html_none;
 	global $pref_album_ignore_list;				// RM 20030813 - v0.6.3.5
 	global $pref_enable_album_pagination;		// RM 20030908 - v0.6.4.3
 
@@ -2226,19 +2228,19 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 	// -- setup title of album
 	
 	if (!$title)
-		$title = $html_album;
+		$title = $html_album_title;
 
 	if ($current_album)
 	{
 		$items = explode(SEP, $current_album);
 		$pretty = rig_pretty_name($items[count($items)-1], FALSE, TRUE);
 		$display_title = "$title - " . $pretty;
-		$display_album_title = "$html_album - " . $pretty;
+		$display_album_title = "$html_album_title - " . $pretty;
 	}
 	else
 	{
 		$display_title = "$title - $html_none";
-		$display_album_title = "$html_album - $html_none";
+		$display_album_title = "$html_album_title - $html_none";
 	}
 
 	// Read this album's options right now
@@ -2728,7 +2730,7 @@ function rig_prepare_image($album, $image, $title="")
 	global $pretty_image;
 	global $display_title;
 	global $display_album_title;
-	global $html_image;
+	global $html_image_title;
 
 
 	$current_album		= FALSE;
@@ -2831,6 +2833,7 @@ function rig_prepare_image($album, $image, $title="")
 	list($current_type, $dummy) = explode("/", rig_get_file_type($current_image), 2);
 
 	// -- setup title of album
+	$title = $html_image_title;
 	if ($title)
 		$title .= " - ";
 
@@ -3385,10 +3388,14 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.39  2004/03/02 10:38:01  ralfoide
+//	Translation of tooltip string.
+//	New page title strings.
+//
 //	Revision 1.38  2004/02/18 07:38:03  ralfoide
 //	Added rig_unset_global.
 //	Fixed resetting global arrays when parsing album options.
-//
+//	
 //	Revision 1.37  2003/12/07 19:41:41  ralfoide
 //	Fix: invalidate html cache if image data cache modified
 //	

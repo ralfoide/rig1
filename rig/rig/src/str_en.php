@@ -129,6 +129,8 @@ $html_video_download				= "[&nbsp;<a title=\"Download video and play on your com
 // Script Content
 //---------------
 
+
+
 // Date formatiing
 // Date formating for $html_footer_date, $html_img_date and $html_album_date uses
 // the PHP's date() notation, cf http://www.php.net/manual/en/function.date.php
@@ -136,6 +138,7 @@ $html_video_download				= "[&nbsp;<a title=\"Download video and play on your com
 $html_footer_date	= '%m/%d/%Y, %I:%M %p';
 
 // Album Title
+$html_album_title	= 'RIG Album';
 $html_album			= 'Album';
 $html_admin			= 'Admin';
 $html_none			= 'Start';
@@ -144,6 +147,7 @@ $html_none			= 'Start';
 $html_root			= 'Start';
 
 // Images
+$html_image_title	= 'RIG Image';
 $html_image			= 'Image';
 $html_prev			= 'Previous';
 $html_next			= 'Next';
@@ -156,6 +160,7 @@ $html_original		= 'Original';
 // Tooltips
 $html_image_tooltip	= '[type]: [name]';
 $html_album_tooltip	= '[type]: [name]; Last Updated: [date]';
+$html_last_update   = 'Last Updated: [date]';
 
 
 // Number formating
@@ -175,9 +180,13 @@ $html_album_date	= '%B %Y';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.17  2004/03/02 10:38:01  ralfoide
+//	Translation of tooltip string.
+//	New page title strings.
+//
 //	Revision 1.16  2004/02/27 08:49:42  ralfoide
 //	Translation for video strings
-//
+//	
 //	Revision 1.15  2003/11/09 20:52:12  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)

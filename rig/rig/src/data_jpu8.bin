@@ -302,7 +302,12 @@ $html_video_download
 //---------------
 
 
+
 // Album Title
+
+$html_album_title
+RIGのアルバム
+// Album
 
 $html_album
 アルバム
@@ -324,6 +329,10 @@ $html_root
 // Start
 
 // Images
+
+$html_image_title
+RIGの画像
+// Image
 
 $html_image
 画像
@@ -366,6 +375,10 @@ $html_image_tooltip
 $html_album_tooltip
 [type]: [name]; 最終更新: [date]
 // [type]: [name]; Last Updated: [date]
+
+$html_last_update
+最終更新: [date]
+// Last Updated: [date]
 
 
 

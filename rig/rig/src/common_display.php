@@ -176,6 +176,9 @@ function rig_display_album_list()
 	global $pref_album_with_description_layout;	// RM 20030720 auto-switch
 	global $pref_enable_album_border;			// RM 20030814
 	global $color_table_desc;					// RM 20030817
+	global $html_last_update;					// RM 20040302 v0.6.4.5 i18l strings
+	global $html_image_tooltip;
+	global $html_album_tooltip;
 
 
 	// select the layout
@@ -316,9 +319,13 @@ function rig_display_album_list()
 
 		// prepare image tooltip and alt attributes
 		
-		$alt     = "$html_album: $pretty";
-		$tooltip = "$html_album: $pretty; Last updated: $album_date";
+		$alt = str_replace('[type]', $html_album, $html_image_tooltip);
+		$alt = str_replace('[name]', $pretty,     $alt);
 
+		$tooltip = str_replace('[type]', $html_album, $html_album_tooltip);
+		$tooltip = str_replace('[name]', $pretty,     $tooltip);
+		$tooltip = str_replace('[date]', $album_date, $tooltip);
+		
 
 		// --------------------------------------------
 		
@@ -492,9 +499,11 @@ function rig_display_album_list()
 		}
 		else // default: 'grid' mode
 		{
+			$last_update = str_replace('[date]', $album_date, $html_last_update);
+			
 			echo "</td></tr>\n";
 			echo "<tr><td><center>$title</center></td></tr>\n";
-			echo "<tr><td title=\"Last updated: $album_date\"><center><font color=\"$color_table_desc\" size=\"-1\"><span>$album_date</span></font></center></td></tr>\n";
+			echo "<tr><td title=\"$last_update\"><center><font color=\"$color_table_desc\" size=\"-1\"><span>$album_date</span></font></center></td></tr>\n";
 			echo "<tr><td><center><font color=\"$color_table_desc\">$desc</font></center></td></tr>\n";
 			echo "</table>";
 
@@ -1745,9 +1754,13 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.33  2004/03/02 10:38:01  ralfoide
+//	Translation of tooltip string.
+//	New page title strings.
+//
 //	Revision 1.32  2004/02/27 08:49:06  ralfoide
 //	No longer display "image" after "jpeg" or "video" in display info
-//
+//	
 //	Revision 1.31  2004/02/18 07:38:29  ralfoide
 //	Allow for extra html in body (typically for JS)
 //	

@@ -144,6 +144,7 @@ $html_video_download				= "[&nbsp;<a title=\"Descargar la vídeo y reproducirla c
 $html_footer_date	= '%d/%m/%Y %H:%M:%S';
 
 // Album Title
+$html_album_title	= 'Album RIG';
 $html_album			= 'Album';
 $html_admin			= 'Admin';
 $html_none			= 'Primero';
@@ -152,6 +153,7 @@ $html_none			= 'Primero';
 $html_root			= 'Primero';
 
 // Images
+$html_image_title	= 'Imagen RIG';
 $html_image			= 'Imagen';
 $html_prev			= 'Anterior';
 $html_next			= 'Siguiente';
@@ -163,7 +165,8 @@ $html_original		= 'Original';
 
 // Tooltips
 $html_image_tooltip	= '[type]: [name]';
-$html_album_tooltip	= '[type]: [name]; Last Updated: [date]';
+$html_album_tooltip	= '[type]: [name]; Ultima actualización: [date]';
+$html_last_update   = 'Ultima actualización: [date]';
 
 // Number formating
 $html_num_dec_sep	= '.';		// separator for decimals (ex 25.00 in English)
@@ -192,9 +195,13 @@ $pref_date_YMD      = 'D-M-Y';          // Long format.  Must contain D & M & Y.
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2004/03/02 10:38:01  ralfoide
+//	Translation of tooltip string.
+//	New page title strings.
+//
 //	Revision 1.13  2004/02/27 08:49:42  ralfoide
 //	Translation for video strings
-//
+//	
 //	Revision 1.12  2003/11/09 20:52:13  ralfoide
 //	Fix: image resize popup broken (img_size value not memorized?)
 //	Feature: Comments (edit page, organizing workflow)

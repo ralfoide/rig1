@@ -32,6 +32,11 @@ class RTest_I18l_Strings extends TestCase
 		check_string($this, 'html_video_install_named_player');
 		check_string($this, 'html_video_install_unnamed_player');
 		check_string($this, 'html_video_download');
+		check_string($this, 'html_album_title');
+		check_string($this, 'html_image_title');
+		check_string($this, 'html_image_tooltip', true);
+		check_string($this, 'html_album_tooltip');
+		check_string($this, 'html_last_update');
 	}
 
 }
@@ -99,10 +104,14 @@ function check_string(&$test, $str_name, $same_as_english = FALSE)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2004/03/02 10:38:01  ralfoide
+//	Translation of tooltip string.
+//	New page title strings.
+//
 //	Revision 1.1  2004/02/27 08:44:25  ralfoide
 //	Test unit for strings.
 //	Ability to check strings are present and different in the 4 languages
-//
+//	
 //	Revision 1.1  2004/02/23 04:08:25  ralfoide
 //	Setting up phpUnit testing
 //	

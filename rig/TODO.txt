@@ -203,6 +203,8 @@ Admin:
 
 [0.6.4.5]
 
+20040302 [1.F] Fix: Translated/fixed tooltips international strings
+20040301 [1.F] Fix: Changed web page title to start by "RIG" (one of those minor yet so helpful usability improvments)
 20040228 [1.F] Fix: Need real Japanese translations from Tatsuo
 20040226 [2.F] Fix: Minor fixes in phpUnit
 20040226 [1.F] Fix: Translate all new strings in French, Spanish and Japanese
@@ -691,9 +693,13 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.48  2004/03/02 10:38:01  ralfoide
+//	Translation of tooltip string.
+//	New page title strings.
+//
 //	Revision 1.47  2004/02/29 08:07:07  ralfoide
 //	Real Japanese translations for video strings rom Tatsuo
-//
+//	
 //	Revision 1.46  2004/02/27 09:04:21  ralfoide
 //	Fixed a typo and a missing cvs tag
 //	

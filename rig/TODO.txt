@@ -119,6 +119,7 @@ Admin:
 [0.6.4]
 
 [0.6.3.1]
+20030220 [1.F] Added gray theme color
 20030216 [1.F] Bumped to version 0.6.3.1
 20030216 [1.F] Bug fix: album visibility not used correctly by display album
 20030216 [1.F] Bug fix: visibility values not correctly read from options.txt
@@ -401,9 +402,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/02/21 09:03:02  ralfoide
+//	Added gray theme color
+//
 //	Revision 1.10  2003/02/18 08:16:32  ralfoide
 //	update
-//
+//	
 //	Revision 1.9  2003/02/17 08:18:38  ralfoide
 //	Version 0.6.3.1 started...
 //	

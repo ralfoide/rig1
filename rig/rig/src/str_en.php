@@ -34,7 +34,8 @@ $html_desc_lang		= array('en' => 'English',
 //-----------------
 
 $html_theme			= 'Color Theme:';
-$html_desc_theme	= array('blue'  => 'Blue',
+$html_desc_theme	= array('gray'  => 'Gray',
+							'blue'  => 'Blue',
 							'sand'  => 'Sand',
 							'khaki' => 'Khaki',
 							'egg'	=> 'Egg',
@@ -147,6 +148,9 @@ $html_img_date		= 'l\, F d\, Y\, g:m A';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/02/21 09:03:03  ralfoide
+//	Added gray theme color
+//
 //	Revision 1.8  2003/02/16 20:22:57  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -154,7 +158,7 @@ $html_img_date		= 'l\, F d\, Y\, g:m A';
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.7  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.

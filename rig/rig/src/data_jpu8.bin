@@ -57,23 +57,31 @@ Español
 //-----------------
 
 $html_theme
-Color Theme:
+色の主題:
+// Color Theme:
+
+@$html_desc_theme gray
+灰色 
+// Gray
 
 @$html_desc_theme blue
-Blue
+青い 
+// Blue
 
 @$html_desc_theme sand
-Sand
+砂 
+// Sand
 
 @$html_desc_theme khaki
-Khaki
-
+Khaki 
 
 @$html_desc_theme egg
-Egg
+卵 
+// Egg
 
 @$html_desc_theme none
-None
+どれも 
+// None
 
 
 

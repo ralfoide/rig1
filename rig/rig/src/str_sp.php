@@ -44,7 +44,8 @@ $html_desc_lang		= array('en' => 'English',
 //-----------------
 
 $html_theme			= 'Color de p&aacute;gina:';
-$html_desc_theme	= array('blue'  => 'Azul',
+$html_desc_theme	= array('gray'  => 'Gris',
+							'blue'  => 'Azul',
 							'sand'  => 'Arena',
 							'khaki' => 'Caqui',
 							'egg'	=> 'Amarilla',
@@ -162,6 +163,9 @@ $pref_date_YMD      = 'D-M-Y';          // Long format.  Must contain D & M & Y.
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.7  2003/02/21 09:03:03  ralfoide
+//	Added gray theme color
+//
 //	Revision 1.6  2003/02/16 20:22:58  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -169,7 +173,7 @@ $pref_date_YMD      = 'D-M-Y';          // Long format.  Must contain D & M & Y.
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.5  2003/01/20 12:39:51  ralfoide
 //	Started version 0.6.3. Display: show number of albums or images in table view.
 //	Display: display copyright in images or album mode with pref name and language strings.

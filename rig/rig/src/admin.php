@@ -60,8 +60,7 @@ rig_display_body();
 <br>
 <?php
 	$res = rig_admin_get_preview_info($current_album);
-	// Result: array{ 0:nb_files, 1:nb_folders, 2:nb_bytes}
-	printf($html_album_stat, $res[2], $res[0], $res[1]);
+	rig_admin_display_album_stat($html_album_stat, $res);
 ?>
 <br>
 
@@ -157,9 +156,12 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2002/10/23 08:39:34  ralfoide
+//	Fixes for internationalization of strings
+//
 //	Revision 1.4  2002/10/21 07:33:59  ralfoide
 //	Admin page which respect themes
-//
+//	
 //	Revision 1.3  2002/10/21 01:53:43  ralfoide
 //	prefixing functions with rig_
 //	

@@ -228,132 +228,63 @@ function display_album_list()
 				$sy = $dy;
 			}
 
-if (0)
-{
-			?>
+			// space around the album thumbnail and the shadow.
+			// dx/dy is the default thumbnail size
+			// sx/sy is the real thumbail size of this thumbnail
+			// -8 is because the thumbnail has a 1-pixel border (*2) and the two shadows are 3 pixels each
+			$x2 = ($dx-$sx-8)/2;
+			$y2 = ($dy-$sy-8)/2;
 
-<table border="1" cellspacing="0" cellpadding="0">
-<tr height="<?= $sy+2 ?>">
-<td width="<?= $sx+2 ?>"><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0"><tr height="<?= $sy+2 ?>"><td width="<?= $sx+2 ?>">
-<a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<? $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td></tr></table></td>
-<td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
-<td><img src="<?= $box_tr ?>" width="3" height="6"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
-</tr>
-<tr height="3">
-<td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
-<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-<td><img src="<?= $line_r ?>" width="3" height="3"></td>
-</tr>
-<tr height="3">
-<td><img src="<?= $box_tr ?>" width="6" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
-<td><img src="<?= $line_b ?>" width="3" height="3"></td>
-<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-</tr>
-</table>
+			// make sure this size is positive non nul
+			if ($x2 <= 0) $x2 = 1;
+			if ($y2 <= 0) $y2 = 1;
 			
+			?>
+			<table border="0" cellspacing="0" cellpadding="0">
+				<!-- top row -->
+				<tr>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+				</tr>
+				<!-- center rows -->
+				<tr>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
+					<td><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
+					    <tr>
+						    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
+					    </tr>
+					</table></td>
+					<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
+					<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
+				</tr>
+				<tr>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+					<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
+					<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+					<td><img src="<?= $line_r ?>" width="3" height="3"></td>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+				</tr>
+				<tr>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+					<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
+					<td><img src="<?= $line_b ?>" width="3" height="3"></td>
+					<td><img src="<?= $box_br ?>" width="3" height="3"></td>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
+				</tr>
+				<!-- bottom row -->
+				<tr>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
+					<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
+				</tr>
+			</table>
 			<?php
-}
-else if (0) // -----------------------------------------------------------------
-{
-?>
-<table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
-    <tr><td>
-        <a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<? $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
-    </tr>
-</table>
-<?php
-}
-else if (0) // -----------------------------------------------------------------
-{
-	$y2 = ($dy-$sy-8)/2;
-	$x2 = ($dx-$sx-8)/2;
-?>
-<table border="0" cellspacing="0" cellpadding="0" colspan="5" rowspan="5">
-<!-- top row -->
-<tr><td colspan="5"><img src="<?= $box_tr ?>" width="<?= $dx ?>" height="<?= $y2 ?>"></td></tr>
-<!-- center rows -->
-<tr>
-	<!-- left column -->
-	<td rowspan="4"><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+6 ?>"></td></tr>
-	<!-- center columns -->
-	<td>
-		<table border="0" bgcolor="#000000" cellspacing="10" cellpadding="0">
-		    <tr>
-		    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<=? $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
-		    </tr>
-		</table>
-	</td>
-	<td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
-	<td><img src="<?= $box_tr ?>" width="3" height="6"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
-	<!-- right column -->
-	<td rowspan="4"><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+6 ?>"></td></tr>
-</tr>
-<tr>
-	<td><img src="<?= $box_tr ?>" width="3" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
-	<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-	<td><img src="<?= $line_r ?>" width="3" height="3"></td>
-</tr>
-<tr>
-	<td><img src="<?= $box_tr ?>" width="6" height="3"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
-	<td><img src="<?= $line_b ?>" width="3" height="3"></td>
-	<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-</tr>
-<!-- bottom row -->
-<tr><td colspan="5"><img src="<?= $box_tr ?>" width="<?= $dx ?>" height="<?= $y2 ?>"></td></tr>
-</table>
-<?php
-}
-else if (1) // -----------------------------------------------------------------
-{
-	$y2 = ($dy-$sy-8)/2;
-	$x2 = ($dx-$sx-8)/2;
-?>
-<table border="0" cellspacing="0" cellpadding="0">
-	<!-- top row -->
-	<tr>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-	</tr>
-	<!-- center rows -->
-	<tr>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
-		<td><table border="0" bgcolor="#000000" cellspacing="1" cellpadding="0">
-		    <tr>
-			    <td><a href="<?= $link ?>"><img src="<?= $url_path ?>" alt="<?= $pretty ?>" width="<?= $sx ?>" height="<?= $sy ?>" border="0"></a></td>
-		    </tr>
-		</table></td>
-		<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-3 ?>"></td>
-		<td valign="bottom"><img src="<?= $line_r ?>" width="3" height="<?= $sy+2-6 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="<?= $sy+2 ?>"></td>
-	</tr>
-	<tr>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-		<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-3 ?>" height="3"></td>
-		<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-		<td><img src="<?= $line_r ?>" width="3" height="3"></td>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-	</tr>
-	<tr>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-		<td align="right"><img src="<?= $line_b ?>" width="<?= $sx+2-6 ?>" height="3"></td>
-		<td><img src="<?= $line_b ?>" width="3" height="3"></td>
-		<td><img src="<?= $box_br ?>" width="3" height="3"></td>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2 ?>" height="3"></td>
-	</tr>
-	<!-- bottom row -->
-	<tr>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="<?= $sx+2 ?>" height="<?= $y2 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="3"            height="<?= $y2 ?>"></td>
-		<td><img src="<?= $box_tr ?>" width="<?= $x2   ?>" height="<?= $y2 ?>"></td>
-	</tr>
-</table>
-<?php
-}
 
     }
 
@@ -862,9 +793,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2002/10/30 09:12:29  ralfoide
+//	Finalized album thumbnail table, cleaned up experimental code. Checked with IE5, IE6, NS4.7 and Mozilla 1.1
+//
 //	Revision 1.8  2002/10/30 09:06:18  ralfoide
 //	Experimenting with alternate table to display album thumbnails
-//
+//	
 //	Revision 1.7  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

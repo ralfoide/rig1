@@ -12,12 +12,12 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="Debug"
+			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="1">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
@@ -25,6 +25,8 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_CONSOLE;RIG_EXCLUDE_AVIFILE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
+				BufferSecurityCheck="TRUE"
+				EnableFunctionLevelLinking="TRUE"
 				PrecompiledHeaderFile=".\Debug/Thumbnail.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
@@ -38,12 +40,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="./Release/jpeglib.lib"
-				OutputFile="Debug/rig_thumbnail.exe"
+				AdditionalDependencies="$(OutDir)/jpeglib.lib"
+				OutputFile="$(OutDir)/rig_thumbnail.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/rig_thumbnail.pdb"
+				ProgramDatabaseFile="$(OutDir)/rig_thumbnail.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
@@ -73,12 +75,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="Release"
+			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="1">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
@@ -100,12 +102,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="./Release/jpeglib.lib"
-				OutputFile="Release/rig_thumbnail.exe"
+				AdditionalDependencies="$(OUTDIR)/jpeglib.lib"
+				OutputFile="$(OutDir)/rig_thumbnail.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Release/rig_thumbnail.pdb"
+				ProgramDatabaseFile="$(OutDir)/rig_thumbnail.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool

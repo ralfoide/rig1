@@ -83,7 +83,7 @@ $html_credits		= 'Credits';
 $html_show_credits	= 'Display RIG & PHP Credits';
 $html_hide_credits	= 'Hide Credits';
 $html_text_credits	= 'R\'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 by R\'alf<br>';
-$html_text_credits .= 'RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a>.<br>';
+$html_text_credits .= 'RIG is diffused under the terms of the <a href="LICENSE.html">RIG license</a> (<a href="http://www.opensource.org/licenses/">OSL</a>).<br>';
 $html_text_credits .= 'Based on <a href="http://www.php.net">PHP</a> and ';
 $html_text_credits .= 'the <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>';
 
@@ -145,9 +145,12 @@ $html_img_date		= 'l\, F d\, Y\, g:m A';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2003/06/15 19:09:49  ralfoide
+//	Version 0.6.3.3: Japanese translation completed
+//
 //	Revision 1.11  2003/05/26 17:51:08  ralfoide
 //	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
-//
+//	
 //	Revision 1.10  2003/03/17 08:24:43  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)

@@ -21,6 +21,7 @@ Generic:
 - in 0.6.4:
 [1.N] Drop DB support and dump 0.6.3-exp
 - in 0.6.3.3:
+[1.F] Japanese translation completed
 - in 0.6.3.2:
 [1.F] Album borders: ability to deactivate for Mozilla 1.0 users
 [1.F] Translate: deactivated by default
@@ -145,7 +146,14 @@ Admin:
 
 [0.6.4]
 
+[0.6.3.4]
+20030615 [1.W] Version: Bumped to version 0.6.3.4
+
 [0.6.3.3]
+20030615 [1.F] Sourceforge: uploading package for 0.6.3.3 (unstable, more cleanup needed before being stable)
+20030615 [1.F] CVS: tag_2003-02-22_v0633
+20030615 [1.F] CVS: Upload japanese file as well as language string updates
+20030606 [1.F] Lang: Japanese translation finished by Tastuo
 20030526 [2.F] Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
 20030321 [2.F] Pref: add a pref to have image.php display next/prev images on top of main image, as before (for MM).
                (Note: later this should become a different layout theme)
@@ -153,7 +161,8 @@ Admin:
 20030316 [1.F] Version: Bumped to version 0.6.3.3
 
 [0.6.3.2]
-20030216 [1.F] CVS: tag_2003-02-22_v0633
+20030216 [1.F] CVS: tag_2003-03-16_v0632
+20030216 [1.F] CVS: tag_2003-02-22_v0631
 20030316 [1.F] Fix: added $pref_disable_web_translate_interface (disabled by default)
 20030316 [1.F] Fix: added $pref_disable_album_borders (enabled by default)
 20030316 [1.F] MM Fix: missing $pref_copyright_name in settings/prefs.php
@@ -498,9 +507,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.21  2003/06/15 19:09:48  ralfoide
+//	Version 0.6.3.3: Japanese translation completed
+//
 //	Revision 1.20  2003/05/26 17:53:46  ralfoide
 //	Removed unused language strings. Updated Japanese. New rig_display_back_to_album.
-//
+//	
 //	Revision 1.19  2003/03/22 01:22:56  ralfoide
 //	Fixed album/image count display in admin mode
 //	Added "old" layout for image display, with image layout pref variable.

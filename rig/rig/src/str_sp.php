@@ -93,7 +93,7 @@ $html_credits		= 'Cr&eacute;ditos';
 $html_show_credits	= 'Mostrar los cr&eacute;ditos de RIG y PHP';
 $html_hide_credits	= 'Ocultar los cr&eacute;ditos';
 $html_text_credits	= 'R\'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 por R\'alf<br>';
-$html_text_credits .= 'RIG se distribuye bajo los t&eacute;rminos de la <a href="LICENSE.html">licencia RIG</a>.<br>';
+$html_text_credits .= 'RIG se distribuye bajo los t&eacute;rminos de la <a href="LICENSE.html">licencia RIG</a> (<a href="http://www.opensource.org/licenses/">OSL</a>).<br>';
 $html_text_credits .= 'Basado en <a href="http://www.php.net">PHP</a> y ';
 $html_text_credits .= '<a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>';
 
@@ -164,9 +164,12 @@ $pref_date_YMD      = 'D-M-Y';          // Long format.  Must contain D & M & Y.
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/06/15 19:09:49  ralfoide
+//	Version 0.6.3.3: Japanese translation completed
+//
 //	Revision 1.8  2003/05/26 17:51:08  ralfoide
 //	Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.
-//
+//	
 //	Revision 1.7  2003/02/21 09:03:03  ralfoide
 //	Added gray theme color
 //	

@@ -20,6 +20,9 @@ Summary of features for RIG:
 Generic:
 - in 0.6.4:
 [1.N] Drop DB support and dump 0.6.3-exp
+- in 0.6.3.2:
+[3.F] Translate: ability to update the language files from the web interface
+[1.F] Admin: admin-image vs admin-album pages
 - in 0.6.3.1:
 [1.F] Login: plain vs crypt vs MD5 password in the password file
 [1.F] Login: display error msg for invalid user/password
@@ -91,14 +94,18 @@ Admin:
 20030112 [3.N] Admin-album page vs Admin-image page (use these from 0.6.3-exp)
 20030112 [5.N] Revise the TODO file structure -- separating Generic/Admin/DB doesn't really work for me.
 
+
 [for 0.6.3]
+20030308 [1.N] Translate: Must enforce line syntax of upload file (security: no php, no html)
+20030308 [3.N] Translate: Should display backuped files in popup for "undo"
+20030308 [4.N] Translate: Restructure code, move functions in admin_util.
+
 20030126 [2.N] Must not display album images borders with Mozilla 1.0 (broken)
 20030126 [2.N] Need javascript to detect browser (if javascript supported)
 20030119 [1.N] Bug/URL-rewrite: cookie path should use the real URL, not the rewritten one (use a pref?)
-20030118 [1.N] Album pref to customize the <meta name="robots" content="noindex, nofollow">
 20030111 [1.N] Learn how to make a Debian package. Actually make one.
 20030108 [1.N] Make SourceForge file package for 0.6.3 and move on to 0.6.4
-20030108 [1.N] 0.6.2.4 considered stable enough to become 0.6.3
+
 
 [for 0.6.2]
 20020712 [2.N] Experiment: display admin image detail in overlapped DHTML window
@@ -125,7 +132,26 @@ Admin:
 
 [0.6.4]
 
+[0.6.3.2]
+20030311 [1.F] Updated SF CVS (meta, translate, admin image vs album) -- this is all alpha-dev stuff
+20030311 [1.F] Album pref to customize the <meta name="robots" content="noindex, nofollow">
+20030308 [3.F] Japanese: made a separate dev/demo web site for Tatsuo
+20030308 [3.F] Translate: Added Edit/Reload language links in admin+translate page's options
+20030308 [3.F] Translate: Lang/theme sources are now searched in upload_src before the main src dir
+20030308 [3.F] Added upload_src and upload_photos directories to the site
+20030307 [3.F] Translate: when submitted, upload new text in upload_src and backup previous file
+20030307 [3.F] Translate: reads the str_XX or the dataXX file and display in a textfield
+20030307 [3.F] Test: created an admin-translate page, to translate language files on the fly
+20030227 [2.F] Japanese: gave Tatsuo admin-access to the public/demo web site
+20030227 [2.F] Public: updated public/demo web site to latest 0.6.3.1
+20030224 [1.F] Japanese: INOUE Tatsuo replied to my SourceForge job request for a Japanese translator
+20030223 [2.F] Sourceforge: uploaded packages for 0.6.2.3 (stable) and 0.6.3.0+0.6.3.1 (unstable)
+20030223 [1.F] Sourceforge: added mkdistrib.sh script for build packages from CVS tag
+20030223 [1.F] Admin: admin_album vs admin_image pages
+20030223 [1.F] Version: Bumped to version 0.6.3.2
+
 [0.6.3.1]
+20030223 [1.F] CVS: tag_2003-02-22_v0631
 20030222 [1.F] Login: allow for plain vs crypt vs MD5 password in the password file
 20030222 [1.F] Login: display error msg when invalid password
 20030222 [1.F] Login: display error msg when invalid user
@@ -151,6 +177,7 @@ Admin:
 20021012 [4.F] Ask Pascal about Japanese -> [20030112] gave up getting help
 
 [0.6.2.4]
+20030118 [1.F] 0.6.2.4 considered stable enough to become 0.6.3
 20030118 [1.F] Make CVS tag_2003-01-18_v0624
 20030107 [4.F] Bumped to version 0.6.2.4 and updated SourceForge
 20030107 [3.F] URL-Rewrite support (cf site/prefs.php)
@@ -443,9 +470,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2003/03/12 07:16:41  ralfoide
+//	Updated SF CVS (meta, translate, admin image vs album) -- this is all alpha-dev stuff
+//
 //	Revision 1.13  2003/02/23 10:18:35  ralfoide
 //	plain vs crypt vs MD5 password in the password file
-//
+//	
 //	Revision 1.12  2003/02/23 08:14:34  ralfoide
 //	Login: display error msg when invalid password or invalid user
 //	

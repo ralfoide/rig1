@@ -18,7 +18,7 @@ function rig_display_header($title)
 	global $html_encoding;
 	global $html_language_code;
 	global $theme_css_head;
-	global $admin;
+	global $pref_html_meta;
 
 	// Online reference:
 
@@ -51,6 +51,9 @@ function rig_display_header($title)
 
 	// prepare the meta tags line
 	$meta = "";
+
+
+	$admin = rig_get($_GET,'admin');
 
 	if (!$admin && $pref_html_meta)
 		$meta = $pref_html_meta;
@@ -292,8 +295,9 @@ function rig_display_album_list()
 		// get the relative and absolute path to the preview icon
 		$abs_path = "";
 		$url_path = "";
-		$res = rig_build_album_preview($name, &$abs_path, &$url_path, $preview_size, $preview_quality);
+		$res = rig_build_album_preview($name, $abs_path, $url_path, $preview_size, $preview_quality);
 		$url_path = rig_encode_url_link($url_path);
+
 		if (!$res)
 		{
 			// if we can't have the preview icon, use a little album icon
@@ -378,11 +382,11 @@ function rig_display_album_list()
 
 				// name of album-border images
 				// old names
-				$box_tr = $dir_images . "album_topright.gif";
-				$box_br = $dir_images . "album_bottomright.gif";
-				$box_bl = $dir_images . "album_bottomleft.gif";
-				$line_b = $dir_images . "album_bottomline.gif";
-				$line_r = $dir_images . "album_rightline.gif";
+				$box_tr = rig_post_sep($dir_images) . "album_topright.gif";
+				$box_br = rig_post_sep($dir_images) . "album_bottomright.gif";
+				$box_bl = rig_post_sep($dir_images) . "album_bottomleft.gif";
+				$line_b = rig_post_sep($dir_images) . "album_bottomline.gif";
+				$line_r = rig_post_sep($dir_images) . "album_rightline.gif";
 
 				?>
 				<table  width="<?= $sxT ?>" height="<?= $syT ?>" border="0" cellspacing="0" cellpadding="0">
@@ -452,7 +456,7 @@ function rig_display_album_list()
 			$i++;
 			if ($i >= $n)
 			{
-				echo "</td></tr><tr $w_tr>\n";
+				echo "</td></tr><tr>\n";
 				$i = 0;
 			}
 			else
@@ -571,11 +575,9 @@ function rig_display_image_list()
 
 							// get the size of the icon
 					
-							$dx = $preview_size;
-							$dy = $preview_size;
+							$dx = $pref_preview_size;
+							$dy = $pref_preview_size;
 
-							$icon_info = rig_image_info($abs_path);
-							
 							if (isset($info["w"]))
 								$sx = $info["w"];
 							else
@@ -614,11 +616,11 @@ function rig_display_image_list()
 			
 							// name of album-border images
 							// old names
-							$box_tr = $dir_images . "image_topright.gif";
-							$box_br = $dir_images . "image_bottomright.gif";
-							$box_bl = $dir_images . "image_bottomleft.gif";
-							$line_b = $dir_images . "image_bottomline.gif";
-							$line_r = $dir_images . "image_rightline.gif";
+							$box_tr = rig_post_sep($dir_images) . "image_topright.gif";
+							$box_br = rig_post_sep($dir_images) . "image_bottomright.gif";
+							$box_bl = rig_post_sep($dir_images) . "image_bottomleft.gif";
+							$line_b = rig_post_sep($dir_images) . "image_bottomline.gif";
+							$line_r = rig_post_sep($dir_images) . "image_rightline.gif";
 			
 							?>
 							<table  width="<?= $sxT ?>" height="<?= $syT ?>" border="0" cellspacing="0" cellpadding="0">
@@ -1289,8 +1291,6 @@ function rig_display_options($use_hr = TRUE)
 function rig_display_language()
 //*****************************
 {
-	global $admin;
-	global $translate;
 	global $html_desc_lang;
 	global $html_language;
 	global $current_language;
@@ -1315,6 +1315,10 @@ function rig_display_language()
 			{
 				// if in admin mode and not already in translate mode, display the edit language link
 				// RM 20030308 TBT -- Translate "Edit"
+
+				$admin     = isset($_GET['admin'    ]) ? $_GET['admin'    ] : null;
+				$translate = isset($_GET['translate']) ? $_GET['translate'] : null;
+
 				if ($admin && !$translate)
 				{
 					echo " [<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_TRANSLATE, "lang=$key#lang") . "\">Edit $value</a>] \n";
@@ -1437,12 +1441,10 @@ function rig_display_image_copyright()
 
 //-----------------------------------------------------------------------
 
-//******************************************************
-function rig_display_credits($has_credits, $has_phpinfo)
-//******************************************************
+//****************************************************************
+function rig_display_credits($has_credits = -1, $has_phpinfo = -1)
+//****************************************************************
 {
-	global $admin;
-	global $_debug_;
 	global $html_text_credits;
 	global $html_hide_credits;
 	global $html_show_credits;
@@ -1453,6 +1455,16 @@ function rig_display_credits($has_credits, $has_phpinfo)
 	global $html_phpinfo;
 
 	global $color_section_bg;
+
+	$admin   = rig_get($_GET,'admin'  );
+	$_debug_ = rig_get($_GET,'_debug_');
+
+	if (!is_string($has_credits) && $has_credits == -1)
+		$has_credits = rig_get($_GET,'credits', '');
+
+	if (!is_string($has_phpinfo) && $has_phpinfo == -1)
+		$has_phpinfo = rig_get($_GET,'phpinfo', '');
+
 
 	// link to show or hide the credits
 	$v = ($has_credits == "on" ? "off" : "on");
@@ -1831,9 +1843,12 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.23  2003/08/18 03:05:12  ralfoide
+//	PHP 4.3.x support
+//
 //	Revision 1.22  2003/08/15 07:14:02  ralfoide
 //	Album HTML cache generation, image thumbnail borders
-//
+//	
 //	Revision 1.21  2003/07/21 04:58:26  ralfoide
 //	Tooltips that work with Mozilla (using title attribute); Date description in grid albums and tooltips; Small preview for vertical album layout; Auto-switch album layout on description presence.
 //	

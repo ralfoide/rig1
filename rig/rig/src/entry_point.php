@@ -22,32 +22,16 @@
 // 5- !admin 	&  image -> image.php
 // 6- !admin 	& !image -> album.php
 
-$rig_is_image = (isset($image) && is_string($image) && $image);
+$rig_is_image = (isset($_GET['image']) && is_string($_GET['image']) && $_GET['image']);
 
-if ($_test_ == 1)
+if (isset($_GET['admin']) && $_GET['admin'])
 {
-	require_once($dir_install . $dir_src . "common.php");
-	require_once(rig_require_once("RUser.php", $dir_src));
-	require_once(rig_require_once("RAlbum.php", $dir_src));
-
-	$rig_user = new RUser();
-	$rig_path = new RPath($dir_album, $abs_album_path, $album, $image);
-
-	$rig_album = new RAlbum($rig_path);
-	$rig_album->Load();
-	echo $rig_album->Render();
-	$rig_album->Sync();
-}
-else
-
-if ($admin)
-{
-	if ($upload)
+	if (isset($_GET['upload']) && $_GET['upload'])
 	{
 		rig_check_src_file($dir_install . $dir_src . "admin_upload.php");
 		require_once(      $dir_install . $dir_src . "admin_upload.php");
 	}
-	else if ($translate)
+	else if (isset($_GET['translate']) && $_GET['translate'])
 	{
 		rig_check_src_file($dir_install . $dir_src . "admin_translate.php");
 		require_once(      $dir_install . $dir_src . "admin_translate.php");
@@ -81,9 +65,12 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/08/18 03:05:12  ralfoide
+//	PHP 4.3.x support
+//
 //	Revision 1.3  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
-//
+//	
 //	Revision 1.2  2003/05/26 17:52:30  ralfoide
 //	Disabled admin_image (not finished -- experimental)
 //	

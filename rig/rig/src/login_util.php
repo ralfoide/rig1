@@ -37,22 +37,46 @@ function rig_enter_login($url, $admin = FALSE)
 	global $pref_allow_guest;
 	global $pref_guest_username;
 
+
+//DEBUG
+//echo "rig_enter_login<br>";
+//var_dump($_POST);	echo "<br>";
+//var_dump($_GET);	echo "<p>";
+
+	$user			= rig_get($_GET,'user',   rig_get($_POST,'user'  ));
+	$passwd			= rig_get($_GET,'passwd', rig_get($_POST,'passwd'));
+	$admusr			= rig_get($_GET,'admusr', rig_get($_POST,'admusr'));
+	$admpwd			= rig_get($_GET,'admpwd', rig_get($_POST,'admpwd'));
+
+	$force_login	= rig_get($_GET,'force_login', rig_get($_POST,'force_login'));
+	$keep			= rig_get($_GET,'keep',		   rig_get($_POST,'keep'));
+
+	$rig_user		= rig_get($_COOKIE,'rig_user'		);
+	$rig_passwd		= rig_get($_COOKIE,'rig_passwd'		);
+	$rig_adm_user	= rig_get($_COOKIE,'rig_adm_user'	);
+	$rig_adm_passwd	= rig_get($_COOKIE,'rig_adm_passwd'	);
+
 	if ($admin)
 	{
-		$valid    = rig_test_user_pwd($admin, &$rig_adm_user, &$rig_adm_passwd, &$login_error);
+		$login_error = "";
+		$valid = rig_test_user_pwd($admin, $rig_adm_user, $rig_adm_passwd, $login_error);
+
 		$var_user = "admusr";
 		$var_pwd  = "admpwd";
 		$title    = "$html_rig_admin $html_login";
 	}
 	else
 	{
-		$valid    = rig_test_user_pwd($admin, &$rig_user, &$rig_passwd, &$login_error);
+		$login_error = "";
+		$valid = rig_test_user_pwd($admin, $rig_user, $rig_passwd, $login_error);
+
 		$var_user = "user";
 		$var_pwd  = "passwd";
 		$title    = "$html_login";
 	}
 
 	if (   !$valid
+		&& !$admin
 		&& !$force_login
 		&&  $pref_allow_guest
 		&&  $pref_auto_guest
@@ -62,7 +86,7 @@ function rig_enter_login($url, $admin = FALSE)
 	{
 		$rig_user = $pref_guest_username;
 		$rig_passwd = "";
-		$valid = rig_test_user_pwd($admin, &$rig_user, &$rig_passwd, &$login_error);
+		$valid = rig_test_user_pwd($admin, $rig_user, $rig_passwd, $login_error);
 	}
 
 	if ($force_login || !$valid)
@@ -78,6 +102,14 @@ function rig_enter_login($url, $admin = FALSE)
 		include($dir_install . $dir_src . "login.php");
 		exit;
 	}
+
+	// update cookies/globals
+
+	$_COOKIE['rig_user'	]      = $rig_user;
+	$_COOKIE['rig_passwd'	]  = $rig_passwd;
+	$_COOKIE['rig_adm_user']   = $rig_adm_user;
+	$_COOKIE['rig_adm_passwd'] = $rig_adm_passwd;
+
 }
 
 
@@ -100,7 +132,7 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 	#    c     : crypt(3) password -- cf mkpasswd(1)
 	#    m     : md5 password -- not implemented yet, cf md5sum(1) and echo -n
 	#    i     : invalid user, cannot log in
-	# - a wrong type will invalid the user
+	# - a wrong type will invalidate the user
 	# - the display name is everything after the third colon till the end of the line and is optional
 	# - colons are accepted in the display name
 	# - colons are NOT accepted in user name, type or any form of password!
@@ -117,19 +149,30 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 	$display_user = "";
 
 	// DEBUG
-	// echo "<p>testing user/pwd: user='$user' pwd='$passwd' admin='$admin'\n";
+	//echo "<p>testing user/pwd: user='$user' pwd='$passwd' admin='$admin'\n";
+//var_dump($user);
+//var_dump($passwd);
+
+	// If we get here and neither user nor passwd are assigned strings,
+	// that means the script is opening the login screen and the user
+	// didn't have a chance to enter the login info yet so it is an error
+	// to have nothing at all but no error message should be displayed.
+	if ($user === null && $passwd === null)
+		return FALSE;
 
 	if ($user)
 	{
 		// look for a file in the local settings
-		$b = $dir_locset;
-		$file = @fopen($admin ? $b . "admin_list.txt" : $b . "user_list.txt", "rt");
+		$name = $dir_locset;
+		$name = $admin ? $name . "admin_list.txt" : $name . "user_list.txt";
+		$file = @fopen($name, "rt");
 
 		// if we cannot find it, look for a file in the global settings
 		if (!$file)
 		{
-			$b = $dir_install . $dir_globset;
-			$file = @fopen($admin ? $b . "admin_list.txt" : $b . "user_list.txt", "rt");
+			$name = $dir_install . $dir_globset;
+			$name = $admin ? $name . "admin_list.txt" : $name . "user_list.txt";
+			$file = @fopen($name, "rt");
 		}
 
 		if ($file)
@@ -137,87 +180,93 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 			while (!feof($file))
 			{
 				$line = fgets($file, 1023);
-				if (is_string($line) && $line[0] != '#')
-				{
-					// see comments in function header for line format
-					list($u, $t, $p, $n) = split(':', $line, 4);
+				if (!is_string($line) || $line == '' || $line[0] == '#')
+					continue;
 
-					// DEBUG
-					// echo "<br>U=$u T=$t P=$p N=$n\n";
+				// see comments in function header for line format
+				$a = split(':', $line, 4);
+				
+				if (count($a) < 4)
+					continue;
 
-					if (is_string($u))
-					{	
-						if ($u == $user)
+				list($u, $t, $p, $n) = $a;
+
+				// DEBUG
+				// echo "<br>U=$u T=$t P=$p N=$n\n";
+
+				if (is_string($u))
+				{	
+					if ($u == $user)
+					{
+						// invalid types are not tested, they just invalid the user
+						// type 'i' is obviously not tested here :-)
+						if ($t == '')
 						{
-							// invalid types are not tested, they just invalid the user
-							// type 'i' is obviously not tested here :-)
-							if ($t == '')
-							{
-								// empty password, accept everything
-								$valid = TRUE;
-							}
-							else if ($t == 't')
-							{
-								$valid = ($passwd == $p);
-
-								// leave $passwd as is, we'll store the plain password
-
-								if (!$valid)
-									$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
-							}
-							else if ($t == 'c')
-							{
-								// if the stored password is already a crypt, it should match texto
-								if (substr($passwd, 0, 2) == "c:")
-								{
-									$valid = (substr($passwd, 2) == $p);
-								}
-								else
-								{
-									// cf http://www.php.net/manual/en/function.crypt.php
-									$valid = (crypt($passwd, $p) == $p);
-
-									// store the crypted password from the config file
-									if ($valid)
-										$passwd = "c:$p";
-								}
-
-								if (!$valid)
-									$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
-							}
-							else if ($t == 'm')
-							{
-								// if the stored password is already a MD5, it should match texto
-								if (substr($passwd, 0, 2) == "m:")
-								{
-									$valid = (substr($passwd, 2) == $p);
-								}
-								else
-								{
-									// get the MD5 of the user's input the first time
-									if (!$pass_md5)
-										$pass_md5 = md5($passwd);
-									
-									$valid = ($p == $pass_md5);
-
-									// store the MD5 from the config file
-									if ($valid)
-										$passwd = "m:$p";
-								}
-								
-								if (!$valid)
-									$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
-							} // if type
-						} // if user
-								
-						if ($valid)
-						{
-							$display_user = $n;
-							break;
+							// empty password, accept everything
+							$valid = TRUE;
 						}
+						else if ($t == 't')
+						{
+							$valid = ($passwd == $p);
+
+							// leave $passwd as is, we'll store the plain password
+
+							if (!$valid)
+								$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
+						}
+						else if ($t == 'c')
+						{
+							// if the stored password is already a crypt, it should match texto
+							if (substr($passwd, 0, 2) == "c:")
+							{
+								$valid = (substr($passwd, 2) == $p);
+							}
+							else
+							{
+								// cf http://www.php.net/manual/en/function.crypt.php
+								$valid = (crypt($passwd, $p) == $p);
+
+								// store the crypted password from the config file
+								if ($valid)
+									$passwd = "c:$p";
+							}
+
+							if (!$valid)
+								$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
+						}
+						else if ($t == 'm')
+						{
+							// if the stored password is already a MD5, it should match texto
+							if (substr($passwd, 0, 2) == "m:")
+							{
+								$valid = (substr($passwd, 2) == $p);
+							}
+							else
+							{
+								// get the MD5 of the user's input the first time
+								if (!$pass_md5)
+									$pass_md5 = md5($passwd);
+								
+								$valid = ($p == $pass_md5);
+
+								// store the MD5 from the config file
+								if ($valid)
+									$passwd = "m:$p";
+							}
+							
+							if (!$valid)
+								$logerr = "Error: Invalid password";	// RM 20030222 TBDL translation string
+						} // if type
+					} // if user
+							
+					if ($valid)
+					{
+						$display_user = $n;
+						break;
 					}
 				}
-			}
+			} // while
+			
 			fclose($file);
 		}
 		else
@@ -276,9 +325,12 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2003/08/18 03:05:12  ralfoide
+//	PHP 4.3.x support
+//
 //	Revision 1.8  2003/02/23 10:18:36  ralfoide
 //	plain vs crypt vs MD5 password in the password file
-//
+//	
 //	Revision 1.7  2003/02/23 08:14:36  ralfoide
 //	Login: display error msg when invalid password or invalid user
 //	

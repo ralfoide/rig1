@@ -17,10 +17,10 @@ require_once($dir_install . $dir_src . "admin_util.php");
 rig_enter_login(rig_self_url(), TRUE);
 rig_nocache_headers();
 
-if ($image)
-	rig_prepare_image(-1, $album, $image, $html_admin);
+if (isset($_GET['image']) && $_GET['image'])
+	rig_prepare_image(-1, rig_get($_GET,'album'), rig_get($_GET,'image'), $html_admin);
 else
-	rig_prepare_album(-1, $album, $html_admin);
+	rig_prepare_album(-1, rig_get($_GET,'album'), $html_admin);
 
 rig_admin_perform_before_header(rig_self_url());
 
@@ -38,7 +38,7 @@ rig_display_body();
 						$color_title_text);
 
 	rig_display_user_name($rig_adm_user);
-	if ($album)
+	if (isset($_GET['album']) && $_GET['album'])
 	{
 ?>
 		<p>
@@ -91,7 +91,7 @@ rig_display_body();
 <br>
   <a href="<?= rig_self_url("") . "&admin=rnm_canon"   ?>"><?= $html_act_canon ?></a>
 <?php
-	if ($_debug_)
+	if (rig_get($_GET, '_debug_'))
 	{
 ?>
 <br>
@@ -139,7 +139,7 @@ rig_display_body();
 
 	<p>
 		<?php
-			rig_display_section("<b> $html_avail_prevws </b>");
+			rig_display_section("<b> $html_current_album </b>");
 		?>
 	<br>
 	<font size="-1">
@@ -178,7 +178,7 @@ rig_display_body();
 <p>
 
 <?php
-	rig_display_credits($credits, $phpinfo);
+	rig_display_credits();
 	rig_display_footer();
 	rig_terminate_db();
 
@@ -189,9 +189,12 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/08/18 03:05:12  ralfoide
+//	PHP 4.3.x support
+//
 //	Revision 1.3  2003/05/26 17:52:56  ralfoide
 //	Removed unused language strings. Added new rig_display_back_to_album method
-//
+//	
 //	Revision 1.2  2003/03/17 08:24:42  ralfoide
 //	Fix: added pref_disable_web_translate_interface (disabled by default)
 //	Fix: added pref_disable_album_borders (enabled by default)

@@ -51,11 +51,25 @@ $html_num_th_sep	= ',';		// separator for thousand (ex 1,000 in English)
 // Image date displayed
 // Now using notation from http://www.php.net/manual/en/function.strftime.php
 // $html_img_date		= '%c';
-$html_img_date		= '%Y&#x5e74;%m&#x6708;%d&#x65e5; %A %H&#x6642;%M&#x5206;%S&#x79d2;';
+// Year  = 0x5E74 = 24180 decimal
+// Month = 0x6708 = 26376
+// Day   = 0x65E5 = 26085
+// Hour  = 0x6642 = 26178
+// Min.  = 0x5206 = 20998
+// Second= 0x79D2 = 31186
+// Note that %A does not work under Windows
+if (PHP_OS == 'WINNT')
+	$html_img_date		= '%Y&#24180;%m&#26376;%d&#26085; %H&#26178;%M&#20998;%S&#31186;';
+else
+	$html_img_date		= '%Y&#24180;%m&#26376;%d&#26085; %A %H&#26178;%M&#20998;%S&#31186;';
+
 
 // Album date displayed
 // cf http://www.php.net/manual/en/function.strftime.php
-$html_album_date	= '%Y&#24180; %B';
+
+$html_album_date	= '%Y&#24180; %b&#26376;';
+// The following works under GNU/Linux but not Windows (%B is not recognized)
+// $html_album_date	= '%Y&#24180; %B';
 
 
 // Overriding prefs.php
@@ -84,9 +98,12 @@ rig_parse_string_data('data_jpu8.bin');
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2003/08/18 03:05:12  ralfoide
+//	PHP 4.3.x support
+//
 //	Revision 1.5  2003/07/21 04:54:45  ralfoide
 //	Added date format for album display; changed dates format to strftime (localizable); setting locale
-//
+//	
 //	Revision 1.4  2003/02/16 20:22:58  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

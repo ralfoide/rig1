@@ -13,16 +13,16 @@ require_once($dir_install . $dir_src . "common.php");
 // Important: this page can only display an image.
 // If there is no image parameter, redirect to the album
 // RM 20020714 disabled since this test is already performed by location/index.php
-// if (!((isset($image) && $image) || (isset($id) && rig_db_is_image_id($id))))
+// if (!((isset($_GET['image']) && $_GET['image']) || (isset($_GET['id']) && rig_db_is_image_id($_GET['id']))))
 // 	header("Location: " . rig_self_url(""));
 
 rig_enter_login(rig_self_url());
 
-rig_prepare_image($id, $album, $image);
+rig_prepare_image(rig_get($_GET, 'id', 0), rig_get($_GET,'album'), rig_get($_GET,'image'));
 rig_display_header($display_title);
 rig_display_body();
 
-if ($_test_==5)
+if (rig_get($_GET,'_test_', 0)==5)
 {
 	?>
 
@@ -80,7 +80,7 @@ document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>")
 
 
 <?php
-	rig_display_credits($credits, $phpinfo);
+	rig_display_credits();
 	rig_display_footer();
 	rig_terminate_db();
 ?>
@@ -91,9 +91,12 @@ document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>")
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2003/08/18 03:05:12  ralfoide
+//	PHP 4.3.x support
+//
 //	Revision 1.10  2003/07/14 18:30:37  ralfoide
 //	Javascript test
-//
+//	
 //	Revision 1.9  2003/07/11 15:56:38  ralfoide
 //	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
 //	

@@ -90,7 +90,7 @@ else // Un*x
 define("CURRENT_ALBUM_ARROW",	"&nbsp;=&gt;&nbsp;");
 define("SOFT_NAME",				"Rig [Ralf Image Gallery]");
 define("ALBUM_ICON",			"album_icon.jpg");
-define("ALBUM_OPTIONS",			"options");
+// -- RM 20030809 obsolete -- define("ALBUM_OPTIONS",			"options");
 define("ALBUM_OPTIONS_TXT",		"options.txt");
 define("ALBUM_OPTIONS_XML",		"options.xml");
 
@@ -155,13 +155,13 @@ if (!isset($current_theme) || !rig_is_file($dir_install . $dir_src . "theme_$cur
 	$current_theme = $pref_default_theme;
 require_once(rig_require_once("theme_$current_theme.php", $dir_src, $abs_upload_src_path));
 
-rig_setup();
-rig_create_option_dir("");
-
 // load common source code -- note these do not use the src_upload override
 require_once(rig_require_once("common_display.php", $dir_src));
 require_once(rig_require_once("common_images.php",  $dir_src));
 require_once(rig_require_once("common_xml.php",     $dir_src));			// RM 20030216
+
+rig_setup();
+rig_create_option_dir("");
 
 // RM 20021021 not for rig 062 yet
 // require_once(rig_require_once("common_db.php",  $dir_src));
@@ -201,12 +201,34 @@ function rig_html_error($title_str,
 	echo "<tr><td bgcolor=\"$color_error2_bg\">\n $error_str\n </td></tr>\n";
 
 	// file argument
-	if ($file_str)
-		echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>File:</b> $file_str\n </td></tr>\n";
+	if ($file_str != NULL)
+	{
+		if (is_array($file_str))
+		{
+			echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>File:</b><pre>";
+			var_dump($file_str);
+			echo "<pre></td></tr>\n";
+		}
+		else
+		{
+			echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>File:</b> $file_str\n </td></tr>\n";
+		}
+	}
 
 	// php error msg
-	if ($php_str)
-		echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>PHP Error:</b> $php_str\n </td></tr>\n";
+	if ($php_str != NULL)
+	{
+		if (is_array($php_str))
+		{
+			echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>PHP Error:</b><pre>";
+			var_dump($php_str);
+			echo "</pre>\n</td></tr>\n";
+		}
+		else
+		{
+			echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>PHP Error:</b> $php_str\n </td></tr>\n";
+		}
+	}
 
 	echo "</table></center><p>\n";
 
@@ -276,6 +298,16 @@ function rig_require_once($filename, $main_dir, $abs_override_dir = "")
 	return $main . $filename;
 }
 
+
+//-----------------------------------------------------------------------
+
+function rig_get($array, $name, $default = NULL)
+{
+	if (isset($array) && isset($name) && isset($array[$name]))
+		return $array[$name];
+	
+	return $default;
+}
 
 //-----------------------------------------------------------------------
 
@@ -368,10 +400,13 @@ function rig_get_file_type($name)
 {
 	global $pref_file_types;
 
-	foreach($pref_file_types as $filter => $type)
+	if (is_array($pref_file_types) && count($pref_file_types) > 0)
 	{
-		if (preg_match($filter, $name) > 0)
-			return $type;
+		foreach($pref_file_types as $filter => $type)
+		{
+			if (preg_match($filter, $name) > 0)
+				return $type;
+		}
 	}
 
 	return "";
@@ -754,19 +789,21 @@ function rig_self_url($in_image = -1,
 //
 // Use URL-Rewriting when defined in prefs [RM 20030107]
 {
-	global $album;				// from index.php url line
-	global $image;				// from index.php url line
-	global $admin;				// from index.php url line
-	global $translate;			// from index.php url line -- RM 20030308
-	global $upload;				// from index.php url line -- RM 20030308
-	global $credits;
-	global $phpinfo;
 	global $current_id;
 	global $current_album;
 	global $current_image;
-	global $PHP_SELF;
-	global $_debug_;
 	global $pref_url_rewrite;	// RM 20030107
+
+
+	$image		= rig_get($_GET,'image'		);
+	$album		= rig_get($_GET,'album'		);
+	$admin		= rig_get($_GET,'admin'		);
+	$translate	= rig_get($_GET,'translate'	);
+	$upload		= rig_get($_GET,'upload'	);
+	$credits	= rig_get($_GET,'credits'	);
+	$phpinfo	= rig_get($_GET,'phpinfo'	);
+	$_debug_	= rig_get($_GET,'_debug_'	);
+
 
 	// DEBUG
 	// echo "<p>rig_self_url: in_page=$in_page\n";
@@ -777,7 +814,7 @@ function rig_self_url($in_image = -1,
 	if ($use_rewrite)
 		$url = $pref_url_rewrite['index'];
 	else
-		$url = $PHP_SELF;
+		$url = $_SERVER['PHP_SELF'];
 
 	$params = "";
 	$param_concat_char = "?";
@@ -818,17 +855,17 @@ function rig_self_url($in_image = -1,
 	switch($in_page)
 	{
 		case RIG_SELF_URL_ADMIN:
-			rig_url_add_param(&$params, 'admin', 'on');
+			rig_url_add_param($params, 'admin', 'on');
 			break;
 
 		case RIG_SELF_URL_TRANSLATE:
-			rig_url_add_param(&$params, 'admin', 'on');
-			rig_url_add_param(&$params, 'translate', 'on');
+			rig_url_add_param($params, 'admin', 'on');
+			rig_url_add_param($params, 'translate', 'on');
 			break;
 
 		case RIG_SELF_URL_UPLOAD:
-			rig_url_add_param(&$params, 'admin', 'on');
-			rig_url_add_param(&$params, 'upload', 'on');
+			rig_url_add_param($params, 'admin', 'on');
+			rig_url_add_param($params, 'upload', 'on');
 			break;
 	}
 
@@ -842,7 +879,7 @@ function rig_self_url($in_image = -1,
 		}
 		else
 		{
-			rig_url_add_param(&$params, 'album', $in_album);
+			rig_url_add_param($params, 'album', $in_album);
 		}
 	}
 
@@ -856,18 +893,18 @@ function rig_self_url($in_image = -1,
 		}
 		else
 		{
-			rig_url_add_param(&$params, 'image', $in_image);
+			rig_url_add_param($params, 'image', $in_image);
 		}
 	}
 
 	if ($_debug_)
-		rig_url_add_param(&$params, '_debug_', '1');
+		rig_url_add_param($params, '_debug_', '1');
 
 	if ($credits == 'on')
-		rig_url_add_param(&$params, 'credits', $credits);
+		rig_url_add_param($params, 'credits', $credits);
 
 	if ($phpinfo == 'on')
-		rig_url_add_param(&$params, 'phpinfo', $phpinfo);
+		rig_url_add_param($params, 'phpinfo', $phpinfo);
 
 
 	// the extra must always be the last one
@@ -941,7 +978,7 @@ function rig_read_prefs_paths()
 	// RM 20030628 added v0.6.3.4
 
 	global $dir_images, $abs_images_path;
-	$abs_images_path   = realpath($dir_abs_images . $dir_images);
+	$abs_images_path   = realpath($dir_abs_album . $dir_images);	// RM 20030726 $dir_abs_images => $dir_abs_album
 
 	if (!is_string($abs_images_path))
 	{
@@ -1051,6 +1088,9 @@ function rig_clear_album_options()
 	global $list_album_icon;
 	global $list_description;
 
+	// DEBUG
+	// echo "<h1>Clear options</h1>";
+
 	unset($list_hide);
 	unset($list_album_icon);
 	unset($list_description);
@@ -1095,7 +1135,7 @@ function rig_read_album_options($album)
 
 	// DEBUG
 	// global $_debug_;
-	// if ($_debug_)  echo "<p>Reading abs_options '$abs_options'<br>";
+	// if ($_debug_) echo "<p>Reading abs_options '$abs_options'<br>";
 
 	$file = @fopen($abs_options, "rt");
 
@@ -1108,12 +1148,14 @@ function rig_read_album_options($album)
 	while(!feof($file))
 	{
 		$line = fgets($file, 1023);
+
+		if (!is_string($line) || $line == FALSE || $line[0] == '#')
+			continue;
+		
 		if (substr($line, -1) == "\n")
 			$line = substr($line, 0, -1);
 		if (substr($line, -1) == "\r")
 			$line = substr($line, 0, -1);
-		if (!$line || $line == EOF || $line[0] == '#')
-			continue;
 
 		if ($line[0] == ':')
 		{
@@ -1122,15 +1164,27 @@ function rig_read_album_options($album)
 				global $$var_name;
 				$$var_name = array_merge($$var_name, $local);
 				$local = array();
+
+				// DEBUG
+				// echo "<br>DUMP array; '$var_name' -- ";
+				// var_dump($$var_name);
 			}
 
 			$var_name = substr($line, 1);
-			global $$var_name;
-			$$var_name = array();
+			
+			if ($var_name != "")
+			{
+				global $$var_name;
+				$$var_name = array();
+			}
+
+			// DEBUG
+			echo "<br>NEW array; '$var_name'";
 		}
 		else if ($line)
 		{
 			$key = -1;
+			$value = "";
 			$c = substr($line, 0, 1);
 			// DEBUG
 			// if ($_debug_) echo "<br>Read line; '$line'";
@@ -1144,9 +1198,7 @@ function rig_read_album_options($album)
 				{
 					$key   = $reg[1];
 					// the reg-exp will return false if nothing can be matched for the second part
-					if ($reg[2] === FALSE)
-						$value = "";
-					else
+					if (!($reg[2] === FALSE))
 						$value = $reg[2];
 				}
 			}
@@ -1175,11 +1227,102 @@ function rig_read_album_options($album)
 	}
 
 	// DEBUG
-	// if ($_debug_) global $list_hide;
-	// if ($_debug_) global $list_album_icon;
-	// if ($_debug_) { echo "<p>Reading list_hide: "; var_dump($list_hide);}
+	// if ($_debug_) 
+	global $list_hide;
+	// if ($_debug_) 
+	global $list_album_icon;
+	// if ($_debug_) 
+	{ echo "<p>Reading list_hide: "; var_dump($list_hide);}
+	{ echo "<p>Reading list_album_icon: "; var_dump($list_album_icon);}
 
 	fclose($file);		// RM 20020713 fix
+	return TRUE;
+}
+
+
+//*******************************************************
+function rig_write_album_options($album, $silent = FALSE)
+//*******************************************************
+// Currently writes:
+// - list_hide				- array of filename
+// - list_album_icon		- array of icon info { a:album(relative) , f:file, s:size }
+// RM 20030121 moving options to option's dir -- amazin design isn't it?
+// RM 20030121 always writing header for the array name even if the array is empty or missing
+// RM 20030121 not ready to move to XML yet (DomXml is only in PHP 4.2.1+ experimental yet)
+{
+	global $list_hide;
+	global $list_album_icon;
+	global $rig_version;
+	global $abs_option_path;
+
+	// DEBUG
+	// echo "<p> rig_write_album_options( $album, $silent )\n";
+	// echo "<br>list_album_icon = \n"; var_dump($list_album_icon);
+
+	// make sure the directory exists
+	// don't output an error message, the create function does it for us
+	if (!rig_create_option_dir($album))
+		return FALSE;
+
+	$abs_options = $abs_option_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS_TXT);
+
+	// DEBUG
+	// echo "<p> abs_options = $abs_options\n";
+
+	// make sure the directory exists
+
+	$file = fopen($abs_options, "wb");
+
+	if (!$file)
+	{
+		return rig_html_error("Write Album Options",
+							  "Failed to write to file",
+							  $abs_options,
+							  $php_errormsg);
+	}
+
+	if (!$silent)
+		echo "<p>Write album <b>'$album'</b> options - file: <b>$file</b>\n";
+
+	// ------
+
+	fputs($file, "# Album options - RIG $rig_version\n");
+	fputs($file, "# Format: :var_name/val/val.../: to end\n");
+	fputs($file, "# Values: one entry per line, either _String\\n or [Key]String\\n\n");
+
+	// ------
+
+	// DEBUG
+	// echo "<p> list_hide = \n"; var_dump($list_hide);
+
+	fputs($file, ":list_hide\n");
+	if (is_array($list_hide))
+	{
+		if (!$silent)
+			echo "<br>Write album options - list_hide: " . count($list_hide) . " items\n";
+
+		foreach($list_hide as $str)
+			fputs($file, '_' . $str . "\n");
+	}
+
+	// ------
+
+	// DEBUG
+	// echo "<p> list_album_icon = \n"; var_dump($list_album_icon);
+
+	fputs($file, ":list_album_icon\n");
+	if (is_array($list_album_icon))
+	{
+		if (!$silent)
+			echo "<br>Write album options - list_album_icon: " . count($list_album_icon) . " items\n";
+
+		foreach($list_album_icon as $key => $str)
+			fputs($file, '[' . $key . ']' . $str . "\n");
+	}
+
+	fputs($file, ":\n");
+	fclose($file);
+
 	return TRUE;
 }
 
@@ -1287,28 +1430,31 @@ function rig_parse_description_file($abs_path)
 		{
 			$temp = fgets($file, 1023);
 
-			if ($line == "")
-				$is_comment = ($temp[0] == '#');
-
-			if (substr($temp, -1) == "\n")
+			if (is_string($temp))
 			{
-				$temp = substr($temp, 0, -1);
-				$same_line = FALSE;
-			}
+				if ($line == "")
+					$is_comment = ($temp[0] == '#');
 	
-			if (substr($temp, -1) == "\r")
-			{
-				$temp = substr($temp, 0, -1);
-				$same_line = FALSE;
+				if (substr($temp, -1) == "\n")
+				{
+					$temp = substr($temp, 0, -1);
+					$same_line = FALSE;
+				}
+		
+				if (substr($temp, -1) == "\r")
+				{
+					$temp = substr($temp, 0, -1);
+					$same_line = FALSE;
+				}
+	
+				// store if not a comment line
+				if (!$is_comment)
+					$line .= $temp;
 			}
-
-			// store if not a comment line
-			if (!$is_comment)
-				$line .= $temp;
 		}
 
 		// need a valid line
-		if (!$line || $line == "" || $line == EOF || $is_comment)
+		if (!$line || $line == "" || $line == FALSE || $is_comment)
 			continue;
 
 		// if starts by a whitespace, it's the continuation of the previous line
@@ -1354,91 +1500,6 @@ function rig_parse_description_file($abs_path)
 }
 
 
-//*******************************************************
-function rig_write_album_options($album, $silent = FALSE)
-//*******************************************************
-// Currently writes:
-//	list_hide				- array of filename
-//	list_album_icon			- array of icon info { a:album(relative) , f:file, s:size }
-// RM 20030121 moving options to option's dir -- amazin design isn't it?
-// RM 20030121 always writing header for the array name even if the array is empty or missing
-// RM 20030121 not ready to move to XML yet (DomXml is only in PHP 4.2.1+ experimental yet)
-{
-	global $list_hide;
-	global $list_album_icon;
-	global $rig_version;
-	global $abs_option_path;
-
-	// DEBUG
-	// echo "<p> rig_write_album_options( $album, $silent )\n";
-	// echo "<br>list_album_icon = \n"; var_dump($list_album_icon);
-	// echo "<p> abs_options = $abs_options\n";
-
-	// make sure the directory exists
-	// don't output an error message, the create function does it for us
-	if (!rig_create_option_dir($album))
-		return FALSE;
-
-	$abs_options = $abs_option_path . rig_prep_sep($album) . rig_prep_sep(ALBUM_OPTIONS_TXT);
-
-	// make sure the directory exists
-
-	$file = fopen($abs_options, "wt");
-
-	if (!$file)
-	{
-		return rig_html_error("Write Album Options",
-							  "Failed to write to file",
-							  $abs_options,
-							  $php_errormsg);
-	}
-
-	if (!$silent)
-		echo "<p>Write album <b>'$album'</b> options - file: <b>$file</b>\n";
-
-	// ------
-
-	fputs($file, "# Album options - RIG $rig_version\n");
-	fputs($file, "# Format: :var_name/val/val.../: to end\n");
-	fputs($file, "# Values: one entry per line, either _String\\n or [Key]String\\n\n");
-
-	// ------
-
-	// DEBUG
-	// echo "<p> list_hide = \n"; var_dump($list_hide);
-
-	fputs($file, ":list_hide\n");
-	if (is_array($list_hide))
-	{
-		if (!$silent)
-			echo "<br>Write album options - list_hide: " . count($list_hide) . " items\n";
-
-		foreach($list_hide as $str)
-			fputs($file, '_' . $str . "\n");
-	}
-
-	// ------
-
-	// DEBUG
-	//echo "<p> list_album_icon = \n"; var_dump($list_album_icon);
-
-	fputs($file, ":list_album_icon\n");
-	if (is_array($list_album_icon))
-	{
-		if (!$silent)
-			echo "<br>Write album options - list_album_icon: " . count($list_album_icon) . " items\n";
-
-		foreach($list_album_icon as $key => $str)
-			fputs($file, '[' . $key . ']' . $str . "\n");
-	}
-
-	fputs($file, ":\n");
-	fclose($file);
-
-	return TRUE;
-}
-
-
 //-----------------------------------------------------------------------
 
 //****************************
@@ -1459,17 +1520,14 @@ function rig_set_cookie_val($name, $val, $set = TRUE)
 //***************************************************
 // $set: TRUE to set cookie, FALSE to delete cookie
 {
-	global $HTTP_HOST;
 	global $dir_abs_album;
     global $pref_cookie_host;
-    global $admin;
-    global $_debug_;
 
 	$delay = 3600 * 24 * 365;
 
     $host = $pref_cookie_host;
 	if (!$host)
-		$host = $HTTP_HOST;
+		$host = $_SERVER['HTTP_HOST'];
 
     $path = $dir_abs_album;
 
@@ -1480,10 +1538,16 @@ function rig_set_cookie_val($name, $val, $set = TRUE)
 	$path = "";
 
 	// debug
-    // if ($admin && $_debug_)
-	//	echo "Set Cookie: name='$name' -- val='$val' -- date='$time' -- path='$path' -- host='$host'<br>\n";
+    // if (rig_get($_GET,'admin') && rig_get($_GET,'_debug_'))
+	// echo "Set Cookie: name='$name' -- val='$val' -- date='$time' -- path='$path' -- host='$host'<br>\n";
 
 	setcookie($name, $val, $time, $path, $host);
+
+	// Update the global cookie array
+	if ($set)
+		$_COOKIE[$name] = $val;
+	else
+		$_COOKIE[$name] = NULL;		
 }
 
 
@@ -1493,28 +1557,16 @@ function rig_handle_cookies()
 // Some literature:
 // http://developer.netscape.com:80/docs/manuals/js/client/jsguide/cookies.htm
 {
-	global $lang;
-	global $rig_lang;
 	global $current_language;
-
-	global $theme;
-	global $rig_theme;
 	global $current_theme;
 
-	global $img_size;
-	global $rig_img_size;
-	global $pref_image_size;
+	global $login_error;
 
+	global $pref_image_size;
 	global $pref_auto_guest;
 	global $pref_allow_guest;
 	global $pref_guest_username;
 
-	global $login_error;
-	global $force_login,  $keep;
-	global $user, 		  $passwd;
-	global $admusr, 	  $admpwd;
-	global $rig_user,	  $rig_passwd;
-	global $rig_adm_user, $rig_adm_passwd;
 
 	// Description of variables:
 	//
@@ -1527,6 +1579,35 @@ function rig_handle_cookies()
 	// passwd				rig_passwd
 	// admusr				rig_adm_user
 	// admpwd				rig_adm_passwd
+
+	global $lang,		$rig_lang;
+	global $theme,		$rig_theme;
+	global $img_size,	$rig_img_size;
+	global $user,		$rig_user;
+	global $passwd,		$rig_passwd;
+	global $admusr,		$rig_adm_user;
+	global $admpwd,		$rig_adm_passwd;
+	global $force_login;
+
+	$lang			= rig_get($_GET,'lang'			);
+	$theme			= rig_get($_GET,'theme'			);
+	$img_size		= rig_get($_GET,'img_size'		);
+	$force_login	= rig_get($_GET,'force_login'	);
+	$keep			= rig_get($_GET,'keep'			);
+
+	$user			= rig_get($_GET,'user',   rig_get($_POST,'user'  ));
+	$passwd			= rig_get($_GET,'passwd', rig_get($_POST,'passwd'));
+	$admusr			= rig_get($_GET,'admusr', rig_get($_POST,'admusr'));
+	$admpwd			= rig_get($_GET,'admpwd', rig_get($_POST,'admpwd'));
+
+	$rig_lang		= rig_get($_COOKIE,'rig_lang'	);
+	$rig_theme		= rig_get($_COOKIE,'rig_theme'	);
+	$rig_img_size	= rig_get($_COOKIE,'rig_img_size');
+	$rig_user		= rig_get($_COOKIE,'rig_user'	);
+	$rig_passwd		= rig_get($_COOKIE,'rig_passwd'	);
+	$rig_adm_user	= rig_get($_COOKIE,'rig_adm_user');
+	$rig_adm_passwd	= rig_get($_COOKIE,'rig_adm_passwd');
+
 
 	if ($lang)
 	{
@@ -1579,7 +1660,7 @@ function rig_handle_cookies()
 		$rig_user   = $user;
 		$rig_passwd = $passwd;
 
-		if (rig_test_user_pwd(FALSE, &$rig_user, &$rig_passwd, &$login_error))
+		if (rig_test_user_pwd(FALSE, $rig_user, $rig_passwd, $login_error))
 		{
 			// set the expiration date to +1 year if we want to keep it,
 			// or 0 if it's only for this session
@@ -1603,7 +1684,7 @@ function rig_handle_cookies()
 		$rig_adm_user   = $admusr;
 		$rig_adm_passwd = $admpwd;
 
-		if (rig_test_user_pwd(TRUE, &$rig_adm_user, &$rig_adm_passwd, &$login_error))
+		if (rig_test_user_pwd(TRUE, $rig_adm_user, $rig_adm_passwd, $login_error))
 		{
 			// set the expiration date to +1 year if we want to keep it,
 			// or 0 if it's only for this session
@@ -1623,6 +1704,11 @@ function rig_handle_cookies()
 function rig_remove_login_cookies($is_admin)
 //******************************************
 {
+	global $rig_user;
+	global $rig_passwd;
+	global $rig_adm_user;
+	global $rig_adm_passwd;
+
 	// debug
     // echo "remove login cookies $is_admin<br>\n";
 
@@ -1652,6 +1738,7 @@ function rig_setup()
 	global $pref_use_db;
 	global $pref_use_db_id;
 	global $pref_use_id_in_url;
+	global $pref_file_types;		// RM 20030807
 	global $current_language;
 	global $display_exec_date;
 	global $display_softname;
@@ -1708,6 +1795,25 @@ function rig_setup()
 	$pref_use_db = FALSE;
 	$pref_use_db_id = FALSE;
 	$pref_use_id_in_url = FALSE;
+
+
+	// -- setup filetypes --
+	
+	// If global $pref_file_types is not defined, request file type support
+	// information from the rig_thumbnail.exe application. [RM 20030807]
+	
+	if ($pref_file_types == NULL || !is_array($pref_file_types) || count($pref_file_types) == 0)
+	{
+		$pref_file_types = rig_runtime_filetype_support();
+
+		if ($pref_file_types == NULL || !is_array($pref_file_types) || count($pref_file_types) == 0)
+			rig_html_error("Runtime File Type Array Error",
+						   "Runtime File Type Array is not valid<p>" .
+						   "<b>Is array?</b> " . ($pref_file_types == NULL || !is_array($pref_file_types) ? "No" : "Yes") . "<br>" .
+						   "<b>Is empty?</b> " . (is_array($pref_file_types) && count($pref_file_types) >= 0 ? "No" : "Yes"),
+						   $pref_file_types);
+	}
+
 }
 
 
@@ -2328,7 +2434,7 @@ function rig_parse_string_data($filename)
 		$line = fgets($file, 1023);
 
 		// if the line is empty, we skip it
-		if (!is_string($line) || !$line || $line == EOF)
+		if (!is_string($line) || !$line || $line == FALSE)
 			continue;
 
 		// if the line does not start with @$ or $, we skip it
@@ -2344,7 +2450,7 @@ function rig_parse_string_data($filename)
 
 		if (is_string($var_name))
 		{
-			// acces the global variable
+			// access the global variable
 			global $$var_name;
 
 			// if an array, get the array index name
@@ -2632,14 +2738,18 @@ function rig_check_ignore_list($name, $ignore_list)
 
 
 
+
 //-----------------------------------------------------------------------
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.29  2003/08/18 03:05:12  ralfoide
+//	PHP 4.3.x support
+//
 //	Revision 1.28  2003/08/16 05:35:34  ralfoide
 //	fix in case locset is empty
-//
+//	
 //	Revision 1.27  2003/08/15 07:12:44  ralfoide
 //	Album HTML cache generation, disabled xml read options
 //	

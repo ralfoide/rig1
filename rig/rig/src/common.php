@@ -1916,6 +1916,7 @@ function rig_prepare_album($id, $album, $title="")
 	global $html_album, $html_none;
 	global $pref_album_ignore_list;		// RM 20030813 - v0.6.3.5
 	global $pref_enable_access_hidden_albums;
+	global $pref_follow_album_symlinks;	// RM 20030901 - v0.6.4.3
 
 	$current_album = FALSE;
 	$current_id = 0;
@@ -1981,8 +1982,55 @@ function rig_prepare_album($id, $album, $title="")
 			// access denied, unset variables
 			$current_id = 0;
 			$current_album = '';
+			$abs_dir = '';
 		}
 	}
+	
+	
+	// -- follow album symlinks
+	
+	if (   $pref_follow_album_symlinks
+		&& $current_album
+		&& rig_is_dir($abs_dir)
+		&& is_link($abs_dir))
+	{
+		// ok so abs_dir is a directory and it is a symlink
+		// get the real directory it points to:
+
+		$rp = realpath($abs_dir);
+
+		// now $abs_album_path is the root of the album and
+		// it is a real path too. The symlink points onto
+		// the same album if $abs_album_path is exactly
+		// present at the beginning of $rp
+		
+		if (strncmp($rp, $abs_album_path, strlen($abs_album_path)) == 0)
+		{
+			// if so, the rest of the rp string gives the linked-to
+			// album, and there should be a directory separator too
+			// that we can ignore
+			
+			$album = substr($rp, strlen($abs_album_path));
+
+			// check the string contains at least the directory separator
+			// and some more
+			
+			if (strlen($album) > 1 && ($album[0] == SEP || $album[0] == SEP2))
+			{
+				// strip the directory sep
+				$album = substr($album, 1);
+				
+				// we got ourselves our candidate new album...
+				// process it (use this function recursively)
+				
+				rig_prepare_album(0, $album, $title);
+				
+				// and exit
+				return;
+			}
+		}
+	}
+	
 
 	// -- setup title of album
 	if (!$title)
@@ -2965,9 +3013,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.32  2003/09/01 20:54:52  ralfoide
+//	Implemented pref_follow_album_symlinks
+//
 //	Revision 1.31  2003/08/21 20:19:30  ralfoide
 //	New dir/path variables, new enable prefs (album/image hidden, descriptions, album cache), updated rig_require_once
-//
+//	
 //	Revision 1.30  2003/08/18 04:25:30  ralfoide
 //	Expire album cache when album option change. Capitalize album month name.
 //	

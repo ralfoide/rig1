@@ -8,14 +8,14 @@
 //**********************************************
 
 
-require_once($dir_install . $dir_src . "common.php");
+require_once($dir_abs_src . "common.php");
 
 // OO test -- RM 20030805
 if (isset($_GET['_test_']) && $_GET['_test_'] == 1)
 {
-	require_once($dir_install . $dir_src . "common.php");
-	require_once(rig_require_once("RUser.php", $dir_src));
-	require_once(rig_require_once("RAlbum.php", $dir_src));
+	require_once($dir_abs_src . "common.php");
+	require_once(rig_require_once("RUser.php"));
+	require_once(rig_require_once("RAlbum.php"));
 
 	// log in and get the current user
 	$rig_user = new RUser();
@@ -193,9 +193,12 @@ rig_terminate_db();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/08/21 20:18:02  ralfoide
+//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
+//
 //	Revision 1.9  2003/08/18 03:07:14  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
-//
+//	
 //	Revision 1.8  2003/08/15 07:12:07  ralfoide
 //	Album HTML cache generation
 //	

@@ -77,10 +77,10 @@ function rig_build_image_type($album, $file,
 // Caller should thus use [r]+[p] or [a]+[p]
 {
 	global $abs_album_path;
-	global $abs_preview_path;
+	global $abs_image_cache_path;
 	global $dir_abs_album;
 	global $dir_album;
-	global $dir_preview;
+	global $dir_image_cache;
 	global $dir_images;
 	global $pref_preview_size;
 	global $pref_empty_album;
@@ -116,8 +116,8 @@ function rig_build_image_type($album, $file,
 	$dest_file = $prev_prefix . rig_simplify_filename($file);
 
 	$dest		= $album . rig_prep_sep($dest_file);
-	$abs_dest	= $abs_preview_path . rig_prep_sep($dest);
-	$abs_source	= $abs_album_path   . rig_prep_sep($album) . rig_prep_sep($file);
+	$abs_dest	= $abs_image_cache_path . rig_prep_sep($dest);
+	$abs_source	= $abs_album_path       . rig_prep_sep($album) . rig_prep_sep($file);
 
 	if (rig_is_file($abs_source) && !rig_is_file($abs_dest) && $auto_create)
 	{
@@ -135,8 +135,8 @@ function rig_build_image_type($album, $file,
 		}
 	}
 
-	return array("r" => $dir_preview,
-				 "a" => $abs_preview_path,
+	return array("r" => $dir_image_cache,
+				 "a" => $abs_image_cache_path,
 				 "p" => $dest);
 }
 
@@ -157,11 +157,11 @@ function rig_build_video_type($album, $file,
 // Caller should thus use [r]+[p] or [a]+[p]
 {
 	global $abs_album_path;
-	global $abs_preview_path;
+	global $abs_image_cache_path;
 	global $abs_images_path;
 	global $dir_abs_album;
 	global $dir_album;
-	global $dir_preview;
+	global $dir_image_cache;
 	global $dir_images;
 	global $pref_preview_size;
 	global $pref_empty_album;
@@ -186,8 +186,8 @@ function rig_build_video_type($album, $file,
 	// the destination is appended a .jpg extension if a thumbnail is requested
 
 	$dest		= $album . rig_prep_sep($dest_file) . $ext;
-	$abs_dest	= $abs_preview_path . rig_prep_sep($dest);
-	$abs_source	= $abs_album_path   . rig_prep_sep($album) . rig_prep_sep($file);
+	$abs_dest	= $abs_image_cache_path . rig_prep_sep($dest);
+	$abs_source	= $abs_album_path       . rig_prep_sep($album) . rig_prep_sep($file);
 
 	if (rig_is_file($abs_source) && !rig_is_file($abs_dest) && $auto_create)
 	{
@@ -201,8 +201,8 @@ function rig_build_video_type($album, $file,
 		}
 	}
 
-	return array("r" => $dir_preview,
-				 "a" => $abs_preview_path,
+	return array("r" => $dir_image_cache,
+				 "a" => $abs_image_cache_path,
 				 "p" => $dest);
 }
 
@@ -389,7 +389,7 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 	global $pref_empty_album;
 	global $pref_preview_size;
 	global $abs_album_path;
-	global $abs_preview_path, $dir_preview;
+	global $abs_image_cache_path, $dir_image_cache;
 	global $current_album;
 
 // DEBUG
@@ -415,8 +415,8 @@ echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
 		// the target file this is all about
 		$dest_file = rig_prep_sep($album) . rig_prep_sep(ALBUM_ICON);
 	
-		$abs_path = $abs_preview_path . $dest_file;
-		$url_path = $dir_preview      . $dest_file;
+		$abs_path = $abs_image_cache_path . $dest_file;
+		$url_path = $dir_image_cache  . $dest_file;
 	
 		// -1- perform various checks
 	
@@ -580,7 +580,7 @@ function rig_set_album_icon($dest_album, $prev_album, $prev_image,
 	Note that by design the relative album name will be either empty (local) or "/something".
 */
 {
-	global $abs_preview_path;
+	global $abs_image_cache_path;
 
 	// get its preview
 	$preview = rig_build_preview($prev_album, $prev_image, -1, -1, TRUE, FALSE);
@@ -592,7 +592,7 @@ function rig_set_album_icon($dest_album, $prev_album, $prev_image,
 		if (rig_get_file_type($preview) != "")
 		{
 			// copy it as the album icon
-			$abs_dest = $abs_preview_path . rig_prep_sep($dest_album) . rig_prep_sep(ALBUM_ICON);
+			$abs_dest = $abs_image_cache_path . rig_prep_sep($dest_album) . rig_prep_sep(ALBUM_ICON);
 	
 			rig_create_preview_dir($dest_album);
 	
@@ -745,9 +745,12 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.13  2003/08/21 20:18:02  ralfoide
+//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
+//
 //	Revision 1.12  2003/08/18 03:06:23  ralfoide
 //	PHP 4.3.x support, new runtime filetype support
-//
+//	
 //	Revision 1.11  2003/07/21 04:55:37  ralfoide
 //	Customizable size for album previews
 //	

@@ -23,7 +23,7 @@ class RPath
 		-----------------------------------------
 		dir_images			abs_images_path
 		dir_album			abs_album_path
-		dir_preview			abs_preview_path
+		dir_image_cache		abs_image_cache_path
 		dir_option			abs_option_path
 		dir_upload_src		abs_upload_src_path
 		dir_upload_album	abs_upload_album_path
@@ -147,9 +147,12 @@ class RPath
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/08/21 20:18:02  ralfoide
+//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
+//
 //	Revision 1.3  2003/08/18 03:06:44  ralfoide
 //	OO experiment continued
-//
+//	
 //	Revision 1.2  2003/07/11 15:55:25  ralfoide
 //	Cosmetics
 //	

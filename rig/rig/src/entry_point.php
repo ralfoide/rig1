@@ -26,38 +26,34 @@ $rig_is_image = (isset($_GET['image']) && is_string($_GET['image']) && $_GET['im
 
 if (isset($_GET['admin']) && $_GET['admin'])
 {
-	if (isset($_GET['upload']) && $_GET['upload'])
+	if (0 && isset($_GET['upload']) && $_GET['upload']) // RM 20030820 -- not yet implemented
 	{
-		rig_check_src_file($dir_install . $dir_src . "admin_upload.php");
-		require_once(      $dir_install . $dir_src . "admin_upload.php");
+		// RM 20030820 -- not yet implemented
+		// require_once(rig_check_src_file($dir_abs_admin_src . "admin_upload.php"));
 	}
 	else if (isset($_GET['translate']) && $_GET['translate'])
 	{
-		rig_check_src_file($dir_install . $dir_src . "admin_translate.php");
-		require_once(      $dir_install . $dir_src . "admin_translate.php");
+		require_once(rig_check_src_file($dir_abs_admin_src . "admin_translate.php"));
 	}
 	else if (0 && $rig_is_image) // RM 20030525 deactivated
 	{
-		rig_check_src_file($dir_install . $dir_src . "admin_image.php");
-		require_once(      $dir_install . $dir_src . "admin_image.php");
+		// RM 20030820 -- not yet implemented
+		// require_once(rig_check_src_file($dir_abs_admin_src . "admin_image.php"));
 	}
 	else
 	{
-		rig_check_src_file($dir_install . $dir_src . "admin_album.php");
-		require_once(      $dir_install . $dir_src . "admin_album.php");
+		require_once(rig_check_src_file($dir_abs_admin_src . "admin_album.php"));
 	}
 }
 else
 {
 	if ($rig_is_image)
 	{
-		rig_check_src_file($dir_install . $dir_src . "image.php");
-		require_once      ($dir_install . $dir_src . "image.php");
+		require_once(rig_check_src_file($dir_abs_src . "image.php"));
 	}
 	else
 	{
-		rig_check_src_file($dir_install . $dir_src . "album.php");
-		require_once      ($dir_install . $dir_src . "album.php");
+		require_once(rig_check_src_file($dir_abs_src . "album.php"));
 	}
 }
 
@@ -65,9 +61,12 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2003/08/21 20:18:02  ralfoide
+//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
+//
 //	Revision 1.4  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//
+//	
 //	Revision 1.3  2003/06/30 06:08:11  ralfoide
 //	Version 0.6.3.4 -- Introduced support for videos -- new version of rig_thumbnail.exe
 //	

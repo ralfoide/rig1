@@ -9,10 +9,10 @@
 
 
 // Include parent class
-require_once(rig_require_once("RContentBase.php", $dir_src));
+require_once(rig_require_once("RContentBase.php"));
 
 // Include sibbling classes
-require_once(rig_require_once("RPrefAlbum.php", $dir_src));
+require_once(rig_require_once("RPrefAlbum.php"));
 
 
 
@@ -162,9 +162,12 @@ class RAlbum extends RContentBase
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2003/08/21 20:18:02  ralfoide
+//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
+//
 //	Revision 1.3  2003/08/18 03:06:44  ralfoide
 //	OO experiment continued
-//
+//	
 //	Revision 1.2  2003/07/11 15:55:25  ralfoide
 //	Cosmetics
 //	

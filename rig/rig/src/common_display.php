@@ -143,17 +143,11 @@ function rig_display_back_album()
 	global $html_back_previous;
 	global $current_album;
 
-	$items = explode(SEP, $current_album);
-
-	if ($current_album && count($items) > 0)
+	$parent = rig_get_parent_album($current_album);
+	if ($parent)
 	{
-		// remove the last item
-		unset($items[count($items)-1]);
-		// glue it back
-		$path = implode(SEP, $items);
-
 		// write the link
-		echo "<a href=\"" . rig_self_url("", $path) . "\">$html_back_previous</a>\n";
+		echo "<a href=\"" . rig_self_url("", $parent) . "\">$html_back_previous</a>\n";
 	}
 }
 
@@ -168,7 +162,6 @@ function rig_display_album_list()
 	global $pref_preview_quality;
 	global $pref_small_preview_size;		// RM 20030720 for 'vert' layout
 	global $pref_small_preview_quality;
-	global $abs_preview_path;
 	global $html_images;
 	global $list_albums;
 	global $html_album;
@@ -1844,10 +1837,13 @@ if (window.screen) {
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.25  2003/08/21 20:18:02  ralfoide
+//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
+//
 //	Revision 1.24  2003/08/18 06:10:02  ralfoide
 //	Moving on to 0.6.4.2
 //	Added color_table_desc in themes for description and dates in album view.
-//
+//	
 //	Revision 1.23  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
 //	

@@ -22,7 +22,7 @@
 function rig_enter_login($url, $admin = FALSE)
 //********************************************
 {
-	global $dir_install,	$dir_src;
+	global $dir_abs_src;
 	global $html_login,		$html_rig_admin;
 	global $html_username,	$html_passwd;
 	global $html_remember,	$html_validate;
@@ -99,7 +99,7 @@ function rig_enter_login($url, $admin = FALSE)
 		else
 			$force_login = "fail";
 
-		include($dir_install . $dir_src . "login.php");
+		include($dir_abs_src . "login.php");
 		exit;
 	}
 
@@ -140,9 +140,8 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 	#
 */
 {
-	global $dir_locset;
-	global $dir_install;
-	global $dir_globset;
+	global $dir_abs_locset;
+	global $dir_abs_globset;
 	global $display_user;
 	$valid = FALSE;
 	$logerr = "";
@@ -163,14 +162,14 @@ function rig_test_user_pwd($admin, &$user, &$passwd, &$logerr)
 	if ($user)
 	{
 		// look for a file in the local settings
-		$name = $dir_locset;
+		$name = $dir_abs_locset;
 		$name = $admin ? $name . "admin_list.txt" : $name . "user_list.txt";
 		$file = @fopen($name, "rt");
 
 		// if we cannot find it, look for a file in the global settings
 		if (!$file)
 		{
-			$name = $dir_install . $dir_globset;
+			$name = $dir_abs_globset;
 			$name = $admin ? $name . "admin_list.txt" : $name . "user_list.txt";
 			$file = @fopen($name, "rt");
 		}
@@ -325,9 +324,12 @@ function rig_display_user_name($user = "")
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2003/08/21 20:18:02  ralfoide
+//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
+//
 //	Revision 1.9  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//
+//	
 //	Revision 1.8  2003/02/23 10:18:36  ralfoide
 //	plain vs crypt vs MD5 password in the password file
 //	

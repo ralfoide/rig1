@@ -8,7 +8,7 @@
 //**********************************************
 
 
-require_once($dir_install . $dir_src . "common.php");
+require_once($dir_abs_src . "common.php");
 
 // Important: this page can only display an image.
 // If there is no image parameter, redirect to the album
@@ -56,12 +56,12 @@ document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>")
 <?php
 
 	// get layout preference
-	if (!isset($pref_image_layout) || !rig_is_file($dir_install . $dir_src . "image_layout_$pref_image_layout.php"))
+	if (!isset($pref_image_layout) || !rig_is_file($dir_abs_src . "image_layout_$pref_image_layout.php"))
 	    $pref_image_layout = '1';
 
 	if (is_string($pref_image_layout))
 	{
-	    require_once(rig_require_once("image_layout_$pref_image_layout.php", $dir_src, $abs_upload_src_path));
+	    require_once(rig_require_once("image_layout_$pref_image_layout.php", $dir_abs_src, $abs_upload_src_path));
 	}
 		
 
@@ -91,9 +91,12 @@ document.write("is_ie4up = " + is_ie4up + " -- is_win32 = " + is_win32 + "<br>")
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2003/08/21 20:18:02  ralfoide
+//	Renamed dir/path variables, updated rig_require_once and rig_check_src_file
+//
 //	Revision 1.11  2003/08/18 03:05:12  ralfoide
 //	PHP 4.3.x support
-//
+//	
 //	Revision 1.10  2003/07/14 18:30:37  ralfoide
 //	Javascript test
 //	

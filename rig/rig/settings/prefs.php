@@ -200,7 +200,7 @@ $pref_use_id_in_url		= $pref_use_db_id;	// use numeric ids in URLs rather than a
 
 $pref_preview_size		= 80;
 $pref_preview_quality	= 70;
-$pref_preview_timeout	= 10;
+$pref_preview_timeout	= 20;
 
 
 // RM 20030720
@@ -801,9 +801,12 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.22  2004/07/09 05:48:47  ralfoide
+//	Bumped default script timeout to 20s
+//
 //	Revision 1.21  2004/02/18 07:37:01  ralfoide
 //	Allow viewing hidden images by direct access
-//
+//	
 //	Revision 1.20  2003/11/09 20:50:58  ralfoide
 //	Added pref_internal_file_types
 //	

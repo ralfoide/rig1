@@ -628,6 +628,11 @@ function rig_encode_url_link($arg)
 	// RM 20020713 note: tried to encode c>=127 into &#dd;
 	// but that breaks URLs and many other things.
 	
+	// RM 20050823 added
+	// Encode all non us-ascii chars in an URL into their %NN
+	// Note that the RFC 2396 for URI does not define any encoding
+	// for octets > 255 (it was still an 8-bit world back then...)
+	// so here I won't even try to do anything with them.
 
 	$match = ";?:@&=+!*'(), \"#%<>";
 
@@ -636,14 +641,14 @@ function rig_encode_url_link($arg)
 	for($i=0; $i<$n; $i++)
 	{
 		$c = substr($arg, $i, 1);
-		if (strrchr($match, $c))
+		$o = ord($c);		
+		if ($o >= 127 || strrchr($match, $c))
 			$res .= sprintf("%%%02x", ord($c));
 		else
 			$res .= $c;
 	}
 	return $res;
 }
-
 
 
 //*******************************
@@ -1157,9 +1162,9 @@ function rig_self_url($in_image = -1,
 	}
 
 	if ($params)
-		return $url . $param_concat_char . $params;
-	else
-		return $url;
+		$url = $url . $param_concat_char . $params;
+
+	return $url;
 }
 
 
@@ -3569,9 +3574,13 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.49  2005/08/24 02:48:10  ralfoide
+//	Fix to (partially) properly handle accents in generated URLs.
+//	This is needed to view albums with accents in IE 6.
+//
 //	Revision 1.48  2004/12/25 07:44:19  ralfoide
 //	Update
-//
+//	
 //	Revision 1.47  2004/08/12 21:52:41  ralfoide
 //	Fix to remove all unfriendly characters even if not at beginning
 //	

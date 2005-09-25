@@ -19,8 +19,16 @@ Summary of features for RIG:
 
 Generic:
 - in 0.7:
-...
-- in 0.6.5:
+[1.F] License: GNU General Public License v2.
+[1.F] Fix: rig-thumbnail makefiles from system now use libjpeg if headers present
+[1.F] Fix: Handle accents in generated URLs.
+[1.F] Fix: Remove temporary HTML cache if PHP processing aborted before completion
+[1.F] Fix: HTML cache hash now properly includes query variables
+[1.F] Themes: Red title block for admin mode [Request: AR]
+[1.F] Feature: Remove all HTML caches action in Admin album page
+[1.F] Fix: Disable pager if there's only one page
+[1.F] Fix: Display pager at the bottom of the album table
+[1.F] Fix: rig_thumbnail use sig alarm/kill if locked in libavi processing (Cinepak is bugged)
 ...
 - in 0.6.4.5:
 [1.F] Fix for broken browser which interpret &image= in URLs
@@ -229,7 +237,7 @@ Admin:
 20040711 [1.F] Exp: Detect palm-size devices screen size in the HTTP User Agent
 20040708 [1.F] Fix: Don't put ipage/apage=1 in URL as it's a default
 20040708 [1.F] Fix: Disable pagination display if there's only one page
-20040707 [1.F] Fix: rig_thumnail use sig alarm/kill if locked in libavi processing (currently locks on Cinepak reader)
+20040707 [1.F] Fix: rig_thumbnail use sig alarm/kill if locked in libavi processing (currently locks on Cinepak reader)
 20040705 [1.F] CVS: Moving on to 0.6.5
 
 [0.6.4.5]
@@ -728,9 +736,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.60  2005/09/25 23:24:30  ralfoide
+//	Updated changelog/todolist
+//
 //	Revision 1.59  2005/09/25 22:36:11  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.58  2004/12/25 07:44:19  ralfoide
 //	Update
 //	

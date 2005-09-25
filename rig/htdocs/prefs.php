@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -37,6 +37,28 @@ $pref_auto_guest		= TRUE;				// should guest authentificate? TRUE (default) or F
 
 // global gamma override
 $pref_global_gamma		= 1.0;	            // use 1.0 for no-op
+
+// --- default language & theme ---
+
+// These are the defaults from the global prefs.
+// You can overrride them for each local album if you need to.
+// Simply uncomment the desired line and change the value.
+//
+// $pref_default_lang		= 'en';				// choices are en, fr, sp, jp
+// $pref_default_theme		= 'blue';			// choices are blue, gray, khaki, egg, sand
+
+
+// --- dates at beginning of album names ---
+
+// These are the defaults from the global prefs.
+// You can overrride them for each local album if you need to.
+// Simply uncomment the desired line and change the value.
+//
+// $pref_date_YM					= 'M/Y';	// format for short dates. M & Y must appear.
+/* American */ // $pref_date_YMD	= 'M/D/Y';	// format for long dates. D & M & Y must appear.
+/* Japanese */ // $pref_date_YMD	= 'Y/M/D';	// format for long dates. D & M & Y must appear.
+/* French   */ // $pref_date_YMD	= 'D/N/Y';	// format for long dates. D & M & Y must appear.
+// $pref_date_sep					= ' - ';	// separator between date and description
 
 
 // ---- Copyright Name for albums & images ----
@@ -85,9 +107,12 @@ $pref_copyright_name = 'Your Name Here';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2005/09/25 22:36:12  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.2  2004/07/17 07:52:30  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.1  2003/08/18 02:10:13  ralfoide
 //	Reorganazing
 //	

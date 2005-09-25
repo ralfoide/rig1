@@ -209,8 +209,16 @@ Admin:
 
 -- done -- (sorted by finish date)
 
+[0.7]
+
+20050925 [1.F] Fix: Renamed paginator to pager ;-). Added pager at bottom of album table.
+20050925 [1.F] License: Checked GPL headers are all present. Updated to 2001-2005.
+20040925 [1.F] Fix: rig-thumbnail makefiles from system now use libjpeg if headers present
+20050925 [1.F] CVS: Moving on 0.7
+
 [0.6.5]
 
+20050823 [1.F] Fix: Fix to (partially) properly handle accents in generated URLs.
 20041224 [1.F] Fix: Added missing COPYING.txt for GPL license. Updated LICENSE.txt accordingly.
 20041005 [1.F] Fix: Encode/decode item name in admin URLs
 20040717 [1.F] License: Added GPL headers in source files.
@@ -720,9 +728,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.59  2005/09/25 22:36:11  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.58  2004/12/25 07:44:19  ralfoide
 //	Update
-//
+//	
 //	Revision 1.57  2004/10/07 01:18:29  ralfoide
 //	Fix
 //	

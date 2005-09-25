@@ -326,6 +326,9 @@ If no errors occurred, you should now have a file
 End
 
 $Log$
+Revision 1.5  2005/09/25 22:36:11  ralfoide
+Updated GPL header date.
+
 Revision 1.4  2003/08/21 20:14:49  ralfoide
 Reflected new dir_abs_install variable.
 

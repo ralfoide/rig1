@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -39,9 +39,12 @@ require_once("check_entry.php");
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2005/09/25 22:36:12  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.3  2004/07/17 07:52:30  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.2  2003/08/21 20:10:11  ralfoide
 //	New check_entry.php
 //	

@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -367,9 +367,12 @@ if (rig_is_visible())
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2005/09/25 22:36:14  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.5  2004/07/17 07:52:30  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.4  2004/07/06 04:10:57  ralfoide
 //	Fix: using "img" query param instead of "image"
 //	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.

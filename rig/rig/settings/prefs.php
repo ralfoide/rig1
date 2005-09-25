@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -847,9 +847,12 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.26  2005/09/25 22:36:14  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.25  2004/12/25 09:46:46  ralfoide
 //	Fixes and cleanup
-//
+//	
 //	Revision 1.24  2004/07/17 07:52:30  ralfoide
 //	GPL headers
 //	

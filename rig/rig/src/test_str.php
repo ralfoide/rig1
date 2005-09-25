@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -59,7 +59,9 @@ class RTest_I18l_Strings extends TestCase
 
 }
 
+//****************************************************************
 function check_string(&$test, $str_name, $same_as_english = FALSE)
+//****************************************************************
 {
 	global $dir_abs_src;
 	global $abs_upload_src_path;
@@ -122,9 +124,12 @@ function check_string(&$test, $str_name, $same_as_english = FALSE)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2005/09/25 22:36:15  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.4  2004/07/17 07:52:31  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.3  2004/03/09 06:22:30  ralfoide
 //	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
 //	

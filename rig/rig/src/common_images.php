@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -848,9 +848,12 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.22  2005/09/25 22:36:15  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.21  2004/12/25 09:46:46  ralfoide
 //	Fixes and cleanup
-//
+//	
 //	Revision 1.20  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

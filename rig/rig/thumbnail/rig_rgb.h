@@ -3,7 +3,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -81,9 +81,12 @@ private:
 /****************************************************************
 
 	$Log$
+	Revision 1.3  2005/09/25 22:36:15  ralfoide
+	Updated GPL header date.
+
 	Revision 1.2  2004/07/17 07:52:32  ralfoide
 	GPL headers
-
+	
 	Revision 1.1  2002/08/04 00:58:08  ralfoide
 	Uploading 0.6.2 on sourceforge.rig-thumbnail
 	

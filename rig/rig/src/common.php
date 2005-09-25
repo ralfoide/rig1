@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -959,6 +959,7 @@ define("RIG_SELF_URL_NORMAL",		0);	// album+image user view
 define("RIG_SELF_URL_ADMIN",		1);	// album+image admin view
 define("RIG_SELF_URL_UPLOAD",		2);	// upload *admin* view
 define("RIG_SELF_URL_TRANSLATE",	3);	// translate *admin* view
+define("RIG_SELF_URL_TESTS",		4);	// php-unit tests
 
 //*****************************************************************
 function rig_self_url($in_image = -1,
@@ -1056,6 +1057,10 @@ function rig_self_url($in_image = -1,
 	{
 		case RIG_SELF_URL_ADMIN:
 			rig_url_add_param($params, 'admin',		'on');
+			break;
+
+		case RIG_SELF_URL_TESTS:
+			rig_url_add_param($params, 'tests',		'on');
 			break;
 
 		case RIG_SELF_URL_TRANSLATE:
@@ -3574,10 +3579,13 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.50  2005/09/25 22:36:15  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.49  2005/08/24 02:48:10  ralfoide
 //	Fix to (partially) properly handle accents in generated URLs.
 //	This is needed to view albums with accents in IE 6.
-//
+//	
 //	Revision 1.48  2004/12/25 07:44:19  ralfoide
 //	Update
 //	

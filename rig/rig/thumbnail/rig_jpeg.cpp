@@ -3,7 +3,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -441,9 +441,12 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 /****************************************************************
 
 	$Log$
+	Revision 1.6  2005/09/25 22:36:15  ralfoide
+	Updated GPL header date.
+
 	Revision 1.5  2004/07/17 07:52:32  ralfoide
 	GPL headers
-
+	
 	Revision 1.4  2004/07/09 05:55:57  ralfoide
 	Comments
 	

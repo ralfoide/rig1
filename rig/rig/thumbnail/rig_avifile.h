@@ -3,7 +3,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -57,9 +57,12 @@ RigRgb*	rig_avifile_read (const char* filename);
 /****************************************************************
 
 	$Log$
+	Revision 1.7  2005/09/25 22:36:15  ralfoide
+	Updated GPL header date.
+
 	Revision 1.6  2004/07/17 07:52:32  ralfoide
 	GPL headers
-
+	
 	Revision 1.5  2003/11/25 05:02:04  ralfoide
 	Video: report the video codec
 	

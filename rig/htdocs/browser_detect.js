@@ -310,25 +310,4 @@
       }
    }
 
-/* RM 20030703
-   if (is_win&&is_ie4up)
-   {
-      document.write(
-         '<scr' + 'ipt language=VBScript>' + '\n' +
-         'Dim hasPlayer, playerversion' + '\n' +
-         'hasPlayer = false' + '\n' +
-         'playerversion = 10' + '\n' +
-         'Do While playerversion > 0' + '\n' +
-            'On Error Resume Next' + '\n' +
-            'hasPlayer = (IsObject(CreateObject("ShockwaveFlash.ShockwaveFlash." & playerversion)))' + '\n' +
-            'If hasPlayer = true Then Exit Do' + '\n' +
-            'playerversion = playerversion - 1' + '\n' +
-         'Loop' + '\n' +
-         'is_FlashVersion = playerversion' + '\n' +
-         'is_Flash = hasPlayer' + '\n' +
-         '<\/sc' + 'ript>'
-      );
-   }
-*/
-
 //-->

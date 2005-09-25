@@ -1,5 +1,28 @@
 <?php
 // vim: set tabstop=4 shiftwidth=4: //
+//************************************************************************
+/*
+	$Id$
+
+	Copyright 2001-2005 and beyond, Raphael MOLL.
+
+	This file is part of RIG-Thumbnail.
+
+	RIG-Thumbnail is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	RIG-Thumbnail is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with RIG-Thumbnail; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
+//************************************************************************
 // $Id$
 
 //**********************
@@ -194,6 +217,9 @@ function rig_show_album($album)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2005/09/25 22:36:15  ralfoide
+//	Updated GPL header date.
+//
 //	Revision 1.5  2003/02/16 20:22:57  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables
@@ -201,7 +227,7 @@ function rig_show_album($album)
 //	- Using rig_options directory
 //	- Renamed src function with rig_ prefix everywhere
 //	- Only display phpinfo if _debug_ enabled or admin mode
-//
+//	
 //	Revision 1.4  2002/10/24 21:32:47  ralfoide
 //	dos2unix fix
 //	

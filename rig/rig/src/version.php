@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -26,15 +26,18 @@
 
 
 $rig_vernum  =  0.65;
-$rig_version = "0.6.5";
+$rig_version = "0.7";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.24  2005/09/25 22:34:06  ralfoide
+//	Upgrading to version 0.7
+//
 //	Revision 1.23  2004/07/17 07:52:31  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.22  2004/07/09 05:53:33  ralfoide
 //	Started version 0.6.5. Now discarding the useless sub sub version numbers.
 //	

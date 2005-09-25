@@ -3,8 +3,9 @@
 usage()
 {
 	echo
-	echo "Usage: $0 A.tgz B.tgz"
+	echo "Usage: [-f] $0 A.tgz B.tgz"
 	echo "Filenames *must* be in form rig_YYYY-MM-DD_v1234.tgz with A <= B."
+	echo "Use -f to force the diff (in the case A<B is not correctly detected.)"
 	echo
 	exit 1;
 }
@@ -12,6 +13,13 @@ usage()
 if [ "$1" == "" ]
 then
 	usage
+fi
+
+FORCE=0
+if [ "x$1" == "x-f" ]
+then
+	FORCE=1
+	shift
 fi
 
 if [ ! -f "$1" ]
@@ -69,8 +77,13 @@ TB=${DB/rig_/} ; TB=${TB/_v[0-9]*/}
 if [ "$VA2" -gt "$VB2" ]
 then
 	echo
-	echo "Error: $VA2 is greater than $VB2. Are you sure?"
-	usage
+	if [ "$FORCE" == "1" ]
+	then
+		echo "Warning: $VA2 is greater than $VB2. Check ignored. Continuing."
+	else
+		echo "Error: $VA2 is greater than $VB2. Are you sure? (use -f to override)"
+		usage
+	fi
 fi
 
 if [ "rig_${TA}_${VA}" != "$DA" ]

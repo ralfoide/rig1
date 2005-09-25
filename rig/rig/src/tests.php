@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -37,6 +37,10 @@ require_once(rig_require_once("phpunit.php"));
 </head>
 <body>
 
+<center>
+<a href="<?= rig_self_url(-1, -1, RIG_SELF_URL_TESTS) ?>"><?= RIG_SOFT_NAME ?> Unit Tests Page</a>
+</center>
+<hr>
 
 <?php
 
@@ -70,72 +74,13 @@ class RTest_phpUnit extends TestCase
 	}
 }
 
-
-//*************************************
-class RTest_InnerClass extends TestCase
-//*************************************
-{
-	function RTest_phpUnit($name = "RTest_InnerClass")
-	{
-		$this->TestCase($name);
-	}
-
-	function test_include_class_file()
-	{
-		// To enable this test, you must comment out the require_once for RTestModule.php below...
-		// $this->assertEquals(class_exists("RModule"), FALSE, "RModule already defined before require_once!");
-		
-		global $dir_abs_src;
-		require_once(rig_require_once("RModule.php"));
-
-		$this->assertEquals(class_exists("RModule"), TRUE, "RModule not defined after require_once!");
-		
-		$m = new RModule();
-		$this->assert($m != NULL, "RModule can't be instantiated");
-	}
-
-	/* can't nest class definitions -- this creates a parser error
-	function test_inner_class()
-	{
-		class MyInnerClass
-		{
-			var $a;
-			
-			function MyInnerClass()
-			{
-				$a = 1;
-			}
-		}
-	}
-	*/
-}
-
 //---------------------------
 
 $rig_suite = new TestSuite();
-// $rig_suite->addTest(new TestSuite("RTest_phpUnit")); // -- self-test boot
-$rig_suite->addTest(new TestSuite("RTest_InnerClass"));
+// $rig_suite->addTest(new TestSuite("RTest_phpUnit")); // -- self-test boot, use if nothing else works
 
 require_once(rig_require_once("test_str.php"));
 $rig_suite->addTest(new TestSuite("RTest_I18l_Strings"));
-
-if (isset($dir_abs_mod) && rig_is_file($dir_abs_src . "RModuleManager.php"))
-{
-	require_once(rig_require_once("RModuleManager.php"));
-
-	require_once(rig_require_once("RTestModuleManager.php"));
-	$rig_suite->addTest(new TestSuite("RTest_RModuleManager"));
-	
-	require_once(rig_require_once("RTestModule.php"));
-	$rig_suite->addTest(new TestSuite("RTest_RModule"));
-}
-else
-{
-	if (!isset($dir_abs_mod))
-		echo 'Warning: <i>dir_abs_mod</i> is not set. Modules tests are not run.<p>';
-	else if (!rig_is_file($dir_abs_src . "RModuleManager.php"))
-		echo 'Warning: This version of RIG does not have <i>RModuleManager.php</i>. Modules tests are not run.<p>';
-}
 
 //---------------------------
 
@@ -152,9 +97,12 @@ $result->report();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2005/09/25 22:33:47  ralfoide
+//	Removed modules
+//
 //	Revision 1.8  2004/12/25 09:46:47  ralfoide
 //	Fixes and cleanup
-//
+//	
 //	Revision 1.7  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

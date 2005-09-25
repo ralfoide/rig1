@@ -4,7 +4,7 @@
 /*
 	$Id$
 
-	Copyright 2004, Raphael MOLL.
+	Copyright 2001-2005 and beyond, Raphael MOLL.
 
 	This file is part of RIG-Thumbnail.
 
@@ -269,7 +269,7 @@ function rig_display_album_list()
 	if ($current_album_page > 0)
 	{
 		echo "<tr><td colspan=\"$n\" align=\"right\">Page: \n";
-		rig_display_paginator($current_album_page, $max_album_page, TRUE);
+		rig_display_pager($current_album_page, $max_album_page, TRUE);
 		echo "</td></tr>\n";
 	}
 	
@@ -541,6 +541,15 @@ function rig_display_album_list()
 	}
 
 	echo "</tr>\n";
+	
+	//--
+
+	if ($current_album_page > 0)
+	{
+		echo "<tr><td colspan=\"$n\" align=\"right\">Page: \n";
+		rig_display_pager($current_album_page, $max_album_page, TRUE);
+		echo "</td></tr>\n";
+	}
 }
 
 
@@ -596,7 +605,7 @@ function rig_display_image_list()
 	if ($current_image_page > 0)
 	{
 		echo "<tr><td colspan=\"$n\" align=\"right\">Page: \n";
-		rig_display_paginator($current_image_page, $max_image_page, FALSE);
+		rig_display_pager($current_image_page, $max_image_page, FALSE);
 		echo "</td></tr>\n";
 	}
 
@@ -807,7 +816,7 @@ function rig_display_image_list()
 	if ($current_image_page > 0)
 	{
 		echo "<tr><td colspan=\"$n\" align=\"right\">Page: \n";
-		rig_display_paginator($current_image_page, $max_image_page, FALSE);
+		rig_display_pager($current_image_page, $max_image_page, FALSE);
 		echo "</td></tr>\n";
 	}
 
@@ -857,9 +866,9 @@ function rig_display_image_count()
 
 
 
-//*********************************************************************
-function rig_display_paginator($curr_page, $max_page, $is_album = TRUE)
-//*********************************************************************
+//*****************************************************************
+function rig_display_pager($curr_page, $max_page, $is_album = TRUE)
+//*****************************************************************
 {
 	// nothing to do if not at least positionned on page 1
 	if ($curr_page < 1)
@@ -897,12 +906,12 @@ function rig_display_paginator($curr_page, $max_page, $is_album = TRUE)
 
 	$last = 0;
 
-	// RM 20040708 test: temporarily removed the paginator_index, forcing the links to
-	// always go to the top paginator
-	// global $paginator_index;
-	// $paginator_index++;
-	$paginator_index = '';
-	$pname = "pag" . $paginator_index . ($is_album ? "a" : "i");
+	// RM 20040708 test: temporarily removed the pager_index, forcing the links to
+	// always go to the top pager
+	// global $pager_index;
+	// $pager_index++;
+	$pager_index = '';
+	$pname = "pag" . $pager_index . ($is_album ? "a" : "i");
 	echo "<a name=\"$pname\"></a>";
 	$pname = "#" . $pname;
 
@@ -1478,9 +1487,14 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.39  2005/09/25 22:35:08  ralfoide
+//	Renamed paginator to pager ;-)
+//	Also displaying pager at the bottom of album table.
+//	Updated GPL header date.
+//
 //	Revision 1.38  2004/07/17 07:52:31  ralfoide
 //	GPL headers
-//
+//	
 //	Revision 1.37  2004/07/14 06:20:59  ralfoide
 //	Layout
 //	

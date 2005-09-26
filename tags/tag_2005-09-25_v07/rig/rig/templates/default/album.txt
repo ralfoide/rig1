@@ -1,0 +1,112 @@
+# rig-template-v1.0
+# vim: set tabstop=4 shiftwidth=4: #
+#
+# Copyright (c) 2004 Ralf
+# $Id$
+#
+# Syntax:
+# # starts a comment line (before the first @section, ignored after)
+# @ special tag line, @ must be first character
+# [[function]] calls 'function' from accompagnying class
+# {{variable}} insert 'variable' (from class or global)
+# [[if function]] .. [[endif]] for a conditional block, function must return TRUE/FALSE
+#
+# HTML template has 3 parts: header, body and footer. Only the body is cached in rig's html cache.
+
+@class		RTemplateRigAlbum
+@desc		Default Album Template
+
+@mod-alias	rig	RModRigAlbum
+
+
+
+@section header
+
+[[rig:html_header]]
+[[rig:html_body]]
+
+@section body		# -- buffering starts here
+
+[[rig:display_title]]
+[[rig:display_user_name]]
+
+[[if rig:valid_album]]
+<p class="rig_current_album">
+	{{str:html_current_album}}
+</p>
+<p class="rig_display_current_album">
+	[[rig:display_current_album]]
+</p>
+
+[[endif]]
+[[rig:flush]]
+
+<p/>
+
+[[rig:load_album_list]]
+
+[[if rig:has_albums]]
+
+<div class="box">
+
+	<p class="box_header">
+		{{str:html_albums}}
+	</p>
+	
+	[[rig:display_album_list]]
+	
+	[[rig:display_album_copyright]]
+	
+	[[rig:display_album_count]]
+
+</div>
+
+[[endif]]
+[[rig:flush]]
+
+[[if rig:has_images]]
+
+<div class="box">
+
+	<p class="box_header">
+		{{html_images}}
+	</p>
+
+	[[rig_display_image_list]]
+
+	[[rig_display_image_copyright]]
+
+	[[rig_display_image_count]]
+
+</div>
+
+[[endif]]
+[[rig:flush]]
+
+
+[[rig:display_back_album]]
+
+[[rig:display_options]]
+[[rig:admin_link]]
+
+
+@section footer
+
+[[rig:display_credits]]
+[[rig:display_footer]]
+[[rig:html_body_end]]
+
+@end
+
+# Everything past @end is ignored. In fact the file is closed at that point.
+#
+#
+# $Log$
+# Revision 1.2  2004/12/25 09:46:47  ralfoide
+# Fixes and cleanup
+#
+# Revision 1.1  2003/09/13 21:48:45  ralfoide
+# Experimental: template system
+#
+#
+

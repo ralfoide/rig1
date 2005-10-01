@@ -25,16 +25,21 @@
 //************************************************************************
 
 
-$rig_vernum  =  0.7;
-$rig_version = "0.7";
+$rig_vernum  =  0.71;
+$rig_version = "0.7.1";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.26  2005/10/01 23:44:27  ralfoide
+//	Removed obsolete files (admin translate) and dirs (upload dirs).
+//	Fixes for template support.
+//	Preliminary default template for album.
+//
 //	Revision 1.25  2005/09/26 01:13:35  ralfoide
 //	Fixed vernum to match version.
-//
+//	
 //	Revision 1.24  2005/09/25 22:34:06  ralfoide
 //	Upgrading to version 0.7
 //	

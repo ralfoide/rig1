@@ -248,7 +248,9 @@ function rig_html_error($title_str,
 		}
 		else
 		{
-			echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>File:</b> $file_str\n </td></tr>\n";
+			echo "<tr><td bgcolor=\"$color_error2_bg\">\n<b>File:</b> " 
+				. htmlentities($file_str)
+				. "\n </td></tr>\n";
 		}
 	}
 
@@ -1282,34 +1284,6 @@ function rig_read_prefs_paths()
 					   "<b>Base directory:</b> $dir_abs_album<br>" .
 					   "<b>Target directory:</b> $dir_option<br>" ,
 					   $dir_abs_album . $dir_option);
-	}
-
-	// --- upload_src directory ---
-
-	global $dir_upload_src, $abs_upload_src_path;
-	$abs_upload_src_path = realpath($dir_abs_album . $dir_upload_src);
-
-	if (!is_string($abs_upload_src_path))
-	{
-		rig_html_error("Missing Upload Sources Directory",
-					   "Can't get absolute path for the upload_src directory. <p>" .
-					   "<b>Base directory:</b> $dir_abs_album<br>" .
-					   "<b>Target directory:</b> $dir_upload_src<br>" ,
-					   $dir_abs_album . $dir_upload_src);
-	}
-
-	// --- upload_album directory ---
-
-	global $dir_upload_album, $abs_upload_album_path;
-	$abs_upload_album_path = realpath($dir_abs_album . $dir_upload_album);
-
-	if (!is_string($abs_upload_album_path))
-	{
-		rig_html_error("Missing Upload Albums Directory",
-					   "Can't get absolute path for the upload_album directory. <p>" .
-					   "<b>Base directory:</b> $dir_abs_album<br>" .
-					   "<b>Target directory:</b> $dir_upload_album<br>" ,
-					   $dir_abs_album . $dir_upload_album);
 	}
 
 	// --- rig_thumbnail application ---
@@ -3579,9 +3553,14 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.51  2005/10/01 23:44:27  ralfoide
+//	Removed obsolete files (admin translate) and dirs (upload dirs).
+//	Fixes for template support.
+//	Preliminary default template for album.
+//
 //	Revision 1.50  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.49  2005/08/24 02:48:10  ralfoide
 //	Fix to (partially) properly handle accents in generated URLs.
 //	This is needed to view albums with accents in IE 6.

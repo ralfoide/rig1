@@ -44,8 +44,7 @@ $dir_abs_install		= "/opt/rig-thumbnail" . S;
 $dir_abs_src			= $dir_abs_install . "rig/src" . S;
 $dir_abs_admin_src		= $dir_abs_install . "rig/admin" . S;
 
-$dir_abs_mod			= $dir_abs_install . "rig/modules" . S;
-$dir_abs_templ			= $dir_abs_install . "rig/templates" . S;
+$dir_abs_templates		= $dir_abs_install . "rig/templates" . S;
 
 // global settings
 // Note: $dir_abs_globset semantic has changed! Path is *absolute* instead of relative to $dir_abs_install
@@ -81,14 +80,6 @@ $dir_album				= "my-photos/";
 $dir_image_cache		= "rig-cache/";
 $dir_album_cache		= "rig-cache/";
 $dir_option				= "rig-options/";
-$dir_comment			= "rig-options/";
-$dir_vote				= "rig-options/";
-
-// Upload locations
-// Physically, this is relative to $dir_abs_album (i.e. where index.php is)
-// The URL string must end with /
-$dir_upload_src         = "upload-src/";
-$dir_upload_album       = "upload-photos/";
 
 
 
@@ -96,9 +87,14 @@ $dir_upload_album       = "upload-photos/";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2005/10/01 23:44:25  ralfoide
+//	Removed obsolete files (admin translate) and dirs (upload dirs).
+//	Fixes for template support.
+//	Preliminary default template for album.
+//
 //	Revision 1.7  2005/09/25 22:36:12  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.6  2004/12/25 09:46:46  ralfoide
 //	Fixes and cleanup
 //	

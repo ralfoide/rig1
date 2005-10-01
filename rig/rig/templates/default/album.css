@@ -1,0 +1,148 @@
+/* --------------------- */
+
+body {
+	margin: 0px;
+}
+
+.block {
+	border: 1px #88F solid;
+	background-color: #FFF;
+	display: block;
+	margin: 0px;
+	padding: 0px;
+}
+
+.hidden {
+	display: none;
+}
+
+/* --------------------- */
+
+.header-table {
+	width: 100%;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #CCF;
+}
+
+.header-thumb {
+	width: 64px;
+	margin-right: 10px;
+	vertical-align: center;
+}
+
+.header-logo {
+	width: 64px;
+	margin-left: 10px;
+	vertical-align: center;
+}
+
+.header-desc {
+	width: 100%;
+}
+
+.header-title { 
+	font-size: 1.2em;
+	font-weight: bold;
+	display: block;
+}
+
+.header-date, .header-info {
+	font-size: smaller;
+	display: block;
+}
+
+
+/* --------------------- */
+
+.info-table {
+	width: 100%;
+	background-color: #CCF;
+}
+
+.info-path {
+	float: left;
+	margin-left: 10px;
+	//--DEBUG--background: white;
+}
+
+.info-back {
+	width: 100%;
+	text-align: right;
+	margin-left: 10px;
+	//--DEBUG--background: yellow;
+}
+
+.info-settings {
+	float: right;
+	//text-align: right;
+	margin-right: 10px;
+	//margin-left: 10px;
+	//--DEBUG--background: red;
+}
+
+/* --------------------- */
+
+.settings-table {
+	width: 100%;
+	background-color: #FFC;
+	border: 20px solid #CCF;
+	border-top: 0px;
+}
+
+.settings-themes-col, .settings-colors-col, .settings-links-col {
+	width: 30%;
+	vertical-align: top;
+}
+
+
+ul.settings-list {
+	padding: 0px;
+	margin: 0px;
+	left: 0px;
+	list-style: none;
+}
+
+ul.settings-list li:hover { 
+	background-color: #FF0;
+}
+
+/* --------------------- */
+
+.content {
+	border: 0px;
+	background-color: #FFF;
+}
+
+.empty { 
+	height: 1px;
+	background-color: #AAF;
+}
+
+.section {
+	display: block;
+	font-size: 1.5em;
+	text-align: center;
+	border-top: 1px solid #88F;
+	border-bottom: 1px solid #88F;
+	background-color: #AAF;
+}
+
+/* --------------------- */
+
+.debug { 
+	margin-top:20px;
+	background-color: #FCC;
+}
+
+
+.footer {
+	width: 100%;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #CCF;
+}
+
+/* end */

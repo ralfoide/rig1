@@ -28,10 +28,18 @@
 
 //-----------------------------------------------------------------------
 
-
 //*********************************
 function rig_display_header($title)
 //*********************************
+{
+	rig_display_header_start($title);
+	rig_display_header_close();
+}
+
+
+//***************************************
+function rig_display_header_start($title)
+//***************************************
 {
 	global $html_encoding;
 	global $html_language_code;
@@ -88,10 +96,19 @@ function rig_display_header($title)
 	</title>
 	<script language="JavaScript" type="text/javascript" src="browser_detect.js"></script>
 	<?= $theme_css_head ?>
-</head>
 <?php
-
 }
+
+//*********************************
+function rig_display_header_close()
+//*********************************
+{
+echo "\n</head>\n";
+}
+
+
+//-------------------------------------------------
+
 
 //************************************
 function rig_display_body($extra = "")
@@ -104,14 +121,14 @@ function rig_display_body($extra = "")
 	global $color_body_vlink;
 
 	?>
-		<body bgcolor="<?= $color_body_bg    ?>"
-			  text   ="<?= $color_body_text  ?>"
-			  link   ="<?= $color_body_link	 ?>"
-			  alink  ="<?= $color_body_alink ?>"
-			  vlink  ="<?= $color_body_vlink ?>"
-			  <?= $extra ?>
-		>
-	<?php
+<body bgcolor="<?= $color_body_bg    ?>"
+	  text   ="<?= $color_body_text  ?>"
+	  link   ="<?= $color_body_link	 ?>"
+	  alink  ="<?= $color_body_alink ?>"
+	  vlink  ="<?= $color_body_vlink ?>"
+	  <?= $extra ?>
+>
+<?php
 }
 
 
@@ -1487,11 +1504,16 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.40  2005/10/01 23:44:27  ralfoide
+//	Removed obsolete files (admin translate) and dirs (upload dirs).
+//	Fixes for template support.
+//	Preliminary default template for album.
+//
 //	Revision 1.39  2005/09/25 22:35:08  ralfoide
 //	Renamed paginator to pager ;-)
 //	Also displaying pager at the bottom of album table.
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.38  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

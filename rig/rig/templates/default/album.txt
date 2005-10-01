@@ -1,76 +1,115 @@
 # rig-template-v1.0
-# vim: set tabstop=4 shiftwidth=4: #
-#
-# Copyright (c) 2004 Ralf
 # $Id$
-#
-# Syntax:
-# # starts a comment line (before the first @section, ignored after)
-# @ special tag line, @ must be first character
-# [[function]] calls 'function' from accompagnying class
-# {{variable}} insert 'variable' (from class or global)
-# [[if function]] .. [[endif]] for a conditional block, function must return TRUE/FALSE
-#
-# HTML template has 3 parts: header, body and footer. Only the body is cached in rig's html cache.
 
-@class		RTemplateRigAlbum
-@desc		Default Album Template
+[[rig_html_header_start]]
 
-@mod-alias	rig	RModRigAlbum
+<script language="javascript1.2">
+==insert album.js==
+</script>
 
+<style type="text/css">
+==insert album.css==
+</style>
 
+[[rig_html_header_close]]
 
-@section header
+==start-buffer==
 
-[[rig:html_header]]
-[[rig:html_body]]
+<body id="body" onload="RA_Init()">
 
-@section body		# -- buffering starts here
+<!-- ********************************** -->
+<table id="header" class="block header-table"><tr>
+  <td><img class="header-thumb" src="thumbnail.jpg"/></td>
+  <td class="header-desc">
+    <span class="header-title"> {{display_title}} </span>
+    <span class="header-date"> [[rig_display_user_name]]</span>
+    <span class="header-date"> Last Updated September 2005 </span>
+    <span class="header-info">
+              <a href="#album-anchor">9 albums</a>,
+              <a href="#image-anchor">18 images</a>.</span>
+  </td>
+  <td><img class="header-logo" src="thumbnail.jpg"/></td>
+</tr></table>
 
-[[rig:display_title]]
-[[rig:display_user_name]]
-
-[[if rig:valid_album]]
-<p class="rig_current_album">
-	{{str:html_current_album}}
-</p>
-<p class="rig_display_current_album">
-	[[rig:display_current_album]]
-</p>
-
-[[endif]]
-[[rig:flush]]
-
-<p/>
-
-[[rig:load_album_list]]
-
-[[if rig:has_albums]]
-
-<div class="box">
-
-	<p class="box_header">
-		{{str:html_albums}}
-	</p>
-	
-	[[rig:display_album_list]]
-	
-	[[rig:display_album_copyright]]
-	
-	[[rig:display_album_count]]
-
+<!-- ********************************** -->
+<div class="block info-table" border=1>
+  <span class="info-settings">
+    <a id="settings-link" href="settings" >Settings</a>
+  </span>
+==if {{current_album}}==
+  <span class="info-path">
+		{{html_current_album}}:
+		[[rig_display_current_album(FALSE)]]
+  </span>
+  <div class="info-back">
+		[[rig_display_back_album]] &nbsp;|&nbsp;
+  </div>
+==endif==
+<!--  &anbsp; <! - - force this div to exist and have text height -->
 </div>
 
-[[endif]]
-[[rig:flush]]
+<!-- ********************************** -->
+<table id="settings" class="block settings-table hidden"><tr>
+  <td class="settings-themes-col">
+		[[rig_display_options]]
+		[[rig_admin_link]]
+		[[rig_display_credits]]
+    <!-- b>Themes</b>
+    <ul class="settings-list">
+      <li><a id="settings-theme1" href="theme1">Theme 1</a></li>
+      <li><a id="settings-theme2" href="theme2">Theme 2</a></li>
+      <li><a id="settings-theme3" href="theme3">Theme 3</a></li>
+    </ul>
+  </td>
+  <td class="settings-colors-col">
+    <b>Colors</b><br>
+    <ul class="settings-list">
+      <li><a id="settings-color1" href="color1">White 1</a></i>
+      <li><a id="settings-color2" href="color2">Black 2</a></li>
+      <li><a id="settings-color3" href="color3">Blue 3</a></li>
+    </ul>
+  </td>
+  <td class="settings-links-col">
+    <b>More</b><br>
+    <ul class="settings-list">
+      <li>Administration</li>
+      <li>About RIG</li>
+      <li>Credits</li>
+    </ul -->
+  </td>
+</tr></table>
 
-[[if rig:has_images]]
+<!-- ********************************** -->
+<div id="content" class="block content">
 
-<div class="box">
+<div class="empty"></div> <!-- fix for FF1.5b1 -->
 
-	<p class="box_header">
-		{{html_images}}
-	</p>
+[[rig_load_album_list(TRUE)]]
+
+==if [[rig_has_albums]]==
+
+<a name="album-anchor">
+<span class="section">Available Albums</span>
+</a>
+<table width="100%" border="0">
+
+	[[rig_display_album_list]]
+
+	[[rig_display_album_copyright]]
+
+	[[rig_display_album_count]]
+
+</table>
+
+==endif==
+==flush==
+
+==if [[rig_has_images]]==
+
+<a name="image-anchor">
+<span class="section">Available Images</span>
+</a>
+<table width="100%" border="0">
 
 	[[rig_display_image_list]]
 
@@ -78,35 +117,22 @@
 
 	[[rig_display_image_count]]
 
+</table>
+
+==endif==
+==flush==
+
 </div>
 
-[[endif]]
-[[rig:flush]]
+==end-buffer==
 
+<div id="debug" class="block debug"> Debug </div>
 
-[[rig:display_back_album]]
+<div id="footer" class="block footer">
+	[[rig_display_footer]]
+</div>
 
-[[rig:display_options]]
-[[rig:admin_link]]
+</body>
+</html>
 
-
-@section footer
-
-[[rig:display_credits]]
-[[rig:display_footer]]
-[[rig:html_body_end]]
-
-@end
-
-# Everything past @end is ignored. In fact the file is closed at that point.
-#
-#
-# $Log$
-# Revision 1.2  2004/12/25 09:46:47  ralfoide
-# Fixes and cleanup
-#
-# Revision 1.1  2003/09/13 21:48:45  ralfoide
-# Experimental: template system
-#
-#
-
+# end

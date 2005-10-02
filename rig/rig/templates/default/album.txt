@@ -30,16 +30,16 @@
 			<a href="#image-anchor">18 images</a>.
 		</span>
 	</td>
-	<td><img class="header-logo" width="100" src="[[rig_logo]]"/>
+	<td><img class="header-logo" width="51" src="[[rig_logo]]"/>
 	</td>
 </tr></table>
 
 <!-- ********************************** -->
 
 <table class="block info-table"><tr>
-	<td>
+	<td class="info-left">
 		<span class="info-path">
-			{{html_current_album}}:
+			&nbsp;{{html_current_album}}:
 			[[rig_display_current_album(FALSE)]]
 		</span>
 		<span class="info-back">
@@ -52,35 +52,41 @@
 </tr></table>
 
 <!-- ********************************** -->
-<table id="settings" class="block settings-table hidden"><tr>
-  <td class="settings-themes-col">
+<div id="settings" class="block settings-border hidden">
+<table class="settings-table"><tr>
+  	<td class="settings-themes-col" colspan=3>
+		<span class="section">Settings</span>
 		[[rig_display_options]]
 		[[rig_admin_link]]
 		[[rig_display_credits]]
-    <!-- b>Themes</b>
-    <ul class="settings-list">
-      <li><a id="settings-theme1" href="theme1">Theme 1</a></li>
-      <li><a id="settings-theme2" href="theme2">Theme 2</a></li>
-      <li><a id="settings-theme3" href="theme3">Theme 3</a></li>
-    </ul>
-  </td>
-  <td class="settings-colors-col">
-    <b>Colors</b><br>
-    <ul class="settings-list">
-      <li><a id="settings-color1" href="color1">White 1</a></i>
-      <li><a id="settings-color2" href="color2">Black 2</a></li>
-      <li><a id="settings-color3" href="color3">Blue 3</a></li>
-    </ul>
-  </td>
-  <td class="settings-links-col">
-    <b>More</b><br>
-    <ul class="settings-list">
-      <li>Administration</li>
-      <li>About RIG</li>
-      <li>Credits</li>
-    </ul -->
-  </td>
+	</td>
+</tr><tr>
+	<td class="settings-themes-col">
+		<b>Themes</b>
+		<ul class="settings-list">
+		  <li><a id="settings-theme1" href="theme1">Theme 1</a></li>
+		  <li><a id="settings-theme2" href="theme2">Theme 2</a></li>
+		  <li><a id="settings-theme3" href="theme3">Theme 3</a></li>
+		</ul>
+	</td>
+	<td class="settings-colors-col">
+		<b>Colors</b><br>
+		<ul class="settings-list">
+		  <li><a id="settings-color1" href="color1">White 1</a></i>
+		  <li><a id="settings-color2" href="color2">Black 2</a></li>
+		  <li><a id="settings-color3" href="color3">Blue 3</a></li>
+		</ul>
+	</td>
+	<td class="settings-links-col">
+		<b>More</b><br>
+		<ul class="settings-list">
+		  <li>Administration</li>
+		  <li>About RIG</li>
+		  <li>Credits</li>
+		</ul>
+	</td>
 </tr></table>
+</div>
 
 <!-- ********************************** -->
 <div id="content" class="block content">

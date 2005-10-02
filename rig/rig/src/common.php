@@ -3246,12 +3246,11 @@ function rig_begin_buffering()
 	global $dir_abs_admin_src;			// RM 20040601 v0.6.4.5 - fix: missing globals
 	global $dir_abs_globset;
 	global $dir_abs_locset;
+	global $dir_abs_templates;
 	global $pref_image_layout;
 	global $pref_album_layout;
 	global $pref_album_nb_col;
 	global $pref_image_nb_col;
-
-
 	global $rig_lang;
 	global $rig_theme;
 	global $rig_user;
@@ -3304,6 +3303,7 @@ function rig_begin_buffering()
 		// set the list of files or folders to check
 		$check_list = array($abs_album_path  . rig_prep_sep($current_real_album),
 							$abs_option_path . rig_prep_sep($current_real_album),
+							$dir_abs_templates,
 							$dir_abs_src);
 
 		if ($dir_abs_src != $dir_abs_admin_src)
@@ -3553,11 +3553,14 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.52  2005/10/02 21:13:12  ralfoide
+//	Invalidate html cache when templates modified.
+//
 //	Revision 1.51  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.
 //	Preliminary default template for album.
-//
+//	
 //	Revision 1.50  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

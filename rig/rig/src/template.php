@@ -33,8 +33,8 @@
 		&template=			=> results in "default" being used.
 	
 	On init, the system will look for templates in:
-		$abs_template_dir / templates / somename
-		$abs_template_dir / templates / default
+		$dir_abs_templates / templates / somename
+		$dir_abs_templates / templates / default
 	
 	Templates are loaded on demand:
 		rig_init_template();
@@ -63,11 +63,12 @@
 	- flush: flush the browser output. There is no waranty this does anything when
 		buffering is being used.
 	- if followed by {{ }} or [[ ]]: Enables the block if the evaluation is true.
+	- else: between if and endif.
 	- endif: ends an if block.
 	- insert followed by a template filename: inserts this template right there.
 
 	Simplification:
-	- if-endif blocks cannot be nested (will change later.)
+	- if-else-endif blocks cannot be nested (will change later.)
 	- end-buffer must be called after start-buffer.
 	- Only one start-buffer / end-buffer per master file.
 
@@ -88,6 +89,7 @@
 		sb: start-buffer
 		eb: end-buffer
 		if: if
+		el: else
 		ei: endif
 		fl: flush
 		in: insert
@@ -103,7 +105,7 @@
 function rig_init_template($template = NULL)
 //******************************************
 {
-	global $abs_template_dir;
+	global $abs_curr_template_dir;
 	global $dir_abs_templates;
 	global $rig_template_cache;
 	
@@ -115,9 +117,9 @@ function rig_init_template($template = NULL)
 	if ($template == NULL || !is_string($template) || $template == "")
 		$template = "default";
 
-	$abs_template_dir = realpath(rig_post_sep($dir_abs_templates) . $template);
-	if (!rig_is_dir($abs_template_dir))
-		$abs_template_dir = NULL;
+	$abs_curr_template_dir = realpath(rig_post_sep($dir_abs_templates) . $template);
+	if (!rig_is_dir($abs_curr_template_dir))
+		$abs_curr_template_dir = NULL;
 }
 
 
@@ -157,18 +159,18 @@ function rig_parse_template($filename)
 // If a file is accedded again, the cached version is returned.
 // Returns false on error.
 {
-	global $abs_template_dir;
+	global $abs_curr_template_dir;
 	global $rig_template_cache;
 	
 	// Check the global directory
-	if (!$abs_template_dir)
+	if (!$abs_curr_template_dir)
 		return false;
 
 	if (isset($rig_template_cache[$filename]))
 		return $rig_template_cache[$filename];
 
 	// Check the template file
-	$filename = realpath(rig_post_sep($abs_template_dir) . $filename);
+	$filename = realpath(rig_post_sep($abs_curr_template_dir) . $filename);
 	if (!rig_is_file($filename))
 		return false;
 
@@ -262,10 +264,11 @@ function rig_parse_inst($line)
 		$instructions = array(
 			"start-buffer" => "sb",
 			"end-buffer" => "eb",
-			"if" => "if",
-			"endif" => "ei",
-			"flush" => "fl",
-			"insert" => "in");
+			"if"		=> "if",
+			"endif"		=> "ei",
+			"else"		=> "el",
+			"flush"		=> "fl",
+			"insert"	=> "in");
 
 		foreach($instructions as $key => $value)
 		{
@@ -334,6 +337,8 @@ function rig_exec_template($atoms, $rewrite)
 // Execute the template instructions.
 // Return true if succesfully output the template.
 {
+	$exec_else = false;
+
 	$atoms_len = count($atoms);
 	for($counter = 0; $counter < $atoms_len; $counter++)
 	{
@@ -378,7 +383,7 @@ function rig_exec_template($atoms, $rewrite)
 			
 			case "sb":
 				// RM 20050928 DEBUG deactivate buffering
-				break;
+				//break;
 				// returns html filename to include or TRUE to start buffering and output or FALSE on errors
 				$n = rig_begin_buffering();
 				if (is_string($n) && $n != '')
@@ -387,12 +392,7 @@ function rig_exec_template($atoms, $rewrite)
 					include($n);
 					
 					// find matching "eb" instruction
-					$counter++;
-					while($counter < $atoms_len && $atoms[$counter][0] != "eb")
-						$counter++;
-
-					if ($counter < $atoms_len && $atoms[$counter][0] == "eb")
-						rig_end_buffering();
+					$counter = rig_find_next_inst($atoms, $counter, "eb");
 				}
 				break;
 			
@@ -431,23 +431,39 @@ function rig_exec_template($atoms, $rewrite)
 						break;
 				}
 
+				// if the if matched, we'll want to find an "else" to skip up 
+				$rig_temp_need_else = $match;
+
 				if (!$match)
 				{
-					// skip to next endif, find matching "ei" instruction
-					$counter++;
-					while($counter < $atoms_len && $atoms[$counter][0] != "ei")
-					{
-						$counter++;
-					}
+					// skip to next else/endif, find matching else or endif
+					$counter = rig_find_next_inst($atoms, $counter, "el", "ei");
+					// the "if" didn't match so the "else" section needs to be
+					// executed if present
+					$exec_else = true;
 				}
+				else
+				{
+					// the "if" is being executed so we couldn't care less about
+					// any "else" part.
+					$exec_else = false;
+				}
+				
+				break;
+
+			case "el":
+				// "else" found. Skip the next endif if not executed
+				if (!$exec_else)
+					$counter = rig_find_next_inst($atoms, $counter, "ei");
 				break;
 			
 			case "ei":
-				// ignore endif
+				// 'endif' found, discard need to process 'else'
+				$exec_else = false;
 				break;
 				
 			case "in":
-				// value is a template file name.
+				// 'insert': value is a template file name.
 				// process it recursively and abort if it returns an error.
 				if (!rig_process_template($value, $rewrite))
 				{
@@ -464,14 +480,38 @@ function rig_exec_template($atoms, $rewrite)
 }
 
 
+//*****************************************************************
+function rig_find_next_inst($atoms, $counter, $inst1, $inst2=false)
+//*****************************************************************
+// Advances counter to the next instruction.
+// If not found, counter will be equal to count($atoms) (i.e. past end of array)
+// If found, counter will point on the element PREVIOUS to the matched element,
+// so far the next iteration of the main for(...; counter++) loop executes the
+// matched one.
+// Returns the new counter value as explained above.
+{
+	if ($inst2 === false)
+		$inst2 = $inst1;
+	
+	$atoms_len = count($atoms);
+	for(; $counter < $atoms_len; $counter++)
+		if ($atoms[$counter][0] == $inst1 || $atoms[$counter][0] == $inst2)
+			return $counter - 1;
+
+	return $counter;
+}
+
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2005/10/02 21:13:45  ralfoide
+//	Support for else in if-else-endif
+//
 //	Revision 1.1  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.
 //	Preliminary default template for album.
-//
+//	
 //-------------------------------------------------------------
 ?>

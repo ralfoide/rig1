@@ -1,4 +1,6 @@
 //-------------------------
+/* $Id$ */
+//-------------------------
 function RA_GetElem(name) {
   var o = document.getElementById(name);
   return o;

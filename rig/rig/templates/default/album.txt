@@ -18,35 +18,38 @@
 <body id="body" onload="RA_Init()">
 
 <!-- ********************************** -->
-<table id="header" class="block header-table"><tr>
-  <td><img class="header-thumb" src="thumbnail.jpg"/></td>
-  <td class="header-desc">
-    <span class="header-title"> {{display_title}} </span>
-    <span class="header-date"> [[rig_display_user_name]]</span>
-    <span class="header-date"> Last Updated September 2005 </span>
-    <span class="header-info">
-              <a href="#album-anchor">9 albums</a>,
-              <a href="#image-anchor">18 images</a>.</span>
-  </td>
-  <td><img class="header-logo" src="thumbnail.jpg"/></td>
+<table class="block header-table"><tr>
+	<td><img class="header-thumb" src="rig-cache/Misc/album_icon.jpg"/>
+	</td>
+	<td class="header-desc">
+		<span class="header-title"> {{display_title}} </span>
+		<span class="header-date"> [[rig_display_user_name]]</span>
+		<span class="header-date"> Last Updated September 2005 </span>
+		<span class="header-info">
+			<a href="#album-anchor">9 albums</a>,
+			<a href="#image-anchor">18 images</a>.
+		</span>
+	</td>
+	<td><img class="header-logo" width="100" src="[[rig_logo]]"/>
+	</td>
 </tr></table>
 
 <!-- ********************************** -->
-<div class="block info-table" border=1>
-  <span class="info-settings">
-    <a id="settings-link" href="settings" >Settings</a>
-  </span>
-==if {{current_album}}==
-  <span class="info-path">
-		{{html_current_album}}:
-		[[rig_display_current_album(FALSE)]]
-  </span>
-  <div class="info-back">
-		[[rig_display_back_album]] &nbsp;|&nbsp;
-  </div>
-==endif==
-<!--  &anbsp; <! - - force this div to exist and have text height -->
-</div>
+
+<table class="block info-table"><tr>
+	<td>
+		<span class="info-path">
+			{{html_current_album}}:
+			[[rig_display_current_album(FALSE)]]
+		</span>
+		<span class="info-back">
+			[[rig_display_back_album]] 
+		</span>
+	</td>
+	<td class="info-settings">
+    	<a id="settings-link" href="settings" >Settings</a>
+	</td>
+</tr></table>
 
 <!-- ********************************** -->
 <table id="settings" class="block settings-table hidden"><tr>
@@ -81,8 +84,6 @@
 
 <!-- ********************************** -->
 <div id="content" class="block content">
-
-<div class="empty"></div> <!-- fix for FF1.5b1 -->
 
 [[rig_load_album_list(TRUE)]]
 
@@ -122,13 +123,13 @@
 ==endif==
 ==flush==
 
-</div>
+</div> <!-- close content -->
 
 ==end-buffer==
 
 <div id="debug" class="block debug"> Debug </div>
 
-<div id="footer" class="block footer">
+<div id="footer" class="block section footer">
 	[[rig_display_footer]]
 </div>
 

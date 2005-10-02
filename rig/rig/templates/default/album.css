@@ -2,14 +2,16 @@
 
 body {
 	margin: 0px;
+	background-color: #CCF;
 }
 
 .block {
-	border: 1px #88F solid;
+	//border: 1px #88F solid;
 	background-color: #FFF;
-	display: block;
+	//display: block;
 	margin: 0px;
 	padding: 0px;
+	border-top: 1px solid #88F;
 }
 
 .hidden {
@@ -26,16 +28,17 @@ body {
 	background-color: #CCF;
 }
 
+.header-table tr {
+	vertical-align: top;
+}
+
 .header-thumb {
-	width: 64px;
 	margin-right: 10px;
-	vertical-align: center;
 }
 
 .header-logo {
-	width: 64px;
-	margin-left: 10px;
-	vertical-align: center;
+	vertical-align: top;
+	margin-left:  10px;
 }
 
 .header-desc {
@@ -59,27 +62,24 @@ body {
 .info-table {
 	width: 100%;
 	background-color: #CCF;
+	border: 0px;
+	border-top: 1px solid #88F;
 }
 
 .info-path {
 	float: left;
-	margin-left: 10px;
-	//--DEBUG--background: white;
+	margin-left: 0px;
 }
 
 .info-back {
-	width: 100%;
+	float: right;
 	text-align: right;
-	margin-left: 10px;
-	//--DEBUG--background: yellow;
 }
 
 .info-settings {
-	float: right;
-	//text-align: right;
-	margin-right: 10px;
-	//margin-left: 10px;
-	//--DEBUG--background: red;
+	width: 102px;
+	border-left: 1px solid #88F;
+	text-align: center;
 }
 
 /* --------------------- */
@@ -115,11 +115,6 @@ ul.settings-list li:hover {
 	background-color: #FFF;
 }
 
-.empty { 
-	height: 1px;
-	background-color: #AAF;
-}
-
 .section {
 	display: block;
 	font-size: 1.5em;
@@ -142,7 +137,7 @@ ul.settings-list li:hover {
 	border: 0px;
 	margin: 0px;
 	padding: 0px;
-	background-color: #CCF;
+	//background-color: #CCF;
 }
 
 /* end */

@@ -35,9 +35,16 @@ require_once($dir_abs_src . "template.php");
 rig_init_template(rig_get($_GET,'template'));
 if (rig_process_template(
 		"album.txt",
-		array( 'rig_html_header_start' => 'global $display_title; rig_display_header_start($display_title);',
-		       'rig_html_header_close' => 'rig_display_header_close();',
-		  	   'rig_admin_link'        => 'global $html_admin_intrfce; echo "<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_ADMIN) . "\">" . $html_admin_intrfce . "</a>";'
+		array(
+		'rig_html_header_start' => 
+			'global $display_title; rig_display_header_start($display_title);',
+		'rig_html_header_close' => 
+			'rig_display_header_close();',
+		'rig_admin_link' =>
+			'global $html_admin_intrfce;'
+			. 'echo "<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_ADMIN) . "\">" . $html_admin_intrfce . "</a>";',
+		'rig_logo' =>
+			'global $dir_images ; echo rig_post_sep($dir_images) . "riglogo.png";'
 		)))
 {
 	exit;
@@ -191,11 +198,14 @@ rig_terminate_db();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.19  2005/10/02 21:15:08  ralfoide
+//	Album template that starts working (header & info divs properly positionned)
+//
 //	Revision 1.18  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.
 //	Preliminary default template for album.
-//
+//	
 //	Revision 1.17  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

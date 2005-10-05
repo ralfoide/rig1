@@ -1019,13 +1019,13 @@ function rig_display_image()
 			$sx = $icon_info["w"];
 			$sy = $icon_info["h"];
 	
-			echo "<img src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
+			echo "<img id=\"content-img\" src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
 		}
 		else
 		{
 			// there's no size (probably a problem when creating the preview)
 			// just use the img name anyway
-			echo "<img src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0>";
+			echo "<img id=\"content-img\" src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0>";
 		}
 	}
 	else if (strncmp($type, "video/", 6) == 0)
@@ -1504,11 +1504,14 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.41  2005/10/05 03:54:52  ralfoide
+//	Added img id for template/css/js
+//
 //	Revision 1.40  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.
 //	Preliminary default template for album.
-//
+//	
 //	Revision 1.39  2005/09/25 22:35:08  ralfoide
 //	Renamed paginator to pager ;-)
 //	Also displaying pager at the bottom of album table.

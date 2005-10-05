@@ -70,7 +70,12 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 	// echo "<br> res = $res\n";
 
 	// There was an error if the return code was != 0
-	if ($retvar)
+	//
+	// RM 20051004 Only display error if &_debug_=1. We don't really
+	// want to polute the user with obnoxious errors when thumbnails
+	// cannot be created since it's not fatal. A default thumbnail
+	// will be used below, which is obvious enough.
+	if ($retvar && rig_is_debug())
 	{
 		$desc = "(unknown)";
 		if ($retvar == 3)
@@ -164,11 +169,18 @@ function rig_build_image_type($album, $file,
 			{
 				@copy(rig_post_sep($abs_images_path) . $pref_empty_album, $abs_dest);
 
-				rig_html_error("Timeout Warning!",
-							   "A timeout occured whilst generating the thumbnail." .
-							   "<br>A default thumbnail will be used instead." .
-							   "<br>This error should not occur again unless you erase all preview thumbnails from the cache."
-							   );
+				// RM 20051004 Only display error if &_debug_=1. We don't really
+				// want to polute the user with obnoxious errors when thumbnails
+				// cannot be created since it's not fatal. A default thumbnail
+				// will be used below, which is obvious enough.
+				if (rig_is_debug())
+				{
+					rig_html_error("Timeout Warning!",
+								   "A timeout occured whilst generating the thumbnail." .
+								   "<br>A default thumbnail will be used instead." .
+								   "<br>This error should not occur again unless you erase all preview thumbnails from the cache."
+								   );
+				}
 			}
 
 			// in case of error, use the default icon...
@@ -197,7 +209,7 @@ function rig_build_video_type($album, $file,
 // Builds a resized version of the original $album->$file image
 // Size and quality default to the preview size, unless specified
 // auto_create ask the image to be created if no existing
-// use_default ask the pref_empty_album name to be returned if the image cannot be build
+// use_default ask the pref_missing_video name to be returned if the image cannot be build
 //
 // If size -1 is given, a thumbnail is created. The thumbnail is always a JPEG file as of today.
 //
@@ -212,7 +224,7 @@ function rig_build_video_type($album, $file,
 	global $dir_image_cache;
 	global $dir_images;
 	global $pref_preview_size;
-	global $pref_empty_album;
+	global $pref_missing_video;
 	global $current_img_info;
 
 	// debug
@@ -254,22 +266,29 @@ function rig_build_video_type($album, $file,
 				
 				$copyok = copy($source, $abs_dest);
 
-				if ($copyok)
+				// RM 20051004 Only display error if &_debug_=1. We don't really
+				// want to polute the user with obnoxious errors when thumbnails
+				// cannot be created since it's not fatal. A default thumbnail
+				// will be used below, which is obvious enough.
+				if (rig_is_debug())
 				{
-					rig_html_error("Timeout Warning!",
-								   "A timeout occured whilst generating the thumbnail." .
-								   "<br>A default thumbnail will be used instead." .
-								   "<br>This error should not occur again unless you erase all preview thumbnails from the cache."
-								   );
-				}
-				else
-				{
-					rig_html_error("Error accessing $timeout_image",
-								   "Error whilst trying to copy a file:<p>" .
-								   "<b>Source:</b>$source<br>" .
-								   "<b>Dest:</b>$abs_dest<br>",
-								   $source,
-								   $php_errormsg);
+					if ($copyok)
+					{
+						rig_html_error("Timeout Warning!",
+									   "A timeout occured whilst generating the thumbnail." .
+									   "<br>A default thumbnail will be used instead." .
+									   "<br>This error should not occur again unless you erase all preview thumbnails from the cache."
+									   );
+					}
+					else
+					{
+						rig_html_error("Error accessing $timeout_image",
+									   "Error whilst trying to copy a file:<p>" .
+									   "<b>Source:</b>$source<br>" .
+									   "<b>Dest:</b>$abs_dest<br>",
+									   $source,
+									   $php_errormsg);
+					}
 				}
 			}
 
@@ -280,7 +299,7 @@ function rig_build_video_type($album, $file,
 				// RM 20030628 fix: the fixed image in /images/ not in the album's root
 				return array("r" => $dir_images,
 							 "a" => $abs_images_path,
-							 "p" => $pref_empty_album);
+							 "p" => $pref_missing_video);
 			}
 		}
 	}
@@ -848,9 +867,13 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.23  2005/10/05 03:55:59  ralfoide
+//	By default don't display obnoxious error messages when thumbnails cannot
+//	be created. This is not fatal and already obvious enough.
+//
 //	Revision 1.22  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.21  2004/12/25 09:46:46  ralfoide
 //	Fixes and cleanup
 //	

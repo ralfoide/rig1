@@ -195,7 +195,7 @@ function rig_parse_template($filename)
 		else if ($r = rig_parse_func($line))
 			$result = array_merge($result, $r);
 		else
-			$result[] = array("C", rtrim(ltrim($line)));
+			$result[] = array("C", ltrim($line)); // no rtrim on purpose => keep /n
 	}
 
 	fclose($f);
@@ -350,12 +350,12 @@ function rig_exec_template($atoms, $rewrite)
 		switch($key)
 		{
 			case "C":
-				echo $value . "\n";
+				echo $value;
 				break;
 			
 			case "V":
 				global $$value;
-				echo $$value . "\n";
+				echo $$value;
 				break;
 			
 			case "F":
@@ -365,19 +365,10 @@ function rig_exec_template($atoms, $rewrite)
 				}
 				else
 				{
-					$p1 = strpos($value, "(");
-					if ($p1 !== false && $p1 > 0)
-					{
-						$p2 = strpos($value, ")", $p1+1);
-						if ($p2 !== false && $p2 > $p1)
-						{
-							eval($value . ";");
-						}
-					}
-					else
-					{
-						eval("$value();");
-					}
+					// add () if missing
+					if (strpos($value, "(") === false)
+						$value .= "()";
+					eval("$value;");
 				}
 				break;
 			
@@ -415,18 +406,20 @@ function rig_exec_template($atoms, $rewrite)
 						break;
 					
 					case "F":
-						$p1 = strpos($vif, "(");
-						if ($p1 !== false && $p1 > 0)
+						if (isset($rewrite[$vif]))
 						{
-							$p2 = strpos($vif, ")", $p1+1);
-							if ($p2 !== false && $p2 > $p1)
-							{
-								$match = !!eval("return $vif ;");
-							}
+							$match = !!eval($rewrite[$vif]);
 						}
 						else
 						{
-							$match = !!eval("return $vif();");
+							// inserts "return " if not present
+							if (strpos($vif, "return ") === false)
+								$vif = "return " . $vif;
+							// insert "()" if not present
+							if (strpos($vif, "(") === false)
+								$vif = $vif . "()";
+							// exec
+							$match = !!eval("$vif;");
 						}
 						break;
 				}
@@ -505,9 +498,13 @@ function rig_find_next_inst($atoms, $counter, $inst1, $inst2=false)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2005/10/05 03:53:02  ralfoide
+//	Fix: don't trim /n from lines (only left part).
+//	Fixed evaluation of functions in ==if==.
+//
 //	Revision 1.2  2005/10/02 21:13:45  ralfoide
 //	Support for else in if-else-endif
-//
+//	
 //	Revision 1.1  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.

@@ -268,6 +268,7 @@ $pref_image_size		= 512;
 $pref_image_quality		= 75;
 $pref_size_popup		= array(256, 300, 384, 400, 512, 640, 800, 1024, 1280, 1600);
 $pref_empty_album		= 'empty_album.gif';
+$pref_missing_video		= 'n_a_video.gif';
 
 $pref_global_gamma		= 1.0;	// use 1.0 for no-op
 
@@ -847,9 +848,12 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.27  2005/10/05 03:56:28  ralfoide
+//	New missing video thumbnails.
+//
 //	Revision 1.26  2005/09/25 22:36:14  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.25  2004/12/25 09:46:46  ralfoide
 //	Fixes and cleanup
 //	

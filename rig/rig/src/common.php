@@ -371,6 +371,15 @@ function rig_unset_global($var_name)
 	unset($GLOBALS[$var_name]);
 }
 
+
+//*********************
+function rig_is_debug()
+//*********************
+// Returns true if _debug_ is present in the URL query
+{
+	return rig_get($_GET, '_debug_', false);
+}
+
 //-----------------------------------------------------------------------
 
 //*************************
@@ -3553,9 +3562,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.53  2005/10/05 03:55:20  ralfoide
+//	Added new rig_is_debug method. Simply checks &_debug_ in query.
+//
 //	Revision 1.52  2005/10/02 21:13:12  ralfoide
 //	Invalidate html cache when templates modified.
-//
+//	
 //	Revision 1.51  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.

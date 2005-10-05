@@ -37,6 +37,34 @@ require_once($dir_abs_src . "common.php");
 rig_enter_login(rig_self_url());
 
 rig_prepare_image(rig_get($_GET,'album'), rig_get($_GET,'img'));
+
+if (isset($_GET['template']))
+{
+	require_once($dir_abs_src . "template.php");
+	rig_init_template(rig_get($_GET,'template'));
+	if (rig_process_template(
+			"image.txt",
+			array(
+			'rig_html_header_start' => 
+				'global $display_title; rig_display_header_start($display_title);',
+			'rig_html_header_close' => 
+				'rig_display_header_close();',
+			'rig_admin_link' =>
+				'global $html_admin_intrfce;'
+				. 'echo "<a href=\"" . rig_self_url(-1, -1, RIG_SELF_URL_ADMIN) . "\">" . $html_admin_intrfce . "</a>";',
+			'rig_logo' =>
+				'global $dir_images ; echo rig_post_sep($dir_images) . "riglogo.png";',
+			'is_img' =>
+				'global $current_type; return ($current_type == "image");',
+			'show_jhead' =>
+				'global $current_type; global $pref_use_jhead; return ($pref_use_jhead != "" && $current_type == "image");',
+	
+			)))
+	{
+		exit;
+	}
+}
+
 rig_display_header($display_title);
 rig_display_body();
 
@@ -96,9 +124,12 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.18  2005/10/05 03:53:45  ralfoide
+//	Made usage of template conditional on presence of query &template=
+//
 //	Revision 1.17  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.16  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

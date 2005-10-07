@@ -273,7 +273,9 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 	{
 		$items = explode(SEP, $current_album);
 		$pretty = rig_pretty_name($items[count($items)-1], FALSE, TRUE);
-		$display_title = "$title - " . $pretty;
+		// RM 20051006 Don't show the $title part any 
+		// $display_title = "$title - " . $pretty;
+		$display_title = $pretty;
 		$display_album_title = "$html_album_title - " . $pretty;
 	}
 	else
@@ -883,7 +885,9 @@ function rig_prepare_image($album, $image, $title="")
 	if ($title)
 		$title .= " - ";
 
-	$display_title = $title . $pretty_image;
+	// RM 20051006 Don't show the $title part any 
+	// $display_title = $title . $pretty_image;
+	$display_title = $pretty_image;
 
 	// RM 20020715 fix: use current_album
 	if ($current_album)
@@ -960,11 +964,14 @@ function rig_get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2005/10/07 06:18:28  ralfoide
+//	Don't show "rig album - " or "rig image - " in titles.
+//
 //	Revision 1.1  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.53  2005/10/05 03:55:20  ralfoide
 //	Added new rig_is_debug method. Simply checks &_debug_ in query.
 //	

@@ -213,7 +213,6 @@ rig_display_body();
 <?php
 	rig_display_credits();
 	rig_display_footer();
-	rig_terminate_db();
 ?>
 
 </body>
@@ -222,9 +221,14 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2005/10/07 05:40:09  ralfoide
+//	Extracted album/image handling from common into common_media.php.
+//	Removed all references to obsolete db/id.
+//	Added preliminary default image template.
+//
 //	Revision 1.5  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.4  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

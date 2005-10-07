@@ -192,7 +192,6 @@ rig_end_buffering();
 
 rig_display_credits();
 rig_display_footer();
-rig_terminate_db();
 
 ?>
 
@@ -201,9 +200,14 @@ rig_terminate_db();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.21  2005/10/07 05:40:09  ralfoide
+//	Extracted album/image handling from common into common_media.php.
+//	Removed all references to obsolete db/id.
+//	Added preliminary default image template.
+//
 //	Revision 1.20  2005/10/05 03:54:07  ralfoide
 //	Made usage of template conditional on presence of query &template=
-//
+//	
 //	Revision 1.19  2005/10/02 21:15:08  ralfoide
 //	Album template that starts working (header & info divs properly positionned)
 //	

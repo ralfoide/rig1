@@ -28,11 +28,8 @@
 require_once($dir_abs_src . "common.php");
 
 // Important: this page can only display an image.
-// If there is no image parameter, redirect to the album
-// RM 20020714 disabled since this test is already performed by location/index.php
-// RM 20040703 using "img" query param instead of "image"
-// if (!((isset($_GET['img']) && $_GET['img']) || (isset($_GET['id']) && rig_db_is_image_id($_GET['id']))))
-// 	header("Location: " . rig_self_url(""));
+// If there is no image parameter, redirect to the album.
+// This test is performed by location/index.php.
 
 rig_enter_login(rig_self_url());
 
@@ -115,7 +112,6 @@ rig_display_body();
 <?php
 	rig_display_credits();
 	rig_display_footer();
-	rig_terminate_db();
 ?>
 
 </body>
@@ -124,9 +120,14 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.19  2005/10/07 05:40:09  ralfoide
+//	Extracted album/image handling from common into common_media.php.
+//	Removed all references to obsolete db/id.
+//	Added preliminary default image template.
+//
 //	Revision 1.18  2005/10/05 03:53:45  ralfoide
 //	Made usage of template conditional on presence of query &template=
-//
+//	
 //	Revision 1.17  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

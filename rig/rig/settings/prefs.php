@@ -206,22 +206,6 @@ $pref_cookie_host       = '';
 
 
 
-// --- DB-links options ---
-
-
-/***********************************************************
- *
- *	Section:	Database options.
- *
- *	This version of RIG does not rely on database storage.
- *	These settings do not apply here and MUST NOT be modified!
- *
- ***********************************************************/
-
-$pref_use_db			= FALSE;			// not for rig062 yet
-$pref_use_db_id			= $pref_use_db;		// use ids rather than names internally
-$pref_use_id_in_url		= $pref_use_db_id;	// use numeric ids in URLs rather than album/image names
-
 
 
 // --- thumbnails creation ---
@@ -848,9 +832,14 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.28  2005/10/07 05:40:09  ralfoide
+//	Extracted album/image handling from common into common_media.php.
+//	Removed all references to obsolete db/id.
+//	Added preliminary default image template.
+//
 //	Revision 1.27  2005/10/05 03:56:28  ralfoide
 //	New missing video thumbnails.
-//
+//	
 //	Revision 1.26  2005/09/25 22:36:14  ralfoide
 //	Updated GPL header date.
 //	

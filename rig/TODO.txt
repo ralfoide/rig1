@@ -217,6 +217,13 @@ Admin:
 
 -- done -- (sorted by finish date)
 
+[0.7.1]
+
+20051006 [2.F] Source: Extracted album/image handling from common into common_media.php
+20051004 [1.F] Fix: No error messages when thumbnails cannot be created
+20051003 [2.F] Template: Preliminary image template
+20051002 [2.F] Template: Preliminary album template
+
 [0.7]
 
 20050925 [1.F] Fix: Renamed paginator to pager ;-). Added pager at bottom of album table.
@@ -736,9 +743,14 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.61  2005/10/07 05:40:12  ralfoide
+//	Extracted album/image handling from common into common_media.php.
+//	Removed all references to obsolete db/id.
+//	Added preliminary default image template.
+//
 //	Revision 1.60  2005/09/25 23:24:30  ralfoide
 //	Updated changelog/todolist
-//
+//	
 //	Revision 1.59  2005/09/25 22:36:11  ralfoide
 //	Updated GPL header date.
 //	

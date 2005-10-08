@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+
+<h3>RIG Notes</h3>
+
+<p>Notes for 0.7.1:
+<ul>
+  <li>This is an intermediary dev release, with one minor fix.</li>
+</ul>
+<p>Notes for 0.7:
+<ul>
+  <li>This is a stable version.</li>
+  <li>License has been changed to a pure GNU General Public License v2.</li>
+  <li>There are numerous little, insignificant and time-consuming fixes compared
+  		with the latest stable version 0.6.4.4. Upgrading is recommended.</li>
+</ul>
+<p>Notes for 0.6.4.5:
+<ul>
+  <li>This is an intermediary dev release, with some minor but useful fixes.</li>
+</ul>
+<p>Notes for 0.6.4.4:
+<ul>
+  <li>This is an intermediary dev release, with some minor but useful features.</li>
+  <li>Although considered non-stable (low testing and new features to be added soon), this
+  		release seems to perform very well.</li>
+</ul>
+<p>Notes for 0.6.4.3:
+<ul>
+  <li>This is an intermediary dev release, with some minor but useful features.</li>
+</ul>
+<p>Notes for 0.6.4.2:
+<ul>
+  <li>This is an intermediary dev release, with some minor but useful features.</li>
+  <li>Some preferences have been added to enable or disable features (album descriptions,
+  		album cache, viewing of hidden items.)</li>
+  <li>The location.php and htdocs have been updated to be more flexible.</li>
+  <li>A new folder is used to move admin sources out of the normal sources.</li>
+  <li>Although considered non-stable (low testing and new features to be added soon), this
+  		release seems to perform very well.</li>
+</ul>
+<p>Notes for 0.6.4.1:
+<ul>
+  <li>This is a stable version.</li>
+  <li>This version does not technically add any feature, but it fixes a bunch of small and
+  		annoying details.</li>
+  <li>The code has been updated to comply with PHP 4.3.2 installation defaults: 
+  		it works with register_globals=off and allow_call_time_pass_reference=off.</li>
+  <li>This version also has been tested with IIS 5 and PHP 4.3.2 on a Windows box.</li>
+</ul>
+<p>Notes for 0.6.4.0:
+<ul>
+  <li>This version features a completly rewritten installation guide.
+  		Altough I consider the installation guide to be always obsolete (since it is always
+  		updated <em>after</em> features are posted online), its reading should help a lot
+  		people who are new to RIG. It covers how to compile the thumbnail application and
+  		how to configure a basic site, including tricky parts like directories access rights.</li>
+  <li>This version features a brand new album HTML cache generation: each time an album page
+  		is rendered, RIG keeps a cache of it and serves the cached version next time the
+  		same unchanged album is viewed. This greatly reduces the load of the server.</li>
+  <li>This version was supposed to be the next stable one but further testing showed this was premature</li>
+</ul>
+<p>Notes for 0.6.3.5:
+<ul>
+  <li>This version introduces some new (minor but useful) features.
+	  It seems pretty solid and is a good candidate to become 0.6.4-stable</li>
+  <li>Albums has Grid vs Vertical layout, displays date of modification, etc.</li>
+  <li>New "ignore lists" for albums/images (patterns of files to be ignored)</li>
+</ul>
+<p>Notes for 0.6.3.4:
+<ul>
+  <li>This is an intermediary "dev" release (only CVS, no specific tag nor file download)</li>
+  <li>Introduced support for videos</li>
+  <li>Fixed broken album frame for Mozilla 1.0</li>
+  <li>Support in-album "file_info.diz" or "descript.ion" files</li>
+</ul>
+<p>Notes for 0.6.3.3:
+<ul>
+  <li>Japanese translation completed by INOUE Tatsuo</li>
+  <li>Some cleanup and fixes</li>
+</ul>
+<p>Notes for 0.6.3.2:
+<ul>
+  <li>Misc fixes</li>
+  <li>Preparation for upload feature</li>
+  <li>Ability to translate UI via web interface (experimental)</li>
+</ul>
+<p>Notes for 0.6.3.1: 
+<ul>
+<li>Mostly untested, but few problems are to be expected (modifications since 0.6.3.0 are fairly limited).</li>
+</ul>
+<p>Notes for 0.6.3.0:
+<ul>
+  <li>Seems fairly stable, although there's one known bug in the URL-rewrite option 
+    (fails for cookies).</li>
+  <li>The options are now stored in the rig-options subdir instead of the rig-cache 
+    subdir. Consequently, you can either rebuild all options for your site or 
+    use the hidden "fix options" function (it will read the old one and write 
+    new ones, but it may fail to get the correct default thumbnails stored path, 
+    since the format changed).</li>
+</ul>
+
+<h3>RIG Change Log</h3>
+
+<p>New in 0.7.1:
+<ul>
+  <li> Fix: No error messages when thumbnails cannot be created</li>
+</ul>
+<p>New in 0.7:
+<ul>
+  <li>License: GNU General Public License v2.</li>
+  <li>Fix: rig-thumbnail makefiles from system now use libjpeg if headers present</li>
+  <li>Fix: Handle accents in generated URLs.</li>
+  <li>Fix: Remove temporary HTML cache if PHP processing aborted before completion</li>
+  <li>Fix: HTML cache hash now properly includes query variables</li>
+  <li>Themes: Red title block for admin mode</li>
+  <li>Feature: Remove all HTML caches action in Admin album page</li>
+  <li>Fix: Disable pager if there's only one page</li>
+  <li>Fix: Display pager at the bottom of the album table</li>
+  <li>Fix: rig_thumbnail use sig alarm/kill if locked in libavi processing (Cinepak is bugged)</li>
+</ul>
+<p>New in 0.6.4.5:
+<ul>
+  <li>Fix for broken browser which interpret &amp;image= in URLs</li>
+  <li>Fixes for PHP 4.3.6</li>
+  <li>Fix: Translated/fixed tooltips international strings</li>
+  <li>Fix: Changed web page title to start by "RIG"</li>
+  <li>Fix: Minor fixes in phpUnit</li>
+</ul>
+<p>New in 0.6.4.4:
+<ul>
+  <li>Fix: invalidate html cache if image data cache modified</li>
+  <li>Video: Use JavaScript browser & OS detection to customize html tag and display proper install codec links</li>
+  <li>Video: Display video codec name and use to customize html viewer tag.</li>
+</ul>
+<p>New in 0.6.4.3:
+<ul>
+  <li>Feature: Follow image symlinks</li>
+  <li>Feature: Split album/images pages in several pages if too many to display</li>
+  <li>Feature: Follow album symlinks</li>
+</ul>
+<p>New in 0.6.4.2:
+<ul>
+  <li>Feature: Pref to en/disable album descriptions</li>
+  <li>Feature: Pref to en/disable album cache</li>
+  <li>Feature: Pref to en/disable view hidden album/image via query string hack</li>
+  <li>Fix: Album cache not recomputed when src/*.php changed</li>
+  <li>Feature: Split admin in different src dir (with location setting)</li>
+  <li>Htdocs: New check_entry.php (can be symlinked into index.php in album's web folder)</li>
+  <li>Location: New dir_album_cache, using more absolute paths, renamed path variables to be more logical</li>
+  <li>Fix: Added color_table_desc in themes for description and dates in album view.</li>
+</ul>
+<p>New in 0.6.4.1:
+<ul>
+  <li>Checking code to run with IIS 5 + PHP 4.3.2</li>
+  <li>Rewrote access to globals to comply with PHP 4.3.2 installation defaults</li>
+  <li>Many small fixes</li>
+</ul>
+<p>New in 0.6.4.0:
+<ul>
+  <li>New INSTALL.html and INSTALL.txt (already obsolete --sigh-- )</li>
+  <li>New album HTML cache generation</li>
+  <li>New fancy border for image thumbnails in album view</li>
+</ul>
+<p>New in 0.6.3.5:
+<ul>
+  <li>Translation of dates in web pages</li>
+  <li>Albums: Display album modification date in grid layout</li>
+  <li>Albums: Grid vs Vertical layout</li>
+  <li>Feature: "ignore lists" for albums/images (patterns of files to be ignored)</li>
+</ul>
+<p>New in 0.6.3.4:
+<ul>
+  <li>Introduced support for videos (display and rig_thumbnail.exe)</li>
+  <li>Added movie frame to video thumbnails</li>
+  <li>Experimental: Class layout</li>
+  <li>Fixed broken album frame for Mozilla 1.0 (render using cell background images)</li>
+  <li>Started adding some useful(?) comments to settings/prefs.php</li>
+  <li>Support in-album "file_info.diz" or "descript.ion" files</li>
+  <li>New makefiles for rig_thumbnail.exe</li>
+</ul>
+<p>New in 0.6.3.3:</p>
+<ul>
+  <li>Removed unused language strings. Added new rig_display_back_to_album method</li>
+  <li>Disabled admin_image (not finished -- experimental)</li>
+  <li>Lang: Update jp/fr/es strings to match en, removed unused strings. Using latest jp translation file.</li>
+  <li>Fixed album/image count display in admin mode</li>
+  <li>Added "old" layout for image display, with image layout pref variable.</li>
+</ul>
+<p>New in 0.6.3.2:</p>
+<ul>
+  <li>Album borders: ability to deactivate for Mozilla 1.0 users</li>
+  <li>Translate: deactivated by default</li>
+  <li>Translate: ability to update the language files from the web interface</li>
+  <li>Upload directories (not used yet)</li>
+  <li>Pref: can customize &lt;meta name=&quot;robots&quot; ...&gt;</li>
+  <li>Admin: admin-image vs admin-album pages</li>
+</ul>
+<p>New in 0.6.3.1:</p>
+<ul>
+  <li>Login: plain vs crypt vs MD5 password in the password file</li>
+  <li>Login: display error msg for invalid user/password</li>
+  <li>Themes: Added gray theme color</li>
+</ul>
+<p>New in 0.6.3:</p>
+<ul>
+  <li> Display copyright in image page, display number of images/albums in tables</li>
+  <li> Hidden fix_option in admin page to convert option.txt from 0.6.2 to 0.6.3 
+    (experimental)</li>
+  <li> Using rig_options directory</li>
+  <li> Renamed src function with rig_ prefix everywhere</li>
+  <li> Only display phpinfo if _debug_ enabled or admin mode</li>
+</ul>
+<p>New in 0.6.2.4:</p>
+<ul>
+  <li>Stable enough to become 0.6.3 (need file package on SourceForge)</li>
+  <li> URL-Rewrite support (cf site/prefs.php -- has at least one known bug)</li>
+</ul>
+<p>New in 0.6.2.3:</p>
+<ul>
+  <li> Tuned album thumbnail table</li>
+  <li>Charset and html lang support </li>
+</ul>
+<p>New in 0.6.2.2:</p>
+<ul>
+  <li> Better error reporting</li>
+  <li> Multiple languages support (SP+JP on top of EN+FR)</li>
+  <li> Theme pages support</li>
+  <li> jhead support</li>
+  <li> Grayscale JPEG support</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<i>
+$Id$
+</i>
+<p>&nbsp;</p>
+</body>
+</html>

@@ -18,6 +18,8 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
+- in 0.7.1:
+[1.F] Fix: No error messages when thumbnails cannot be created
 - in 0.7:
 [1.F] License: GNU General Public License v2.
 [1.F] Fix: rig-thumbnail makefiles from system now use libjpeg if headers present
@@ -743,11 +745,14 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.62  2005/10/08 19:28:40  ralfoide
+//	Closing 0.7.1
+//
 //	Revision 1.61  2005/10/07 05:40:12  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.60  2005/09/25 23:24:30  ralfoide
 //	Updated changelog/todolist
 //	

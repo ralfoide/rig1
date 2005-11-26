@@ -49,7 +49,8 @@ if ($detail > 0)
 $file = $current_image;
 
 $pretty = rig_pretty_name($file, FALSE);
-$preview = rig_encode_url_link(rig_build_preview($current_album, $file, -1, -1, FALSE));
+$preview = rig_build_preview($current_album, $file, -1, -1, FALSE);
+$preview = $preview["u"];
 
 if (rig_is_visible())
 	$vis_val = "selected";
@@ -366,11 +367,19 @@ if (rig_is_visible())
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.7  2005/10/07 05:40:10  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.6  2005/09/25 22:36:14  ralfoide
 //	Updated GPL header date.
 //	

@@ -329,7 +329,7 @@ function rig_display_album_list()
 		// prepare title
 		$title = "<a href=\"$link\">$pretty</a>\n";
 
-		
+
 		// prepare description, if any
 
 		if (is_string($list_description[$dir]))
@@ -337,7 +337,7 @@ function rig_display_album_list()
 		else
 			$desc = "";
 
-			
+
 		// get the album's date
 
 		$album_date = rig_get_album_date($name);
@@ -372,16 +372,15 @@ function rig_display_album_list()
 		}
 		else // default: 'grid' mode
 		{
-		echo "<td $w_td>\n";
+			echo "<td $w_td>\n";
 			echo "<table border=\"0\">\n";
 			echo "<tr><td align=\"center\">\n";
 		}
 
 		// get the relative and absolute path to the preview icon
-		$abs_path = "";
-		$url_path = "";
-		$res = rig_build_album_preview($name, $abs_path, $url_path, $preview_size, $preview_quality);
-		$url_path = rig_encode_url_link($url_path);
+		$res = rig_build_album_preview($name, $preview_size, $preview_quality);
+		$abs_path = $res["a"];
+		$url_path = $res["u"]; // already url-escaped 
 
 		if (!$res)
 		{
@@ -658,7 +657,7 @@ function rig_display_image_list()
 		$pretty2 = rig_pretty_name($file, FALSE);
 
 		$info = rig_build_preview_info($current_real_album, $file);
-		$preview = $info["p"];
+		$preview = $info["u"]; //[u] is already url-escaped
 
 		if (isset($info["w"]))
 			$width = "width=\"" . $info["w"] . "\"";
@@ -669,8 +668,6 @@ function rig_display_image_list()
 			$height = "height=\"" . $info["h"] . "\"";
 		else
 			$height = "";
-
-		$preview = rig_encode_url_link($preview);
 
 
 		// RM 20021101 important: the <img> and the title must have the </td>
@@ -971,8 +968,116 @@ function rig_display_pager($curr_page, $max_page, $is_album = TRUE)
 		$last = $curr_page+1;
 		$u = rig_self_url(-1, -1, -1, $pname, ($is_album ? $last : -1), ($is_album ? -1 : $last));
 		echo "&nbsp;<a href=\"$u\">Next</a>";
-	}		
+	}
+}
 
+
+//-----------------------------------------------------------------------
+
+
+//***************************************************************
+function rig_display_album_thumb($size = FALSE, $quality = FALSE)
+//***************************************************************
+// This function streams the album icon to the browser.
+// If the precomputed album icon can't be used, a default gif icon is streamed.
+{
+	global $current_real_album;
+
+	if ($quality === FALSE)
+		$quality = -1;
+	if ($size === FALSE)
+		$size = -1;
+
+	$res = rig_build_album_preview($current_real_album);
+	$abs = $res["a"];
+	if (rig_is_file($abs))
+	{
+		header("Content-type: " . $type);
+		header("Content-length: " . filesize($abs));
+		echo file_get_contents($abs);
+		return;
+	}
+
+	// In case of error, return a default icon.
+	global $dir_images;
+	global $dir_abs_base;
+	global $pref_empty_album;
+	$abs = realpath(rig_post_sep($dir_abs_base) . $dir_images . $pref_empty_album);
+	header("Content-type: image/gif");
+	header("Content-length: " . filesize($abs));
+	echo file_get_contents($abs);
+}
+
+
+//***************************************************************
+function rig_display_image_thumb($size = FALSE, $quality = FALSE)
+//***************************************************************
+// This function is misnamed: it streams an "image" into the browser.
+//
+// For regular images, this can be either a preview thumbnail or a resized
+// version of the image.
+// - Size is the largest pixel size of the image. -1 generally means to use
+//   the "preview size" (i.e. thumbnails), whereas FALSE means to use the
+//   default image size.
+// - Quality is a value between 1-100 for the JPEG quality.
+//
+// For video media, it's a bit confusing since this is called to stream
+// either the preview thumbnail or the actual movie .
+// - Size has the same meaning than for images. The actualy pixel size is
+//   is ignored since movies are not resized on the fly. A value of -1 means
+//   to render the thumbnail preview, anything else means to stream the
+//   actual movie file.
+// - Quality is ignored. We don't reencode videos on the fly.
+//
+// If the actual file can't be found, a default gif icon is streamed, which
+// is of course totally irrelevant for videos (TODO: have a default one-frame
+// stream that says "video missing" that we could stream instead.)
+{
+	global $rig_img_size;
+	global $current_image;
+	global $current_real_album;
+	global $pref_image_quality;
+
+	if ($quality === FALSE)
+		$quality = $pref_image_quality;
+	if ($size === FALSE)
+		$size = $rig_img_size;
+
+	// get the file type
+	$type = rig_get_file_type($current_image);
+
+	if ($size == -1 || strncmp($type, "image/", 6) == 0)
+	{
+		// If size is -1, rig_build_preview_info will know how to create a thumbnail
+		// no matter what the input datatype is.
+		// Otherwise it will rescale and render an image as appropriate.
+
+		$res = rig_build_preview_info($current_real_album, $current_image, $size, $quality);
+
+		$abs = $res["a"];
+		if (rig_is_file($abs))
+		{
+			header("Content-type: " . ($size == -1 ? "image/jpeg" : $type));
+			header("Content-length: " . filesize($abs));
+			echo file_get_contents($abs);
+			return;
+		}
+	}
+	else if (strncmp($type, "video/", 6) == 0)
+	{
+		// Stream an actual data file.
+		if (rig_stream_video($type))
+			return;
+	}
+
+	// In case of error, return a default icon.
+	global $dir_images;
+	global $dir_abs_base;
+	global $pref_empty_album;
+	$abs = realpath(rig_post_sep($dir_abs_base) . $dir_images . $pref_empty_album);
+	header("Content-type: image/gif");
+	header("Content-length: " . filesize($abs));
+	echo file_get_contents($abs);
 }
 
 
@@ -983,7 +1088,6 @@ function rig_display_pager($curr_page, $max_page, $is_album = TRUE)
 function rig_display_image()
 //**************************
 {
-	global $dir_album;
 	global $abs_album_path;
 	global $current_real_album;		// RM 20030907
 	global $current_image;
@@ -991,9 +1095,6 @@ function rig_display_image()
 	global $rig_img_size;
 	global $pref_image_size;
 	global $pref_image_quality;
-
-	global $_test_;
-	if (isset($_test_)) echo "Test type: $_test_<br>";
 
 	if ($rig_img_size != -2 && $rig_img_size < 1)
 		$rig_img_size = $pref_image_size;
@@ -1004,28 +1105,22 @@ function rig_display_image()
 	if (strncmp($type, "image/", 6) == 0)
 	{
 		// get image (build resized preview if necessary)
-		$preview = rig_build_preview($current_real_album, $current_image, $rig_img_size, $pref_image_quality);
-	
-		// RM 110801 -- use size of image in img tag if available
-		// get actual size of image
-		$icon_info = rig_image_info($preview);
-	
-		// url-encode filename
-		$preview = rig_encode_url_link($preview);
-	
-		if (is_array($icon_info) && count($icon_info) > 2)
+		$res = rig_build_preview_info($current_real_album, $current_image, $rig_img_size, $pref_image_quality);
+		$link = $res["u"]; // already url-encoded
+		
+		if (isset($res["w"]) && isset($res["h"]))
 		{
 			// if we have the size, use it in the img tag
-			$sx = $icon_info["w"];
-			$sy = $icon_info["h"];
+			$sx = $res["w"];
+			$sy = $res["h"];
 	
-			echo "<img id=\"content-img\" src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
+			echo "<img id=\"content-img\" src=\"$link\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
 		}
 		else
 		{
 			// there's no size (probably a problem when creating the preview)
 			// just use the img name anyway
-			echo "<img id=\"content-img\" src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0>";
+			echo "<img id=\"content-img\" src=\"$link\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0>";
 		}
 	}
 	else if (strncmp($type, "video/", 6) == 0)
@@ -1504,9 +1599,17 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.42  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.41  2005/10/05 03:54:52  ralfoide
 //	Added img id for template/css/js
-//
+//	
 //	Revision 1.40  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.

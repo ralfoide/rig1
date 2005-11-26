@@ -224,317 +224,26 @@ function hide_zoom()
 			<img class="zoom" name="zoom" id="zoom" title="zoom" src="image.jpg" />
 		<?php
 
-		process_album(rig_get($_GET,'album'), $sw, $sh, $sw, $sh);
+		$n = rig_begin_buffering(); // returns html filename to include or TRUE to start buffering and output or FALSE on errors
+		if (is_string($n) && $n != '')
+		{
+			include($n);
+		}
+		else
+		{
+			// begin output (captured by buffering)
+			process_album(rig_get($_GET,'album'), $sw, $sh, $sw, $sh);
+
+		} // end output buffering
+		
+		rig_end_buffering();
 		?>
 			</body>
 			</html>
 		<?php
 		exit;
 	}
-	
-	if (0)
-	{
-		global $color_body_bg;
-		
-		// change the background color depending on the level
-		$bg_col = array( "#FFFFFF", "#EEEEEE", "#DDDDDD", "#CCCCCC", "#BBBBBB", "#AAAAAA",
-						 "#999999", "#888888", "#777777", "#666666", "#555555", "#444444", 
-						 "#333333", "#222222", "#111111", "#000000");
-		$color_body_bg = $bg_col[$rec <= 2 ? 0 : ($rec <= 17 ? $rec-2 : 15)];
 
-		rig_prepare_album(rig_get($_GET,'album'), rig_get($_GET,'apage', 0), rig_get($_GET,'ipage', 0));
-
-		// TODO: if rec=2, add onresize="..." to body tag (reload with rec=1)
-
-		//$extra = "rec=" . ($rec+1) . "&recw=" . $wx . "&rech=" . $wy;
-		//$link = rig_self_url("", $name, -1, $extra);
-		if ($rec > 2)
-			$body_extra .= " onclick=\"go_top('$current_album')\" onmouseover=\"body_over('$current_album')\"";
-
-
-		rig_display_body($body_extra);
-
-
-		if (0) // debug
-		{
-			?>
-				Rec: <?= $rec ?> <br>
-				SX: <?= $sw ?> <br>
-				SY: <?= $sh ?> <br>
-				
-				Window size is: 
-				<script language="JavaScript" type="text/JavaScript">
-				<!--
-					getWindowSize();
-					// document.write('w=' + xScreen + ', h=' + yScreen + '<br>')
-				//-->
-				</script>
-			<?php
-		}
-
-		// background click area
-		// ...		
-
-		rig_load_album_list(FALSE);
-
-		if (rig_has_albums())
-		{
-			global $current_album;
-			global $list_albums;
-			global $list_albums_count;
-
-			// size of the iframe border & border style
-			$border = ($rec < 5 ? 5-$rec : 1);
-			$margin = ($rec < 6 ? 6-$rec : 0);
-
-			// the complete size of an iframe is:
-			// the iframe-width/height + border*2 + margin*2
-			
-
-			$m = is_integer($list_albums_count) ? $list_albums_count : count($list_albums);
-
-			$ps = $rw/$rh;
-			$mx = floor(sqrt($ps * $m) + .5);
-			$my = ceil($m / $mx);
-
-			$wx = floor(($rw - $margin) / $mx);
-			$wy = floor(($rh - $margin) / $my);
-
-			// the inner size of the iframe minus its border and the margin
-			$wx2 = $wx - 2*$margin - 2*$border;
-			$wy2 = $wy - 2*$margin - 2*$border;
-
-			$i = 0;
-			$j = 0;
-
-//echo "[a:$rec] $m / $mx + $my / $wx + $wy";
-
-			// the floating zoom image
-			?>
-				<img class="zoom" name="zoom" id="zoom" title="zoom" src="image.jpg" />
-			<?php
-
-			foreach($list_albums as $dir)
-			{
-				$name = rig_post_sep($current_album) . $dir;
-		
-				// continue if thumbnail is visible
-
-				if (!rig_is_visible(-1, $dir))
-					continue;
-
-				// compute pos
-				
-				$px = $i * $wx;
-				$py = $j * $wy;
-
-				// ---
-
-				$pretty = rig_pretty_name($dir, FALSE, TRUE);
-				$extra =  "rec=" . ($rec+1)
-						. "&scrw=" . $sw . "&scrh=" . $sh
-						. "&recw=" . ($wx2) . "&rech=" . ($wy2)
-						. "&ox="   . ($ox+$px+$border+$margin) . "&oy=" . ($oy+$py+$border+$margin);
-
-				$link = ""; // rig_self_url("", $name, -1, $extra);
-
-//echo "<p>$link<br>";
-//echo "<br>$extra";
-				// insert the iframe
-				?>
-					<iframe class="frame"
-							style="left:<?= $px ?>px; top:<?= $py ?>px; margin:<?= $margin ?>px; border-width:<?= $border ?>px"
-							src="<?= $link ?>" name="<?= $pretty ?>"
-							width="<?= $wx2 ?>" height="<?= $wy2 ?>"
-							title="<?= $pretty ?>" alt="<?= $pretty ?>">
-						Your browser does not support iframe elements.
-					</iframe>
-				<?php			
-
-				// force flush to the browser
-				rig_flush();
-
-				// compute next index
-
-				$i++;
-				if ($i >= $mx)
-				{
-					$i = 0;
-					$j++;
-				}
-			}
-	
-		}
-		else if (rig_has_images())
-		{
-			global $current_album;
-			global $list_images;
-			global $list_images_count;
-			global $current_real_album;
-
-			// 2 pixel margin around div
-			$margin = 1;
-		
-			$m = is_integer($list_images_count) ? $list_images_count : count($list_images);
-
-			//$mx = ceil(sqrt($m));
-			$ps = $rw/$rh;
-			$mx = floor(sqrt($ps * $m) + .5);
-			$my = ceil($m / $mx);
-
-			$wx = floor($rw / $mx);
-			$wy = floor($rh / $my);
-
-			if ($wx < 20) 
-				$margin=0;
-
-			$wx2 = $wx - 2*$margin;
-			$wy2 = $wy - 2*$margin;
-
-			$i = 0;
-			$j = 0;
-			$skip = 0;
-			$skiper = 0;
-
-			// if images become smaller than 20 pixels, skip some images
-			if (0) // $wx2 < 20 || $wy2 < 20)
-			{
-				$nx = min(1, ($wx2 < 20 ? floor($mx * $wx2 / 20) : $mx));
-				$ny = min(1, ($wy2 < 20 ? floor($my * $wy2 / 20) : $my));
-				
-				$d = $m - ($nx * $ny);
-				$skip = $m / $d;
-				
-				$mx = $nx;
-				$my = $ny;
-
-				$wx = floor($rw / $mx);
-				$wy = floor($rh / $my);
-	
-				$wx2 = $wx - 2*$margin;
-				$wy2 = $wy - 2*$margin;
-			}
-
-			foreach($list_images as $file)
-			{
-				// continue if thumbnail is visible
-		
-				if (!rig_is_visible(-1, -1, $file))
-					continue;
-
-				// skip some?
-				if ($skip > 0)
-				{
-					$skiper++;
-					if ($skiper > (int)$skip)
-					{
-						$skiper -= (int)$skip;
-						continue;
-					}
-				}
-
-				// compute pos
-				
-				$px = $i * $wx;
-				$py = $j * $wy;
-
-				$px2 = $px+$marginx;
-				$py2 = $py+$marginy;
-
-				// ---
-
-				$pretty2 = rig_pretty_name($file, FALSE);
-		
-				$info = rig_build_preview_info($current_real_album, $file);
-				$preview = $info["p"];
-				$preview = rig_encode_url_link($preview);
-				$link = rig_self_url($file);
-				$tooltip = "$html_image: $pretty2";
-
-				$ix = $ix1 = (isset($info["w"]) ? $info["w"] : $wx2);
-				$iy = $iy1 = (isset($info["h"]) ? $info["h"] : $wy2);
-
-
-				// proportional rescaling
-				if ($ix != $wx2 && $iy != $wy2)
-				{
-					$p = $ix / $iy;
-					$r = $wx2 / $wy2;
-					if ($p >= $r)
-					{
-						// match width, rescale height
-						$ix = $wx2;
-						$iy = $ix / $p;
-					}
-					else
-					{
-						// match height, rescale width
-						$iy = $wy2;
-						$ix = $iy * $p;
-					}
-				}
-
-				$width  = "width=\""  . $ix . "\"";
-				$height = "height=\"" . $iy . "\"";
-
-				// center image
-				$px2 += floor(($wx2 - $ix) / 2);
-				$py2 += floor(($wy2 - $iy) / 2);
-
-				// zoom position
-
-				$zm = 15;	// browser margin for right/bottom
-				$zd = 10;	// border size around the div
-
-				$zx = $ox + $px2 - floor(($ix1 - $ix)/2);
-				$zy = $oy + $py2 + $iy + $zd;
-
-				if ($zx + $ix1 >= $sw - $zm)
-					$zx = $sw - $zm - $ix1;
-
-				if ($zy + $iy1 >= $sh - $zm)
-					$zy = $oy + $py2 - $zd - $iy1;
-
-
-if(1){
-				// insert the div with the image
-				?>
-					<a  class="image"
-						style="left:<?= $px2 ?>px; top:<?= $py2 ?>px; width:<?= $ix ?>px; height:<?= $iy ?>px"
-						href="<?= $link ?>" target="_new"
-					 ><img src="<?= $preview ?>" 
-						alt="<?= $pretty2 ?>" 
-						title="<?= $tooltip ?>"
-						onmouseover="show_zoom('<?= $preview ?>','<?= $zx ?>px','<?= $zy ?>px')" 
-						onmouseout="hide_zoom()"
-					 	<?= $width ?> <?= $height ?> border="0"/></a>
-				<?php
-}
-
-				// force flush to the browser
-//				rig_flush();
-
-				// compute next index
-
-				$i++;
-				if ($i >= $mx)
-				{
-					$i = 0;
-					$j++;
-				}
-				if ($j >= $my)
-					break;
-			}
-
-			rig_flush();
-		}
-		
-		?>
-			</body>
-			</html>
-		<?php
-		
-	}
 
 //**********************************************************************
 function process_album($album, $sw, $sh, $rw, $rh, $ox=0, $oy=0, $z = 0)
@@ -748,9 +457,8 @@ function process_images($sw, $sh, $rw, $rh, $ox, $oy, $z)
 		$pretty2 = rig_pretty_name($file, FALSE);
 
 		$info = rig_build_preview_info($current_real_album, $file);
-		$preview = $info["p"];
-		$preview = rig_encode_url_link($preview);
-		$link = rig_self_url($file);
+		$preview = $info["u"];
+		$link = rig_self_url($file, -1, RIG_SELF_URL_NORMAL);
 		$tooltip = "Click to view full " . "$html_image: $pretty2";
 
 		$ix = $ix1 = (isset($info["w"]) ? $info["w"] : $wx2);
@@ -828,9 +536,17 @@ if(1){
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.2  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.1  2004/02/18 07:40:46  ralfoide
 //	Album overview
 //	

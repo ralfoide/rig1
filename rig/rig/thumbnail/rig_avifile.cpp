@@ -76,12 +76,20 @@
 void rig_avifile_filetype_support(void)
 //*************************************
 {
-	printf("/\\.(avi|wmv|as[fx])$/i\n");
-	printf("video/avi\n");
+	printf("/\\.avi$/i\n");
+	printf("video/avi:video/x-msvideo\n");
+	printf("/\\.wmv$/i\n");
+	printf("video/avi:video/x-ms-wmv\n");
+	printf("/\\.as[fx]$/i\n");
+	printf("video/avi:video/x-ms-asf\n");
 	printf("/\\.(mov|qt|sdp|rtsp)$/i\n");
 	printf("video/quicktime\n");
 	printf("/\\.(mpe?g[124]?|m[12]v|mp4)$/i\n");
 	printf("video/mpeg\n");
+	printf("/\\.rm$/i\n");
+	printf("video/real:application/vnd.rn-realmedia\n");
+	printf("/\\.flv$/i\n");
+	printf("video/flash\n");
 }
 
 
@@ -295,9 +303,17 @@ RigRgb * rig_avifile_read(const char* filename)
 /****************************************************************
 
 	$Log$
+	Revision 1.11  2005/11/26 18:00:53  ralfoide
+	Version 0.7.2.
+	Ability to have absolute paths for albums, caches & options.
+	Explained each setting in location.php.
+	Fixed HTML cache invalidation bug.
+	Added HTML cache to image view and overview.
+	Added /th to stream images & movies previews via PHP.
+
 	Revision 1.10  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
-
+	
 	Revision 1.9  2004/07/17 07:52:32  ralfoide
 	GPL headers
 	

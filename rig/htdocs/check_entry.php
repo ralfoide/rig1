@@ -33,18 +33,23 @@
 function rig_check_src_file($name)
 //********************************
 {
-	global $dir_abs_install, $dir_abs_src, $dir_abs_admin_src, $dir_abs_globset, $dir_abs_locset;
+	global $dir_abs_install;
+	global $dir_abs_src;
+	global $dir_abs_admin_src;
+	global $dir_abs_globset;
+	global $dir_abs_locset;
 	
 	// enabling track_errors is a big help
 	ini_set("track_errors", "1");
 	
 	// check it worked
 	$track_errors = (ini_get("track_errors") == 1);
-	
+
 	if ($track_errors)
 	    $result = @file_exists($name);
 	else
 	    $result = file_exists($name);
+
 	if (!$result)
 	{
 	    echo "<h1>RIG Configuration Error</h1>";
@@ -79,9 +84,17 @@ require_once(rig_check_src_file($dir_abs_src . "entry_point.php"));
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.3  2005/09/25 22:36:12  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.2  2004/07/17 07:52:30  ralfoide
 //	GPL headers
 //	

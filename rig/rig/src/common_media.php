@@ -936,7 +936,8 @@ function rig_get_images_prev_next()
 		$file = $list_images[$key-1];
 
 		$pretty = rig_pretty_name($file, FALSE);
-		$preview = rig_encode_url_link(rig_build_preview($current_real_album, $file));
+		$preview = rig_build_preview_info($current_real_album, $file);
+		$preview = $preview["u"];
 
 		$display_prev_link = rig_self_url($file);
 		$display_prev_img = "<img src=\"$preview\" alt=\"$pretty\" title=\"$html_image: $pretty\" border=0>";
@@ -947,7 +948,8 @@ function rig_get_images_prev_next()
 		$file = $list_images[$key+1];
 
 		$pretty = rig_pretty_name($file, FALSE);
-		$preview = rig_encode_url_link(rig_build_preview($current_real_album, $file));
+		$preview = rig_build_preview_info($current_real_album, $file);
+		$preview = $preview["u"];
 
 		$display_next_link = rig_self_url($file);
 		$display_next_img = "<img src=\"$preview\" alt=\"$pretty\" title=\"$html_image: $pretty\" border=0>";
@@ -964,9 +966,17 @@ function rig_get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.2  2005/10/07 06:18:28  ralfoide
 //	Don't show "rig album - " or "rig image - " in titles.
-//
+//	
 //	Revision 1.1  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

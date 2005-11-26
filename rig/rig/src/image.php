@@ -65,6 +65,15 @@ if (isset($_GET['template']))
 rig_display_header($display_title);
 rig_display_body();
 
+$n = rig_begin_buffering(); // returns html filename to include or TRUE to start buffering and output or FALSE on errors
+if (is_string($n) && $n != '')
+{
+	include($n);
+}
+else
+{
+	// begin output (captured by buffering)
+
 ?>
 
 <center>
@@ -111,7 +120,12 @@ rig_display_body();
 
 <?php
 	rig_display_credits();
-	rig_display_footer();
+} // end output buffering
+
+rig_end_buffering();
+
+// footer is not buffered as it contains the generation's time output
+rig_display_footer();
 ?>
 
 </body>
@@ -120,11 +134,19 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.20  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.19  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.18  2005/10/05 03:53:45  ralfoide
 //	Made usage of template conditional on presence of query &template=
 //	

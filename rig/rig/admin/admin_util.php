@@ -202,7 +202,7 @@ function rig_admin_mk_preview($album,
 					if ($do_previews)
 					{
 						$t = rig_getmicrotime();
-						$preview = rig_build_preview($album, $file);
+						rig_build_preview_info($album, $file);
 						$t1 = rig_getmicrotime() - $t;
 					}
 					else
@@ -213,7 +213,7 @@ function rig_admin_mk_preview($album,
 					if ($do_images)
 					{
 						$t = rig_getmicrotime();
-						$preview = rig_build_preview($album, $file, $pref_image_size, $pref_image_quality);
+						rig_build_preview_info($album, $file, $pref_image_size, $pref_image_quality);
 						$t2 = rig_getmicrotime() - $t;
 					}
 					else
@@ -883,7 +883,7 @@ function rig_admin_display_album()
 	{
 		$name = rig_post_sep($current_album) . $dir;
 		$pretty = rig_pretty_name($dir, FALSE);
-		$preview = rig_encode_url_link(rig_get_album_preview($name));
+		$preview = rig_get_album_preview($name); // url is properly url-escaped
 
 		if (rig_is_visible(-1, $dir))
 		{
@@ -966,7 +966,8 @@ function rig_admin_display_image()
 	foreach($list_images as $key => $file)
 	{
 		$pretty = rig_pretty_name($file, FALSE);
-		$preview = rig_encode_url_link(rig_build_preview($current_album, $file, -1, -1, FALSE));
+		$preview = rig_build_preview_info($current_album, $file, -1, -1, FALSE);
+		$preview = $preview["u"];
 
 		// count visible images
 		$list_images_count++;
@@ -1069,9 +1070,17 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.8  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.7  2005/09/25 22:36:14  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.6  2004/10/07 01:20:01  ralfoide
 //	Fix for encoding in admin url
 //	

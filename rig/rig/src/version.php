@@ -25,18 +25,26 @@
 //************************************************************************
 
 
-$rig_vernum  =  0.71;
-$rig_version = "0.7.1";
+$rig_vernum  =  0.72;
+$rig_version = "0.7.2";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.27  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.26  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.
 //	Preliminary default template for album.
-//
+//	
 //	Revision 1.25  2005/09/26 01:13:35  ralfoide
 //	Fixed vernum to match version.
 //	

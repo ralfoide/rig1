@@ -42,63 +42,59 @@
 // 8- !admin    &  overview -> overview.php [experimental]
 // 9- !admin    &  tests    -> tests.php    [phpUnit testing]
 
-// RM 20040703 using "img" query param instead of "image"
-$rig_is_image = (isset($_GET['img']) && is_string($_GET['img']) && $_GET['img']);
+
+//************************************************************
+function rig_select($param, $filename = "", $is_admin = FALSE)
+//************************************************************
+{
+	global $_GET;
+	global $dir_abs_admin_src;
+	global $dir_abs_src;
+	
+	if ($filename == "")
+		$filename = $param . ".php";
+	
+	$dir = ($is_admin ? $dir_abs_admin_src : $dir_abs_src);
+
+	if (isset($_GET[$param]) && is_string($_GET[$param]))
+			return "require_once(rig_check_src_file(\"$dir$filename\")); exit();";
+
+	return ";";
+}
+
 
 if (isset($_GET['admin']) && $_GET['admin'])
 {
-	if (0 && isset($_GET['upload']) && $_GET['upload']) // RM 20030820 -- not yet implemented
-	{
-		// RM 20030820 -- not yet implemented
-		// require_once(rig_check_src_file($dir_abs_admin_src . "admin_upload.php"));
-	}
-	else if (isset($_GET['translate']) && $_GET['translate'])
-	{
-		require_once(rig_check_src_file($dir_abs_admin_src . "admin_translate.php"));
-	}
-	else if (0 && $rig_is_image) // RM 20030525 deactivated
-	{
-		// RM 20030820 -- not yet implemented
-		// require_once(rig_check_src_file($dir_abs_admin_src . "admin_image.php"));
-	}
-	else
-	{
-		require_once(rig_check_src_file($dir_abs_admin_src . "admin_album.php"));
-	}
+	// Deactivated. Not fully implemented.
+	// eval(rig_select('upload', 'admin_upload.php', TRUE));
+	// eval(rig_select('img', 'admin_image.php', TRUE));
+	require_once(rig_check_src_file($dir_abs_admin_src . "admin_album.php"));
 }
 else
 {
-	if (isset($_GET['comment']) && $_GET['comment'])
-	{
-		require_once(rig_check_src_file($dir_abs_src . "comment.php"));
-	}
-	else if ($rig_is_image)
-	{
-		require_once(rig_check_src_file($dir_abs_src . "image.php"));
-	}
-	// TEST -- RM 20040201
-	else if (isset($_GET['overview']))
-	{
-		require_once(rig_check_src_file($dir_abs_src . "overview.php"));
-	}
-	// TEST -- RM 20040222
-	else if (isset($_GET['tests']))
-	{
-		require_once(rig_check_src_file($dir_abs_src . "tests.php"));
-	}
-	else
-	{
-		require_once(rig_check_src_file($dir_abs_src . "album.php"));
-	}
+	eval(rig_select('comment'));
+	eval(rig_select('th',  'thumb.php'));
+	eval(rig_select('img', 'image.php'));
+	eval(rig_select('overview'));
+	eval(rig_select('tests'));
+	require_once(rig_check_src_file($dir_abs_src . "album.php"));
 }
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.14  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.13  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.12  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

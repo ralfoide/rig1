@@ -185,12 +185,13 @@ else
 
 
 <?php
+	rig_display_credits();
 
 } // end output buffering
 
 rig_end_buffering();
 
-rig_display_credits();
+// footer is not buffered as it contains the generation's time output
 rig_display_footer();
 
 ?>
@@ -200,11 +201,19 @@ rig_display_footer();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.22  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.21  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.20  2005/10/05 03:54:07  ralfoide
 //	Made usage of template conditional on presence of query &template=
 //	

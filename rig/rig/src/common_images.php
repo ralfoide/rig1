@@ -114,9 +114,8 @@ function rig_build_image_type($album, $file,
 {
 	global $abs_album_path;
 	global $abs_image_cache_path;
-	global $dir_abs_album;
-	global $dir_album;
-	global $dir_image_cache;
+	global $dir_url_album;
+	global $dir_url_image_cache;
 	global $dir_images;
 	global $pref_preview_size;
 	global $pref_empty_album;
@@ -143,7 +142,7 @@ function rig_build_image_type($album, $file,
 			 ($current_img_info["h"] >  $current_img_info["w"] && $current_img_info["h"] == $size)
 	   ))   )
 	{
-		return array("r" => $dir_album,
+		return array("r" => $dir_url_album,
 					 "a" => $abs_album_path,
 					 "p" => rig_prep_sep($album) . rig_prep_sep($file));
 	}
@@ -195,7 +194,7 @@ function rig_build_image_type($album, $file,
 		}
 	}
 
-	return array("r" => $dir_image_cache,
+	return array("r" => $dir_url_image_cache,
 				 "a" => $abs_image_cache_path,
 				 "p" => $dest);
 }
@@ -219,9 +218,7 @@ function rig_build_video_type($album, $file,
 	global $abs_album_path;
 	global $abs_image_cache_path;
 	global $abs_images_path;
-	global $dir_abs_album;
-	global $dir_album;
-	global $dir_image_cache;
+	global $dir_url_image_cache;
 	global $dir_images;
 	global $pref_preview_size;
 	global $pref_missing_video;
@@ -304,7 +301,7 @@ function rig_build_video_type($album, $file,
 		}
 	}
 
-	return array("r" => $dir_image_cache,
+	return array("r" => $dir_url_image_cache,
 				 "a" => $abs_image_cache_path,
 				 "p" => $dest);
 }
@@ -326,19 +323,6 @@ function rig_build_preview_ex($album, $file,
 	return NULL;
 }
 
-
-//******************************************************************
-function rig_build_preview($album, $file,
-						   $size = -1, $quality = -1,
-						   $auto_create = TRUE, $use_default = TRUE)
-//******************************************************************
-{
-	$info = rig_build_preview_ex($album, $file, $size, $quality, $auto_create, $use_default);
-
-	return rig_post_sep($info["r"]) . $info["p"];
-}
-
-
 //***********************************************************************
 function rig_build_preview_info($album, $file,
 								$size = -1, $quality = -1,
@@ -346,14 +330,17 @@ function rig_build_preview_info($album, $file,
 //***********************************************************************
 // returns an array:
 // [p]=translated URL path
+// [a]=absolute image path
 // [w]=width
 // [h]=height
+// [u]=thumbnail URL
 {
 	$info = rig_build_preview_ex($album, $file, $size, $quality, $auto_create, $use_default);
 
 	// build the output array, fill in the first field, i.e. the URL path
 	$res = array();
 	$res["p"] = rig_post_sep($info["r"]) . $info["p"];
+	$res["a"] = rig_post_sep(rig_post_sep($info["a"])) . $info["p"];
 
 	// build the abs path
 	// get the info
@@ -362,6 +349,8 @@ function rig_build_preview_info($album, $file,
 	// set the info and return the array
 	$res["w"] = $info["w"];
 	$res["h"] = $info["h"];
+
+	$res["u"] = rig_self_url($file, $album, RIG_SELF_URL_THUMB, "sz=$size&q=$quality");
 
 	return $res;
 }
@@ -486,38 +475,38 @@ function rig_build_info($album, $file)
 function rig_get_album_preview($album, $use_default = TRUE)
 //*********************************************************
 {
-	$abs_path = "";
-	$url_path = "";
-	rig_build_album_preview($album, $abs_path, $url_path, -1, -1, $use_default);
-	return $url_path;
+	$res = rig_build_album_preview($album, -1, -1, $use_default);
+	return $res["u"];
 }
 
 
 //***********************************************************************************
-function rig_build_album_preview($album, &$abs_path, &$url_path,
-								 $size = -1, $quality = -1,
+function rig_build_album_preview($album, $size = -1, $quality = -1,
 								 $use_default = TRUE, $check_icon_properties = FALSE)
 //***********************************************************************************
-// Returns TRUE if album icon could be found, otherwise FALSE and returns the
-// path to the default one
+// Returns an array:
+// ["a"] = absolute path of the icon
+// ["u"] = URL path of the icon (already url-escaped)
+// If the album can't be found returns a valid path on a default icon.
+//
 // RM 20030125: added check_icon_properties to rebuild the icon if necessary
 // RM 20030720: an preview with a non-default size/quality can be requested, in which case
 // the album's default preview is still the standard size but a copy is returned with a 
 // different size.
 {
 	global $dir_images;
-	global $dir_abs_album;
+	global $dir_abs_base;
 	global $pref_empty_album;
 	global $pref_preview_size;
 	global $abs_album_path;
 	global $abs_image_cache_path;
-	global $dir_image_cache;
+	global $dir_url_image_cache;
 	global $current_real_album;			// RM 20030907
 
 	// DEBUG
 	/*
 	echo "<br><b>Current (real) album:</b> $album -- $current_real_album\n";
-	echo "<br><b>dir_abs_album:</b> $dir_abs_album\n";
+	echo "<br><b>dir_abs_base:</b> $dir_abs_base\n";
 	echo "<br><b>dir_images:</b> $dir_images\n";
 	echo "<br><b>abs_path:</b> $abs_path\n";
 	echo "<br><b>url_path:</b> $url_path\n";
@@ -526,26 +515,29 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 	echo "<br><b>check_icon_properties:</b> $check_icon_properties\n";
 	*/
 
+	$res = array();
+	$res["u"] = rig_self_url(FALSE, $album, RIG_SELF_URL_THUMB, "sz=-1");
+	$abs_path = "";
+
 	// the root album does not have any preview [RM 20030728]
 	if ($album != '')
 	{
-		// memorize if the global album options will have been changed
+		// memorize if the global album options will be changed
 		$album_options_changed = FALSE;
 		// by default, don't re create icons
 		$create_icon = FALSE;
-	
+
 		// the target file this is all about
 		$dest_file = rig_post_sep($album) . ALBUM_ICON;
 	
 		$abs_path = rig_post_sep($abs_image_cache_path) . $dest_file;
-		$url_path = rig_post_sep($dir_image_cache)  . $dest_file;
 	
 		// -1- perform various checks
 	
 		if (!rig_is_file($abs_path))
 		{
 			// if there is no icon, we need to build one
-			$create_icon = TRUE;
+			$create_icon = TRUE;		
 		}
 		else if ($check_icon_properties || ($size != -1 && $size != $pref_preview_size))
 		{
@@ -638,12 +630,12 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 			global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
 			if (is_array($list_album_icon) && is_string($list_album_icon['f']))
 				$create_icon = !rig_set_album_icon($album, $album . rig_prep_sep($list_album_icon['a']), $list_album_icon['f'], FALSE);
-	
+
 			// if previous didn't work, try to make a default random one
 			if ($create_icon)
 				rig_select_random_album_icon($album);
 		}
-	
+
 		// -3- If a non-default size is requested, create the preview now
 		if ($size != -1 && $size != $pref_preview_size)
 		{
@@ -653,14 +645,13 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 				$album_options_changed = rig_read_album_options($album);
 	
 			global $list_album_icon; // array of icon info { a:album(relative) , f:file, s:size }
-	
+
 			if (is_array($list_album_icon) && is_string($list_album_icon['f']))
 			{
 				$info = rig_build_preview_ex(rig_post_sep($album) . $list_album_icon['a'],
 											 $list_album_icon['f'],
 											 $size, $quality);
 				$abs_path = rig_post_sep($info['a']) . $info['p'];
-				$url_path = rig_post_sep($info['r']) . $info['p'];
 	  		}
 		}
 	
@@ -668,18 +659,20 @@ function rig_build_album_preview($album, &$abs_path, &$url_path,
 		if ($album_options_changed)
 			rig_read_album_options($current_real_album, $check_icon_properties);
 	
-		// if there's a file, just use it
-		if (rig_is_file($abs_path) || !$use_default)
-		{
-			return TRUE;
-		}
 	} // album <> ''
 
-	// otherwise, use the default icon...
-	$abs_path = realpath(rig_post_sep($dir_abs_album) . $dir_images . $pref_empty_album);
-	$url_path = $dir_images . $pref_empty_album;	// RM 20020713 fix missing dir_images
+	// if there's a file, just use it
+	if (rig_is_file($abs_path) || !$use_default)
+	{
+		$res["a"] = $abs_path;
+	}
+	else
+	{
+		// otherwise, use the default icon...
+		$res["a"] = realpath(rig_post_sep($dir_abs_base) . $dir_images . $pref_empty_album);
+	}
 
-	return FALSE;
+	return $res;
 }
 
 
@@ -705,7 +698,8 @@ function rig_set_album_icon($dest_album, $prev_album, $prev_image,
 	global $abs_image_cache_path;
 
 	// get its preview
-	$preview = rig_build_preview($prev_album, $prev_image, -1, -1, TRUE, FALSE);
+	$preview = rig_build_preview_info($prev_album, $prev_image, -1, -1, TRUE, FALSE);
+	$preview = $preview["a"];
 
 	// if the preview actually exist
 	if ($preview && rig_is_file($preview))
@@ -715,7 +709,7 @@ function rig_set_album_icon($dest_album, $prev_album, $prev_image,
 		{
 			// copy it as the album icon
 			$abs_dest = $abs_image_cache_path . rig_prep_sep($dest_album) . rig_prep_sep(ALBUM_ICON);
-	
+
 			rig_create_preview_dir($dest_album);
 	
 			if (!copy($preview, $abs_dest))
@@ -867,10 +861,18 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.24  2005/11/26 18:00:53  ralfoide
+//	Version 0.7.2.
+//	Ability to have absolute paths for albums, caches & options.
+//	Explained each setting in location.php.
+//	Fixed HTML cache invalidation bug.
+//	Added HTML cache to image view and overview.
+//	Added /th to stream images & movies previews via PHP.
+//
 //	Revision 1.23  2005/10/05 03:55:59  ralfoide
 //	By default don't display obnoxious error messages when thumbnails cannot
 //	be created. This is not fatal and already obvious enough.
-//
+//	
 //	Revision 1.22  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

@@ -201,6 +201,10 @@ require_once(rig_require_once("common_video.php"));		// RM 20030928
 rig_setup();
 rig_create_option_dir("");
 
+if (rig_is_debug())
+{
+	echo "<b>Debug mode enabled</b><br>Rig Self Url: <code>" . rig_self_url() . "</code><br>";
+}
 
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
@@ -2653,6 +2657,9 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.56  2005/11/27 19:11:11  ralfoide
+//	Debug output
+//
 //	Revision 1.55  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -2660,7 +2667,7 @@ function rig_check_ignore_list($name, $ignore_list)
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.54  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

@@ -994,7 +994,9 @@ function rig_display_album_thumb($size = FALSE, $quality = FALSE)
 	{
 		header("Content-type: " . $type);
 		header("Content-length: " . filesize($abs));
-		echo file_get_contents($abs);
+
+		readfile($abs);
+
 		return;
 	}
 
@@ -1599,6 +1601,9 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.43  2005/11/27 18:33:20  ralfoide
+//	Changed file_get_contents() to readfile() for php 4.2.x compatibility
+//
 //	Revision 1.42  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -1606,7 +1611,7 @@ function rig_display_footer()
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.41  2005/10/05 03:54:52  ralfoide
 //	Added img id for template/css/js
 //	

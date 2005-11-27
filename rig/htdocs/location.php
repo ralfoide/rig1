@@ -200,12 +200,16 @@ $dir_abs_base			= $dir_info_base["dirname"];
  *  Setting: 		$dir_abs_locset
  *  Type:			File-system absolute path with native separators
  *  				(that is \\ on windows and / on linux).
- *  Default:		$dir_abs_album
+ *  Default:		$dir_abs_base
  *
  *  Requirement:	No need to edit this. The default value should work.
  *  
  *  This setting contains the *absolute* path to this album-specific local
  *  settings.
+ *
+ *  If this path is set to an empty string ("") there are no local settings
+ *  and by default all settings will be read from the global settings
+ *  directory as specified by $dir_abs_globset.
  *
  *  Security: You may want this path to be outside of the DocumentRoot,
  *  i.e. not directly served by your web server.
@@ -217,7 +221,7 @@ $dir_abs_base			= $dir_info_base["dirname"];
  *
  ***********************************************************/
 
-$dir_abs_locset				= $dir_abs_album;
+$dir_abs_locset				= $dir_abs_base;
 
 
 // ---- Data settings ---
@@ -407,6 +411,9 @@ $dir_abs_option			= "";
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2005/11/27 19:10:32  ralfoide
+//	Fixed locset
+//
 //	Revision 1.9  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -414,7 +421,7 @@ $dir_abs_option			= "";
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.8  2005/10/01 23:44:25  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.

@@ -347,7 +347,7 @@ $pref_image_ignore_list	= NULL;
 
 
 $pref_allow_guest		= TRUE;				// can be TRUE (default) or FALSE
-$pref_auto_guest		= FALSE;			// FALSE will force login, TRUE will auto-log as guest
+$pref_auto_guest		= TRUE;				// FALSE will force login, TRUE will auto-log as guest
 $pref_guest_username	= 'guest';			// must be in the user_list.txt file
 
 
@@ -832,11 +832,14 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.29  2005/11/27 18:22:29  ralfoide
+//	Revert default auto login pref
+//
 //	Revision 1.28  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.27  2005/10/05 03:56:28  ralfoide
 //	New missing video thumbnails.
 //	

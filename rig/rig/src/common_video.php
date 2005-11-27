@@ -48,12 +48,7 @@ function rig_stream_video($type)
 			header("Content-type: " . $type);
 			header("Content-length: " . filesize($abs));
 
-			// Note: PHP.Net indicated that "file_get_contents" returns a string
-			// with the data and uses whatever memory mapping available on the
-			// current OS. For big movies, this may still be totally innapropriate.
-			// If it looks like the apache/php server uses to much memory here, we
-			// should read by chunks and output and make sure this is not buffered.
-			echo file_get_contents($abs);
+			readfile($abs);
 			
 			return TRUE;
 		}
@@ -910,6 +905,9 @@ function rig_video_javascript_testline($test, $line)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2005/11/27 18:31:07  ralfoide
+//	Replace file_get_contents() by readfile() for backward compatibility with PHP 4.2.x
+//
 //	Revision 1.8  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -917,7 +915,7 @@ function rig_video_javascript_testline($test, $line)
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.7  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

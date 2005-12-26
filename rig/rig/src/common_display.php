@@ -1048,6 +1048,9 @@ function rig_display_image_thumb($size = FALSE, $quality = FALSE)
 	// get the file type
 	$type = rig_get_file_type($current_image);
 
+	// DEBUG
+	// echo "<p> size $size, quality $quality, type $type\n";
+
 	if ($size == -1 || strncmp($type, "image/", 6) == 0)
 	{
 		// If size is -1, rig_build_preview_info will know how to create a thumbnail
@@ -1192,15 +1195,20 @@ function rig_display_jhead()
 	// if the command failed, try a variation on the shell-escaping
 	if ($retvar == 1)
 	{
+		// echo "<p> res[1] -> ";    var_dump($res);
+		// echo "<p> retvar[1] -> "; var_dump($retvar);
+		// echo "<p> args[1] -> "  ; var_dump($args);
+		// echo "<p> output[1] -> " ; var_dump($output);
+
 		$args = $pref_use_jhead . " " . rig_shell_filename2($name);
 		$res = exec($args, $output, $retvar);
 	}
 
 	// DEBUG
-	// echo "<p> res -> ";    var_dump($res);
-	// echo "<p> retvar -> "; var_dump($retvar);
-	// echo "<p> args -> "  ; var_dump($args);
-	// echo "<p> output-> " ; var_dump($output);
+	// echo "<p> res[2] -> ";    var_dump($res);
+	// echo "<p> retvar[2] -> "; var_dump($retvar);
+	// echo "<p> args[2] -> "  ; var_dump($args);
+	// echo "<p> output[2] -> " ; var_dump($output);
 
 	// --- use output if jhead was successful ---
 
@@ -1601,9 +1609,15 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.44  2005/12/26 22:09:30  ralfoide
+//	Added link to view full resolution image.
+//	Album thumbnail in admin album page.
+//	Incorrect escaping of "&" in jhead call.
+//	Submitting 0.7.3.
+//
 //	Revision 1.43  2005/11/27 18:33:20  ralfoide
 //	Changed file_get_contents() to readfile() for php 4.2.x compatibility
-//
+//	
 //	Revision 1.42  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.

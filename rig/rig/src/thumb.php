@@ -44,15 +44,21 @@ if ($img === FALSE)
 }
 else
 {
-	// Thumbnail for an image in an album
+	// Thumbnail for an image or movie in an album
 	rig_prepare_image($album, $img);
 	rig_display_image_thumb(rig_get($_GET,'sz', FALSE), rig_get($_GET,'q', FALSE));
 }
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2005/12/26 22:09:30  ralfoide
+//	Added link to view full resolution image.
+//	Album thumbnail in admin album page.
+//	Incorrect escaping of "&" in jhead call.
+//	Submitting 0.7.3.
+//
 //	Revision 1.1  2005/11/27 18:21:59  ralfoide
 //	Image streaming
-//
+//	
 //-------------------------------------------------------------
 ?>

@@ -141,6 +141,10 @@ $html_video_install_named_player	= "[&nbsp;<a href=\"[url]\">Installer &nbsp;[na
 $html_video_install_unnamed_player	= "[&nbsp;<a href=\"[url]\">Installer &nbsp;le&nbsp;lecteur</a>&nbsp;]";
 $html_video_download				= "[&nbsp;<a title=\"Télécharger la vidéo et la jouer sur votre ordinateur\" href=\"[url]\">Télécharger</a>&nbsp;]";
 
+// RM 20051226 - v0.7.3
+$html_viewfullrez_title	= "Affiche l'image en pleine résolution (Faire click droit et \"Sauver Sous...\" pour télécharger sur votre ordinateur)";
+$html_viewfullrez_link	= "Afficher l'image en pleine résolution";
+
 
 // Contenu des Scripts
 //--------------------
@@ -202,9 +206,15 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.21  2005/12/26 22:09:30  ralfoide
+//	Added link to view full resolution image.
+//	Album thumbnail in admin album page.
+//	Incorrect escaping of "&" in jhead call.
+//	Submitting 0.7.3.
+//
 //	Revision 1.20  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.19  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

@@ -18,6 +18,10 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
+- in 0.7.3:
+[1.F] Source: Added link to view full resolution image
+[1.F] Fix: Album thumbnail in admin album page
+[1.F] Fix: Incorrect escaping of "&" in jhead call
 - in 0.7.2:
 [1.F] Fix: Removed dumb check that was always invalidating the HTML cache
 [1.F] Feature: Added HTML caching to image and overview pages
@@ -221,6 +225,12 @@ Admin:
 
 -- done -- (sorted by finish date)
 
+[0.7.3]
+
+20051226 [1.F] CVS: Tagged as tag_2005-12-26_v073
+20051226 [1.F] Source: Added link to view full resolution image
+20051224 [1.F] Fix: Album thumbnail in admin album page
+20051220 [1.F] Fix: Incorrect escaping of "&" in jhead call
 
 [0.7.2]
 
@@ -756,6 +766,12 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.64  2005/12/26 22:09:30  ralfoide
+//	Added link to view full resolution image.
+//	Album thumbnail in admin album page.
+//	Incorrect escaping of "&" in jhead call.
+//	Submitting 0.7.3.
+//
 //	Revision 1.63  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -763,7 +779,7 @@ No tabs, use spaces for alignment (for viewcvs)
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.62  2005/10/08 19:28:40  ralfoide
 //	Closing 0.7.1
 //	

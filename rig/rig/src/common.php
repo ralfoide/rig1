@@ -728,9 +728,12 @@ function rig_shell_filename2($str)
 	else
 	{
 		$s = "\"" . escapeshellcmd($str) . "\"";
+		// These characters do not need to be escaped when a command-line argument
+		// is already between quotes [RM 20051120 bug fix for &]
 		$s = str_replace("\\'", "'", $s);
+		$s = str_replace("\\&", "&", $s);
 	}
-	
+
 	return $s;
 }
 
@@ -2657,9 +2660,15 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.57  2005/12/26 22:09:30  ralfoide
+//	Added link to view full resolution image.
+//	Album thumbnail in admin album page.
+//	Incorrect escaping of "&" in jhead call.
+//	Submitting 0.7.3.
+//
 //	Revision 1.56  2005/11/27 19:11:11  ralfoide
 //	Debug output
-//
+//	
 //	Revision 1.55  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.

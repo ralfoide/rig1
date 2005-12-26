@@ -149,6 +149,19 @@
 	</table>
 	
 	<p>
+
+<?php
+	// For images only, display a link to get the full resolution image -- RM 20051226
+	if ($current_type == "image")
+	{
+?>
+	<a title="<?= $html_viewfullrez_title ?>" href="<?= rig_self_url(-1, -1, RIG_SELF_URL_THUMB, "sz=-2") ?>">
+		<?= $html_viewfullrez_link ?>
+	</a>
+	&nbsp;|
+<?php
+	}
+?>
 	
 	<a href="<?= rig_self_url("") ?>">
 		<?= $html_back_album ?>
@@ -225,9 +238,15 @@
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.6  2005/12/26 22:09:30  ralfoide
+//	Added link to view full resolution image.
+//	Album thumbnail in admin album page.
+//	Incorrect escaping of "&" in jhead call.
+//	Submitting 0.7.3.
+//
 //	Revision 1.5  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.4  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

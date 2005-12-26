@@ -60,7 +60,7 @@ rig_display_body();
 	{
 ?>
 		<p>
-		<img src="<?= rig_encode_url_link(rig_get_album_preview($current_album, TRUE)) ?>">
+		<img src="<?= rig_self_url(-1, $current_album, RIG_SELF_URL_THUMB) ?>">
 		<br>
 		<font color="<?= $color_index_text ?>">
 			<?php rig_display_current_album() ?>
@@ -207,11 +207,17 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2005/12/26 22:09:30  ralfoide
+//	Added link to view full resolution image.
+//	Album thumbnail in admin album page.
+//	Incorrect escaping of "&" in jhead call.
+//	Submitting 0.7.3.
+//
 //	Revision 1.8  2005/10/07 05:40:11  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.7  2005/09/25 22:36:12  ralfoide
 //	Updated GPL header date.
 //	

@@ -25,13 +25,19 @@
 //************************************************************************
 
 
-$rig_vernum  =  0.72;
-$rig_version = "0.7.2";
+$rig_vernum  =  0.73;
+$rig_version = "0.7.3";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.28  2005/12/26 22:09:30  ralfoide
+//	Added link to view full resolution image.
+//	Album thumbnail in admin album page.
+//	Incorrect escaping of "&" in jhead call.
+//	Submitting 0.7.3.
+//
 //	Revision 1.27  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -39,7 +45,7 @@ $rig_version = "0.7.2";
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.26  2005/10/01 23:44:27  ralfoide
 //	Removed obsolete files (admin translate) and dirs (upload dirs).
 //	Fixes for template support.

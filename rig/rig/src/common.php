@@ -455,13 +455,30 @@ function rig_php_array_search($val, $arr)
 function rig_print_array_str($str)
 //********************************
 {
-	echo "str[] = '$str'<br>\n";
-	for($i=0, $n=strlen($str); $i<$n; $i++)
+	if (rig_is_debug())
 	{
-		$a = ord($str{$i});
-		echo "str[$i] = {$a} = '{$str{$i}}'<br>\n";
+		echo "str[] = '$str'<br>\n";
+		for($i=0, $n=strlen($str); $i<$n; $i++)
+		{
+			$a = ord($str{$i});
+			echo "str[$i] = {$a} = '{$str{$i}}'<br>\n";
+		}
 	}
 }
+
+
+//*********************************
+function rig_debug($str, $var=NULL)
+//*********************************
+// For debug purposes -- RM 20060106
+{
+	if (rig_is_debug())
+	{
+		echo "<br><b>$str</b> ";
+		if ($var != NULL) var_dump($var);
+	}
+}
+
 
 
 //*************************
@@ -469,9 +486,12 @@ function rig_var_dump($str)
 //*************************
 // For debug purposes -- RM 20030928
 {
-	global $$str;
-	echo "<br><b>$str =</b> ";
-	var_dump($$str);
+	if (rig_is_debug())
+	{
+		global $$str;
+		echo "<br><b>$str =</b> ";
+		var_dump($$str);
+	}
 }
 
 
@@ -1010,7 +1030,9 @@ function rig_self_url($in_image = -1,
 	$upload		= rig_get($_GET,'upload'	);
 	$credits	= rig_get($_GET,'credits'	);
 	$phpinfo	= rig_get($_GET,'phpinfo'	);
+	$template	= rig_get($_GET,'template', NULL);
 	$_debug_	= rig_get($_GET,'_debug_'	);
+
 
 	// DEBUG
 	// echo "<p>rig_self_url: in_page=$in_page\n";
@@ -1170,6 +1192,8 @@ function rig_self_url($in_image = -1,
 	if ($phpinfo == 'on')
 		rig_url_add_param($params, 'phpinfo', $phpinfo);
 
+	if (is_string($template))
+		rig_url_add_param($params, 'template', $template);
 
 	// Add any extra
 	// the extra must always be the last one
@@ -1682,8 +1706,15 @@ function rig_parse_description_file($abs_path)
 	# Accepted names are "descript.ion" or "file_info.diz"
 	# Lines starting with # are ignored. So are empty lines.
 	# Line format is:
-	#   <img or album name>[ \t]+<description>\n
+	#	An image or album name followed by at least one tab then a description.
+	#	To split the description on multiple lines, the second lines and more must
+	#	begin by a whitespace. Note that the first separator between the name and
+	#	description MUST be a tab (in case the image name contains spaces), however
+	#	after that it can be be multiple spaces or tabs.
+	# The regexp is:
+	#   <img or album name>\t[ \t]*<description>\n
 	#   [ \t]+<continuation of previous description>\n
+	
 */
 {
 	global $list_description;
@@ -1758,7 +1789,7 @@ function rig_parse_description_file($abs_path)
 		{
 			// this is a new entry, get the name and the text
 			// format is "(name)[ \t]+(text)"
-			if (ereg("^([^ \t]+)[ \t]+(.*)", $line, $reg) && is_string($reg[1]))
+			if (ereg("^([^\t]+)\t[ \t]*(.*)", $line, $reg) && is_string($reg[1]))
 			{
 				$name = $reg[1];
 				$list_description[$name] = $reg[2];
@@ -2040,6 +2071,8 @@ function rig_setup()
 		if (is_string($lang_locale))
 		{
 			$l = setlocale(LC_TIME, $lang_locale);
+			if ($l == FALSE)
+				rig_debug("Set Locale: $lang_locale => ", $l);
 		}
 		else if (is_array($lang_locale))
 		{
@@ -2047,6 +2080,8 @@ function rig_setup()
 			foreach($lang_locale as $name)
 			{
 				$l = setlocale(LC_TIME, $name);
+				if ($l == FALSE)
+					rig_debug("Set Locale: $lang_locale => ", $l);
 				if (is_string($l) && $l != '')
 					break;
 			}
@@ -2660,12 +2695,16 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.58  2006/01/11 08:24:23  ralfoide
+//	Propagating template variable in rig_self.
+//	Added rig_debug function.
+//
 //	Revision 1.57  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.
 //	Incorrect escaping of "&" in jhead call.
 //	Submitting 0.7.3.
-//
+//	
 //	Revision 1.56  2005/11/27 19:11:11  ralfoide
 //	Debug output
 //	

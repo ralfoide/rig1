@@ -55,6 +55,7 @@ $html_language		= 'Langue:';
 $html_desc_lang		= array('en' => 'English',
 							'fr' => 'Fran&ccedil;ais',
 							'sp' => 'Espa&ntilde;ol',
+							'pl' => 'Polski',
 							'jp' => '&#26085;&#26412;&#35486;'
 							);
 
@@ -206,12 +207,15 @@ $pref_date_YMD      = 'D-M-Y';          // format long.  Doit contenir D & M & Y
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.22  2006/01/11 08:21:54  ralfoide
+//	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
+//
 //	Revision 1.21  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.
 //	Incorrect escaping of "&" in jhead call.
 //	Submitting 0.7.3.
-//
+//	
 //	Revision 1.20  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

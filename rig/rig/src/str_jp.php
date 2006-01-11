@@ -101,23 +101,20 @@ $pref_date_YMD      = 'Y-M-D';          // Long format.  Must contain D & M & Y.
 // Parsing of the external data file
 //----------------------------------
 
-// At the site level you can decide which encoding you want to use for Japanse.
-// Each data file describes its own encoding, uncomment the correct one. UTF-8
-// is the preferred one.
-
+// This parses all the strings encoded in UTF-8.
 rig_parse_string_data('data_jpu8.bin');
-// rig_parse_string_data('data_jpjis.bin');
-// rig_parse_string_data('data_jpsjis.bin');
-// rig_parse_string_data('data_jpeuc.bin');
 
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.12  2006/01/11 08:21:54  ralfoide
+//	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
+//
 //	Revision 1.11  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.10  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

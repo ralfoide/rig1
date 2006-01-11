@@ -25,19 +25,22 @@
 //************************************************************************
 
 
-$rig_vernum  =  0.73;
-$rig_version = "0.7.3";
+$rig_vernum  =  0.74;
+$rig_version = "0.7.4";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.29  2006/01/11 08:21:54  ralfoide
+//	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
+//
 //	Revision 1.28  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.
 //	Incorrect escaping of "&" in jhead call.
 //	Submitting 0.7.3.
-//
+//	
 //	Revision 1.27  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.

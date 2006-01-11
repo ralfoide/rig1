@@ -56,6 +56,7 @@ $html_language		= 'Language:';
 $html_desc_lang		= array('en' => 'English',
 							'fr' => 'Fran&ccedil;ais',
 							'sp' => 'Espa&ntilde;ol',
+							'pl' => 'Polski',
 							'jp' => '&#26085;&#26412;&#35486;'
 							);
 
@@ -192,7 +193,7 @@ $html_num_th_sep	= ',';		// separator for thousand (ex 1,000 in English)
 
 // Image date displayed
 // Now using notation from http://www.php.net/manual/en/function.strftime.php
-$html_img_date		= '%A %B %d %Y, %I:%M %p'; //l\, F d\, Y\, g:m A';
+$html_img_date		= '%A %B %d %Y, %I:%M %p';
 
 // Album date displayed
 // cf http://www.php.net/manual/en/function.strftime.php
@@ -202,12 +203,15 @@ $html_album_date	= '%B %Y';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.23  2006/01/11 08:21:54  ralfoide
+//	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
+//
 //	Revision 1.22  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.
 //	Incorrect escaping of "&" in jhead call.
 //	Submitting 0.7.3.
-//
+//	
 //	Revision 1.21  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

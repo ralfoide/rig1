@@ -226,8 +226,8 @@ $pref_preview_timeout	= 20;
 
 // RM 20030720
 // size and quality of small preview (used for vertical album layout)
-$pref_small_preview_size	= 64;
-$pref_small_preview_quality	= 60;
+$pref_small_preview_size	= $pref_preview_size;
+$pref_small_preview_quality	= $pref_preview_quality;
 
 
 // --- admin viewing options ---
@@ -832,9 +832,12 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.30  2006/01/11 08:25:14  ralfoide
+//	Default vertical layout thumbnails size to same than grid's ones.
+//
 //	Revision 1.29  2005/11/27 18:22:29  ralfoide
 //	Revert default auto login pref
-//
+//	
 //	Revision 1.28  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

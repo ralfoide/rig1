@@ -108,6 +108,9 @@ function rig_display_video($type)
 	if ($rig_img_size != -2 && $rig_img_size < 1)
 		$rig_img_size = $pref_image_size;
 
+	// DEBUG
+	rig_debug("User Agent: ", rig_get($_SERVER, 'HTTP_USER_AGENT', ""));
+
 	// get the file type
 	$type_info = rig_video_type($type);
 	if ($type_info)
@@ -145,7 +148,17 @@ function rig_display_video($type)
 
 
 		// get some details based on the video codec
-		$codec_info = array_merge(rig_display_codec_detail($info), rig_display_os_detail());
+		$details1 = rig_display_codec_detail($info);
+		$details2 = rig_display_os_detail();
+		if ($details1 != NULL && $details2 != NULL)
+			$codec_info = array_merge(rig_display_codec_detail($info), rig_display_os_detail());
+		else if ($details1 != NULL)
+			$codec_info = $details1;
+		else
+			$codec_info = $details2;
+		$details1 = NULL;
+		$detauls2 = NULL;
+
 		$codec_install = "";
 
 		$codec_is_divx = false;
@@ -607,6 +620,12 @@ function rig_display_codec_detail($info)
 // TODO: refactor to get it rid of the annoying duplication of detailed entries.
 //
 // Return NULL if there's no info detail.
+//
+// Call to contributors: please feel free to expand this list or email me
+// whenever you have an unsupported codec type (please don't send me the video,
+// only send me a link to it!)
+// References:
+// - http://www.fourcc.org/
 {
 	// Parse the FOURCC codec name, returned by rig-thumnbail
 	if (is_array($info) && is_string($info['e']))
@@ -666,6 +685,16 @@ function rig_display_codec_detail($info)
 									 ),
 			"IV[3-5][0-9]"	=> "Intel Indeo",
 			"cvid"			=> "Cinepak",
+
+			// RM 20060109
+			"FMP4" 			=> array("MPEG4 Mencoder Stream",
+									 "rig:is-divx-format",
+									 "(!is_mac && !is_linux)FFShow Filters" 	=> "http://ffdshow.sourceforge.net/",
+									 "(!is_mac && !is_linux)DivX Codec" 		=> "http://www.divx.com/",
+									 "(is_mac)DivX&nbsp;Codec" 					=> "http://www.divx.com/divx/mac",
+									 "(is_linux)DivX&nbsp;Codec" 				=> "http://www.divx.com/divx/linux/"
+									),
+
 
 			// Some other generic mappings
 			// More info at: http://www.microsoft.com/whdc/hwdev/archive/devdes/fourcc.mspx
@@ -839,21 +868,27 @@ function rig_video_generate_javascript($desc)
 					if (is_string($codec))
 					{
 						if ($need_else)
-							echo "else ";
+							echo " else ";
 						else
 							$need_else = TRUE;
 	
 						if ($js_test != "else")
-							echo "if ($js_test)\n";
+							echo "if ($js_test) ";
+						
+						echo " { ";
+						
+						if (rig_is_debug())
+						 	echo " document.write('DEBUG: test = $js_test');";
 	
 						// Need to escape some characters from the written line
 						// f.ex. at least ' is not acceptable in write('something').
 						
 						$codec = str_replace("'", "\\'", $codec);
 	
-					// Generate the Javascript line
+						// Generate the Javascript line
 	
-						echo " document.write('$codec');\n";
+						echo " document.write('$codec');";
+						echo " } \n";
 					}
 					
 					// get remaining strings as links			
@@ -905,9 +940,12 @@ function rig_video_javascript_testline($test, $line)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2006/01/11 08:23:17  ralfoide
+//	Added FMP4 codec (MPEG4 Mencoder Stream, divx-like, ffshow codec)
+//
 //	Revision 1.9  2005/11/27 18:31:07  ralfoide
 //	Replace file_get_contents() by readfile() for backward compatibility with PHP 4.2.x
-//
+//	
 //	Revision 1.8  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.

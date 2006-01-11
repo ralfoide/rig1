@@ -1552,9 +1552,10 @@ function rig_display_credits($has_credits = -1, $has_phpinfo = -1)
 			<p>
 				<?php echo "$credits" ?>
 			<p>
+
+			<a href="?php_credits=on">PHP Credits</a>
 		<?php
 	
-		phpinfo(INFO_CREDITS);
 	}
 
 	// actually display the PHP info if activated
@@ -1609,12 +1610,15 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.45  2006/01/11 08:18:42  ralfoide
+//	PHP credits displayed in separate window to avoid running current document's stylesheet
+//
 //	Revision 1.44  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.
 //	Incorrect escaping of "&" in jhead call.
 //	Submitting 0.7.3.
-//
+//	
 //	Revision 1.43  2005/11/27 18:33:20  ralfoide
 //	Changed file_get_contents() to readfile() for php 4.2.x compatibility
 //	

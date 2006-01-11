@@ -72,6 +72,7 @@ if (isset($_GET['admin']) && $_GET['admin'])
 }
 else
 {
+	eval(rig_select('php_credits'));
 	eval(rig_select('comment'));
 	eval(rig_select('th',  'thumb.php'));
 	eval(rig_select('img', 'image.php'));
@@ -84,6 +85,9 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.15  2006/01/11 08:18:42  ralfoide
+//	PHP credits displayed in separate window to avoid running current document's stylesheet
+//
 //	Revision 1.14  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -91,7 +95,7 @@ else
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.13  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

@@ -61,6 +61,9 @@ function rig_admin_perform_defer()
 	global $current_album;
 	global $current_image;
 
+var_dump($_GET);
+var_dump($_POST);
+
 	$item		= rig_get($_GET,'item'		);
 	$admin		= rig_get($_GET,'admin'		);
 	$show_album	= rig_get($_GET,'show_album');
@@ -963,6 +966,11 @@ function rig_admin_display_image()
 
 	echo "<tr>\n";
 
+	$form_link = rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "admin=show_img_list");
+	?>
+		<form method="POST" action="<?= $form_link ?>">
+	<?
+
 	foreach($list_images as $key => $file)
 	{
 		$pretty = rig_pretty_name($file, FALSE);
@@ -974,12 +982,14 @@ function rig_admin_display_image()
 
 		if (rig_is_visible(-1, -1, $file))
 		{
+			$is_visible = TRUE;
 			$visible = $html_vis_off;
 			$vis_val = "off";
 			$header_color = $color_section_bg;
 		}
 		else
 		{
+			$is_visible = FALSE;
 			$visible = $html_vis_on;
 			$vis_val = "on";
 			$header_color = $color_warning_bg;
@@ -1010,7 +1020,10 @@ function rig_admin_display_image()
 						<?= $html_use_as_icon ?>
 					</a>
 					<br>
-	
+
+					<input type="checkbox" name="imgvis_<?= $key ?>" value="<?= $item ?>" <?= $is_visible ? "checked" : "" ?> >
+					<label for="imgvis_<?= $key ?>"><?= $visible ?></label>
+					|
 					<a href="<?= $vis_link ?>" target="_top">
 						<?= $visible ?>
 					</a>
@@ -1031,6 +1044,15 @@ function rig_admin_display_image()
 			echo "</td>\n";
 		}
 	}
+	
+	?>
+		<tr><td colspan="<?= $n ?>">
+		<center>
+			<input type="Submit" name="update_img_list" value="Update Visibility">
+		<center>
+		</td></tr>
+		</form>
+	<?
 
 	echo "</tr>\n";
 }
@@ -1070,6 +1092,9 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.9  2006/04/13 05:04:22  ralfoide
+//	Version 0.7.4. Polish translation. Fixes.
+//
 //	Revision 1.8  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -1077,7 +1102,7 @@ function rig_admin_insert_icon_popup()
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.7  2005/09/25 22:36:14  ralfoide
 //	Updated GPL header date.
 //	

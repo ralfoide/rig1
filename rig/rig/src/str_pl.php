@@ -96,7 +96,7 @@ $html_credits		= 'Tw&#x00F3;rcy';
 $html_show_credits	= 'Poka&#x017C; tw&#x00F3;rc&#x00F3;w RIG i PHP';
 $html_hide_credits	= 'Ukryj tw&#x00F3;rc&#x00F3;w';
 $html_text_credits	= 'R\'alf Image Gallery (<a href="http://rig.powerpulsar.com">RIG</a>) &copy; 2001-2003 R\'alf<br>';
-$html_text_credits .= '[check translation] Polski tlumaczenie przez <a href="http://krypa.homelinux.net/">Alfred Broda</a><br>';
+$html_text_credits .= 'Polskie t&#x0142;umaczenie: <a href="mailto:guaranga@wp.pl">Alfred Broda</a><br>';
 $html_text_credits .= 'RIG jest rozprowadzany na warunkach <a href="LICENSE.html">licencji RIG</a> (<a href="http://www.opensource.org/licenses/">OSL</a>).<br>';
 $html_text_credits .= 'Bazuje na <a href="http://www.php.net">PHP</a> ';
 $html_text_credits .= 'oraz na <a href="ftp://ftp.uu.net/graphics/jpeg">JpegLib</a>.<br>';
@@ -180,9 +180,12 @@ $html_album_date	= '%B %Y';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.2  2006/04/13 05:04:57  ralfoide
+//	Version 0.7.4. Polish translation. Fixes.
+//
 //	Revision 1.1  2006/01/11 08:21:54  ralfoide
 //	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
-//
+//	
 //	Revision 1.1  2005/12/31 01:21:11  Freder
 //	Language: strings for tooltip details
 //-------------------------------------------------------------

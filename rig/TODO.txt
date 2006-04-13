@@ -18,6 +18,12 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
+- in 0.7.4:
+[1.F] Translate: Polish translation by Alfred Broda [http://krypa.homelinux.net/]
+[1.F] Fix: PHP credits displayed in separate window to avoid running current document's stylesheet
+[1.F] Fix: Alloc call in rig_mem.h [Reported 20060131 Alfred Broda]
+[1.F] Fix: Merge of video info array in common video [Reported 20060131 Alfred Broda]
+[2.F] Source: Added $pref_extra_html_footer, using in rig_display_footer.
 - in 0.7.3:
 [1.F] Source: Added link to view full resolution image
 [1.F] Fix: Album thumbnail in admin album page
@@ -224,6 +230,14 @@ Admin:
 
 
 -- done -- (sorted by finish date)
+
+[0.7.4]
+
+20060412 [1.F] Fix: Alloc call in rig_mem.h [Reported 20060131 Alfred Broda]
+20060412 [1.F] Fix: Merge of video info array in common video [Reported 20060131 Alfred Broda]
+20060412 [2.F] Source: Added $pref_extra_html_footer, using in rig_display_footer.
+20060110 [1.F] Translate: Polish translation by Alfred Broda [http://krypa.homelinux.net/]
+20060110 [1.F] Fix: PHP credits displayed in separate window to avoid running current document's stylesheet
 
 [0.7.3]
 
@@ -766,12 +780,15 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.65  2006/04/13 05:04:22  ralfoide
+//	Version 0.7.4. Polish translation. Fixes.
+//
 //	Revision 1.64  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.
 //	Incorrect escaping of "&" in jhead call.
 //	Submitting 0.7.3.
-//
+//	
 //	Revision 1.63  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.

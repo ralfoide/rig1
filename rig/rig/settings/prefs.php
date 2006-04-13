@@ -404,6 +404,29 @@ $pref_html_meta = "<meta name=\"robots\" content=\"noindex, nofollow\">";
 
 
 
+/***********************************************************
+ *
+ *	Setting: 		$pref_extra_html_footer
+ *	Type:			String
+ *	Default:		Empty string ''
+ *	
+ *	Extra HTML that can appear right below the "display RIG credits"
+ *  and before the "generated in x seconds."
+ *
+ *	Format is HTML. Use HTML-compliant characters (like &eacute; or &#129;)
+ *	Important: if you want to insert Japanese here, add a line in data_jpu8.bin
+ *	or use UTF-8 bytes directly in hexa.
+ *
+ *	This should ideally be overriden by album-specific prefs.php files.
+ *	If you have a tracking code (such as a Google Analytics urchin code),
+ *	that's the perfect place to use it.
+ *
+ ***********************************************************/
+
+$pref_extra_html_footer = '';
+
+
+
 // --- Global display preferences ---
 
 
@@ -832,9 +855,12 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.31  2006/04/13 05:04:22  ralfoide
+//	Version 0.7.4. Polish translation. Fixes.
+//
 //	Revision 1.30  2006/01/11 08:25:14  ralfoide
 //	Default vertical layout thumbnails size to same than grid's ones.
-//
+//	
 //	Revision 1.29  2005/11/27 18:22:29  ralfoide
 //	Revert default auto login pref
 //	

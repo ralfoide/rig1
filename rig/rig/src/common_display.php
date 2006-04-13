@@ -1578,6 +1578,12 @@ function rig_display_credits($has_credits = -1, $has_phpinfo = -1)
 function rig_display_footer()
 //***************************
 {
+	global $pref_extra_html_footer;
+
+	if ($pref_extra_html_footer)
+		echo "\n" . $pref_extra_html_footer . "\n";
+
+
     global $_debug_;
 	global $rig_version;
 	global $display_exec_date;
@@ -1592,7 +1598,6 @@ function rig_display_footer()
 	$sgen = str_replace("[time]", rig_time_elapsed(), $html_generated);
 	$sgen = str_replace("[date]", $display_exec_date, $sgen);
 	$sgen = str_replace("[rig-version]", $display_softname . " " . $rig_version, $sgen);
-
 
 	?>
 		<table width="100%" bgcolor="<?= $color_section_bg ?>"><tr><td>
@@ -1610,9 +1615,12 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.46  2006/04/13 05:04:57  ralfoide
+//	Version 0.7.4. Polish translation. Fixes.
+//
 //	Revision 1.45  2006/01/11 08:18:42  ralfoide
 //	PHP credits displayed in separate window to avoid running current document's stylesheet
-//
+//	
 //	Revision 1.44  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.

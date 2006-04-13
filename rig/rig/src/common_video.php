@@ -49,7 +49,7 @@ function rig_stream_video($type)
 			header("Content-length: " . filesize($abs));
 
 			readfile($abs);
-			
+
 			return TRUE;
 		}
 	}
@@ -147,17 +147,8 @@ function rig_display_video($type)
 		$sy2 = $sy+16;
 
 
-		// get some details based on the video codec
-		$details1 = rig_display_codec_detail($info);
-		$details2 = rig_display_os_detail();
-		if ($details1 != NULL && $details2 != NULL)
-			$codec_info = array_merge(rig_display_codec_detail($info), rig_display_os_detail());
-		else if ($details1 != NULL)
-			$codec_info = $details1;
-		else
-			$codec_info = $details2;
-		$details1 = NULL;
-		$detauls2 = NULL;
+		// get some details based on the video codec and current OS
+		$codec_info = @array_merge(rig_display_os_detail(), rig_display_codec_detail($info));
 
 		$codec_install = "";
 
@@ -619,7 +610,7 @@ function rig_display_codec_detail($info)
 //
 // TODO: refactor to get it rid of the annoying duplication of detailed entries.
 //
-// Return NULL if there's no info detail.
+// Return an empty array if there's no info detail
 //
 // Call to contributors: please feel free to expand this list or email me
 // whenever you have an unsupported codec type (please don't send me the video,
@@ -829,7 +820,7 @@ function rig_display_codec_detail($info)
 	}
 
 	
-	return NULL;
+	return array(); // RM 20060412 fix, pb found in 20060131 by Alfred Broda
 }
 
 
@@ -940,9 +931,12 @@ function rig_video_javascript_testline($test, $line)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2006/04/13 05:04:57  ralfoide
+//	Version 0.7.4. Polish translation. Fixes.
+//
 //	Revision 1.10  2006/01/11 08:23:17  ralfoide
 //	Added FMP4 codec (MPEG4 Mencoder Stream, divx-like, ffshow codec)
-//
+//	
 //	Revision 1.9  2005/11/27 18:31:07  ralfoide
 //	Replace file_get_contents() by readfile() for backward compatibility with PHP 4.2.x
 //	

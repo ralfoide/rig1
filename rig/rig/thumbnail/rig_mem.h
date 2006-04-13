@@ -131,7 +131,7 @@ template <class T> inline void RigMem<T>::Realloc(int32 new_size)
 	mSize = 0;
 
 	// alloc the new space
-	Alloc(new_size, mac_limit);
+	Alloc(new_size); // 20060131 Fix by Alfred Broda.
 
 	// if there was old memory, copy it to the new one
 	if (mData && old_size && new_size && data)
@@ -173,9 +173,12 @@ template <class T> inline T & RigMem<T>::ItemAt(int32 index) const
 /****************************************************************
 
 	$Log$
+	Revision 1.4  2006/04/13 05:04:57  ralfoide
+	Version 0.7.4. Polish translation. Fixes.
+
 	Revision 1.3  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
-
+	
 	Revision 1.2  2004/07/17 07:52:32  ralfoide
 	GPL headers
 	

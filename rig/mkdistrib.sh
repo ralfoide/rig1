@@ -96,9 +96,11 @@ echo
 echo "########## CVS checkout $RIG ################"
 echo
 
-export CVS_RSH=ssh
-# export CVSROOT=:ext:ralfoide@cvs.rig-thumbnail.sourceforge.net:/cvsroot/rig-thumbnail
-export CVSROOT=:ext:ralfoide@cvs.sourceforge.net:/cvsroot/rig-thumbnail
+if [ "${CVSROOT:0:5}" != ":ext:" ] || [ "$CVS_RSH" == "" ]
+then
+  echo 'Error: Please set $CVSROOT and $CVS_RSH.'
+  exit 1
+fi
 
 cvs -z3 checkout $TAG rig
 

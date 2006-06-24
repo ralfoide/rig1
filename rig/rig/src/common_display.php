@@ -993,7 +993,8 @@ function rig_display_album_thumb($size = FALSE, $quality = FALSE)
 	if (rig_is_file($abs))
 	{
 		header("Content-type: " . $type);
-		header("Content-length: " . filesize($abs));
+		header("Content-Length: " . filesize($abs));
+		header("Content-Disposition: filename=thumb_$current_real_album.jpg");	// RM 20060624 v 1.0
 
 		readfile($abs);
 
@@ -1064,6 +1065,14 @@ function rig_display_image_thumb($size = FALSE, $quality = FALSE)
 		{
 			header("Content-type: " . ($size == -1 ? "image/jpeg" : $type));
 			header("Content-length: " . filesize($abs));
+			$base = "";
+			if ($size == -1)
+				$base = "thumb_";
+			else if ($size == -2)
+				$base = "full_";
+			else
+				$base = "img_$size" . "px_";
+			header("Content-Disposition: filename=$base$current_image");	// RM 20060624 v 1.0
 			echo file_get_contents($abs);
 			return;
 		}
@@ -1615,9 +1624,15 @@ function rig_display_footer()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.47  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.46  2006/04/13 05:04:57  ralfoide
 //	Version 0.7.4. Polish translation. Fixes.
-//
+//	
 //	Revision 1.45  2006/01/11 08:18:42  ralfoide
 //	PHP credits displayed in separate window to avoid running current document's stylesheet
 //	

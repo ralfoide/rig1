@@ -71,7 +71,7 @@
 		[[rig_display_user_name]]
 	</span>
 	<span class="header-title">
-		{{display_title}}
+		{{display_title_html}}
 	</span>
 	<span class="header-copyright">
 		[[rig_display_image_copyright]]

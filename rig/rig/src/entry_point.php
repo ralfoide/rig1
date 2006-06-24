@@ -65,9 +65,6 @@ function rig_select($param, $filename = "", $is_admin = FALSE)
 
 if (isset($_GET['admin']) && $_GET['admin'])
 {
-	// Deactivated. Not fully implemented.
-	// eval(rig_select('upload', 'admin_upload.php', TRUE));
-	// eval(rig_select('img', 'admin_image.php', TRUE));
 	require_once(rig_check_src_file($dir_abs_admin_src . "admin_album.php"));
 }
 else
@@ -85,9 +82,15 @@ else
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.16  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.15  2006/01/11 08:18:42  ralfoide
 //	PHP credits displayed in separate window to avoid running current document's stylesheet
-//
+//	
 //	Revision 1.14  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.

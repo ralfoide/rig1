@@ -70,6 +70,11 @@ $pref_global_gamma		= 1.0;	            // use 1.0 for no-op
 $pref_copyright_name = 'Your Name Here';
 
 
+// Name and link for page header. See main prefs.php for more details.
+
+$pref_site_name		= "My Site";
+$pref_site_link		= "http://www.example.com";
+
 
 // --- meta tags for album/image pages ---
 
@@ -107,9 +112,15 @@ $pref_copyright_name = 'Your Name Here';
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.4  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.3  2005/09/25 22:36:12  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.2  2004/07/17 07:52:30  ralfoide
 //	GPL headers
 //	

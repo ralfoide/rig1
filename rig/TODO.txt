@@ -18,6 +18,9 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
+- in 1.0:
+[2.F] Source: Added pref_site_name and pref_site_link.
+[1.F] Fix: Fixed security vulnerability in check_entry.php
 - in 0.7.4:
 [1.F] Translate: Polish translation by Alfred Broda [http://krypa.homelinux.net/]
 [1.F] Fix: PHP credits displayed in separate window to avoid running current document's stylesheet
@@ -230,6 +233,13 @@ Admin:
 
 
 -- done -- (sorted by finish date)
+
+[1.0]
+
+20060624 [1.F] CVS: Tagged as tag_2006-06-24_v100
+20060624 [2.F] Source: Set filename in thumbnail streaming headers
+20060624 [2.F] Source: Added pref_site_name and pref_site_link.
+20060622 [1.F] Fix: Fixed security vulnerability in check_entry.php
 
 [0.7.4]
 
@@ -780,9 +790,15 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.66  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.65  2006/04/13 05:04:22  ralfoide
 //	Version 0.7.4. Polish translation. Fixes.
-//
+//	
 //	Revision 1.64  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.

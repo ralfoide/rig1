@@ -1021,9 +1021,6 @@ function rig_admin_display_image()
 					</a>
 					<br>
 
-					<input type="checkbox" name="imgvis_<?= $key ?>" value="<?= $item ?>" <?= $is_visible ? "checked" : "" ?> >
-					<label for="imgvis_<?= $key ?>"><?= $visible ?></label>
-					|
 					<a href="<?= $vis_link ?>" target="_top">
 						<?= $visible ?>
 					</a>
@@ -1046,11 +1043,6 @@ function rig_admin_display_image()
 	}
 	
 	?>
-		<tr><td colspan="<?= $n ?>">
-		<center>
-			<input type="Submit" name="update_img_list" value="Update Visibility">
-		<center>
-		</td></tr>
 		</form>
 	<?
 
@@ -1092,9 +1084,15 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.9  2006/04/13 05:04:22  ralfoide
 //	Version 0.7.4. Polish translation. Fixes.
-//
+//	
 //	Revision 1.8  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.

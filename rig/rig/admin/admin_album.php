@@ -51,7 +51,7 @@ rig_display_body();
 
 <?php
 	rig_display_section("<h1> $html_rig_admin </h1>" .
-						"<font size=\"+2\"><b> $display_title </b></font>",
+						"<font size=\"+2\"><b> $display_title_html </b></font>",
 						$color_title_bg,
 						$color_title_text);
 
@@ -207,12 +207,18 @@ rig_display_body();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.10  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.9  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.
 //	Incorrect escaping of "&" in jhead call.
 //	Submitting 0.7.3.
-//
+//	
 //	Revision 1.8  2005/10/07 05:40:11  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

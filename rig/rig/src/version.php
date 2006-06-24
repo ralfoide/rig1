@@ -25,16 +25,22 @@
 //************************************************************************
 
 
-$rig_vernum  =  0.74;
-$rig_version = "0.7.4";
+$rig_vernum  =  1.0;
+$rig_version = "1.0";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.30  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.29  2006/01/11 08:21:54  ralfoide
 //	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
-//
+//	
 //	Revision 1.28  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.

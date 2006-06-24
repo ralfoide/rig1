@@ -81,7 +81,7 @@ else
 <!-- top header -->
 
 <?php
-	rig_display_section("<font size=\"+2\"><b> $display_title </b></font><br>$display_album_title",
+	rig_display_section("<font size=\"+2\"><b> $display_title_html </b></font><br>$display_album_title",
 						$color_title_bg,
 						$color_title_text);
 
@@ -134,6 +134,12 @@ rig_display_footer();
 <?php
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.21  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.20  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -141,7 +147,7 @@ rig_display_footer();
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.19  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

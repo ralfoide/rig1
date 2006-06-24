@@ -156,6 +156,27 @@ else // WINNT
 
 /***********************************************************
  *
+ *	Setting: 		$pref_site_name
+ *	Setting: 		$pref_site_link
+ *	Type:			String
+ *	Default:		""
+ *	
+ *	Site name to be used in page title.
+ *  The site link is an HTTP address that will be linked in the page header
+ *  if present.
+ *
+ *  You would typically override this in an album-specific pref file rather
+ *  than in the global site pref file.
+ *
+ ***********************************************************/
+
+$pref_site_name		= "";
+$pref_site_link		= "";
+
+
+
+/***********************************************************
+ *
  *	Setting: 		$pref_mkdir_mask
  *	Type:			Octal mask
  *	Default:		0777
@@ -847,7 +868,6 @@ $pref_internal_file_types	= NULL;
 
 $pref_extra_file_types	= NULL;
 
-//--RM 20031021 test-- $pref_extra_file_types	= array("/\.izu$/i" => 'text/x-izumi');
 
 
 
@@ -855,9 +875,15 @@ $pref_extra_file_types	= NULL;
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.32  2006/06/24 21:20:34  ralfoide
+//	Version 1.0:
+//	- Source: Set filename in thumbnail streaming headers
+//	- Source: Added pref_site_name and pref_site_link.
+//	- Fix: Fixed security vulnerability in check_entry.php
+//
 //	Revision 1.31  2006/04/13 05:04:22  ralfoide
 //	Version 0.7.4. Polish translation. Fixes.
-//
+//	
 //	Revision 1.30  2006/01/11 08:25:14  ralfoide
 //	Default vertical layout thumbnails size to same than grid's ones.
 //	

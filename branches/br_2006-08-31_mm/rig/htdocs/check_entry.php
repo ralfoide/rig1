@@ -37,6 +37,14 @@ function rig_check_src_file($name)
 	
 	// enabling track_errors is a big help
 	ini_set("track_errors", "1");
+
+    // disable auto-globals from CGI params
+    ini_set("register_globals", "0");
+    if (ini_get("register_globals") == 1)
+    {
+        echo "<h1>RIG Configuration Error</h1>";
+        echo "<h2>Important!</h2>You MUST disable <em>register_globals</em> in your PHP.INI file!";
+    }
 	
 	// check it worked
 	$track_errors = (ini_get("track_errors") == 1);
@@ -47,6 +55,7 @@ function rig_check_src_file($name)
 	    $result = file_exists($name);
 	if (!$result)
 	{
+		exit;
 	    echo "<h1>RIG Configuration Error</h1>";
 	    echo "<h2>Error</h2>A source file could not be located! Please check <em>location.php</em> file!";
 	    if ($track_errors)
@@ -74,14 +83,18 @@ function rig_check_src_file($name)
 // call the entry point
 
 require_once(rig_check_src_file($dir_abs_src . "entry_point.php"));
+//require_once(rig_check_src_file("entry_point.php"));
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.3.2.1  2006/09/01 06:13:59  ralfoide
+//	Security fix merged in old branch
+//
 //	Revision 1.3  2005/09/25 22:36:12  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.2  2004/07/17 07:52:30  ralfoide
 //	GPL headers
 //	

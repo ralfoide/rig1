@@ -776,7 +776,7 @@ function rig_pretty_name($name,
 			$name = str_replace("M", $reg[2], $name);
 			$name = str_replace("D", $reg[3], $name);
         }
-		else if (ereg("^([0-9]{4})[-/]{0,1}([0-9]{2})[-/]{0,1}([0-9]{2})[- _]*(.+)$", $name, $reg))
+		else if (ereg("^([0-9]{4})[-/]([0-9]{2})[-/]([0-9]{2})[- _]*(.+)$", $name, $reg) or ereg("^([0-9]{4})([0-9]{2})([0-9]{2})[- _]*(.+)$", $name, $reg))
 		{
             // A full date followed by a description with optional date separators
 			// --> "YYYYMMDD_text" or "YYYY-MM-DD_text"
@@ -785,14 +785,14 @@ function rig_pretty_name($name,
 			$name = str_replace("D", $reg[3], $name);
 			$name .= $pref_date_sep.$reg[4];
         }
-		else if (ereg("^([0-9]{4})([0-9]{2})$", $name, $reg))
+		else if (ereg("^([0-9]{4})([0-9]{2})[^0-9]$", $name, $reg))
 		{
             // and then partial dates YYYYMM
 			$name = str_replace("Y", $reg[1], $pref_date_YM);
 			$name = str_replace("M", $reg[2], $name);
 			$name .= $pref_date_delim.$reg[2];
         }
-		else if (ereg("^([0-9]{4})[-/]{0,1}([0-9]{2})[- _]*(.+)$", $name, $reg))
+		else if (ereg("^([0-9]{4})[-/]{0,1}([0-9]{2})[- _]{0,1}([^0-9].+)$", $name, $reg))
 		{
             // a partial date followed by a description with optional date separators
 			// --> "YYYYMM_text" or "YYYY-MM_text"
@@ -800,7 +800,7 @@ function rig_pretty_name($name,
 			$name = str_replace("M", $reg[2], $name);
 			$name .= $pref_date_sep.$reg[3];
         }
-		else if (ereg("^[0-9]{1,5}[- _](.+)$", $name, $reg))
+		else if (ereg("^[0-9]{1,5}[ _](.+)$", $name, $reg))
 		{
             // Remove leading digits if there are less than 5
 			$name = $reg[1];
@@ -811,7 +811,7 @@ function rig_pretty_name($name,
 		// remove numbers from begining of file name
 
 		// unless the name contains the name "IMG" as such, try to strip any leading numbers
-		if (eregi("^([0-9]+)[- _]([0-9]+)[- _]img$", $name, $reg))
+		if (eregi("^([0-9]+)[ _]([0-9]+)[- _]img$", $name, $reg))
 		{
 			// numbered sequence direct from the camera.
 			$name = "$html_image " . $reg[2];
@@ -821,7 +821,7 @@ function rig_pretty_name($name,
 			// if the image name is just a number, generate a text for it
 			$name = "$html_image " . $reg[1];
 		}
-		else if (ereg("^[0-9]+[- _]*(.+)$", $name, $reg))
+		else if (ereg("^[0-9]+[ _]*(.+)$", $name, $reg))
 		{
 			// trim number at beginning if any
 			$name = $reg[1];
@@ -2604,11 +2604,14 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.54.2.1  2006/09/01 06:13:30  ralfoide
+//	MM regexps
+//
 //	Revision 1.54  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.53  2005/10/05 03:55:20  ralfoide
 //	Added new rig_is_debug method. Simply checks &_debug_ in query.
 //	

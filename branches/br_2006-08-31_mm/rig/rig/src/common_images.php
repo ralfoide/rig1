@@ -64,6 +64,7 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 	// create the preview now
 	// RM 20030628 using exec instead of system (system's output goes directly in the HTML!)
 	// $res = @system($abs_preview_exec . " " . $args, $retvar);
+	rig_debug("rig_make_image: $args"); // RM 20060901 DEBUG
 	$res = @exec($abs_preview_exec . " " . $args, $output, $retvar);
 
 	// debug
@@ -398,6 +399,7 @@ function rig_image_info($abs_file)
 			$args = "-i " . rig_shell_filename($abs_file) . "";
 
 			// get the info now
+			rig_debug("rig_image_info: $args");
 			$res = exec($abs_preview_exec . " " . $args, $output, $retvar);
 
 			if ($retvar == 127)
@@ -830,6 +832,7 @@ function rig_runtime_filetype_support()
 
 	// gather filetype output now
 	// RM 20030628 using exec instead of system (system's output goes directly in the HTML!)
+	rig_debug("rig_filetype: $args");
 	$res = @exec($abs_preview_exec . " " . $args, $output, $retvar);
 
 	// output should be an even number of lines
@@ -867,10 +870,13 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.23.2.1  2006/09/02 04:59:19  ralfoide
+//	Debug info
+//
 //	Revision 1.23  2005/10/05 03:55:59  ralfoide
 //	By default don't display obnoxious error messages when thumbnails cannot
 //	be created. This is not fatal and already obvious enough.
-//
+//	
 //	Revision 1.22  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

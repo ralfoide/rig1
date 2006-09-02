@@ -378,6 +378,7 @@ function rig_is_debug()
 
 //-----------------------------------------------------------------------
 
+
 //*************************
 function rig_is_file($name)
 //*************************
@@ -456,6 +457,23 @@ function rig_print_array_str($str)
 	{
 		$a = ord($str{$i});
 		echo "str[$i] = {$a} = '{$str{$i}}'<br>\n";
+	}
+}
+
+
+
+
+//*********************************
+function rig_debug($str, $var=NULL)
+//*********************************
+// For debug purposes -- RM 20060106
+{
+	syslog(LOG_DEBUG, "$str");
+
+	if (rig_is_debug())
+	{
+		echo "<br><b>$str</b> ";
+		if ($var != NULL) var_dump($var);
 	}
 }
 
@@ -2057,6 +2075,11 @@ function rig_setup()
 	else
 		$rig_file_types = $pref_internal_file_types;
 
+
+	// -- setup logging [RM 20060901]
+
+	define_syslog_variables();
+	openlog("rig", LOG_ODELAY | LOG_PID, LOG_USER);
 }
 
 
@@ -2219,8 +2242,10 @@ function rig_check_expired($compare_date, &$path_list)
 
 			$tm = filemtime($path);
 			
-			if ($tm > $compare_date)
+			if ($tm > $compare_date) {
+			  rig_debug("EXPIRED 1: $tm [$path] > $compare_date");
 				return TRUE;
+			}
 		}
 		else if (rig_is_dir($path))
 		{
@@ -2228,8 +2253,10 @@ function rig_check_expired($compare_date, &$path_list)
 			
 			$tm = filemtime($path);
 
-			if ($tm > $compare_date)
+			if ($tm > $compare_date) {
+			  rig_debug("EXPIRED 2: $tm [$path] > $compare_date");
 				return TRUE;
+			}
 
 			// if not, check all files in the directory (no recursion)
 			// note that since there is no semantic associated to the path,
@@ -2249,6 +2276,7 @@ function rig_check_expired($compare_date, &$path_list)
 					
 					if ($tm > $compare_date)
 					{
+					  rig_debug("EXPIRED 3: $tm [$path . $file] > $compare_date");
 						closedir($handle);
 						return TRUE;				
 					}
@@ -2272,6 +2300,10 @@ function rig_begin_buffering()
 // Returns html filename to include or TRUE to start buffering and output or FALSE on errors
 // When FALSE is returned, the caller should proceed generating the page is if with buffering
 // except no buffering will occur.
+//
+// RM 20051126 v0.7.2: Buffering is also used for image pages now.
+// This should work transparently since the hash code contains the full url.
+// Also cache invalidation on album changed applies just fine.
 {
 	global $rig_abs_cache;
 	global $rig_tmp_cache;
@@ -2317,7 +2349,7 @@ function rig_begin_buffering()
 	// - preference image nb col
 	// - self url (in order to get the extra fields: credits, phpinfo, _debug_, etc.) [RM 20040715 v 0.6.5]
 
-	$hash =  ($current_album_page > 1 ? rig_simplify_filename($current_album_page) . 'a_' : '')
+	$hash_ =  ($current_album_page > 1 ? rig_simplify_filename($current_album_page) . 'a_' : '')
 			. ($current_image_page > 1 ? rig_simplify_filename($current_image_page) . 'i_' : '')
 			. rig_simplify_filename($rig_lang) . '_'
 			. rig_simplify_filename($rig_theme) . '_'
@@ -2328,7 +2360,7 @@ function rig_begin_buffering()
 			. $pref_image_nb_col . "|"
 			. rig_self_url();
 
-	$hash = md5($hash);
+	$hash = md5($hash_);
 
 	$abs_html =   rig_post_sep($abs_album_cache_path)
 				. rig_post_sep($current_real_album)
@@ -2337,6 +2369,9 @@ function rig_begin_buffering()
 				. ALBUM_CACHE_EXT;
 
 	$is_valid = rig_is_file($abs_html);
+
+	rig_debug("cache hash: $hash_");
+	rig_debug("cache is_valid: " . ($is_valid ? "TRUE" : "FALSE") . " (rig is file abs_html: $abs_html)");
 
 	if ($is_valid)
 	{
@@ -2367,7 +2402,7 @@ function rig_begin_buffering()
 			$check_list[] = $dir_abs_locset;
 
 		// RM 20040601 v.0.6.4.5 - fix image=>album var name
-		$check_list[] = $abs_album_cache_path . rig_prep_sep($current_real_album);
+		// $check_list[] = $abs_album_cache_path . rig_prep_sep($current_real_album);
 
 		// cache is valid if not expired
 		$is_valid  = !rig_check_expired($tm_html, $check_list);
@@ -2377,10 +2412,16 @@ function rig_begin_buffering()
 			@unlink($abs_html);
 	}
 
+	// RM 20060901 DEBUG
+	rig_debug("cache is_valid: " . ($is_valid ? "TRUE" : "FALSE") . ", abs_html: $abs_html, hash: $hash_");
+
 	if ($is_valid)
 	{
 		// no buffering is going on
 		$rig_abs_cache = FALSE;
+
+		// RM 20060901 DEBUG
+		rig_debug("Use CACHED version");
 
 		// return the filename of the cached html
 		return $abs_html;
@@ -2411,6 +2452,10 @@ function rig_begin_buffering()
 		$rig_tmp_cache = $rig_abs_cache . uniqid('_');
 		if (rig_is_file($rig_tmp_cache))
 			unlink($rig_tmp_cache);
+
+
+		// RM 20060901 DEBUG
+		rig_debug("CACHING: " . strftime("%c") . " => " . $rig_tmp_cache);
 
 		// RM 20040715 [v0.6.5] register a cleanup function to remove the
 		// tmp cache if the script is aborted before the buffering ends
@@ -2604,9 +2649,12 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.54.2.2  2006/09/02 04:59:18  ralfoide
+//	Debug info
+//
 //	Revision 1.54.2.1  2006/09/01 06:13:30  ralfoide
 //	MM regexps
-//
+//	
 //	Revision 1.54  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

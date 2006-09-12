@@ -2131,6 +2131,11 @@ function rig_setup()
 	else
 		$rig_file_types = $pref_internal_file_types;
 
+
+	// -- setup logging [RM 20060901]
+
+	define_syslog_variables();
+	openlog("rig", LOG_ODELAY | LOG_PID, LOG_USER);
 }
 
 
@@ -2387,6 +2392,8 @@ function rig_begin_buffering()
 	global $rig_lang;
 	global $rig_theme;
 	global $rig_user;
+	global $rig_img_size;				// RM 20060909 fix: image size changed in web UI
+	global $pref_image_size;
 
 	// Get the absolute cache filename
 	// Note that the cache file depends on the follwing variables:
@@ -2407,7 +2414,9 @@ function rig_begin_buffering()
 			. $pref_image_layout . "-"
 			. $pref_album_layout . "-"
 			. $pref_album_nb_col . "-"
-			. $pref_image_nb_col . "|"
+			. $pref_image_nb_col . "-"
+			. $rig_img_size      . "-"
+			. $pref_image_size   . "|"
 			. rig_self_url();
 
 	$hash = md5($hash_);
@@ -2695,10 +2704,13 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.59  2006/09/12 14:15:39  ralfoide
+//	Fixed broken image resize
+//
 //	Revision 1.58  2006/01/11 08:24:23  ralfoide
 //	Propagating template variable in rig_self.
 //	Added rig_debug function.
-//
+//	
 //	Revision 1.57  2005/12/26 22:09:30  ralfoide
 //	Added link to view full resolution image.
 //	Album thumbnail in admin album page.

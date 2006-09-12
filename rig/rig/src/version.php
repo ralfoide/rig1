@@ -25,19 +25,22 @@
 //************************************************************************
 
 
-$rig_vernum  =  1.0;
-$rig_version = "1.0";
+$rig_vernum  =  1.01;
+$rig_version = "1.0.1";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.31  2006/09/12 14:15:49  ralfoide
+//	Fixed broken image resize
+//
 //	Revision 1.30  2006/06/24 21:20:34  ralfoide
 //	Version 1.0:
 //	- Source: Set filename in thumbnail streaming headers
 //	- Source: Added pref_site_name and pref_site_link.
 //	- Fix: Fixed security vulnerability in check_entry.php
-//
+//	
 //	Revision 1.29  2006/01/11 08:21:54  ralfoide
 //	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
 //	

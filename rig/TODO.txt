@@ -234,6 +234,10 @@ Admin:
 
 -- done -- (sorted by finish date)
 
+[1.0.1]
+
+20060910 [1.F] Fix: Image resize was broken
+
 [1.0]
 
 20060624 [1.F] CVS: Tagged as tag_2006-06-24_v100
@@ -790,12 +794,15 @@ No tabs, use spaces for alignment (for viewcvs)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.67  2006/09/12 14:16:05  ralfoide
+//	Fixed broken image resize
+//
 //	Revision 1.66  2006/06/24 21:20:34  ralfoide
 //	Version 1.0:
 //	- Source: Set filename in thumbnail streaming headers
 //	- Source: Added pref_site_name and pref_site_link.
 //	- Fix: Fixed security vulnerability in check_entry.php
-//
+//	
 //	Revision 1.65  2006/04/13 05:04:22  ralfoide
 //	Version 0.7.4. Polish translation. Fixes.
 //	

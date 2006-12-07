@@ -240,7 +240,8 @@ char * rig_unslash(const char *filename)
 //**************************************
 // RIG will protect special characters in the name by backslashing them.
 // Returns a pointer onto a static allocated memory. By construction, 
-// this is called once and the result it used right after, so it works.
+// this is called once and the result is used right after, so it works.
+// And yes it's ugly.
 {
 	static char *res = NULL;
 
@@ -408,7 +409,8 @@ void rig_resize_image(const char * in_filename,
 	RigRgb *out_rgb = NULL;
 
 
-	DPRINTF(("FILE-IN:'%s'\nFILE-OUT:'%s'\n", in_filename, out_filename));
+	DPRINTF(("[rig] FILE-IN:'%s'\n" , in_filename));
+	DPRINTF(("[rig] FILE-OUT:'%s'\n", out_filename));
 
 	try
 	{
@@ -424,6 +426,10 @@ void rig_resize_image(const char * in_filename,
 		if (!in_rgb)
 		{
 			in_rgb = rig_avifile_read(name);
+			
+			if (!in_rgb)
+				in_rgb = rig_avifile_mplayer_read(name);
+
 			is_video = (in_rgb != NULL);
 		}
 #endif
@@ -711,12 +717,12 @@ int main(int argc, char *argv[])
 	}
 	catch(const char * s)
 	{
-		DPRINTF(("[rig] Catched string exception... -- result 1 --\n[rig]   Exception: %s\n", s));
+		DPRINTF(("[rig %s:%d] Catched string exception... -- result 1 --\n[rig]   Exception: %s\n", __FILE__, __LINE__, s));
 		return 1;
 	}
 	catch(...)
 	{
-		DPRINTF(("[rig] Catched unknown exception... -- result 1 --\n"));
+		DPRINTF(("[rig %s:%d] Catched unknown exception... -- result 1 --\n", __FILE__, __LINE__));
 		return 1;
 	}
 
@@ -739,9 +745,14 @@ int main(int argc, char *argv[])
 /*****************************************************************************
 
 	$Log$
+	Revision 1.11  2006/12/07 01:08:35  ralfoide
+	v1.0.2:
+	- Feature: Ability to automatically hide images based on name regexp
+	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+
 	Revision 1.10  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
-
+	
 	Revision 1.9  2004/07/17 07:52:32  ralfoide
 	GPL headers
 	

@@ -61,7 +61,7 @@
 	typedef	long long			int64;
 
 	#include <assert.h>
-	#define rig_assert(x)			assert(x)
+	#define rig_assert(x)		assert(x)
 
 #endif
 
@@ -99,9 +99,14 @@ extern int64 rig_system_time(void);
 /*****************************************************************************
 
 	$Log$
+	Revision 1.5  2006/12/07 01:08:35  ralfoide
+	v1.0.2:
+	- Feature: Ability to automatically hide images based on name regexp
+	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+
 	Revision 1.4  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
-
+	
 	Revision 1.3  2004/07/17 07:52:32  ralfoide
 	GPL headers
 	

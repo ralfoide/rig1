@@ -44,7 +44,15 @@
 
 #ifndef RIG_EXCLUDE_AVIFILE
 
+#include "rig_jpeg.h"
+
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#ifndef WIN32
+	#include <alloca.h>
+	#include <unistd.h>
+#endif
 
 //----------------------------------------------------------------------------
 // libavifile headers
@@ -59,7 +67,7 @@
 //----------------------------------------------------------------------------
 // Debug macro utility
 
-#if 0
+#if 1
 	#define DPRINTF(s) rig_dprintf s
 #else
 	#define DPRINTF(s)
@@ -275,7 +283,7 @@ RigRgb * rig_avifile_read(const char* filename)
 	}
 	catch(...)
 	{
-		DPRINTF(("[rig] Unexpected exception\n"));
+		DPRINTF(("[rig %s:%d] Unexpected exception\n", __FILE__, __LINE__));
 	}
 
 	// RM 20040707: these objects are not deleted on purpose.
@@ -286,12 +294,76 @@ RigRgb * rig_avifile_read(const char* filename)
 	// delete aviFile;
 
 	// ---
-	DPRINTF(("[rig] -- end rgb = %p\n", rgb));
+	DPRINTF(("[rig %s:%d] -- end rgb = %p\n", __FILE__, __LINE__, rgb));
 
 	return rgb;
 
 } // end of rig_avifile_read
 
+
+
+//*****************************************************
+RigRgb * rig_avifile_mplayer_read(const char *filename)
+//*****************************************************
+// In case we didn't succeed using libavifile directly above,
+// we can try extracting a thumbnail from a movie using mplayer.
+// This will obviously fail if mplayer is not on the system.
+//
+// Mplayer -vo jpeg -frames 1 will actually generate 2 frames
+// named 00000001.jpg and 00000002.jpg in the current directory
+// so we'll just cwd to /tmp first and hope it works. The image
+// will be in the native resolution of the movie, which is fine.
+//*****************************************************
+{
+	RigRgb *rgb	= NULL;
+
+	if (!filename)
+		return NULL;
+
+#if 0
+	// This is experimental and mostly broken. The bottom line is that
+	// it doesn't work because mplayer is executed in a weird environment
+	// and can't find his babies nor his mother so he just sit there and
+	// cries (what?! ok too much babysitting recently, forgive me.)
+#ifndef WIN32
+
+	DPRINTF(("[rig] rig_avifile_mplayer_read: '%s'\n", filename));
+
+	try {
+		const char *cmd = "cd /tmp && mplayer -really-quiet -nosound -vo jpeg -frames 1 \"%s\" 2>&1 ; pwd ; set";
+		const int len = strlen(cmd) + strlen(filename) + 1;
+		char *buf = (char *)alloca(len + 1);
+		int n = snprintf(buf, len, cmd, filename);
+		if (n >= len) {
+			buf = (char *)alloca(n + 1);
+			n = snprintf(buf, n, cmd, filename);
+		}
+		rig_assert(n > 0);
+
+		int ret = system(buf);
+
+		DPRINTF(("[rig] %d <= system '%s'\n", ret, buf));
+
+		if (ret == 0) {
+			rgb = rig_jpeg_read("/tmp/00000001.jpg");
+		}
+
+		unlink("/tmp/00000001.jpg");
+		unlink("/tmp/00000002.jpg");
+
+	} catch(...) {
+		DPRINTF(("[rig %s:%d] Unexpected exception\n", __FILE__, __LINE__));
+	}
+
+	// ---
+	DPRINTF(("[rig %s:%d] -- end rgb = %p\n", __FILE__, __LINE__, rgb));
+
+#endif
+#endif
+
+	return rgb;
+
+} // end of rig_avifile_mplayer_read
 
 
 //---------------------------------------------------------------
@@ -303,6 +375,11 @@ RigRgb * rig_avifile_read(const char* filename)
 /****************************************************************
 
 	$Log$
+	Revision 1.12  2006/12/07 01:08:34  ralfoide
+	v1.0.2:
+	- Feature: Ability to automatically hide images based on name regexp
+	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+
 	Revision 1.11  2005/11/26 18:00:53  ralfoide
 	Version 0.7.2.
 	Ability to have absolute paths for albums, caches & options.
@@ -310,7 +387,7 @@ RigRgb * rig_avifile_read(const char* filename)
 	Fixed HTML cache invalidation bug.
 	Added HTML cache to image view and overview.
 	Added /th to stream images & movies previews via PHP.
-
+	
 	Revision 1.10  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
 	

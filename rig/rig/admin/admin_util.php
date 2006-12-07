@@ -783,38 +783,18 @@ function rig_admin_set_album_visible($album, $visible)
 function rig_admin_set_image_visible($image, $visible)
 //****************************************************
 {
-	global $list_hide;
 	global $current_album;
 
 	echo "set image: '$image' visible: " . ($visible ? "Yes" : "No") . "<br>\n";
 
-	if (!$image)
-		return;
-
-	if ($visible && !rig_is_visible(-1, -1, $image))
+	if (rig_set_image_visible($image, $visible))
 	{
-		// remove the name from the hide list
-		foreach($list_hide as $key => $value)
-		{
-			if ($value == $image)
-			{
-				unset($list_hide[$key]);
-				break;
-			}
-		}
-
 		rig_write_album_options($current_album);
-	}
-	else if (!$visible && rig_is_visible(-1, -1, $image))
-	{
-		// add the name to the hide list
-		$list_hide[] = $image;
-		rig_write_album_options($current_album);
-	}
 
-	// make sure we read back the written options...
-	// takes some time, but this is a neat debug thingy
-	rig_read_album_options($current_album);
+		// make sure we read back the written options...
+		// takes some time, but this is a neat debug thingy
+		rig_read_album_options($current_album);
+	}
 }
 
 
@@ -1084,12 +1064,17 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.11  2006/12/07 01:08:34  ralfoide
+//	v1.0.2:
+//	- Feature: Ability to automatically hide images based on name regexp
+//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+//
 //	Revision 1.10  2006/06/24 21:20:34  ralfoide
 //	Version 1.0:
 //	- Source: Set filename in thumbnail streaming headers
 //	- Source: Added pref_site_name and pref_site_link.
 //	- Fix: Fixed security vulnerability in check_entry.php
-//
+//	
 //	Revision 1.9  2006/04/13 05:04:22  ralfoide
 //	Version 0.7.4. Polish translation. Fixes.
 //	

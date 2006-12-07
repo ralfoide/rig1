@@ -870,17 +870,38 @@ $pref_extra_file_types	= NULL;
 
 
 
+/***********************************************************
+ *
+ *	Setting: 		$pref_auto_hide_images
+ *	Type:			Regexp string
+ *	Default:		NULL
+ *	
+ *	Regular expression to match image filenames to hide by default.
+ *  Example: '/^[0-9]+\..+/';
+ *
+ ***********************************************************/
+
+
+$pref_auto_hide_images = NULL;
+
+
+
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.33  2006/12/07 01:08:34  ralfoide
+//	v1.0.2:
+//	- Feature: Ability to automatically hide images based on name regexp
+//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+//
 //	Revision 1.32  2006/06/24 21:20:34  ralfoide
 //	Version 1.0:
 //	- Source: Set filename in thumbnail streaming headers
 //	- Source: Added pref_site_name and pref_site_link.
 //	- Fix: Fixed security vulnerability in check_entry.php
-//
+//	
 //	Revision 1.31  2006/04/13 05:04:22  ralfoide
 //	Version 0.7.4. Polish translation. Fixes.
 //	

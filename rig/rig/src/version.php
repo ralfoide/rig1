@@ -25,16 +25,21 @@
 //************************************************************************
 
 
-$rig_vernum  =  1.01;
-$rig_version = "1.0.1";
+$rig_vernum  =  1.02;
+$rig_version = "1.0.2";
 
 // end
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.32  2006/12/07 01:08:34  ralfoide
+//	v1.0.2:
+//	- Feature: Ability to automatically hide images based on name regexp
+//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+//
 //	Revision 1.31  2006/09/12 14:15:49  ralfoide
 //	Fixed broken image resize
-//
+//	
 //	Revision 1.30  2006/06/24 21:20:34  ralfoide
 //	Version 1.0:
 //	- Source: Set filename in thumbnail streaming headers

@@ -396,6 +396,14 @@ function rig_is_dir($name)
     return file_exists($name) && is_dir($name);
 }
 
+//************************************
+function rig_leaf_filename($full_name)
+//************************************
+{
+	$items = explode(SEP, $full_name);
+	return $items[count($items)-1];
+}
+
 //*************************
 function rig_getmicrotime()
 //*************************
@@ -1389,12 +1397,18 @@ function rig_clear_album_options()
 	rig_unset_global('list_hide');			// RM 20040204 fix see rig_unset_global description
 	rig_unset_global('list_album_icon');	// RM 20040204 fix see rig_unset_global description
 	rig_unset_global('list_description');	// RM 20040204 fix see rig_unset_global description
+
+
+	// RM 20061206 - v1.0.2 - no album options loaded yet
+	global $has_album_options;
+	$has_album_options = FALSE;
 }
 
 
 //*************************************
 function rig_read_album_options($album)
 //*************************************
+// Returns TRUE if could read options or they don't exist, FALSE otherwise.
 {
 	// first clear current options
 	rig_clear_album_options();
@@ -1529,6 +1543,12 @@ function rig_read_album_options($album)
 	// { echo "<p>Reading list_album_icon: "; var_dump($list_album_icon);}
 
 	fclose($file);		// RM 20020713 fix
+
+	// RM 20061206 - v1.0.2 -- album options were just loaded
+	global $has_album_options;
+	$has_album_options = TRUE;
+
+
 	return TRUE;
 }
 
@@ -1616,7 +1636,44 @@ function rig_write_album_options($album, $silent = FALSE)
 	fputs($file, ":\n");
 	fclose($file);
 
+	// RM 20061206 - v1.0.2 -- album options were just created
+	global $has_album_options;
+	$has_album_options = TRUE;
+
 	return TRUE;
+}
+
+
+//**********************************************
+function rig_set_image_visible($image, $visible)
+//**********************************************
+// Returns TRUE if options changed
+{
+	global $list_hide;
+
+	if (!$image)
+		return;
+
+	if ($visible && !rig_is_visible(-1, -1, $image))
+	{
+		// remove the name from the hide list
+		foreach($list_hide as $key => $value)
+		{
+			if ($value == $image)
+			{
+				unset($list_hide[$key]);
+				return TRUE;
+			}
+		}
+	}
+	else if (!$visible && rig_is_visible(-1, -1, $image))
+	{
+		// add the name to the hide list
+		$list_hide[] = $image;
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 
@@ -2647,9 +2704,6 @@ function rig_flush()
 }
 
 
-
-
-
 //****************************
 function rig_clean_buffering()
 //****************************
@@ -2692,7 +2746,7 @@ function rig_check_ignore_list($name, $ignore_list)
 		foreach($ignore_list as $pattern)
 			if (preg_match($pattern, $name) == 1)
 				return TRUE;
-	
+
 	return FALSE;
 }
 
@@ -2704,9 +2758,14 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.60  2006/12/07 01:08:34  ralfoide
+//	v1.0.2:
+//	- Feature: Ability to automatically hide images based on name regexp
+//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+//
 //	Revision 1.59  2006/09/12 14:15:39  ralfoide
 //	Fixed broken image resize
-//
+//	
 //	Revision 1.58  2006/01/11 08:24:23  ralfoide
 //	Propagating template variable in rig_self.
 //	Added rig_debug function.

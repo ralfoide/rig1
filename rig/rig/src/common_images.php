@@ -44,7 +44,7 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 	if ($pref_preview_timeout)
 		set_time_limit($pref_preview_timeout);
 
-	$args = "-r " . rig_shell_filename($abs_source)
+	$args = " -r " . rig_shell_filename($abs_source)
 		    . " " . rig_shell_filename($abs_dest)
 		    . " $size";
 
@@ -59,15 +59,16 @@ function rig_make_image($abs_source, $abs_dest, $size, $quality = 0)
 
 	// debug
 	// echo "mk image:<br>src=$abs_source<br>dst=$abs_dest<p>\n";
-	// echo "<br> args = $args <br> exec = $abs_preview_exec <br>\n";
+	// DEBUG -- echo "<br> exec = $abs_preview_exec || args = $args <br>  <br>\n";
 
 	// create the preview now
 	// RM 20030628 using exec instead of system (system's output goes directly in the HTML!)
-	// $res = @system($abs_preview_exec . " " . $args, $retvar);
+	// DEBUG -- echo "<pre>"; $res = @system($abs_preview_exec . " " . $args, $retvar); echo "</pre>";
 	$res = @exec($abs_preview_exec . " " . $args, $output, $retvar);
 
 	// debug
-	// echo "<br> res = $res\n";
+	// DEBUG -- echo "<br> res = $res\n";
+	// DEBUG -- echo "<pre>"; foreach($output as $line) echo "$line\n"; echo "</pre>";
 
 	// There was an error if the return code was != 0
 	//
@@ -861,6 +862,11 @@ function rig_runtime_filetype_support()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.25  2006/12/07 01:08:34  ralfoide
+//	v1.0.2:
+//	- Feature: Ability to automatically hide images based on name regexp
+//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+//
 //	Revision 1.24  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.
@@ -868,7 +874,7 @@ function rig_runtime_filetype_support()
 //	Fixed HTML cache invalidation bug.
 //	Added HTML cache to image view and overview.
 //	Added /th to stream images & movies previews via PHP.
-//
+//	
 //	Revision 1.23  2005/10/05 03:55:59  ralfoide
 //	By default don't display obnoxious error messages when thumbnails cannot
 //	be created. This is not fatal and already obvious enough.

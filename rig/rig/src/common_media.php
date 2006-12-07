@@ -168,6 +168,11 @@ function rig_follow_album_symlink($abs_dir, &$current_album, &$current_real_albu
 //*****************************************************************
 function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 //******************************************************************
+// ${a,i}page is an integer:
+// -1: the pagination must be disabled (even if enabled in the preferences)
+//  0: default page must be shown (typically the first one) and there is
+//	   no need to generate the page display if there's only one page
+// 1..N: display page N, generate the page HTML display, pass back in URLs, etc.
 {
 	// List of globals defined for the album page by prepare_album():
 	// $current_album		- string
@@ -282,8 +287,7 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 
 	if ($current_album)
 	{
-		$items = explode(SEP, $current_album);
-		$pretty = rig_pretty_name($items[count($items)-1], FALSE, TRUE);
+		$pretty = rig_pretty_name(rig_leaf_filename($current_album), FALSE, TRUE);
 		$display_title = $pretty;
 		if ($link)
 			$display_title_html = "<a href='$link'>$title</a> &bull; " . $pretty;
@@ -303,6 +307,7 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 
 	// Read this album's options right now
 	rig_read_album_options($current_real_album);
+
 }
 
 
@@ -525,8 +530,49 @@ function rig_load_album_list($show_all = FALSE)
 	}
 	
 	rig_read_album_descriptions($current_real_album);
+
+	// RM 20061206 - v1.0.2 -- if we have no album options, auto-generate them
+	global $has_album_options;
+	if (!$has_album_options)
+		rig_auto_album_options();
 }
 
+
+//*******************************
+function rig_auto_album_options()
+//*******************************
+// RM 20061206 - v1.0.2 -- auto-hide images according to their name
+{
+	global $list_hide;
+	global $list_images;
+	global $current_album;
+	global $pref_auto_hide_images;
+	
+	if (!$list_images || !$pref_auto_hide_images)
+		return;
+
+	$hide = array();
+
+	foreach($list_images as $full_name)
+	{
+		$leaf = rig_leaf_filename($full_name);
+		if (preg_match($pref_auto_hide_images, $leaf) == 1)
+			$hide[] = $leaf;
+	}
+
+	if (count($hide) > 0) {
+		$modified = FALSE;
+
+		foreach($hide as $name)
+		{
+			if (rig_set_image_visible($name, FALSE))
+				$modified = TRUE;
+		}
+
+		if ($modified)
+			rig_write_album_options($current_album, !rig_is_debug());
+	}
+}
 
 //*****************************************************
 function rig_max_album_page($nb_col = -1, $nb_row = -1)
@@ -766,11 +812,6 @@ function rig_is_visible($id = -1, $album = -1, $image = -1)
 //***************************************************
 function rig_prepare_image($album, $image, $title="")
 //***************************************************
-// $page is an integer:
-// -1: the pagination must be disabled (even if enabled in the preferences)
-//  0: default page must be shown (typically the first one) and there is
-//	   no need to generate the page display if there's only one page
-// 1..N: display page N, generate the page HTML display, pass back in URLs, etc.
 {
 	rig_setup();
 
@@ -924,9 +965,8 @@ function rig_prepare_image($album, $image, $title="")
 	// RM 20020715 fix: use current_album
 	if ($current_album)
 	{
-		$items = explode(SEP, $current_album);
 		// RM 20020711: rig_pretty_name with strip_numbers=FALSE
-		$display_album_title = rig_pretty_name($items[count($items)-1], FALSE);
+		$display_album_title = rig_pretty_name(rig_leaf_filename($current_album), FALSE);
 	}
 
 	rig_read_album_options($current_real_album);
@@ -998,12 +1038,17 @@ function rig_get_images_prev_next()
 
 //-------------------------------------------------------------
 //	$Log$
+//	Revision 1.5  2006/12/07 01:08:34  ralfoide
+//	v1.0.2:
+//	- Feature: Ability to automatically hide images based on name regexp
+//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
+//
 //	Revision 1.4  2006/06/24 21:20:34  ralfoide
 //	Version 1.0:
 //	- Source: Set filename in thumbnail streaming headers
 //	- Source: Added pref_site_name and pref_site_link.
 //	- Fix: Fixed security vulnerability in check_entry.php
-//
+//	
 //	Revision 1.3  2005/11/26 18:00:53  ralfoide
 //	Version 0.7.2.
 //	Ability to have absolute paths for albums, caches & options.

@@ -234,6 +234,11 @@ Admin:
 
 -- done -- (sorted by finish date)
 
+[1.0.3]
+
+20070106 [2.F] Feature: Changed renaming schemes to be more flexible
+
+
 [1.0.2]
 
 20061206 [2.F] Feature: Ability to automatically hide images based on name regexp

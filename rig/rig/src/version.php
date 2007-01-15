@@ -25,13 +25,16 @@
 //************************************************************************
 
 
-$rig_vernum  =  1.02;
-$rig_version = "1.0.2";
+$rig_vernum  =  1.03;
+$rig_version = "1.0.3";
 
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: version.php,v $
+//	Revision 1.33  2007/01/10 09:07:42  ralfoide
+//	Changed renaming schemes to be more flexible
+//	
 //	Revision 1.32  2006/12/07 01:08:34  ralfoide
 //	v1.0.2:
 //	- Feature: Ability to automatically hide images based on name regexp

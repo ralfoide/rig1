@@ -802,42 +802,31 @@ function rig_pretty_name($name,
     // We'll interpret at least 6 leading digits as a year + date
 	if ($pretty_dirname)
 	{
-	    if (ereg("^([0-9]{4})[-/]([0-9]{2})[-/]([0-9]{2})$", $name, $reg))
-		{
-            // First deal with full dates with optional date separators
+	    if (preg_match("/^(\d{4})([\/-]?)(\d{2})\\2(\d{2})(?:[_.+ -]*(.+))?$/", $name, $reg))
+		{   // reg:       [1]    [2]     [3]       [4]               [5]
+            // First deal with full dates with optional date separators           
             // RM 20020713 fix: added optional separators (for albums name with only a date value)
-			// --> "YYYYMMDD"
+            // RM 20070105 merged next rules with optional separators and optional text
+			// --> "YYYYMMDD" or "YYYYMMDD_text" or "YYYY-MM-DD_text"
 			$name = str_replace("Y", $reg[1], $pref_date_YMD);
-			$name = str_replace("M", $reg[2], $name);
-			$name = str_replace("D", $reg[3], $name);
+			$name = str_replace("M", $reg[3], $name);
+			$name = str_replace("D", $reg[4], $name);
+			if ($reg[5])
+				$name .= $pref_date_sep . $reg[5];
         }
-		else if (ereg("^([0-9]{4})[-/]{0,1}([0-9]{2})[-/]{0,1}([0-9]{2})[- _]*(.+)$", $name, $reg))
-		{
-            // A full date followed by a description with optional date separators
-			// --> "YYYYMMDD_text" or "YYYY-MM-DD_text"
-			$name = str_replace("Y", $reg[1], $pref_date_YMD);
-			$name = str_replace("M", $reg[2], $name);
-			$name = str_replace("D", $reg[3], $name);
-			$name .= $pref_date_sep.$reg[4];
-        }
-		else if (ereg("^([0-9]{4})([0-9]{2})$", $name, $reg))
-		{
+		else if (preg_match("/^(\d{4})[\/-]?(\d{2})(?:[_.+ -]*(.+))?$/", $name, $reg))
+		{   // reg:            [1]          [2]               [3]
             // and then partial dates YYYYMM
-			$name = str_replace("Y", $reg[1], $pref_date_YM);
-			$name = str_replace("M", $reg[2], $name);
-			$name .= $pref_date_delim.$reg[2];
-        }
-		else if (ereg("^([0-9]{4})[-/]{0,1}([0-9]{2})[- _]*(.+)$", $name, $reg))
-		{
-            // a partial date followed by a description with optional date separators
+            // or a partial date followed by a description with optional date separators
 			// --> "YYYYMM_text" or "YYYY-MM_text"
 			$name = str_replace("Y", $reg[1], $pref_date_YM);
 			$name = str_replace("M", $reg[2], $name);
-			$name .= $pref_date_sep.$reg[3];
+			if ($reg[3])
+				$name .= $pref_date_sep . $reg[3];
         }
-		else if (ereg("^[0-9]{1,5}[- _](.+)$", $name, $reg))
+		else if (preg_match("/^\d{1,5}[_.+ -](.+)$/", $name, $reg))
 		{
-            // Remove leading digits if there are less than 5
+            // Remove leading digits if there are less or equal than 5
 			$name = $reg[1];
         }
 	}
@@ -845,18 +834,42 @@ function rig_pretty_name($name,
 	{
 		// remove numbers from begining of file name
 
-		// unless the name contains the name "IMG" as such, try to strip any leading numbers
-		if (eregi("^([0-9]+)[- _]([0-9]+)[- _]img$", $name, $reg))
-		{
-			// numbered sequence direct from the camera.
+		if (preg_match("/^1(\d{2})-(\\1\d{2})_IMG$/i", $name, $reg))
+		{   // reg:  [1]        [2]
+			// Canon camera sequence: 123-2300_IMG i.e. 1xx-xxyy_IMG
 			$name = "$html_image " . $reg[2];
 		}
-		else if (ereg("^([0-9]+)$", $name, $reg))
+		else if (preg_match("/^PICT(\d{4})$/i", $name, $reg))
+		{   // reg:                   [1]
+			// DiMage sequence: PICT1000 i.e. PICTxxxx
+			$name = "$html_image " . $reg[1];
+		}
+		else if (preg_match("/^(\d)00_(\\1\d{3})$/", $name, $reg))
+		{   // reg:      [1]       [2]
+			// Kodak sequence: 100-1234 i.e. x00-xyyy
+			$name = "$html_image " . $reg[2];
+		}
+		else if (preg_match("/^P1(\d{2})0(\d{3})$/i", $name, $reg))
+		{   // reg:        [1]        [2]
+			// Panasonic sequence: P1xx0yyy
+			$name = "$html_image " . $reg[1] . $reg[2];
+		}
+		else if (preg_match("/^DSC_(\d{4})$/i", $name, $reg))
+		{   // reg:          [1]
+			// Sony sequence: DSC_xxxx
+			$name = "$html_image " . $reg[1];
+		}
+		else if (preg_match("/^(\d+)$/", $name, $reg))
 		{
 			// if the image name is just a number, generate a text for it
 			$name = "$html_image " . $reg[1];
 		}
-		else if (ereg("^[0-9]+[- _]*(.+)$", $name, $reg))
+		else if (preg_match("/^[A-Z]\d{4,5}[_.+ -]*(.+)$/", $name, $reg))
+		{
+			// RM 20070106 new ralf numbering scheme: X12345_blah.jpg
+			$name = $reg[1];
+		}
+		else if (preg_match("/^\d+[_.+ -]*(.+)$/", $name, $reg))
 		{
 			// trim number at beginning if any
 			$name = $reg[1];
@@ -867,7 +880,7 @@ function rig_pretty_name($name,
 		// do not remove numbers at begining of file name
 		// (that doesn't mean we can't rearange things !)
 
-		if (eregi("^([0-9]+)[ _]([a-z_0-9].+)$", $name, $reg))
+		if (eregi("^(\d+)[_.+ -]([a-z_0-9].+)$", $name, $reg))
 		{
 			// if image starts with a number, insert a dash after it for lisibility
 			// note that the reg exp above has [ _] in it, not [- _]. If there's a dash, leave it!
@@ -2757,7 +2770,10 @@ function rig_check_ignore_list($name, $ignore_list)
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: common.php,v $
+//	Revision 1.61  2007/01/10 09:07:42  ralfoide
+//	Changed renaming schemes to be more flexible
+//	
 //	Revision 1.60  2006/12/07 01:08:34  ralfoide
 //	v1.0.2:
 //	- Feature: Ability to automatically hide images based on name regexp

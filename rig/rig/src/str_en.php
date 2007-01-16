@@ -109,6 +109,7 @@ $html_back_album	= 'Back to album';
 $html_back_previous	= 'Back to previous album';
 $html_vis_on		= 'Show';
 $html_vis_off		= 'Hide';
+$html_vis_hidden	= 'Hidden'; 								// RM 20070115 TBT
 
 $html_credits		= 'Credits';
 $html_show_credits	= 'Display RIG & PHP Credits';

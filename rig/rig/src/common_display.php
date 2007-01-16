@@ -94,9 +94,13 @@ function rig_display_header_start($title)
  	<title>
 		<?= $title ?>
 	</title>
+	<script language="JavaScript" type="text/javascript" src="prototype.js"></script>
 	<script language="JavaScript" type="text/javascript" src="browser_detect.js"></script>
 	<?= $theme_css_head ?>
 <?php
+
+	// RM 20070115 Tutorial for using prototype.js:
+	// http://www.sergiopereira.com/articles/prototype.js.html
 }
 
 //*********************************

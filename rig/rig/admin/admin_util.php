@@ -61,20 +61,28 @@ function rig_admin_perform_defer()
 	global $current_album;
 	global $current_image;
 
-var_dump($_GET);
-var_dump($_POST);
+	// DEBUG
+	// echo "<b>GET</b> "; var_dump($_GET);
+	// echo "<br><b>POST</b> "; var_dump($_POST);
 
-	$item		= rig_get($_GET,'item'		);
-	$admin		= rig_get($_GET,'admin'		);
-	$show_album	= rig_get($_GET,'show_album');
-	$show_image	= rig_get($_GET,'show_image');
+	$item		= rig_get($_GET, 'item'		);
+	$admin		= rig_get($_GET, 'admin'		);
+	$show_album	= rig_get($_GET, 'show_album');
+	$show_image	= rig_get($_GET, 'show_image');
 
-
+	$form_apply  = rig_get($_POST, 'form_apply');
+	$hide_images = rig_get($_POST, 'hide');
+	$icon_key    = rig_get($_POST, 'icon_key');
+	$album_for_icon = rig_get($_POST, 'album_for_icon');
+	/* // RM 20070116 TO-BE-CONTINUED -- var_dump($form_apply);
+	var_dump($icon_key);
+	var_dump($album_for_icon);
+	*/
 
 	// DEBUG
 	// echo "admin defer: admin = '$admin' -- album = '$current_album' -- image = '$current_image'<br>\n";
 
-//------
+	//------
 	if ($admin == "fix_option")
 	{
 		rig_admin_fix_options($current_album);			// non recursive version
@@ -83,7 +91,7 @@ var_dump($_POST);
 	{
 		rig_admin_fix_all_options($current_album);	// recursive version
 	}
-//-------
+	//-------
 	else if ($admin == "mk_previews")
 	{
 		rig_admin_mk_preview($current_album, TRUE, FALSE);
@@ -133,6 +141,16 @@ var_dump($_POST);
 		$item = rig_decode_argument($item);
 		// RM 20021022 fix for changing image visibility
 		rig_admin_set_image_visible($item, ($show_image == 'on'));
+	}
+	else if ($form_apply && $hide_images != NULL
+			 && is_array($hide_images) && count($hide_images) > 0)
+	{
+		rig_admin_set_images_hidden($hide_images);
+	}
+	else if ($form_apply && is_string($icon_key) && $icon_key > 0
+			 && is_string($album_for_icon) && $album_for_icon >= 0)
+	{
+		// RM 20070116 TO-BE-CONTINUED -- rig_admin_set_album_icon($icon_key, $album_for_icon);
 	}
 }
 
@@ -798,6 +816,38 @@ function rig_admin_set_image_visible($image, $visible)
 }
 
 
+//************************************************
+function rig_admin_set_images_hidden($hide_images)
+//************************************************
+{
+	global $current_album;
+	global $list_images;
+	$changed = FALSE;
+
+	rig_load_album_list(TRUE);
+
+	foreach($list_images as $key => $file) {
+		$item = rig_encode_url_link($file);
+		$is_visible = rig_is_visible(-1, -1, $file);
+		$should_be_visible = !in_array($item, $hide_images);
+
+		if ($is_visible != $should_be_visible) {
+			rig_set_image_visible($file, $should_be_visible);
+			$changed = TRUE;
+		}
+	}
+
+	if ($changed) {
+		rig_write_album_options($current_album);
+
+		// make sure we read back the written options...
+		// takes some time, but this is a neat debug thingy
+		rig_read_album_options($current_album);
+	}
+}
+
+
+
 //*****************************************
 function rig_admin_get_preview_info($album)
 //*****************************************
@@ -935,6 +985,7 @@ function rig_admin_display_image()
 	global $html_rename_album;
 	global $color_section_bg;
 	global $color_warning_bg;
+	global $html_vis_hidden;
 
 	$list_images_count = 0;
 	
@@ -948,7 +999,7 @@ function rig_admin_display_image()
 
 	$form_link = rig_self_url(-1, -1, RIG_SELF_URL_ADMIN, "admin=show_img_list");
 	?>
-		<form method="POST" action="<?= $form_link ?>">
+		<form id="form1" name="form1" method="POST" action="<?= $form_link ?>">
 	<?
 
 	foreach($list_images as $key => $file)
@@ -965,6 +1016,7 @@ function rig_admin_display_image()
 			$is_visible = TRUE;
 			$visible = $html_vis_off;
 			$vis_val = "off";
+			$hide_check = "";
 			$header_color = $color_section_bg;
 		}
 		else
@@ -972,6 +1024,7 @@ function rig_admin_display_image()
 			$is_visible = FALSE;
 			$visible = $html_vis_on;
 			$vis_val = "on";
+			$hide_check = "checked";
 			$header_color = $color_warning_bg;
 		}
 
@@ -983,17 +1036,16 @@ function rig_admin_display_image()
 
 		?>
 			<td <?= $w ?>>
-			<center>
 
 				<?php
 					rig_display_section("<a name=\"$key\">$html_image<br><b>$pretty</b></a>\n",
 										$header_color);
 				?>
-
 				<br>
 
 				<font size="-1">
-					<a href="<?= rig_self_url($file, -1, TRUE, "#$key") ?>"><img src="<?= $preview ?>" alt="<?= $file ?>" border="1" ></a>
+					<img src="<?= $preview ?>" alt="<?= $file ?>" border="1" >
+					<!--
 					<br>
 	
 					<a href="<?= rig_self_url($file, -1, TRUE, "admin=set_icon#$key") ?>">
@@ -1004,9 +1056,22 @@ function rig_admin_display_image()
 					<a href="<?= $vis_link ?>" target="_top">
 						<?= $visible ?>
 					</a>
+					-->
+					
+					<br>
+					<input type="checkbox" <?= $hide_check ?> value="<?= $item ?>" name="hide[]" id="visible_<?= $key ?>" />
+					<label for="visible_<?= $key ?>">
+						<?= $html_vis_hidden ?>
+					</label>
+
+					<br>
+					<input type="radio" value="<?= $key ?>" name="icon_key" id="set_icon_<?= $key ?>"
+					  	   onclick="return rig_select_icon('<?= $key ?>', '<?= $pretty ?>')" />
+					<label for="set_icon_<?= $key ?>">
+						<?= $html_use_as_icon ?>
+					</label>
 				</font>
 
-			</center>
 			</td>
 		<?php
 
@@ -1023,6 +1088,51 @@ function rig_admin_display_image()
 	}
 	
 	?>
+		<tr>
+		<td colspan="<?= $n ?>" align="center">
+		
+		<script type="text/javascript">
+		function rig_select_icon(key, name) {
+			var span_name = $("icon_name");
+			var span_display = $("parent_album_choice");
+
+			if (name) {
+				Element.setStyle(span_display, { display: "block" } );
+				Element.update(span_name, "<a href='#" + key + "'>" + name + "</a>");
+			} else {
+				Element.setStyle(span_display, { display: "none" } );
+				Element.update(span_name, "None");
+			}
+			
+			return true;
+		}
+		
+		function rig_check_all(state) {
+			var elements = document.getElementsByTagName("input");
+			elements = $A(elements);
+			elements.each(function(e) {
+				if (e.type == "checkbox")
+					e.checked = state;
+			});
+			
+			return false;
+		}
+		</script>
+
+		<span id="parent_album_choice" style="display: none">
+			Set <span id="icon_name"> name </span> as icon for album
+				<?
+				rig_admin_insert_icon_popup();
+				?>
+		</span>
+		
+		<a href="#" onclick="return rig_check_all(false)">Show All</a> ||
+		<a href="#" onclick="return rig_check_all(true)">Hide All</a> ||
+
+		<input type="submit" name="form_apply" value="Apply Changes" />
+		<input type="reset" onclick="rig_select_icon(false)" />
+		</td>
+		</tr>
 		</form>
 	<?
 
@@ -1047,15 +1157,16 @@ function rig_admin_insert_icon_popup()
 	// the last item is the current album name
 	$n = count($list)-1;
 
-	// remove the last item
-	unset($list[$n]);
+	echo "<select name='album_for_icon'>";
+	echo "<option value='-1'>[Select an album name]</option>\n";
 
-	echo "<option value='0'>[Select an album name]</option>\n";
-
-	foreach($list as $key => $item)
-	{
-		echo "<option value='$key'>$item</option>\n";
+	$prefix = "";
+	foreach($list as $key => $item) {
+		echo "<option value='$key' " . ($key == $n ? "selected" : "") . ">$prefix $item</option>\n";
+		$prefix .= "&bull;";
 	}
+
+	echo "</select>\n";
 }
 
 

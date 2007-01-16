@@ -419,6 +419,8 @@ $pref_copyright_name = '';
  *	Each album's pref can override this. The default is here.
  *	Use an empty string '' to disable.
  *
+ *  Example:
+ *
  ***********************************************************/
 
 $pref_html_meta = "<meta name=\"robots\" content=\"noindex, nofollow\">";

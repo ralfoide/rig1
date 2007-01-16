@@ -1172,63 +1172,6 @@ function rig_admin_insert_icon_popup()
 
 //-------------------------------------------------------------
 // end
-
-//-------------------------------------------------------------
-//	$Log$
-//	Revision 1.11  2006/12/07 01:08:34  ralfoide
-//	v1.0.2:
-//	- Feature: Ability to automatically hide images based on name regexp
-//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-//
-//	Revision 1.10  2006/06/24 21:20:34  ralfoide
-//	Version 1.0:
-//	- Source: Set filename in thumbnail streaming headers
-//	- Source: Added pref_site_name and pref_site_link.
-//	- Fix: Fixed security vulnerability in check_entry.php
-//	
-//	Revision 1.9  2006/04/13 05:04:22  ralfoide
-//	Version 0.7.4. Polish translation. Fixes.
-//	
-//	Revision 1.8  2005/11/26 18:00:53  ralfoide
-//	Version 0.7.2.
-//	Ability to have absolute paths for albums, caches & options.
-//	Explained each setting in location.php.
-//	Fixed HTML cache invalidation bug.
-//	Added HTML cache to image view and overview.
-//	Added /th to stream images & movies previews via PHP.
-//	
-//	Revision 1.7  2005/09/25 22:36:14  ralfoide
-//	Updated GPL header date.
-//	
-//	Revision 1.6  2004/10/07 01:20:01  ralfoide
-//	Fix for encoding in admin url
-//	
-//	Revision 1.5  2004/07/17 07:52:30  ralfoide
-//	GPL headers
-//	
-//	Revision 1.4  2004/07/14 06:08:34  ralfoide
-//	Clean html caches
-//	
-//	Revision 1.3  2004/03/09 06:22:29  ralfoide
-//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//	
-//	Revision 1.2  2003/09/13 21:55:54  ralfoide
-//	New prefs album nb col vs image nb col, album nb row vs image nb row.
-//	New pagination system (several pages for image/album grids if too many items)
-//	
-//	Revision 1.1  2003/08/21 20:15:32  ralfoide
-//	Moved admin src into separate folder
-//	
-//	Revision 1.15  2003/08/18 03:07:14  ralfoide
-//	PHP 4.3.x support, new runtime filetype support
-//
-//	[...]
-//
-//	Revision 1.1  2002/08/04 00:58:08  ralfoide
-//	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//	
-//	Revision 1.2  2001/11/26 04:35:20  ralf
-//	version 0.6 with location.php
 //-------------------------------------------------------------
 
 // IMPORTANT: the "? >" must be the LAST LINE of this file, otherwise

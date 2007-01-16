@@ -859,55 +859,5 @@ function rig_runtime_filetype_support()
 
 //-----------------------------------------------------------------------
 // end
-
-//-------------------------------------------------------------
-//	$Log$
-//	Revision 1.25  2006/12/07 01:08:34  ralfoide
-//	v1.0.2:
-//	- Feature: Ability to automatically hide images based on name regexp
-//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-//
-//	Revision 1.24  2005/11/26 18:00:53  ralfoide
-//	Version 0.7.2.
-//	Ability to have absolute paths for albums, caches & options.
-//	Explained each setting in location.php.
-//	Fixed HTML cache invalidation bug.
-//	Added HTML cache to image view and overview.
-//	Added /th to stream images & movies previews via PHP.
-//	
-//	Revision 1.23  2005/10/05 03:55:59  ralfoide
-//	By default don't display obnoxious error messages when thumbnails cannot
-//	be created. This is not fatal and already obvious enough.
-//	
-//	Revision 1.22  2005/09/25 22:36:15  ralfoide
-//	Updated GPL header date.
-//	
-//	Revision 1.21  2004/12/25 09:46:46  ralfoide
-//	Fixes and cleanup
-//	
-//	Revision 1.20  2004/07/17 07:52:31  ralfoide
-//	GPL headers
-//	
-//	Revision 1.19  2004/07/14 06:19:13  ralfoide
-//	Minor fixes for Win32/PHP 4.3.7 support
-//	
-//	Revision 1.18  2004/07/09 05:52:06  ralfoide
-//	Handling of timeout in thumbnail creation
-//	
-//	Revision 1.17  2004/06/03 14:14:47  ralfoide
-//	Fixes to support PHP 4.3.6
-//	
-//	Revision 1.16  2004/03/09 06:22:30  ralfoide
-//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//	
-//	Revision 1.15  2003/11/25 05:05:34  ralfoide
-//	Version 0.6.4.4 started.
-//	Added video install codec/player link & codec info.
-//	Isolated video display routines in new source file.
-//
-//	[...]
-//
-//	Revision 1.2  2001/11/26 04:35:20  ralf
-//	version 0.6 with location.php
 //-------------------------------------------------------------
 ?>

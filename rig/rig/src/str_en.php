@@ -200,43 +200,7 @@ $html_img_date		= '%A %B %d %Y, %I:%M %p';
 // cf http://www.php.net/manual/en/function.strftime.php
 $html_album_date	= '%B %Y';
 
-// end
-
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.23  2006/01/11 08:21:54  ralfoide
-//	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
-//
-//	Revision 1.22  2005/12/26 22:09:30  ralfoide
-//	Added link to view full resolution image.
-//	Album thumbnail in admin album page.
-//	Incorrect escaping of "&" in jhead call.
-//	Submitting 0.7.3.
-//	
-//	Revision 1.21  2005/09/25 22:36:15  ralfoide
-//	Updated GPL header date.
-//	
-//	Revision 1.20  2004/07/17 07:52:31  ralfoide
-//	GPL headers
-//	
-//	Revision 1.19  2004/07/14 06:19:50  ralfoide
-//	Admin option to clean HTML caches
-//	
-//	Revision 1.18  2004/03/09 06:22:30  ralfoide
-//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
-//	
-//	Revision 1.17  2004/03/02 10:38:01  ralfoide
-//	Translation of tooltip string.
-//	New page title strings.
-//
-//	[...]
-//
-//	Revision 1.1  2002/08/04 00:58:08  ralfoide
-//	Uploading 0.6.2 on sourceforge.rig-thumbnail
-//
-//	[...]
-//
-//	Revision 1.2  2001/11/26 04:35:20  ralf
-//	version 0.6 with location.php
+// end
 //-------------------------------------------------------------
 ?>

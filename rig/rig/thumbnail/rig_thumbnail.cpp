@@ -79,6 +79,8 @@ Usage:
 			out-size pixels, respecting the aspect ratio. Optional "quality"
 			for jpeg save operation, defaults to 80. Optional "gamma" for
 			changing gamma after rescaling (default to 1., which is no-op)
+      New: out-size can be 0, which mean to use the source size (i.e. no
+      resizing. Useful when you just want to change the quality or gamma.)
 
 -f			reports support file type information. The output are text lines
 			in the form: <perl-compatible regexp> \n <major/minor filetype> \n
@@ -443,18 +445,17 @@ void rig_resize_image(const char * in_filename,
 		wdst = wsrc = in_rgb->Sx();
 		hdst = hsrc = in_rgb->Sy();
 
-		double aspect = (double)wsrc / (double)hsrc;
+    if (target_size > 0) {
+      double aspect = (double)wsrc / (double)hsrc;
 
-		if (wsrc >= hsrc && wdst != target_size)
-		{
-			wdst = target_size;
-			hdst = (int32)((double)target_size / aspect);
-		}
-		else if (hsrc > wsrc && hdst != target_size)
-		{
-			hdst = target_size;
-			wdst = (int32)((double)target_size*aspect);
-		}
+      if (wsrc >= hsrc && wdst != target_size) {
+          wdst = target_size;
+          hdst = (int32)((double)target_size / aspect);
+      } else if (hsrc > wsrc && hdst != target_size) {
+          hdst = target_size;
+          wdst = (int32)((double)target_size*aspect);
+      }
+    }
 
 		DPRINTF(("[rig] Resize [%dx%d] -> [%dx%d]\n\n", wsrc, hsrc, wdst, hdst));
 
@@ -607,6 +608,7 @@ int rig_usage(const char *argv0)
 			"\t-v : verbose output (debug)\n"
 			"\t-i in-file : prints out information on file (format, width & height)\n"
 			"\t-r in-file out-file out-size [quality=80 [gamma=1.0]] : build jpeg thumbnail\n"
+      "\t                    (use out-size=0 to avoid resizing)"
 			"\t-f file types' regexp list\n"
 			"\t-t debug test\n"
 			"\nReturns: 0=no error, 1=processing error, 2=not enough arguments, 3=timeout\n",

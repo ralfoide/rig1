@@ -38,6 +38,7 @@
 #include "rig_rgb.h"
 #include "rig_jpeg.h"
 #include "rig_avifile.h"
+#include "rig_avcodec.h"
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -79,6 +80,8 @@ Usage:
 			out-size pixels, respecting the aspect ratio. Optional "quality"
 			for jpeg save operation, defaults to 80. Optional "gamma" for
 			changing gamma after rescaling (default to 1., which is no-op)
+      New: out-size can be 0, which mean to use the source size (i.e. no
+      resizing. Useful when you just want to change the quality or gamma.)
 
 -f			reports support file type information. The output are text lines
 			in the form: <perl-compatible regexp> \n <major/minor filetype> \n
@@ -359,10 +362,12 @@ void rig_print_filetype_support(void)
 
 	rig_jpeg_filetype_support();
 
-#ifndef RIG_EXCLUDE_AVIFILE
-
+#ifdef RIG_USES_AVIFILE
 	rig_avifile_filetype_support();
+#endif
 
+#ifdef RIG_USES_AVCODEC
+	rig_avcodec_filetype_support();
 #endif
 }
 
@@ -372,7 +377,7 @@ void rig_print_info(const char * in_filename)
 //*******************************************
 {
 	int32 width, height;
-#ifndef RIG_EXCLUDE_AVIFILE
+#if defined(RIG_USES_AVIFILE) || defined(RIG_USES_AVCODEC)
 	uint32 codec;
 #endif
 
@@ -382,8 +387,14 @@ void rig_print_info(const char * in_filename)
 	{
 		printf("[rig-thumbnail-result] jpeg %ld %ld\n", width, height);
 	}
-#ifndef RIG_EXCLUDE_AVIFILE
+#ifdef RIG_USES_AVIFILE
 	else if (rig_avifile_info(name, width, height, codec))
+	{
+		printf("[rig-thumbnail-result] video %ld %ld @%.4s@\n", width, height, (const char *)(&codec));
+	}
+#endif
+#ifdef RIG_USES_AVCODEC
+	else if (rig_avcodec_info(name, width, height, codec))
 	{
 		printf("[rig-thumbnail-result] video %ld %ld @%.4s@\n", width, height, (const char *)(&codec));
 	}
@@ -414,22 +425,26 @@ void rig_resize_image(const char * in_filename,
 
 	try
 	{
+		bool  is_video = false;
+
 		// read input image
 
 		char *name = rig_unslash(in_filename);
 
 		in_rgb = rig_jpeg_read(name);
 
-#ifndef RIG_EXCLUDE_AVIFILE
-		bool  is_video = false;
-
+#ifdef RIG_USES_AVCODEC
+		if (!in_rgb)
+		{
+			in_rgb = rig_avcodec_read(name);
+			is_video = (in_rgb != NULL);
+		}
+#endif
+		
+#ifdef RIG_USES_AVIFILE
 		if (!in_rgb)
 		{
 			in_rgb = rig_avifile_read(name);
-			
-			if (!in_rgb)
-				in_rgb = rig_avifile_mplayer_read(name);
-
 			is_video = (in_rgb != NULL);
 		}
 #endif
@@ -443,18 +458,17 @@ void rig_resize_image(const char * in_filename,
 		wdst = wsrc = in_rgb->Sx();
 		hdst = hsrc = in_rgb->Sy();
 
-		double aspect = (double)wsrc / (double)hsrc;
+    if (target_size > 0) {
+      double aspect = (double)wsrc / (double)hsrc;
 
-		if (wsrc >= hsrc && wdst != target_size)
-		{
-			wdst = target_size;
-			hdst = (int32)((double)target_size / aspect);
-		}
-		else if (hsrc > wsrc && hdst != target_size)
-		{
-			hdst = target_size;
-			wdst = (int32)((double)target_size*aspect);
-		}
+      if (wsrc >= hsrc && wdst != target_size) {
+          wdst = target_size;
+          hdst = (int32)((double)target_size / aspect);
+      } else if (hsrc > wsrc && hdst != target_size) {
+          hdst = target_size;
+          wdst = (int32)((double)target_size*aspect);
+      }
+    }
 
 		DPRINTF(("[rig] Resize [%dx%d] -> [%dx%d]\n\n", wsrc, hsrc, wdst, hdst));
 
@@ -475,10 +489,8 @@ void rig_resize_image(const char * in_filename,
 
 		// apply decorations
 		
-#ifndef RIG_EXCLUDE_AVIFILE
 		if (is_video)
 			rig_video_frame(out_rgb);
-#endif
 		
 		// write output image
 
@@ -607,6 +619,7 @@ int rig_usage(const char *argv0)
 			"\t-v : verbose output (debug)\n"
 			"\t-i in-file : prints out information on file (format, width & height)\n"
 			"\t-r in-file out-file out-size [quality=80 [gamma=1.0]] : build jpeg thumbnail\n"
+      "\t                    (use out-size=0 to avoid resizing)"
 			"\t-f file types' regexp list\n"
 			"\t-t debug test\n"
 			"\nReturns: 0=no error, 1=processing error, 2=not enough arguments, 3=timeout\n",

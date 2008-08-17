@@ -42,7 +42,7 @@
 #include "rig_rgb.h"
 #include "rig_avifile.h"
 
-#ifndef RIG_EXCLUDE_AVIFILE
+#ifdef RIG_USES_AVIFILE
 
 #include "rig_jpeg.h"
 
@@ -302,73 +302,9 @@ RigRgb * rig_avifile_read(const char* filename)
 
 
 
-//*****************************************************
-RigRgb * rig_avifile_mplayer_read(const char *filename)
-//*****************************************************
-// In case we didn't succeed using libavifile directly above,
-// we can try extracting a thumbnail from a movie using mplayer.
-// This will obviously fail if mplayer is not on the system.
-//
-// Mplayer -vo jpeg -frames 1 will actually generate 2 frames
-// named 00000001.jpg and 00000002.jpg in the current directory
-// so we'll just cwd to /tmp first and hope it works. The image
-// will be in the native resolution of the movie, which is fine.
-//*****************************************************
-{
-	RigRgb *rgb	= NULL;
-
-	if (!filename)
-		return NULL;
-
-#if 0
-	// This is experimental and mostly broken. The bottom line is that
-	// it doesn't work because mplayer is executed in a weird environment
-	// and can't find his babies nor his mother so he just sit there and
-	// cries (what?! ok too much babysitting recently, forgive me.)
-#ifndef WIN32
-
-	DPRINTF(("[rig] rig_avifile_mplayer_read: '%s'\n", filename));
-
-	try {
-		const char *cmd = "cd /tmp && mplayer -really-quiet -nosound -vo jpeg -frames 1 \"%s\" 2>&1 ; pwd ; set";
-		const int len = strlen(cmd) + strlen(filename) + 1;
-		char *buf = (char *)alloca(len + 1);
-		int n = snprintf(buf, len, cmd, filename);
-		if (n >= len) {
-			buf = (char *)alloca(n + 1);
-			n = snprintf(buf, n, cmd, filename);
-		}
-		rig_assert(n > 0);
-
-		int ret = system(buf);
-
-		DPRINTF(("[rig] %d <= system '%s'\n", ret, buf));
-
-		if (ret == 0) {
-			rgb = rig_jpeg_read("/tmp/00000001.jpg");
-		}
-
-		unlink("/tmp/00000001.jpg");
-		unlink("/tmp/00000002.jpg");
-
-	} catch(...) {
-		DPRINTF(("[rig %s:%d] Unexpected exception\n", __FILE__, __LINE__));
-	}
-
-	// ---
-	DPRINTF(("[rig %s:%d] -- end rgb = %p\n", __FILE__, __LINE__, rgb));
-
-#endif
-#endif
-
-	return rgb;
-
-} // end of rig_avifile_mplayer_read
-
-
 //---------------------------------------------------------------
 
-#endif // RIG_EXCLUDE_AVIFILE
+#endif // RIG_USES_AVIFILE
 
 //---------------------------------------------------------------
 

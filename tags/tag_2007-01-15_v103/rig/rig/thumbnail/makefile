@@ -2,44 +2,123 @@
 #creates ./thumbnail.exe
 
 # -----------------------------
+#  setup basic compilation flags
 
-OFILES = $(wildcard *.o)
-EFILES = $(wildcard *.exe)
+### DEBUG ##CFLAGS	= -O3
+CFLAGS	= -g
+LDFLAGS = 
+LDLIBS  = -lstdc++ -lm -lc
+LN      = $(CC)
+
+INCDIR  = -I.
+
+# ----- jpeglib support -------
+
+ifneq ($(wildcard /usr/include/jpeglib.h*),)
+	# found a jpeglib header, using -ljpeg from your system.)
+	JPEGRULE =
+	LIBJPEG  = -ljpeg
+else
+	# jpeglib header not found, building from source
+	JPEGRULE = libjpeg
+	JPEG_TGZ = jpegsrc.v6b.tar.gz
+	DIRJPEG1 = ./jpegsrc
+	DIRJPEG2 = $(DIRJPEG1)/jpeg-6b
+	DIRJPEG3 = $(DIRJPEG1)/ralf_patch
+	LIBJPEG  = $(DIRJPEG2)/libjpeg.a
+	INCDIR  := $(INCDIR) -I$(DIRJPEG2)
+endif
+
+# ----- avifile support -------
+
+ifneq ($(shell which avifile-config),)
+	# we found avifile-config. assume the system has libavifile-dev installed.
+	USES_AVIFILE = 1
+	LDLIBS:= $(LDLIBS) $(shell avifile-config --libs)
+	INCDIR:= $(INCDIR) $(shell avifile-config --cflags)
+	CFLAGS:= $(CFLAGS) -DRIG_USES_AVIFILE
+endif	
+
+# ----- libavcodec/libavformat support -------
+
+ifneq ($(wildcard /usr/include/ffmpeg/*),)
+	# we found the main headers for ffmpeg; assume libavformat & libavcodec are present
+	USES_AVCODEC = 1
+	LDLIBS:= $(LDLIBS) -lavformat -lavcodec
+	INCDIR:= $(INCDIR) -I/usr/include/ffmpeg
+	CFLAGS:= $(CFLAGS) -DRIG_USES_AVCODEC -D__STDC_CONSTANT_MACROS
+endif
 
 # -----------------------------
 
-all:
-	@echo
-	@echo "Please select target 'no-video' or target 'with-video' by using"
-	@echo "	make no-video"
-	@echo "or"
-	@echo "	make with-video"
-	@echo
-	@echo "The makefile will use 'wget' to download libjpeg.6b"
-	@echo "To compile the video version, you need to install libavifile-devel 0.7.33 first"
-	@echo
+CFILES = rig_thumbnail.cpp rig_rgb.cpp rig_jpeg.cpp rig_avifile.cpp rig_avcodec.cpp
 
-no-video:
-	$(MAKE) -f makefile-no-video
+OFILES = $(patsubst %.cpp,%.o,$(CFILES))
 
-with-video:
-	$(MAKE) -f makefile-with-video
+TARGET = rig_thumbnail.exe
 
 # -----------------------------
 
-clean:
-	rm -fv $(OFILES)
-	$(MAKE) -f makefile-libjpeg clean
-	@echo
-	@echo "**** IMPORTANT: To remove $(EFILES) too, use 'make clean-all' *****"
-	@echo
+all: info $(JPEGRULE) $(TARGET)
+	@echo "Done."
 
-clean-all: clean
-	rm -fv $(EFILES)
+# -----------------------------
+
+libjpeg:
+	$(MAKE) -f makefile-libjpeg
+
+# -----------------------------
+
+$(TARGET): $(OFILES)
+	$(LN) $(LDFLAGS) -o $(TARGET) $(OFILES) $(LIBJPEG) $(LDLIBS)
+
+$(OFILES): %.o: %.cpp
+	$(CC) -c $(CFLAGS) $(INCDIR) $< -o $@
+
+# -----------------------------
+
+ALL_OFILES = $(wildcard *.o)
+ALL_EFILES = $(wildcard *.exe)
+
+clean: clean-o check-all-clean
+
+clean-o:
+	rm -fv $(ALL_OFILES)
+	@$(MAKE) -f makefile-libjpeg clean
+
+check-all-clean:
+	@if [ "x$(ALL_EFILES)" != "x" ]; then \
+		echo; \
+		echo "**** IMPORTANT: To remove $(ALL_EFILES) too, use 'make clean-all' *****"; \
+		echo; \
+	fi
+
+clean-all: clean-o
+	rm -fv $(ALL_EFILES)
 
 super-clean: clean-all
 
 extra-clean: clean-all
+
+
+# -----------------------------
+
+info:
+	@if [ "x$(JPEGRULE)" == "x" ]; then \
+		echo "**** LIBJPEG: Using -ljpeg from your system."; \
+	else \
+		echo "**** LIBJPEG: No jpeglib.h found, building libjpeg from source."; \
+	fi
+	@if [ "x$(USES_AVIFILE)" == "x" ]; then \
+		echo "**** AVIFILE: No headers found for libavifile. Support not included."; \
+	else \
+		echo "**** AVIFILE: Some avifile headers found, trying to build with libavifile."; \
+	fi
+	@if [ "x$(USES_AVCODEC)" == "x" ]; then \
+		echo "**** AVCODEC: No headers found for libavformat/libavcodec. Support not included."; \
+	else \
+		echo "**** AVCODEC: Some ffmpeg headers found, trying to build with libavformat/libavcodec."; \
+	fi
 
 
 # -----------------------------

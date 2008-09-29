@@ -1,5 +1,5 @@
 <?php
-// vim: set tabstop=4 shiftwidth=4: //
+// vim:tabstop=4 shiftwidth=4 softtabstop=4
 //************************************************************************
 /*
 	$Id$
@@ -109,11 +109,12 @@ function rig_follow_album_symlink($abs_dir, &$current_album, &$current_real_albu
 	global $pref_follow_album_symlinks;
 	global $abs_album_path;
 
+	if (!$pref_follow_album_symlinks || !$current_album || !rig_is_dir($abs_dir)) {
+		// we don't allow symlinks or this is not right. Don't block it but don't change it either.
+		return TRUE;
+	}
 
-	if (   $pref_follow_album_symlinks
-		&& $current_album
-		&& rig_is_dir($abs_dir)
-		&& is_link($abs_dir))
+	if (is_link($abs_dir))
 	{
 		// ok so abs_dir is a directory and it is a symlink
 		// get the real directory it points to:
@@ -158,9 +159,33 @@ function rig_follow_album_symlink($abs_dir, &$current_album, &$current_real_albu
 				}
 			}
 		}
-	}
 
-	return TRUE;
+		return TRUE;
+	} else {
+		// FIXED by RM 20080928 for MM branch
+		// abs_dir is not a symlink. but maybe one of its parents is
+
+		$abs_parent = rig_get_parent_album($abs_dir);
+		$leaf = substr($abs_dir, strlen($abs_parent));
+		if (strlen($leaf) > 1 && ($leaf[0] == SEP || $leaf[0] == SEP2)) {
+			$leaf = substr($leaf, 1);
+		}
+
+		$new_real_album = "";
+		$result = rig_follow_album_symlink($abs_parent, $current_album, $new_real_album);
+
+		if ($result) {
+			// True here means either to follow a smylink (new_real_album) or to keep using
+			// the original.
+			if ($new_real_album != "") {
+				$current_real_album = rig_post_sep($new_real_album) . $leaf;
+			}
+		} else {
+			// False means access was denied on the parent level. Nothing to do.
+		}
+
+		return $result;
+    }
 
 } // follow symlink
 

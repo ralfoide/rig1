@@ -137,6 +137,62 @@ function rig_admin_perform_defer()
 
 
 //*****************************************
+function rig_admin_follow_symlink($album)
+//*****************************************
+// ADDED by RM 20080928 for MM branch
+// Checks if $album is a symlink that maps on this album.
+// If it is, returns the corresponding resolved symlink.
+// If not, returns $abs_dir unchanged.
+{
+	global $pref_follow_album_symlinks;
+	global $abs_album_path;
+
+	$abs_dir = $abs_album_path . rig_prep_sep($album);
+
+	if (!$pref_follow_album_symlinks || !rig_is_dir($abs_dir)) {
+		// we don't allow symlinks or this is not right.
+		return $abs_dir;
+	}
+
+	if (is_link($abs_dir)) {
+		// ok so abs_dir is a directory and it is a symlink
+		// get the real directory it points to:
+
+		$rp = realpath($abs_dir);
+
+		// now $abs_album_path is the root of the album and
+		// it is a real path too. The symlink points onto
+		// the same album if $abs_album_path is exactly
+		// present at the beginning of $rp
+		
+		if (strncmp($rp, $abs_album_path, strlen($abs_album_path)) == 0) {
+			$album = substr($rp, strlen($abs_album_path));
+			if (strlen($album) > 1 && ($album[0] == SEP || $album[0] == SEP2)) {
+				$album = substr($album, 1);
+			}
+		}
+	} else {
+		// abs_dir is not a symlink. but maybe one of its parents is
+
+		$parent = rig_get_parent_album($album);
+
+		if ($parent) {
+			$leaf = substr($album, strlen($parent));
+			if (strlen($leaf) > 1 && ($leaf[0] == SEP || $leaf[0] == SEP2)) {
+				$leaf = substr($leaf, 1);
+			}
+
+			$parent = rig_post_sep(rig_admin_follow_symlink($parent));
+			$album = $parent . $leaf;
+		}
+    }
+
+	return $album;
+
+} // follow symlink
+
+
+//*****************************************
 function rig_admin_mk_preview($album,
 							  $do_previews,
 							  $do_images)
@@ -151,6 +207,8 @@ function rig_admin_mk_preview($album,
 	global $pref_album_ignore_list;     // RM 20030813 - v0.6.3.5
 	global $pref_image_ignore_list;
 
+
+	$album = rig_admin_follow_symlink($album);
 
 	$abs_dir = $abs_album_path . rig_prep_sep($album);
 

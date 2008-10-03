@@ -28,6 +28,36 @@
 //-----------------------------------------------------------------------
 
 
+//****************************
+function rig_video_type($type)
+//****************************
+// Decodes the type string for a video.
+// The type string has the following format:
+//   video/subtype[:realmimetype]
+// When realmimetype, "video/subtype" is the real mime-type.
+//
+// The mime-type can be used in an HTTP header.
+//
+// Result is returned in an array:
+// ['s'] = sub-type for internal usage
+// ['m'] = mime-type
+//
+// If the type is not a video type, NULL is returned.
+{
+	if (preg_match('@^video/([^:]+)(?::(.+))?$@', $type, $m) == 1)
+	{
+		$ret = array('s' => $m[1]);
+		if (isset($m[2]) && $m[2])
+			$ret['m'] = $m[2];
+		else
+			$ret['m'] = $m[0];
+		return $ret;
+	}
+
+	return NULL;
+}
+
+
 //*******************************
 function rig_display_video($type)
 //*******************************
@@ -53,8 +83,11 @@ function rig_display_video($type)
 		$rig_img_size = $pref_image_size;
 
 	// get the file type
-	if (strncmp($type, "video/", 6) == 0)
+	$type_info = rig_video_type($type);
+	if ($type_info)
 	{
+        $subtype = $type_info["s"];   // RM 20081002 for MM branch
+
 		// RM 20030628 v0.6.3.4
 
 		// get the full relative URL to the media file
@@ -76,8 +109,6 @@ function rig_display_video($type)
 
 		// for QT, add 16 to the height to see the controls (cf doc above)
 		$sy2 = $sy+16;
-
-		$subtype = substr($type, 6);
 
 
 		// get some details based on the video codec

@@ -104,17 +104,17 @@ extra-clean: clean-all
 # -----------------------------
 
 info:
-	@if [ "x$(JPEGRULE)" == "x" ]; then \
+	@if [ "x$(JPEGRULE)" = "x" ]; then \
 		echo "**** LIBJPEG: Using -ljpeg from your system."; \
 	else \
 		echo "**** LIBJPEG: No jpeglib.h found, building libjpeg from source."; \
 	fi
-	@if [ "x$(USES_AVIFILE)" == "x" ]; then \
+	@if [ "x$(USES_AVIFILE)" = "x" ]; then \
 		echo "**** AVIFILE: No headers found for libavifile. Support not included."; \
 	else \
 		echo "**** AVIFILE: Some avifile headers found, trying to build with libavifile."; \
 	fi
-	@if [ "x$(USES_AVCODEC)" == "x" ]; then \
+	@if [ "x$(USES_AVCODEC)" = "x" ]; then \
 		echo "**** AVCODEC: No headers found for libavformat/libavcodec. Support not included."; \
 	else \
 		echo "**** AVCODEC: Some ffmpeg headers found, trying to build with libavformat/libavcodec."; \

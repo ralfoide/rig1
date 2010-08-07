@@ -81,7 +81,7 @@ if (PHP_OS != 'WINNT')
 	 *	The path must NOT start by /. 
 	 ***********************************************************/
 
-	$pref_preview_exec		= "thumbnail/rig_thumbnail.exe";
+	$pref_preview_exec		= "rig/thumbnail/rig_thumbnail.exe";
 
 
 

@@ -173,7 +173,7 @@ $dir_abs_globset		= $dir_abs_install . "rig". S . "settings" . S;
  *  Setting: 		$dir_abs_base
  *  Type:			Automatically generated absolute path to the main
  *  				"index.php" when running this script.
- *  Default:		A pathinfo/PATH_TRANSLATED that automatically detects
+ *  Default:		A pathinfo/SCRIPT_FILENAME that automatically detects
  *  				the absolute path of this script as indicated by PHP.
  *
  *  Requirement:	No need to edit this. The default value should work.
@@ -190,9 +190,9 @@ $dir_abs_globset		= $dir_abs_install . "rig". S . "settings" . S;
  *
  ***********************************************************/
 
-$dir_info_base			= pathinfo($_SERVER['PATH_TRANSLATED']);
-$dir_abs_base			= $dir_info_base["dirname"];
-
+# As of PHP 4.3.2 the PATH_TRANSLATED may not be filled by default.
+# cf http://www.php.net/manual/en/reserved.variables.server.php
+$dir_abs_base                   = pathinfo($_SERVER['SCRIPT_FILENAME'], PATHINFO_DIRNAME);
 
 
 /***********************************************************

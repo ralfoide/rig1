@@ -2586,7 +2586,7 @@ function rig_begin_buffering()
 
 		// RM 20040715 [v0.6.5] register a cleanup function to remove the
 		// tmp cache if the script is aborted before the buffering ends
-		register_shutdown_function(rig_clean_buffering);
+		register_shutdown_function('rig_clean_buffering');
 
 		ob_implicit_flush(0);
 		ob_start();

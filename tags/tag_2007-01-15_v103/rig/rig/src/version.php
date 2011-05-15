@@ -26,7 +26,7 @@
 
 
 $rig_vernum  =  1.03;
-$rig_version = "1.0.3";
+$rig_version = "1.0.3 (<a href='http://rig-thumbnail.svn.sourceforge.net/viewvc/rig-thumbnail/tags/tag_2007-01-15_v103'>tag_2007-01-15_v103</a>)";
 
 // end
 

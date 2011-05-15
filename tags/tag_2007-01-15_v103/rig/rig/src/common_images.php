@@ -830,9 +830,27 @@ function rig_runtime_filetype_support()
 	// output should be an even number of lines
 
 	$filetypes = NULL;
-	$n = count($output);
 
-	if ($retvar || !is_array($output) || $n == 0 || ($n % 2) != 0)
+    $n = 0;
+    $is_valid = !($retvar || !is_array($output));
+
+    if ($is_valid) {
+    	$n = count($output);
+
+        // RM 20110514 a new version of AVIFILE pollutes the output with some crappy headers
+        // lines. We can filter them because they start by '<init>'
+        $output2 = array();
+	    for($i = 0, $j = 0; $i < $n; $i++) {
+            $line = $output[$i];
+            if (strpos($line, "<init>") === FALSE) {
+                $output2[$j++] = $output[$i];
+            }
+        }
+        $output = $output2;
+    	$n = count($output);
+    }
+
+	if (!$is_valid || $n == 0 || ($n % 2) != 0)
 	{
 		rig_html_error("Runtime File Type Array Error",
 					   "Error $retvar when collecting supported file type information<p>" .

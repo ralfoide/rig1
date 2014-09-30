@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: str_en.php,v 1.21 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -56,7 +56,6 @@ $html_language		= 'Language:';
 $html_desc_lang		= array('en' => 'English',
 							'fr' => 'Fran&ccedil;ais',
 							'sp' => 'Espa&ntilde;ol',
-							'pl' => 'Polski',
 							'jp' => '&#26085;&#26412;&#35486;'
 							);
 
@@ -109,7 +108,6 @@ $html_back_album	= 'Back to album';
 $html_back_previous	= 'Back to previous album';
 $html_vis_on		= 'Show';
 $html_vis_off		= 'Hide';
-$html_vis_hidden	= 'Hidden'; 								// RM 20070115 TBT
 
 $html_credits		= 'Credits';
 $html_show_credits	= 'Display RIG & PHP Credits';
@@ -144,10 +142,6 @@ $html_video_codec_detail			= "Video format: <i>[codec_name]</i>";
 $html_video_install_named_player	= "[&nbsp;<a href=\"[url]\">Install&nbsp;[name]</a>&nbsp;] ";
 $html_video_install_unnamed_player	= "[&nbsp;<a href=\"[url]\">Install&nbsp;the&nbsp;player</a>&nbsp;]";
 $html_video_download				= "[&nbsp;<a title=\"Download video and play on your computer\" href=\"[url]\">Download</a>&nbsp;]";
-
-// RM 20051226 - v0.7.3
-$html_viewfullrez_title	= "View full resolution image (right-click and \"Save As...\" to download on your computer)";
-$html_viewfullrez_link	= "View Full Resolution Image";
 
 
 // Script Content
@@ -194,13 +188,40 @@ $html_num_th_sep	= ',';		// separator for thousand (ex 1,000 in English)
 
 // Image date displayed
 // Now using notation from http://www.php.net/manual/en/function.strftime.php
-$html_img_date		= '%A %B %d %Y, %I:%M %p';
+$html_img_date		= '%A %B %d %Y, %I:%M %p'; //l\, F d\, Y\, g:m A';
 
 // Album date displayed
 // cf http://www.php.net/manual/en/function.strftime.php
 $html_album_date	= '%B %Y';
 
-//-------------------------------------------------------------
 // end
+
+//-------------------------------------------------------------
+//	$Log: str_en.php,v $
+//	Revision 1.21  2005/09/25 22:36:15  ralfoide
+//	Updated GPL header date.
+//	
+//	Revision 1.20  2004/07/17 07:52:31  ralfoide
+//	GPL headers
+//	
+//	Revision 1.19  2004/07/14 06:19:50  ralfoide
+//	Admin option to clean HTML caches
+//	
+//	Revision 1.18  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//	
+//	Revision 1.17  2004/03/02 10:38:01  ralfoide
+//	Translation of tooltip string.
+//	New page title strings.
+//
+//	[...]
+//
+//	Revision 1.1  2002/08/04 00:58:08  ralfoide
+//	Uploading 0.6.2 on sourceforge.rig-thumbnail
+//
+//	[...]
+//
+//	Revision 1.2  2001/11/26 04:35:20  ralf
+//	version 0.6 with location.php
 //-------------------------------------------------------------
 ?>

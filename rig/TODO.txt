@@ -3,7 +3,7 @@
 // RIG version 0.6.x
 // Copyright (c) 2001-2002 Ralf
 //**********************************************
-// $Id$
+// $Id: TODO.txt,v 1.62 2005/10/08 19:28:40 ralfoide Exp $
 //**********************************************
 
 RIG To Do List
@@ -18,25 +18,6 @@ The file's format is described at the end.
 Summary of features for RIG:
 
 Generic:
-- in 1.0:
-[2.F] Source: Added pref_site_name and pref_site_link.
-[1.F] Fix: Fixed security vulnerability in check_entry.php
-- in 0.7.4:
-[1.F] Translate: Polish translation by Alfred Broda [http://krypa.homelinux.net/]
-[1.F] Fix: PHP credits displayed in separate window to avoid running current document's stylesheet
-[1.F] Fix: Alloc call in rig_mem.h [Reported 20060131 Alfred Broda]
-[1.F] Fix: Merge of video info array in common video [Reported 20060131 Alfred Broda]
-[2.F] Source: Added $pref_extra_html_footer, using in rig_display_footer.
-- in 0.7.3:
-[1.F] Source: Added link to view full resolution image
-[1.F] Fix: Album thumbnail in admin album page
-[1.F] Fix: Incorrect escaping of "&" in jhead call
-- in 0.7.2:
-[1.F] Fix: Removed dumb check that was always invalidating the HTML cache
-[1.F] Feature: Added HTML caching to image and overview pages
-[2.F] Source: Clearly commented all settings in location.php
-[2.F] Source: Absolutes paths in location.php as well as relatives
-[2.F] Feature: Stream image instead of redirecting to temp folder URL (would prevent browsing)
 - in 0.7.1:
 [1.F] Fix: No error messages when thumbnails cannot be created
 - in 0.7:
@@ -151,10 +132,14 @@ Admin:
 20040601 [1.N] Manual: Need description of Windows installation/build instructions.
 20040528 [1.N] Setup: Installer for Windows (assumes IIS and PHP with defaults)
 20040528 [1.N] Setup: Prebuild binaries for rig_thumbnail
+20040218 [1.N] License: Use GPL.
+20040217 [1.N] CVS: Move to 0.7
+20040217 [1.N] Fix: Can't handle album name with é accent in it
 20031129 [1.N] Fix: WMF video doesn't play under Win/Mozilla
 
 20040528 [2.N] Feature: Do not allow access to image in original file size
-20040528 [2.N] Feature: Videos support for rig_thumbnail/Windows
+20040528 [2.N] Feature: Stream image instead of redirecting to temp folder URL (would prevent browsing)
+20040528 [2.N] Feature: Videso support for rig_thumbnail/Windows
 
 20040217 [2.N] Feature: Implement default UI language based on html-accept-language
 20040217 [2.N] Fix: Don't store default cookies (for first time visitors)
@@ -233,50 +218,6 @@ Admin:
 
 
 -- done -- (sorted by finish date)
-
-[1.0.3]
-
-20070106 [2.F] Feature: Changed renaming schemes to be more flexible
-
-
-[1.0.2]
-
-20061206 [2.F] Feature: Ability to automatically hide images based on name regexp
-20061113 [2.F] Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-
-[1.0.1]
-
-20060910 [1.F] Fix: Image resize was broken
-
-[1.0]
-
-20060624 [1.F] CVS: Tagged as tag_2006-06-24_v100
-20060624 [2.F] Source: Set filename in thumbnail streaming headers
-20060624 [2.F] Source: Added pref_site_name and pref_site_link.
-20060622 [1.F] Fix: Fixed security vulnerability in check_entry.php
-
-[0.7.4]
-
-20060412 [1.F] Fix: Alloc call in rig_mem.h [Reported 20060131 Alfred Broda]
-20060412 [1.F] Fix: Merge of video info array in common video [Reported 20060131 Alfred Broda]
-20060412 [2.F] Source: Added $pref_extra_html_footer, using in rig_display_footer.
-20060110 [1.F] Translate: Polish translation by Alfred Broda [http://krypa.homelinux.net/]
-20060110 [1.F] Fix: PHP credits displayed in separate window to avoid running current document's stylesheet
-
-[0.7.3]
-
-20051226 [1.F] CVS: Tagged as tag_2005-12-26_v073
-20051226 [1.F] Source: Added link to view full resolution image
-20051224 [1.F] Fix: Album thumbnail in admin album page
-20051220 [1.F] Fix: Incorrect escaping of "&" in jhead call
-
-[0.7.2]
-
-20051126 [1.F] Fix: Removed dumb check that was always invalidating the HTML cache
-20051126 [1.F] Feature: Added HTML caching to image and overview pages
-20051124 [2.F] Source: Clearly commented all settings in location.php
-20051120 [2.F] Source: Absolutes paths in location.php as well as relatives
-20051119 [2.F] Feature: Stream image instead of redirecting to temp folder URL (would prevent browsing)
 
 [0.7.1]
 
@@ -803,38 +744,7 @@ No tabs, use spaces for alignment (for viewcvs)
 
 
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.68  2006/12/07 01:08:34  ralfoide
-//	v1.0.2:
-//	- Feature: Ability to automatically hide images based on name regexp
-//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-//
-//	Revision 1.67  2006/09/12 14:16:05  ralfoide
-//	Fixed broken image resize
-//	
-//	Revision 1.66  2006/06/24 21:20:34  ralfoide
-//	Version 1.0:
-//	- Source: Set filename in thumbnail streaming headers
-//	- Source: Added pref_site_name and pref_site_link.
-//	- Fix: Fixed security vulnerability in check_entry.php
-//	
-//	Revision 1.65  2006/04/13 05:04:22  ralfoide
-//	Version 0.7.4. Polish translation. Fixes.
-//	
-//	Revision 1.64  2005/12/26 22:09:30  ralfoide
-//	Added link to view full resolution image.
-//	Album thumbnail in admin album page.
-//	Incorrect escaping of "&" in jhead call.
-//	Submitting 0.7.3.
-//	
-//	Revision 1.63  2005/11/26 18:00:53  ralfoide
-//	Version 0.7.2.
-//	Ability to have absolute paths for albums, caches & options.
-//	Explained each setting in location.php.
-//	Fixed HTML cache invalidation bug.
-//	Added HTML cache to image view and overview.
-//	Added /th to stream images & movies previews via PHP.
-//	
+//	$Log: TODO.txt,v $
 //	Revision 1.62  2005/10/08 19:28:40  ralfoide
 //	Closing 0.7.1
 //	

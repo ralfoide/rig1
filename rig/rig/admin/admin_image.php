@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: admin_image.php,v 1.7 2005/10/07 05:40:10 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -49,8 +49,7 @@ if ($detail > 0)
 $file = $current_image;
 
 $pretty = rig_pretty_name($file, FALSE);
-$preview = rig_build_preview($current_album, $file, -1, -1, FALSE);
-$preview = $preview["u"];
+$preview = rig_encode_url_link(rig_build_preview($current_album, $file, -1, -1, FALSE));
 
 if (rig_is_visible())
 	$vis_val = "selected";
@@ -61,7 +60,7 @@ if (rig_is_visible())
 
 <?php
 	rig_display_section("<h1> $html_rig_admin </h1>" .
-						"<font size=\"+2\"><b> $display_title_html </b></font>",
+						"<font size=\"+2\"><b> $display_title </b></font>",
 						$color_title_bg,
 						$color_title_text);
 
@@ -366,21 +365,7 @@ if (rig_is_visible())
 </html>
 <?php
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.9  2006/06/24 21:20:34  ralfoide
-//	Version 1.0:
-//	- Source: Set filename in thumbnail streaming headers
-//	- Source: Added pref_site_name and pref_site_link.
-//	- Fix: Fixed security vulnerability in check_entry.php
-//
-//	Revision 1.8  2005/11/26 18:00:53  ralfoide
-//	Version 0.7.2.
-//	Ability to have absolute paths for albums, caches & options.
-//	Explained each setting in location.php.
-//	Fixed HTML cache invalidation bug.
-//	Added HTML cache to image view and overview.
-//	Added /th to stream images & movies previews via PHP.
-//	
+//	$Log: admin_image.php,v $
 //	Revision 1.7  2005/10/07 05:40:10  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

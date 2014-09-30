@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: comment.php,v 1.6 2005/10/07 05:40:09 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -45,7 +45,7 @@ rig_display_body();
 <!-- top header -->
 
 <?php
-	rig_display_section("<font size=\"+2\"><b> $display_title_html </b></font><br>$display_album_title",
+	rig_display_section("<font size=\"+2\"><b> $display_title </b></font><br>$display_album_title",
 						$color_title_bg,
 						$color_title_text);
 
@@ -78,7 +78,7 @@ rig_display_body();
 				<?php rig_comment_insert_icon() ?>
 			</td>
 			<td>
-				<b><?= $display_title_html ?></b>
+				<b><?= $display_title ?></b>
 			</td>
 		<tr>
 			<td>
@@ -220,13 +220,7 @@ rig_display_body();
 
 <?php
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.7  2006/06/24 21:20:34  ralfoide
-//	Version 1.0:
-//	- Source: Set filename in thumbnail streaming headers
-//	- Source: Added pref_site_name and pref_site_link.
-//	- Fix: Fixed security vulnerability in check_entry.php
-//
+//	$Log: comment.php,v $
 //	Revision 1.6  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

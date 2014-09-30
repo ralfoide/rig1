@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: common_display.php,v 1.41 2005/10/05 03:54:52 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -91,16 +91,25 @@ function rig_display_header_start($title)
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?= $html_encoding ?>">
 	<?= $meta ?> 
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-131966-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script');
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 
+        'http://www') + '.google-analytics.com/ga.js';
+    ga.setAttribute('async', 'true');
+    document.documentElement.firstChild.appendChild(ga);
+  })();
+</script>
  	<title>
 		<?= $title ?>
 	</title>
-	<script language="JavaScript" type="text/javascript" src="prototype.js"></script>
 	<script language="JavaScript" type="text/javascript" src="browser_detect.js"></script>
 	<?= $theme_css_head ?>
 <?php
-
-	// RM 20070115 Tutorial for using prototype.js:
-	// http://www.sergiopereira.com/articles/prototype.js.html
 }
 
 //*********************************
@@ -333,7 +342,7 @@ function rig_display_album_list()
 		// prepare title
 		$title = "<a href=\"$link\">$pretty</a>\n";
 
-
+		
 		// prepare description, if any
 
 		if (is_string($list_description[$dir]))
@@ -341,7 +350,7 @@ function rig_display_album_list()
 		else
 			$desc = "";
 
-
+			
 		// get the album's date
 
 		$album_date = rig_get_album_date($name);
@@ -376,15 +385,16 @@ function rig_display_album_list()
 		}
 		else // default: 'grid' mode
 		{
-			echo "<td $w_td>\n";
+		echo "<td $w_td>\n";
 			echo "<table border=\"0\">\n";
 			echo "<tr><td align=\"center\">\n";
 		}
 
 		// get the relative and absolute path to the preview icon
-		$res = rig_build_album_preview($name, $preview_size, $preview_quality);
-		$abs_path = $res["a"];
-		$url_path = $res["u"]; // already url-escaped 
+		$abs_path = "";
+		$url_path = "";
+		$res = rig_build_album_preview($name, $abs_path, $url_path, $preview_size, $preview_quality);
+		$url_path = rig_encode_url_link($url_path);
 
 		if (!$res)
 		{
@@ -661,7 +671,7 @@ function rig_display_image_list()
 		$pretty2 = rig_pretty_name($file, FALSE);
 
 		$info = rig_build_preview_info($current_real_album, $file);
-		$preview = $info["u"]; //[u] is already url-escaped
+		$preview = $info["p"];
 
 		if (isset($info["w"]))
 			$width = "width=\"" . $info["w"] . "\"";
@@ -673,6 +683,14 @@ function rig_display_image_list()
 		else
 			$height = "";
 
+		$preview = rig_encode_url_link($preview);
+
+		$georef = rig_get_pict_link($current_real_album, $file);
+		if ($georef)
+		{
+			$georef = " ".$georef['link']."(".$georef['shorttext'].")</a>";
+		}
+
 
 		// RM 20021101 important: the <img> and the title must have the </td>
 		// immediately after without any new-line in between (most browsers would insert
@@ -681,7 +699,7 @@ function rig_display_image_list()
 		// extra space between rows or images.
 
 		$link = rig_self_url($file);
-		$title = "<center><a href=\"$link\">$pretty1</a></center>";
+		$title = "<center><a href=\"$link\">$pretty1</a>$georef</center>";
 
 		$tooltip = "$html_image: $pretty2";
 
@@ -972,130 +990,8 @@ function rig_display_pager($curr_page, $max_page, $is_album = TRUE)
 		$last = $curr_page+1;
 		$u = rig_self_url(-1, -1, -1, $pname, ($is_album ? $last : -1), ($is_album ? -1 : $last));
 		echo "&nbsp;<a href=\"$u\">Next</a>";
-	}
-}
+	}		
 
-
-//-----------------------------------------------------------------------
-
-
-//***************************************************************
-function rig_display_album_thumb($size = FALSE, $quality = FALSE)
-//***************************************************************
-// This function streams the album icon to the browser.
-// If the precomputed album icon can't be used, a default gif icon is streamed.
-{
-	global $current_real_album;
-
-	if ($quality === FALSE)
-		$quality = -1;
-	if ($size === FALSE)
-		$size = -1;
-
-	$res = rig_build_album_preview($current_real_album);
-	$abs = $res["a"];
-	if (rig_is_file($abs))
-	{
-		header("Content-type: " . $type);
-		header("Content-Length: " . filesize($abs));
-		header("Content-Disposition: filename=thumb_$current_real_album.jpg");	// RM 20060624 v 1.0
-
-		readfile($abs);
-
-		return;
-	}
-
-	// In case of error, return a default icon.
-	global $dir_images;
-	global $dir_abs_base;
-	global $pref_empty_album;
-	$abs = realpath(rig_post_sep($dir_abs_base) . $dir_images . $pref_empty_album);
-	header("Content-type: image/gif");
-	header("Content-length: " . filesize($abs));
-	echo file_get_contents($abs);
-}
-
-
-//***************************************************************
-function rig_display_image_thumb($size = FALSE, $quality = FALSE)
-//***************************************************************
-// This function is misnamed: it streams an "image" into the browser.
-//
-// For regular images, this can be either a preview thumbnail or a resized
-// version of the image.
-// - Size is the largest pixel size of the image. -1 generally means to use
-//   the "preview size" (i.e. thumbnails), whereas FALSE means to use the
-//   default image size.
-// - Quality is a value between 1-100 for the JPEG quality.
-//
-// For video media, it's a bit confusing since this is called to stream
-// either the preview thumbnail or the actual movie .
-// - Size has the same meaning than for images. The actualy pixel size is
-//   is ignored since movies are not resized on the fly. A value of -1 means
-//   to render the thumbnail preview, anything else means to stream the
-//   actual movie file.
-// - Quality is ignored. We don't reencode videos on the fly.
-//
-// If the actual file can't be found, a default gif icon is streamed, which
-// is of course totally irrelevant for videos (TODO: have a default one-frame
-// stream that says "video missing" that we could stream instead.)
-{
-	global $rig_img_size;
-	global $current_image;
-	global $current_real_album;
-	global $pref_image_quality;
-
-	if ($quality === FALSE)
-		$quality = $pref_image_quality;
-	if ($size === FALSE)
-		$size = $rig_img_size;
-
-	// get the file type
-	$type = rig_get_file_type($current_image);
-
-	// DEBUG
-	// echo "<p> size $size, quality $quality, type $type\n";
-
-	if ($size == -1 || strncmp($type, "image/", 6) == 0)
-	{
-		// If size is -1, rig_build_preview_info will know how to create a thumbnail
-		// no matter what the input datatype is.
-		// Otherwise it will rescale and render an image as appropriate.
-
-		$res = rig_build_preview_info($current_real_album, $current_image, $size, $quality);
-
-		$abs = $res["a"];
-		if (rig_is_file($abs))
-		{
-			header("Content-type: " . ($size == -1 ? "image/jpeg" : $type));
-			header("Content-length: " . filesize($abs));
-			$base = "";
-			if ($size == -1)
-				$base = "thumb_";
-			else if ($size == -2)
-				$base = "full_";
-			else
-				$base = "img_$size" . "px_";
-			header("Content-Disposition: filename=$base$current_image");	// RM 20060624 v 1.0
-			echo file_get_contents($abs);
-			return;
-		}
-	}
-	else if (strncmp($type, "video/", 6) == 0)
-	{
-		// Stream an actual data file.
-		if (rig_stream_video($type))
-			return;
-	}
-
-	// In case of error, return a default icon.
-	global $dir_images;
-	global $dir_abs_base;
-	global $pref_empty_album;
-	$abs = realpath(rig_post_sep($dir_abs_base) . $dir_images . $pref_empty_album);
-	header("Content-type: image/gif");
-	header("Content-length: " . filesize($abs));
-	echo file_get_contents($abs);
 }
 
 
@@ -1106,6 +1002,7 @@ function rig_display_image_thumb($size = FALSE, $quality = FALSE)
 function rig_display_image()
 //**************************
 {
+	global $dir_album;
 	global $abs_album_path;
 	global $current_real_album;		// RM 20030907
 	global $current_image;
@@ -1113,6 +1010,9 @@ function rig_display_image()
 	global $rig_img_size;
 	global $pref_image_size;
 	global $pref_image_quality;
+
+	global $_test_;
+	if (isset($_test_)) echo "Test type: $_test_<br>";
 
 	if ($rig_img_size != -2 && $rig_img_size < 1)
 		$rig_img_size = $pref_image_size;
@@ -1123,22 +1023,39 @@ function rig_display_image()
 	if (strncmp($type, "image/", 6) == 0)
 	{
 		// get image (build resized preview if necessary)
-		$res = rig_build_preview_info($current_real_album, $current_image, $rig_img_size, $pref_image_quality);
-		$link = $res["u"]; // already url-encoded
-		
-		if (isset($res["w"]) && isset($res["h"]))
+		$preview = rig_build_preview($current_real_album, $current_image, $rig_img_size, $pref_image_quality);
+	
+		// RM 110801 -- use size of image in img tag if available
+		// get actual size of image
+		$icon_info = rig_image_info($preview);
+	
+		// url-encode filename
+		$preview = rig_encode_url_link($preview);
+	
+		$georef=rig_get_pict_link($current_real_album, $current_image);
+
+		if ($georef)
+		{
+			echo $georef['link'];
+		}
+		if (is_array($icon_info) && count($icon_info) > 2)
 		{
 			// if we have the size, use it in the img tag
-			$sx = $res["w"];
-			$sy = $res["h"];
+			$sx = $icon_info["w"];
+			$sy = $icon_info["h"];
 	
-			echo "<img id=\"content-img\" src=\"$link\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
+			echo "<img id=\"content-img\" src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0 width=\"$sx\" height=\"$sy\">";
 		}
 		else
 		{
 			// there's no size (probably a problem when creating the preview)
 			// just use the img name anyway
-			echo "<img id=\"content-img\" src=\"$link\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0>";
+			echo "<img id=\"content-img\" src=\"$preview\" alt=\"$pretty_image\" title=\"$pretty_image\" border=0>";
+		}
+		if ($georef)
+		{
+			echo "</a>";
+			echo $georef['link'].$georef['longtext']."</a><BR>";
 		}
 	}
 	else if (strncmp($type, "video/", 6) == 0)
@@ -1208,20 +1125,15 @@ function rig_display_jhead()
 	// if the command failed, try a variation on the shell-escaping
 	if ($retvar == 1)
 	{
-		// echo "<p> res[1] -> ";    var_dump($res);
-		// echo "<p> retvar[1] -> "; var_dump($retvar);
-		// echo "<p> args[1] -> "  ; var_dump($args);
-		// echo "<p> output[1] -> " ; var_dump($output);
-
 		$args = $pref_use_jhead . " " . rig_shell_filename2($name);
 		$res = exec($args, $output, $retvar);
 	}
 
 	// DEBUG
-	// echo "<p> res[2] -> ";    var_dump($res);
-	// echo "<p> retvar[2] -> "; var_dump($retvar);
-	// echo "<p> args[2] -> "  ; var_dump($args);
-	// echo "<p> output[2] -> " ; var_dump($output);
+	// echo "<p> res -> ";    var_dump($res);
+	// echo "<p> retvar -> "; var_dump($retvar);
+	// echo "<p> args -> "  ; var_dump($args);
+	// echo "<p> output-> " ; var_dump($output);
 
 	// --- use output if jhead was successful ---
 
@@ -1565,10 +1477,9 @@ function rig_display_credits($has_credits = -1, $has_phpinfo = -1)
 			<p>
 				<?php echo "$credits" ?>
 			<p>
-
-			<a href="?php_credits=on">PHP Credits</a>
 		<?php
 	
+		phpinfo(INFO_CREDITS);
 	}
 
 	// actually display the PHP info if activated
@@ -1591,12 +1502,6 @@ function rig_display_credits($has_credits = -1, $has_phpinfo = -1)
 function rig_display_footer()
 //***************************
 {
-	global $pref_extra_html_footer;
-
-	if ($pref_extra_html_footer)
-		echo "\n" . $pref_extra_html_footer . "\n";
-
-
     global $_debug_;
 	global $rig_version;
 	global $display_exec_date;
@@ -1612,6 +1517,7 @@ function rig_display_footer()
 	$sgen = str_replace("[date]", $display_exec_date, $sgen);
 	$sgen = str_replace("[rig-version]", $display_softname . " " . $rig_version, $sgen);
 
+
 	?>
 		<table width="100%" bgcolor="<?= $color_section_bg ?>"><tr><td>
 			<center><font size="-1" color="<?= $color_section_text ?>">
@@ -1625,5 +1531,44 @@ function rig_display_footer()
 
 //-----------------------------------------------------------------------
 // end
+
+//-------------------------------------------------------------
+//	$Log: common_display.php,v $
+//	Revision 1.41  2005/10/05 03:54:52  ralfoide
+//	Added img id for template/css/js
+//	
+//	Revision 1.40  2005/10/01 23:44:27  ralfoide
+//	Removed obsolete files (admin translate) and dirs (upload dirs).
+//	Fixes for template support.
+//	Preliminary default template for album.
+//	
+//	Revision 1.39  2005/09/25 22:35:08  ralfoide
+//	Renamed paginator to pager ;-)
+//	Also displaying pager at the bottom of album table.
+//	Updated GPL header date.
+//	
+//	Revision 1.38  2004/07/17 07:52:31  ralfoide
+//	GPL headers
+//	
+//	Revision 1.37  2004/07/14 06:20:59  ralfoide
+//	Layout
+//	
+//	Revision 1.36  2004/07/09 05:51:35  ralfoide
+//	Fixes for pagination
+//	
+//	Revision 1.35  2004/06/03 14:14:47  ralfoide
+//	Fixes to support PHP 4.3.6
+//	
+//	Revision 1.34  2004/03/09 06:22:30  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//	
+//	Revision 1.33  2004/03/02 10:38:01  ralfoide
+//	Translation of tooltip string.
+//	New page title strings.
+//
+//	[...]
+//
+//	Revision 1.2  2001/11/26 04:35:20  ralf
+//	version 0.6 with location.php
 //-------------------------------------------------------------
 ?>

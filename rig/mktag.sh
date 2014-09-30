@@ -1,6 +1,5 @@
 #!/bin/sh
 
-URL=https://rig-thumbnail.svn.sourceforge.net/svnroot/rig-thumbnail
 
 # V="./rig/src/version.php"
 
@@ -42,17 +41,31 @@ then
 	exit 1
 fi
 
-# Only create the tag if there's no tag dir already existing
-svn info $URL/tags/$TAG 2>/dev/null
+TEMP=`mktemp`
+
+cvs -z3 rtag $2 $1 rig | tee "$TEMP"
+
 RETVAL=$?
-if [ "$RETVAL" == "0" ];
+
+echo
+
+if [ "$RETVAL" != "0" ]
 then
-	echo
-	echo "Error: tags/$TAG already exist. To recreate a tag remove the existing tag first:"
-	echo "  svn rm $URL/tags/$TAG"
-	echo
-	exit 1
+	echo "Error $RETVAL occured during CVS"
+else
+	echo "CVS done successfully"
+
+	# the stupid CVS returns 0 even if some errors occured.
+	if grep -s -q "^W .* NOT MOVING tag" "$TEMP"
+	then
+		echo "Suggestion: to force moving a tag, use:"
+		echo "	$0 $* -F"
+	fi
 fi
 
-svn copy $URL/trunk $URL/tags/$TAG
+if [ -f "$TEMP" ]
+then
+	rm -f "$TEMP"
+fi
+echo
 

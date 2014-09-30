@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: test_str.php,v 1.5 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -123,10 +123,10 @@ function check_string(&$test, $str_name, $same_as_english = FALSE)
 }
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: test_str.php,v $
 //	Revision 1.5  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.4  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

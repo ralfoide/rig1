@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: str_sp.php,v 1.17 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -65,7 +65,6 @@ $html_language		= 'Idioma:';
 $html_desc_lang		= array('en' => 'English',
 							'fr' => 'Fran&ccedil;ais',
 							'sp' => 'Espa&ntilde;ol',
-							'pl' => 'Polski',
 							'jp' => '&#26085;&#26412;&#35486;'
 							);
 
@@ -212,10 +211,7 @@ $pref_date_YMD      = 'D-M-Y';          // Long format.  Must contain D & M & Y.
 // end
 
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.18  2006/01/11 08:21:54  ralfoide
-//	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
-//
+//	$Log: str_sp.php,v $
 //	Revision 1.17  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

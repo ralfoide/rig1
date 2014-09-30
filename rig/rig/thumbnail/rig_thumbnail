@@ -1,0 +1,33 @@
+#!/bin/bash
+
+RIGLOC=/usr/local/Rig/rig/thumbnail
+#export LD_PRELOAD=$RIGLOC/libaviplay-0.7.so.0
+
+#$RIGLOC/rig_thumbnail.exe "$@"
+#exit
+
+#set -x
+
+#echo "args: $@" >&2
+
+INPUT=${2//\\/}
+OUTPUT=${3//\\/}
+
+#ls $INPUT >&2
+
+# if not resize, call rtn directly or if it's an avi (at least not a jpeg)
+# (i.e. if removing the .jpg extension yields the same filename)
+if [ "$1" != "-r" -o "$INPUT" == "${INPUT%%.jpg}" ]; then
+    $RIGLOC/rig_thumbnail.exe $@ | grep -v '<init>' #2>/dev/null
+else
+    #echo "/bin/cp '$INPUT' '$OUTPUT'" > /tmp/mesg
+    /bin/cp "$INPUT" "$OUTPUT" || bash -c "echo 'cannot cp $INPUT $OUTPUT' >&2; exit 1" || exit
+    
+    #echo jhead -cmd "$RIGLOC/rig_thumbnail.exe -r &i &o $4 $5 $6" "$OUTPUT" >> /tmp/exec
+    if ! jhead -cmd "$RIGLOC/rig_thumbnail.exe -r &i &o $4 $5 $6" $OUTPUT >/dev/null; then
+	jhead -cmd "$RIGLOC/rig_thumbnail.exe -r &i &o $4 $5 $6" $OUTPUT &>$OUTPUT.err
+	mv $OUTPUT $OUTPUT.cannot_jhead
+	mv $OUTPUT.err $OUTPUT
+    fi
+
+fi 

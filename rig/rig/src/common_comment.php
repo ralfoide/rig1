@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: common_comment.php,v 1.4 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -83,10 +83,10 @@ function rig_comment_insert_text()
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: common_comment.php,v $
 //	Revision 1.4  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.3  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

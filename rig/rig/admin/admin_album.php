@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: admin_album.php,v 1.8 2005/10/07 05:40:11 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -51,7 +51,7 @@ rig_display_body();
 
 <?php
 	rig_display_section("<h1> $html_rig_admin </h1>" .
-						"<font size=\"+2\"><b> $display_title_html </b></font>",
+						"<font size=\"+2\"><b> $display_title </b></font>",
 						$color_title_bg,
 						$color_title_text);
 
@@ -60,7 +60,7 @@ rig_display_body();
 	{
 ?>
 		<p>
-		<img src="<?= rig_self_url(-1, $current_album, RIG_SELF_URL_THUMB) ?>">
+		<img src="<?= rig_encode_url_link(rig_get_album_preview($current_album, TRUE)) ?>">
 		<br>
 		<font color="<?= $color_index_text ?>">
 			<?php rig_display_current_album() ?>
@@ -206,6 +206,51 @@ rig_display_body();
 </html>
 <?php
 //-------------------------------------------------------------
-// end
+//	$Log: admin_album.php,v $
+//	Revision 1.8  2005/10/07 05:40:11  ralfoide
+//	Extracted album/image handling from common into common_media.php.
+//	Removed all references to obsolete db/id.
+//	Added preliminary default image template.
+//	
+//	Revision 1.7  2005/09/25 22:36:12  ralfoide
+//	Updated GPL header date.
+//	
+//	Revision 1.6  2004/07/17 07:52:30  ralfoide
+//	GPL headers
+//	
+//	Revision 1.5  2004/07/14 06:08:34  ralfoide
+//	Clean html caches
+//	
+//	Revision 1.4  2004/07/06 04:10:57  ralfoide
+//	Fix: using "img" query param instead of "image"
+//	Some browsers (at least PocketIE) will interpret "&image=" as "&image;" in URL.
+//	
+//	Revision 1.3  2004/03/09 06:22:29  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//	
+//	Revision 1.2  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//	
+//	Revision 1.1  2003/08/21 20:15:32  ralfoide
+//	Moved admin src into separate folder
+//	
+//	Revision 1.4  2003/08/18 03:05:12  ralfoide
+//	PHP 4.3.x support
+//
+//	[...]
+//
+//	Revision 1.1  2003/03/12 07:02:07  ralfoide
+//	New admin image vs album (alpha version not finished).
+//	New admin translate page (alpha version not finished).
+//	New pref to override the <meta> line in album/image display.
+//	
+//	Revision 1.7  2003/02/17 07:47:00  ralfoide
+//	Debugging. Fixed album visibility not being used correctly
+//
+//	[...]
+//
+//	Revision 1.2  2001/11/26 04:35:20  ralf
+//	version 0.6 with location.php
 //-------------------------------------------------------------
 ?>

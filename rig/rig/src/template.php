@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: template.php,v 1.3 2005/10/05 03:53:02 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -497,11 +497,11 @@ function rig_find_next_inst($atoms, $counter, $inst1, $inst2=false)
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: template.php,v $
 //	Revision 1.3  2005/10/05 03:53:02  ralfoide
 //	Fix: don't trim /n from lines (only left part).
 //	Fixed evaluation of functions in ==if==.
-//
+//	
 //	Revision 1.2  2005/10/02 21:13:45  ralfoide
 //	Support for else in if-else-endif
 //	

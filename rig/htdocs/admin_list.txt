@@ -21,4 +21,4 @@
 # crypt:c:zxnQ9wTEcM7pE:Crypt Password
 # invalid:i:whatever:Invalid User
 
-admin:t:admin:Rig Owner Administrator
+marcrig:t:marcrig:Marc MERLIN

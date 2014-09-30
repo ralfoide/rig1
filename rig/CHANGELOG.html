@@ -9,34 +9,6 @@
 
 <h3>RIG Notes</h3>
 
-<p>Notes in 1.0:
-<ul>
-  <li>This is the last final version. It fixes a security vulnerability in the
-  entry point that allows for PHP code inclusion and cross-site vulnerability.
-  All previous version are unsafe to use.</li>
-</ul>
-<p>Notes in 0.7.4:
-<ul>
-  <li>This is an intermediary dev release, with Polish translation by
-  <a href="http://krypa.homelinux.net/">Alfred Broda</a> and some minor fixes.</li>
-</ul>
-<p>Notes in 0.7.3:
-<ul>
-  <li>This is an intermediary dev release, with one minor fix and one minor feature.</li>
-</ul>
-<p>Notes in 0.7.2:
-<ul>
-  <li>This is an intermediary dev release, with some fixes & features.</li>
-  <li>This version adds caching to the image & overview pages and eventually
-  	fixes a dumb bug that was always invalidating cached pages when the cache
-  	was reloaded.</li>
-  <li>A new most significant feature is streaming of resized images via PHP
-	instead of letting Apache serve the images directly from the cache folders.</li>
-  <li>Consequently, it is also now possible to avoid placing all caches and sources images
-  	under the document root. Instead data can be located out of reach of Apache.</li>
-  <li><b>Important: When you upgrade to this version, you <em>must</em> review your
-  	location.php file to adjust the data paths!</b></li>
-</ul>
 <p>Notes for 0.7.1:
 <ul>
   <li>This is an intermediary dev release, with one minor fix.</li>
@@ -133,46 +105,8 @@
     since the format changed).</li>
 </ul>
 
-<!-- *********************************************************************** -->
 <h3>RIG Change Log</h3>
 
-<p>New in 1.0.2:
-<ul>
-	<li> Feature: Ability to automatically hide images based on name regexp </li>
-</ul>
-
-<p>New in 1.0.1:
-<ul>
-	<li> Fix: Image resize was broken </li>
-</ul>
-
-<p>New in 1.0:
-<ul>
-	<li> Source: Added pref_site_name and pref_site_link.</li>
-	<li> Fix: Fixed security vulnerability in check_entry.php </li>
-</ul>
-<p>New in 0.7.4:
-<ul>
-	<li>Translate: Polish translation by 
-		<a href="http://krypa.homelinux.net/">Alfred Broda</a></li>
-	<li> Fix: PHP credits displayed in separate window to avoid running current document's stylesheet</li>
-	<li> Fix: Alloc call in rig_mem.h]</li>
-	<li> Fix: Merge of video info array in common video</li>
-	<li> Source: Added $pref_extra_html_footer, using in rig_display_footer.</li>
-</ul>
-<p>New in 0.7.3:
-<ul>
-  <li> Source: Added link to view full resolution image</li>
-  <li> Fix: Album thumbnail in admin album page</li>
-</ul>
-<p>New in 0.7.2:
-<ul>
-  <li> Fix: Removed dumb check that was always invalidating the HTML cache</li>
-  <li> Feature: Added HTML caching to image and overview pages</li>
-  <li> Source: Clearly commented all settings in location.php</li>
-  <li> Source: Absolutes paths in location.php as well as relatives</li>
-  <li> Feature: Stream images instead of redirecting to temp folder</li>
-</ul>
 <p>New in 0.7.1:
 <ul>
   <li> Fix: No error messages when thumbnails cannot be created</li>
@@ -304,7 +238,7 @@
 <p>&nbsp;</p>
 
 <i>
-$Id$
+$Id: CHANGELOG.html,v 1.10 2005/10/08 19:28:40 ralfoide Exp $
 </i>
 <p>&nbsp;</p>
 </body>

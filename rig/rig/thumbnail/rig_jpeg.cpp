@@ -1,7 +1,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: rig_jpeg.cpp,v 1.6 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -440,10 +440,10 @@ bool rig_jpeg_write(const char* filename, RigRgb *rgb, int32 quality, bool inter
 
 /****************************************************************
 
-	$Log$
+	$Log: rig_jpeg.cpp,v $
 	Revision 1.6  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
-
+	
 	Revision 1.5  2004/07/17 07:52:32  ralfoide
 	GPL headers
 	

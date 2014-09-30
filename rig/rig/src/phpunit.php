@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: phpunit.php,v 1.8 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -30,7 +30,7 @@
 // Written by Fred Yankowski <fred@ontosys.com>
 //            OntoSys, Inc  <http://www.OntoSys.com>
 //
-// $Id$
+// $Id: phpunit.php,v 1.8 2005/09/25 22:36:15 ralfoide Exp $
 
 // Copyright (c) 2000 Fred Yankowski
 
@@ -930,10 +930,10 @@ class TestRunner
 }
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: phpunit.php,v $
 //	Revision 1.8  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.7  2004/12/25 09:46:47  ralfoide
 //	Fixes and cleanup
 //	

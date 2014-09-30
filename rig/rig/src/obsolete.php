@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: obsolete.php,v 1.6 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -23,7 +23,7 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 //************************************************************************
-// $Id$
+// $Id: obsolete.php,v 1.6 2005/09/25 22:36:15 ralfoide Exp $
 
 //**********************
 function rig_http_auth()
@@ -216,10 +216,10 @@ function rig_show_album($album)
 
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: obsolete.php,v $
 //	Revision 1.6  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.5  2003/02/16 20:22:57  ralfoide
 //	New in 0.6.3:
 //	- Display copyright in image page, display number of images/albums in tables

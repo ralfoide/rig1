@@ -1,7 +1,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: rig_avifile.cpp,v 1.10 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -42,17 +42,9 @@
 #include "rig_rgb.h"
 #include "rig_avifile.h"
 
-#ifdef RIG_USES_AVIFILE
-
-#include "rig_jpeg.h"
+#ifndef RIG_EXCLUDE_AVIFILE
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#ifndef WIN32
-	#include <alloca.h>
-	#include <unistd.h>
-#endif
 
 //----------------------------------------------------------------------------
 // libavifile headers
@@ -67,7 +59,7 @@
 //----------------------------------------------------------------------------
 // Debug macro utility
 
-#if 1
+#if 0
 	#define DPRINTF(s) rig_dprintf s
 #else
 	#define DPRINTF(s)
@@ -84,20 +76,12 @@
 void rig_avifile_filetype_support(void)
 //*************************************
 {
-	printf("/\\.avi$/i\n");
-	printf("video/avi:video/x-msvideo\n");
-	printf("/\\.wmv$/i\n");
-	printf("video/avi:video/x-ms-wmv\n");
-	printf("/\\.as[fx]$/i\n");
-	printf("video/avi:video/x-ms-asf\n");
+	printf("/\\.(avi|wmv|as[fx])$/i\n");
+	printf("video/avi\n");
 	printf("/\\.(mov|qt|sdp|rtsp)$/i\n");
 	printf("video/quicktime\n");
 	printf("/\\.(mpe?g[124]?|m[12]v|mp4)$/i\n");
 	printf("video/mpeg\n");
-	printf("/\\.rm$/i\n");
-	printf("video/real:application/vnd.rn-realmedia\n");
-	printf("/\\.flv$/i\n");
-	printf("video/flash\n");
 }
 
 
@@ -283,7 +267,7 @@ RigRgb * rig_avifile_read(const char* filename)
 	}
 	catch(...)
 	{
-		DPRINTF(("[rig %s:%d] Unexpected exception\n", __FILE__, __LINE__));
+		DPRINTF(("[rig] Unexpected exception\n"));
 	}
 
 	// RM 20040707: these objects are not deleted on purpose.
@@ -294,7 +278,7 @@ RigRgb * rig_avifile_read(const char* filename)
 	// delete aviFile;
 
 	// ---
-	DPRINTF(("[rig %s:%d] -- end rgb = %p\n", __FILE__, __LINE__, rgb));
+	DPRINTF(("[rig] -- end rgb = %p\n", rgb));
 
 	return rgb;
 
@@ -304,26 +288,13 @@ RigRgb * rig_avifile_read(const char* filename)
 
 //---------------------------------------------------------------
 
-#endif // RIG_USES_AVIFILE
+#endif // RIG_EXCLUDE_AVIFILE
 
 //---------------------------------------------------------------
 
 /****************************************************************
 
-	$Log$
-	Revision 1.12  2006/12/07 01:08:34  ralfoide
-	v1.0.2:
-	- Feature: Ability to automatically hide images based on name regexp
-	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-
-	Revision 1.11  2005/11/26 18:00:53  ralfoide
-	Version 0.7.2.
-	Ability to have absolute paths for albums, caches & options.
-	Explained each setting in location.php.
-	Fixed HTML cache invalidation bug.
-	Added HTML cache to image view and overview.
-	Added /th to stream images & movies previews via PHP.
-	
+	$Log: rig_avifile.cpp,v $
 	Revision 1.10  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
 	

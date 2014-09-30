@@ -42,7 +42,7 @@ clean:
 # -----------------------------
 
 #
-# $Log$
+# $Log: makefile-libjpeg,v $
 # Revision 1.4  2003/11/25 05:03:30  ralfoide
 # Using Gnu Make builtin MAKE variable instead of hardcoded make name.
 # Allows for script to run with -j n for multi processor support.

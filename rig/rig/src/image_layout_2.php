@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: image_layout_2.php,v 1.5 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -193,19 +193,6 @@
 	</table>
 	
 	<p>
-
-<?php
-	// For images only, display a link to get the full resolution image -- RM 20051226
-	if ($current_type == "image")
-	{
-?>
-	<a title="<?= $html_viewfullrez_title ?>" href="<?= rig_self_url(-1, -1, RIG_SELF_URL_THUMB, "sz=-2") ?>">
-		<?= $html_viewfullrez_link ?>
-	</a>
-	&nbsp; |
-<?php
-	}
-?>
 	
 	<a href="<?= rig_self_url("") ?>">
 		<?= $html_back_album ?>
@@ -237,7 +224,6 @@
 		</center></td></tr></table>
 	</div>
 </td>
-
 <?php
 	// If the use of jhead is enabled, output jhead's output here -- RM 20021020
 	// Only use jhead for images -- RM 20030713
@@ -266,13 +252,7 @@
 
 <?php
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.6  2005/12/26 22:09:30  ralfoide
-//	Added link to view full resolution image.
-//	Album thumbnail in admin album page.
-//	Incorrect escaping of "&" in jhead call.
-//	Submitting 0.7.3.
-//
+//	$Log: image_layout_2.php,v $
 //	Revision 1.5  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

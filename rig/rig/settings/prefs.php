@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: prefs.php,v 1.28 2005/10/07 05:40:09 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -81,7 +81,7 @@ if (PHP_OS != 'WINNT')
 	 *	The path must NOT start by /. 
 	 ***********************************************************/
 
-	$pref_preview_exec		= "rig/thumbnail/rig_thumbnail.exe";
+	$pref_preview_exec		= "thumbnail/rig_thumbnail.exe";
 
 
 
@@ -156,27 +156,6 @@ else // WINNT
 
 /***********************************************************
  *
- *	Setting: 		$pref_site_name
- *	Setting: 		$pref_site_link
- *	Type:			String
- *	Default:		""
- *	
- *	Site name to be used in page title.
- *  The site link is an HTTP address that will be linked in the page header
- *  if present.
- *
- *  You would typically override this in an album-specific pref file rather
- *  than in the global site pref file.
- *
- ***********************************************************/
-
-$pref_site_name		= "";
-$pref_site_link		= "";
-
-
-
-/***********************************************************
- *
  *	Setting: 		$pref_mkdir_mask
  *	Type:			Octal mask
  *	Default:		0777
@@ -188,7 +167,7 @@ $pref_site_link		= "";
  *
  ***********************************************************/
 
-$pref_mkdir_mask		= 0777;
+$pref_mkdir_mask		= 02775;
 
 
 /***********************************************************
@@ -205,7 +184,7 @@ $pref_mkdir_mask		= 0777;
  *
  ***********************************************************/
 
-$pref_umask				= 0022;
+$pref_umask				= 0002;
 
 
 // --- customization of cookies ---
@@ -240,15 +219,15 @@ $pref_cookie_host       = '';
  ***********************************************************/
 
 
-$pref_preview_size		= 80;
+$pref_preview_size		= 100;
 $pref_preview_quality	= 70;
 $pref_preview_timeout	= 20;
 
 
 // RM 20030720
 // size and quality of small preview (used for vertical album layout)
-$pref_small_preview_size	= $pref_preview_size;
-$pref_small_preview_quality	= $pref_preview_quality;
+$pref_small_preview_size	= 64;
+$pref_small_preview_quality	= 60;
 
 
 // --- admin viewing options ---
@@ -269,9 +248,9 @@ $pref_admin_size		= 256;
  ***********************************************************/
 
 
-$pref_image_size		= 512;
+$pref_image_size		= 800;
 $pref_image_quality		= 75;
-$pref_size_popup		= array(256, 300, 384, 400, 512, 640, 800, 1024, 1280, 1600);
+$pref_size_popup		= array(256, 300, 384, 400, 512, 640, 800, 1024, 1280, 1600, 1800, 2048, 2272);
 $pref_empty_album		= 'empty_album.gif';
 $pref_missing_video		= 'n_a_video.gif';
 
@@ -313,7 +292,7 @@ $pref_global_gamma		= 1.0;	// use 1.0 for no-op
  *
  ***********************************************************/
 
-$pref_album_ignore_list	= NULL;
+$pref_album_ignore_list	= array("/tosort/", "/tmp/");
 
 
 /***********************************************************
@@ -368,7 +347,7 @@ $pref_image_ignore_list	= NULL;
 
 
 $pref_allow_guest		= TRUE;				// can be TRUE (default) or FALSE
-$pref_auto_guest		= TRUE;				// FALSE will force login, TRUE will auto-log as guest
+$pref_auto_guest		= TRUE;			// FALSE will force login, TRUE will auto-log as guest
 $pref_guest_username	= 'guest';			// must be in the user_list.txt file
 
 
@@ -380,10 +359,10 @@ $pref_default_theme		= 'blue';			// choices are blue, gray, khaki, egg, sand
 
 // --- dates at beginning of album names ---
 
-$pref_date_YM						= 'M/Y';	// format for short dates. M & Y must appear.
-/* American */ $pref_date_YMD		= 'M/D/Y';	// format for long dates. D & M & Y must appear.
-/* Japanese */ // $pref_date_YMD	= 'Y/M/D';	// format for long dates. D & M & Y must appear.
-/* French   */ // $pref_date_YMD	= 'D/M/Y';	// format for long dates. D & M & Y must appear.
+$pref_date_YM						= 'Y/M';	// format for short dates. M & Y must appear.
+/* American */ // $pref_date_YMD		= 'M/D/Y';	// format for long dates. D & M & Y must appear.
+/* Japanese */ $pref_date_YMD	= 'Y/M/D';	// format for long dates. D & M & Y must appear.
+/* French   */ // $pref_date_YMD	= 'D/N/Y';	// format for long dates. D & M & Y must appear.
 $pref_date_sep						= ' - ';	// separator between date and description
 
 
@@ -404,7 +383,7 @@ $pref_date_sep						= ' - ';	// separator between date and description
  *
  ***********************************************************/
 
-$pref_copyright_name = '';
+$pref_copyright_name = 'Marc MERLIN';
 
 
 
@@ -419,34 +398,9 @@ $pref_copyright_name = '';
  *	Each album's pref can override this. The default is here.
  *	Use an empty string '' to disable.
  *
- *  Example:
- *
  ***********************************************************/
 
 $pref_html_meta = "<meta name=\"robots\" content=\"noindex, nofollow\">";
-
-
-
-/***********************************************************
- *
- *	Setting: 		$pref_extra_html_footer
- *	Type:			String
- *	Default:		Empty string ''
- *	
- *	Extra HTML that can appear right below the "display RIG credits"
- *  and before the "generated in x seconds."
- *
- *	Format is HTML. Use HTML-compliant characters (like &eacute; or &#129;)
- *	Important: if you want to insert Japanese here, add a line in data_jpu8.bin
- *	or use UTF-8 bytes directly in hexa.
- *
- *	This should ideally be overriden by album-specific prefs.php files.
- *	If you have a tracking code (such as a Google Analytics urchin code),
- *	that's the perfect place to use it.
- *
- ***********************************************************/
-
-$pref_extra_html_footer = '';
 
 
 
@@ -504,7 +458,7 @@ $pref_disable_web_translate_interface = 1;
  *
  ***********************************************************/
 
-$pref_image_layout = '1';
+$pref_image_layout = '2';
 
 
 /***********************************************************
@@ -621,7 +575,7 @@ $pref_enable_album_pagination = TRUE;
  *
  ***********************************************************/
 
-$pref_album_nb_row = 5;
+$pref_album_nb_row = 10;
 
 
 
@@ -729,7 +683,7 @@ $pref_enable_album_html_cache = TRUE;
  *
  ***********************************************************/
 
-$pref_enable_access_hidden_albums = FALSE;
+$pref_enable_access_hidden_albums = TRUE;
 
 
 /***********************************************************
@@ -870,25 +824,137 @@ $pref_internal_file_types	= NULL;
 
 $pref_extra_file_types	= NULL;
 
+//--RM 20031021 test-- $pref_extra_file_types	= array("/\.izu$/i" => 'text/x-izumi');
+
 
 
 /***********************************************************
  *
- *	Setting: 		$pref_auto_hide_images
- *	Type:			Regexp string
- *	Default:		NULL
- *	
- *	Regular expression to match image filenames to hide by default.
- *  Example: '/^[0-9]+\..+/';
+ *	Setting: 		$pref_debug_mode
+ *	Type:			String
+ *	Default:		FALSE or a specific string, cf below
+ *
+ *  This string specifies the internal logging mode for debugging.
+ *  Options are one of:
+ *  'cache': A file _debug_log.txt is created in the albums' cache dir.
+ *  'syslog': Syslog LOG_DEBUG is used with identifier "rig"
+ *  FALSE: No file logging.
+ *
+ *  Note that this logging is currently used only for debugging by calls
+ *  to rig_debug (cf src/common.php).
+ *  In "stable" code there are no such debug statement.
+ *
+ *  'syslog' is probably a tad more efficient than 'cache', which implies
+ *  the file being opened and closed for *each* debug line. However the
+ *  syslog is only readable by root whereas the cache file is probably readable
+ *  by non-root users.
+ *
+ *	Unless you are really familliar with the internals of RIG, you do not
+ *	want to change this setting, as the debug output is quite cryptic.
  *
  ***********************************************************/
 
-
-$pref_auto_hide_images = NULL;
-
-
-
+$pref_debug_mode = FALSE;
 
 // end
+
+//-------------------------------------------------------------
+//	$Log: prefs.php,v $
+//	Revision 1.28  2005/10/07 05:40:09  ralfoide
+//	Extracted album/image handling from common into common_media.php.
+//	Removed all references to obsolete db/id.
+//	Added preliminary default image template.
+//	
+//	Revision 1.27  2005/10/05 03:56:28  ralfoide
+//	New missing video thumbnails.
+//	
+//	Revision 1.26  2005/09/25 22:36:14  ralfoide
+//	Updated GPL header date.
+//	
+//	Revision 1.25  2004/12/25 09:46:46  ralfoide
+//	Fixes and cleanup
+//	
+//	Revision 1.24  2004/07/17 07:52:30  ralfoide
+//	GPL headers
+//	
+//	Revision 1.23  2004/07/14 06:08:16  ralfoide
+//	Experimental small pda screen support
+//	
+//	Revision 1.22  2004/07/09 05:48:47  ralfoide
+//	Bumped default script timeout to 20s
+//	
+//	Revision 1.21  2004/02/18 07:37:01  ralfoide
+//	Allow viewing hidden images by direct access
+//	
+//	Revision 1.20  2003/11/09 20:50:58  ralfoide
+//	Added pref_internal_file_types
+//	
+//	Revision 1.19  2003/09/13 21:55:54  ralfoide
+//	New prefs album nb col vs image nb col, album nb row vs image nb row.
+//	New pagination system (several pages for image/album grids if too many items)
+//	
+//	Revision 1.18  2003/09/01 20:54:24  ralfoide
+//	More variable descriptions.
+//	Added pref_follow_album/image_symlinks
+//	
+//	Revision 1.17  2003/08/21 20:20:52  ralfoide
+//	New enable prefs (album/image hidden, descriptions, album cache)
+//	
+//	Revision 1.16  2003/08/18 02:14:35  ralfoide
+//	Updated, new filetype support
+//	
+//	Revision 1.15  2003/08/15 07:15:03  ralfoide
+//	Album/image border usage flags
+//	
+//	Revision 1.14  2003/08/14 04:42:08  ralfoide
+//	Album & Image ignore lists
+//	
+//	Revision 1.13  2003/07/21 04:59:29  ralfoide
+//	Alternate album layout for description.
+//	Auto-swithc album layout on description presence.
+//	
+//	Revision 1.12  2003/07/19 07:52:36  ralfoide
+//	Vertical layout for albums
+//	
+//	Revision 1.11  2003/07/14 18:29:12  ralfoide
+//	Experimenting with better comments
+//	
+//	Revision 1.10  2003/07/11 15:56:38  ralfoide
+//	Fixes in video html tags. Added video/mpeg mode. Experimenting with Javascript
+//	
+//	Revision 1.9  2003/06/30 06:10:00  ralfoide
+//	Introduced file-types (for video vs image support)
+//	
+//	Revision 1.8  2003/03/22 01:22:56  ralfoide
+//	Fixed album/image count display in admin mode
+//	Added "old" layout for image display, with image layout pref variable.
+//	
+//	Revision 1.7  2003/03/17 08:24:42  ralfoide
+//	Fix: added pref_disable_web_translate_interface (disabled by default)
+//	Fix: added pref_disable_album_borders (enabled by default)
+//	Fix: missing pref_copyright_name in settings/prefs.php
+//	Fix: outdated pref_album_copyright_name still present. Eradicated now :-)
+//	
+//	Revision 1.6  2003/03/12 07:03:16  ralfoide
+//	Prefs can override <meta> in album/image display
+//	
+//	Revision 1.5  2003/02/16 20:10:35  ralfoide
+//	Update. Version 0.6.3.1
+//	
+//	Revision 1.4  2003/01/07 17:54:03  ralfoide
+//	Moved URL-Rewrite conf array from global pref file to album-local pref file
+//	
+//	Revision 1.3  2002/10/21 01:51:36  ralfoide
+//	Multiple language and theme support
+//	
+//	Revision 1.2  2002/10/20 11:48:42  ralfoide
+//	jhead support
+//	
+//	Revision 1.1  2002/08/04 00:58:08  ralfoide
+//	Uploading 0.6.2 on sourceforge.rig-thumbnail
+//	
+//	Revision 1.2  2001/11/26 04:35:17  ralf
+//	version 0.6 with location.php
+//	
 //-------------------------------------------------------------
 ?>

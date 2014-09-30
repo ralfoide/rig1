@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: theme_none.php,v 1.7 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -67,10 +67,10 @@ $color_error2_bg		= '#FFFF99';	// '#FFFF33';
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: theme_none.php,v $
 //	Revision 1.7  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.6  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

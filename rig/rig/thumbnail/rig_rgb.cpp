@@ -1,7 +1,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: rig_rgb.cpp,v 1.4 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -679,10 +679,10 @@ RigRgb * RigRgb::Rescale(int32 sx, int32 sy)
 
 /*****************************************************************************
 
-	$Log$
+	$Log: rig_rgb.cpp,v $
 	Revision 1.4  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
-
+	
 	Revision 1.3  2004/07/17 07:52:32  ralfoide
 	GPL headers
 	

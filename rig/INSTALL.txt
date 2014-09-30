@@ -1,6 +1,6 @@
 RIG Installation Manual
 
-$Id$
+$Id: INSTALL.txt,v 1.5 2005/09/25 22:36:11 ralfoide Exp $
 
 Important note: this file is delivered in both HTML format and TXT format. The TXT format is generated automatically from the HTML format, and thus may not be as readable. Please consult the HTML format if possible (should render neatly in links or lynx).
 
@@ -325,7 +325,7 @@ If no errors occurred, you should now have a file
 
 End
 
-$Log$
+$Log: INSTALL.txt,v $
 Revision 1.5  2005/09/25 22:36:11  ralfoide
 Updated GPL header date.
 

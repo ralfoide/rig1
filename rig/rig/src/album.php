@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: album.php,v 1.21 2005/10/07 05:40:09 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -70,7 +70,7 @@ else
 <center>
 
 <?php
-	rig_display_section("<h1> $display_title_html </h1>",
+	rig_display_section("<h1> $display_title </h1>",
 						$color_title_bg,
 						$color_title_text);
 	rig_display_user_name();
@@ -185,13 +185,12 @@ else
 
 
 <?php
-	rig_display_credits();
 
 } // end output buffering
 
 rig_end_buffering();
 
-// footer is not buffered as it contains the generation's time output
+rig_display_credits();
 rig_display_footer();
 
 ?>
@@ -199,5 +198,39 @@ rig_display_footer();
 </body>
 </html>
 <?php
+//-------------------------------------------------------------
+//	$Log: album.php,v $
+//	Revision 1.21  2005/10/07 05:40:09  ralfoide
+//	Extracted album/image handling from common into common_media.php.
+//	Removed all references to obsolete db/id.
+//	Added preliminary default image template.
+//	
+//	Revision 1.20  2005/10/05 03:54:07  ralfoide
+//	Made usage of template conditional on presence of query &template=
+//	
+//	Revision 1.19  2005/10/02 21:15:08  ralfoide
+//	Album template that starts working (header & info divs properly positionned)
+//	
+//	Revision 1.18  2005/10/01 23:44:27  ralfoide
+//	Removed obsolete files (admin translate) and dirs (upload dirs).
+//	Fixes for template support.
+//	Preliminary default template for album.
+//	
+//	Revision 1.17  2005/09/25 22:36:15  ralfoide
+//	Updated GPL header date.
+//	
+//	Revision 1.16  2004/07/17 07:52:31  ralfoide
+//	GPL headers
+//	
+//	Revision 1.15  2004/03/09 06:22:29  ralfoide
+//	Cleanup of extraneous CVS logs and unused <script> test code, with the help of some cognac.
+//	
+//	Revision 1.14  2004/02/23 04:18:13  ralfoide
+//	Removed obsolete OO test
+//
+//	[...]
+//
+//	Revision 1.2  2001/11/26 04:35:20  ralf
+//	version 0.6 with location.php
 //-------------------------------------------------------------
 ?>

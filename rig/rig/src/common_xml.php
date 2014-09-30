@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: common_xml.php,v 1.5 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -70,10 +70,10 @@ function rig_xml_read_options($album)
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: common_xml.php,v $
 //	Revision 1.5  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.4  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

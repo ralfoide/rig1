@@ -24,5 +24,4 @@
 # invalid:i:whatever:Invalid User
 
 guest:::Guest
-user1:::User 1
-foobar:::John Foo Bar
+marc::Marc MERLIN

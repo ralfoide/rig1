@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: index.php,v 1.4 2005/09/25 22:36:12 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -38,10 +38,10 @@ require_once("check_entry.php");
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: index.php,v $
 //	Revision 1.4  2005/09/25 22:36:12  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.3  2004/07/17 07:52:30  ralfoide
 //	GPL headers
 //	

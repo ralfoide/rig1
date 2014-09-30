@@ -1,7 +1,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: rig_mem.h,v 1.3 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -131,7 +131,7 @@ template <class T> inline void RigMem<T>::Realloc(int32 new_size)
 	mSize = 0;
 
 	// alloc the new space
-	Alloc(new_size); // 20060131 Fix by Alfred Broda.
+	Alloc(new_size, mac_limit);
 
 	// if there was old memory, copy it to the new one
 	if (mData && old_size && new_size && data)
@@ -172,10 +172,7 @@ template <class T> inline T & RigMem<T>::ItemAt(int32 index) const
 
 /****************************************************************
 
-	$Log$
-	Revision 1.4  2006/04/13 05:04:57  ralfoide
-	Version 0.7.4. Polish translation. Fixes.
-
+	$Log: rig_mem.h,v $
 	Revision 1.3  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
 	

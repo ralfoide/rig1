@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: common.php,v 1.54 2005/10/07 05:40:09 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -81,12 +81,12 @@
 
 	List of global access paths:
 	----------------------------
-	dir_abs_script
+	dir_abs_album
 	dir_images
 	dir_album
-	dir_url_image_cache
-	dir_url_album_cache
-	dir_url_option
+	dir_image_cache
+	dir_album_cache
+	dir_option
 	abs_images_path
 	abs_album_path
 	abs_image_cache_path
@@ -201,10 +201,6 @@ require_once(rig_require_once("common_video.php"));		// RM 20030928
 rig_setup();
 rig_create_option_dir("");
 
-if (rig_is_debug())
-{
-	echo "<b>Debug mode enabled</b><br>Rig Self Url: <code>" . rig_self_url() . "</code><br>";
-}
 
 //-----------------------------------------------------------------------
 //-----------------------------------------------------------------------
@@ -396,14 +392,6 @@ function rig_is_dir($name)
     return file_exists($name) && is_dir($name);
 }
 
-//************************************
-function rig_leaf_filename($full_name)
-//************************************
-{
-	$items = explode(SEP, $full_name);
-	return $items[count($items)-1];
-}
-
 //*************************
 function rig_getmicrotime()
 //*************************
@@ -463,30 +451,13 @@ function rig_php_array_search($val, $arr)
 function rig_print_array_str($str)
 //********************************
 {
-	if (rig_is_debug())
+	echo "str[] = '$str'<br>\n";
+	for($i=0, $n=strlen($str); $i<$n; $i++)
 	{
-		echo "str[] = '$str'<br>\n";
-		for($i=0, $n=strlen($str); $i<$n; $i++)
-		{
-			$a = ord($str{$i});
-			echo "str[$i] = {$a} = '{$str{$i}}'<br>\n";
-		}
+		$a = ord($str{$i});
+		echo "str[$i] = {$a} = '{$str{$i}}'<br>\n";
 	}
 }
-
-
-//*********************************
-function rig_debug($str, $var=NULL)
-//*********************************
-// For debug purposes -- RM 20060106
-{
-	if (rig_is_debug())
-	{
-		echo "<br><b>$str</b> ";
-		if ($var != NULL) var_dump($var);
-	}
-}
-
 
 
 //*************************
@@ -494,12 +465,9 @@ function rig_var_dump($str)
 //*************************
 // For debug purposes -- RM 20030928
 {
-	if (rig_is_debug())
-	{
-		global $$str;
-		echo "<br><b>$str =</b> ";
-		var_dump($$str);
-	}
+	global $$str;
+	echo "<br><b>$str =</b> ";
+	var_dump($$str);
 }
 
 
@@ -756,12 +724,9 @@ function rig_shell_filename2($str)
 	else
 	{
 		$s = "\"" . escapeshellcmd($str) . "\"";
-		// These characters do not need to be escaped when a command-line argument
-		// is already between quotes [RM 20051120 bug fix for &]
 		$s = str_replace("\\'", "'", $s);
-		$s = str_replace("\\&", "&", $s);
 	}
-
+	
 	return $s;
 }
 
@@ -802,31 +767,42 @@ function rig_pretty_name($name,
     // We'll interpret at least 6 leading digits as a year + date
 	if ($pretty_dirname)
 	{
-	    if (preg_match("/^(\d{4})([\/-]?)(\d{2})\\2(\d{2})(?:[_.+ -]*(.+))?$/", $name, $reg))
-		{   // reg:       [1]    [2]     [3]       [4]               [5]
-            // First deal with full dates with optional date separators           
+	    if (ereg("^([0-9]{4})[-/]([0-9]{2})[-/]([0-9]{2})$", $name, $reg))
+		{
+            // First deal with full dates with optional date separators
             // RM 20020713 fix: added optional separators (for albums name with only a date value)
-            // RM 20070105 merged next rules with optional separators and optional text
-			// --> "YYYYMMDD" or "YYYYMMDD_text" or "YYYY-MM-DD_text"
+			// --> "YYYYMMDD"
 			$name = str_replace("Y", $reg[1], $pref_date_YMD);
-			$name = str_replace("M", $reg[3], $name);
-			$name = str_replace("D", $reg[4], $name);
-			if ($reg[5])
-				$name .= $pref_date_sep . $reg[5];
+			$name = str_replace("M", $reg[2], $name);
+			$name = str_replace("D", $reg[3], $name);
         }
-		else if (preg_match("/^(\d{4})[\/-]?(\d{2})(?:[_.+ -]*(.+))?$/", $name, $reg))
-		{   // reg:            [1]          [2]               [3]
+		else if (ereg("^([0-9]{4})[-/]([0-9]{2})[-/]([0-9]{2})[- _]*(.+)$", $name, $reg) or ereg("^([0-9]{4})([0-9]{2})([0-9]{2})[- _]*(.+)$", $name, $reg))
+		{
+            // A full date followed by a description with optional date separators
+			// --> "YYYYMMDD_text" or "YYYY-MM-DD_text"
+			$name = str_replace("Y", $reg[1], $pref_date_YMD);
+			$name = str_replace("M", $reg[2], $name);
+			$name = str_replace("D", $reg[3], $name);
+			$name .= $pref_date_sep.$reg[4];
+        }
+		else if (ereg("^([0-9]{4})([0-9]{2})[^0-9]$", $name, $reg))
+		{
             // and then partial dates YYYYMM
-            // or a partial date followed by a description with optional date separators
+			$name = str_replace("Y", $reg[1], $pref_date_YM);
+			$name = str_replace("M", $reg[2], $name);
+			$name .= $pref_date_delim.$reg[2];
+        }
+		else if (ereg("^([0-9]{4})[-/]{0,1}([0-9]{2})[- _]{0,1}([^0-9].+)$", $name, $reg))
+		{
+            // a partial date followed by a description with optional date separators
 			// --> "YYYYMM_text" or "YYYY-MM_text"
 			$name = str_replace("Y", $reg[1], $pref_date_YM);
 			$name = str_replace("M", $reg[2], $name);
-			if ($reg[3])
-				$name .= $pref_date_sep . $reg[3];
+			$name .= $pref_date_sep.$reg[3];
         }
-		else if (preg_match("/^\d{1,5}[_.+ -](.+)$/", $name, $reg))
+		else if (ereg("^[0-9]{1,5}[ _](.+)$", $name, $reg))
 		{
-            // Remove leading digits if there are less or equal than 5
+            // Remove leading digits if there are less than 5
 			$name = $reg[1];
         }
 	}
@@ -834,42 +810,18 @@ function rig_pretty_name($name,
 	{
 		// remove numbers from begining of file name
 
-		if (preg_match("/^1(\d{2})-(\\1\d{2})_IMG$/i", $name, $reg))
-		{   // reg:  [1]        [2]
-			// Canon camera sequence: 123-2300_IMG i.e. 1xx-xxyy_IMG
+		// unless the name contains the name "IMG" as such, try to strip any leading numbers
+		if (eregi("^([0-9]+)[ _]([0-9]+)[- _]img$", $name, $reg))
+		{
+			// numbered sequence direct from the camera.
 			$name = "$html_image " . $reg[2];
 		}
-		else if (preg_match("/^PICT(\d{4})$/i", $name, $reg))
-		{   // reg:                   [1]
-			// DiMage sequence: PICT1000 i.e. PICTxxxx
-			$name = "$html_image " . $reg[1];
-		}
-		else if (preg_match("/^(\d)00_(\\1\d{3})$/", $name, $reg))
-		{   // reg:      [1]       [2]
-			// Kodak sequence: 100-1234 i.e. x00-xyyy
-			$name = "$html_image " . $reg[2];
-		}
-		else if (preg_match("/^P1(\d{2})0(\d{3})$/i", $name, $reg))
-		{   // reg:        [1]        [2]
-			// Panasonic sequence: P1xx0yyy
-			$name = "$html_image " . $reg[1] . $reg[2];
-		}
-		else if (preg_match("/^DSC_(\d{4})$/i", $name, $reg))
-		{   // reg:          [1]
-			// Sony sequence: DSC_xxxx
-			$name = "$html_image " . $reg[1];
-		}
-		else if (preg_match("/^(\d+)$/", $name, $reg))
+		else if (ereg("^([0-9]+)$", $name, $reg))
 		{
 			// if the image name is just a number, generate a text for it
 			$name = "$html_image " . $reg[1];
 		}
-		else if (preg_match("/^[A-Z]\d{4,5}[_.+ -]*(.+)$/", $name, $reg))
-		{
-			// RM 20070106 new ralf numbering scheme: X12345_blah.jpg
-			$name = $reg[1];
-		}
-		else if (preg_match("/^\d+[_.+ -]*(.+)$/", $name, $reg))
+		else if (ereg("^[0-9]+[ _]*(.+)$", $name, $reg))
 		{
 			// trim number at beginning if any
 			$name = $reg[1];
@@ -880,7 +832,7 @@ function rig_pretty_name($name,
 		// do not remove numbers at begining of file name
 		// (that doesn't mean we can't rearange things !)
 
-		if (eregi("^(\d+)[_.+ -]([a-z_0-9].+)$", $name, $reg))
+		if (eregi("^([0-9]+)[ _]([a-z_0-9].+)$", $name, $reg))
 		{
 			// if image starts with a number, insert a dash after it for lisibility
 			// note that the reg exp above has [ _] in it, not [- _]. If there's a dash, leave it!
@@ -996,11 +948,11 @@ function rig_create_option_dir($album)
 
 	if (!rig_mkdir($abs_option_path, $album, $pref_mkdir_mask))
     {
-        global $dir_abs_base, $dir_url_option;
+        global $dir_abs_album, $dir_option;
 		return rig_html_error( "Create Options Directory",
 		                       "Failed to create directory<br>\n" .
-    		                   "<b>Dir Abs Script:</b> $dir_abs_base<br>\n" . 
-        		               "<b>Dir Option:</b> $dir_url_option\n",
+    		                   "<b>Dir Abs Album:</b> $dir_abs_album<br>\n" . 
+        		               "<b>Dir Option:</b> $dir_option\n",
             		           $album,
                 		       $php_errormsg);
     }
@@ -1015,8 +967,6 @@ define("RIG_SELF_URL_ADMIN",		1);	// album+image admin view
 define("RIG_SELF_URL_UPLOAD",		2);	// upload *admin* view
 define("RIG_SELF_URL_TRANSLATE",	3);	// translate *admin* view
 define("RIG_SELF_URL_TESTS",		4);	// php-unit tests
-define("RIG_SELF_URL_THUMB",		5);	// thumbnail link
-define("RIG_SELF_URL_OVERVIEW",		6);	// overview mode
 
 //*****************************************************************
 function rig_self_url($in_image = -1,
@@ -1047,13 +997,10 @@ function rig_self_url($in_image = -1,
 	$album		= rig_get($_GET,'album'		);
 	$admin		= rig_get($_GET,'admin'		);
 	$translate	= rig_get($_GET,'translate'	);
-	$overview   = rig_get($_GET,'overview'	);
 	$upload		= rig_get($_GET,'upload'	);
 	$credits	= rig_get($_GET,'credits'	);
 	$phpinfo	= rig_get($_GET,'phpinfo'	);
-	$template	= rig_get($_GET,'template', NULL);
 	$_debug_	= rig_get($_GET,'_debug_'	);
-
 
 	// DEBUG
 	// echo "<p>rig_self_url: in_page=$in_page\n";
@@ -1109,7 +1056,6 @@ function rig_self_url($in_image = -1,
 		if ($translate)		$in_page = RIG_SELF_URL_TRANSLATE;
 		else if ($upload)	$in_page = RIG_SELF_URL_UPLOAD;
 		else if ($admin)	$in_page = RIG_SELF_URL_ADMIN;
-		else if ($overview)	$in_page = RIG_SELF_URL_OVERVIEW;
 		else				$in_page = RIG_SELF_URL_NORMAL;
 	}
 
@@ -1132,14 +1078,6 @@ function rig_self_url($in_image = -1,
 		case RIG_SELF_URL_UPLOAD:
 			rig_url_add_param($params, 'admin',		'on');
 			rig_url_add_param($params, 'upload',	'on');
-			break;
-
-		case RIG_SELF_URL_THUMB:
-			rig_url_add_param($params, 'th',		'');
-			break;
-
-		case RIG_SELF_URL_OVERVIEW:
-			rig_url_add_param($params, 'overview',	'');
 			break;
 	}
 
@@ -1213,8 +1151,6 @@ function rig_self_url($in_image = -1,
 	if ($phpinfo == 'on')
 		rig_url_add_param($params, 'phpinfo', $phpinfo);
 
-	if (is_string($template))
-		rig_url_add_param($params, 'template', $template);
 
 	// Add any extra
 	// the extra must always be the last one
@@ -1278,10 +1214,10 @@ function rig_url_add_param(&$inout_url, $in_param, $in_value)
 function rig_read_prefs_paths()
 //*****************************
 {
-	global $dir_abs_base;
+	global $dir_abs_album;
 
 	// append a separator to the abs album dir if not already done
-	$dir_abs_base = rig_post_sep($dir_abs_base);
+	$dir_abs_album = rig_post_sep($dir_abs_album);
 
 	// make some paths absolute
 	// RM 20021021 check these absolute paths
@@ -1290,89 +1226,69 @@ function rig_read_prefs_paths()
 	// RM 20030628 added v0.6.3.4
 
 	global $dir_images, $abs_images_path;
-	$abs_images_path = realpath($dir_abs_base . $dir_images);
+	$abs_images_path   = realpath($dir_abs_album . $dir_images);	// RM 20030726 $dir_abs_images => $dir_abs_album
 
 	if (!is_string($abs_images_path))
 	{
 		rig_html_error("Missing Image Directory",
 					   "Can't get absolute path for the images directory. <p>" .
-					   "<b>Base directory:</b> $dir_abs_base<br>" .
+					   "<b>Base directory:</b> $dir_abs_images<br>" .
 					   "<b>Target directory:</b> $dir_images<br>" ,
-					   $dir_abs_base . $dir_images);
+					   $dir_abs_images . $dir_images);
 	}
 
 	// --- album directory ---
 
-	global $dir_url_album, $dir_abs_album, $abs_album_path;
-
-	// RM 20051119 location.php can force the $dir_abs_album directory value	
-	if (isset($dir_abs_album) && rig_is_dir($dir_abs_album))
-		$abs_album_path = realpath($dir_abs_album);
-	else
-		$abs_album_path = realpath($dir_abs_base . $dir_url_album);
+	global $dir_album, $abs_album_path;
+	$abs_album_path   = realpath($dir_abs_album . $dir_album);
 
 	if (!is_string($abs_album_path))
 	{
 		rig_html_error("Missing Album Directory",
 					   "Can't get absolute path for the album directory. <p>" .
-					   "<b>Base directory:</b> $dir_abs_base<br>" .
-					   "<b>Target directory:</b> $dir_url_album<br>" ,
-					   $dir_abs_base . $dir_url_album);
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_album<br>" ,
+					   $dir_abs_album . $dir_album);
 	}
 
 	// --- cache directory ---
 
-	global $dir_url_image_cache, $dir_abs_image_cache, $abs_image_cache_path;
-
-	// RM 20051119 location.php can force the $dir_abs_image_cache directory value	
-	if (isset($dir_abs_image_cache) && rig_is_dir($dir_abs_image_cache))
-		$abs_image_cache_path = realpath($dir_abs_image_cache);
-	else
-		$abs_image_cache_path = realpath($dir_abs_base . $dir_url_image_cache);
+	global $dir_image_cache, $abs_image_cache_path;
+	$abs_image_cache_path = realpath($dir_abs_album . $dir_image_cache);
 
 	if (!is_string($abs_image_cache_path))
 	{
 		rig_html_error("Missing Image Cache Directory",
 					   "Can't get absolute path for the previews directory. <p>" .
-					   "<b>Base directory:</b> $dir_abs_base<br>" .
-					   "<b>Target directory:</b> $dir_url_image_cache<br>" ,
-					   $dir_abs_base . $dir_url_image_cache);
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_image_cache<br>" ,
+					   $dir_abs_album . $dir_image_cache);
 	}
 
-	global $dir_url_album_cache, $dir_abs_album_cache, $abs_album_cache_path;
-	
-	// RM 20051119 location.php can force the $dir_abs_album_cache directory value	
-	if (isset($dir_abs_album_cache) && rig_is_dir($dir_abs_album_cache))
-		$abs_album_cache_path = realpath($dir_abs_album_cache);
-	else
-		$abs_album_cache_path = realpath($dir_abs_base . $dir_url_album_cache);
+	global $dir_album_cache, $abs_album_cache_path;
+	$abs_album_cache_path = realpath($dir_abs_album . $dir_album_cache);
 
 	if (!is_string($abs_album_cache_path))
 	{
 		rig_html_error("Missing Album Cache Directory",
 					   "Can't get absolute path for the previews directory. <p>" .
-					   "<b>Base directory:</b> $dir_abs_base<br>" .
-					   "<b>Target directory:</b> $dir_url_album_cache<br>" ,
-					   $dir_abs_base . $dir_url_album_cache);
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_album_cache<br>" ,
+					   $dir_abs_album . $dir_album_cache);
 	}
 
 	// --- options directory ---
 
-	global $dir_url_option, $dir_abs_option, $abs_option_path;
-	
-	// RM 20051119 location.php can force the $dir_abs_album_cache directory value	
-	if (isset($dir_abs_option) && rig_is_dir($dir_abs_option))
-		$abs_option_path = realpath($dir_abs_option);
-	else
-		$abs_option_path = realpath($dir_abs_base . $dir_url_option);
+	global $dir_option, $abs_option_path;
+	$abs_option_path = realpath($dir_abs_album . $dir_option);
 
 	if (!is_string($abs_option_path))
 	{
 		rig_html_error("Missing Options Directory",
 					   "Can't get absolute path for the options directory. <p>" .
-					   "<b>Base directory:</b> $dir_abs_base<br>" .
-					   "<b>Target directory:</b> $dir_url_option<br>" ,
-					   $dir_abs_base . $dir_url_option);
+					   "<b>Base directory:</b> $dir_abs_album<br>" .
+					   "<b>Target directory:</b> $dir_option<br>" ,
+					   $dir_abs_album . $dir_option);
 	}
 
 	// --- rig_thumbnail application ---
@@ -1410,18 +1326,12 @@ function rig_clear_album_options()
 	rig_unset_global('list_hide');			// RM 20040204 fix see rig_unset_global description
 	rig_unset_global('list_album_icon');	// RM 20040204 fix see rig_unset_global description
 	rig_unset_global('list_description');	// RM 20040204 fix see rig_unset_global description
-
-
-	// RM 20061206 - v1.0.2 - no album options loaded yet
-	global $has_album_options;
-	$has_album_options = FALSE;
 }
 
 
 //*************************************
 function rig_read_album_options($album)
 //*************************************
-// Returns TRUE if could read options or they don't exist, FALSE otherwise.
 {
 	// first clear current options
 	rig_clear_album_options();
@@ -1556,12 +1466,6 @@ function rig_read_album_options($album)
 	// { echo "<p>Reading list_album_icon: "; var_dump($list_album_icon);}
 
 	fclose($file);		// RM 20020713 fix
-
-	// RM 20061206 - v1.0.2 -- album options were just loaded
-	global $has_album_options;
-	$has_album_options = TRUE;
-
-
 	return TRUE;
 }
 
@@ -1649,44 +1553,7 @@ function rig_write_album_options($album, $silent = FALSE)
 	fputs($file, ":\n");
 	fclose($file);
 
-	// RM 20061206 - v1.0.2 -- album options were just created
-	global $has_album_options;
-	$has_album_options = TRUE;
-
 	return TRUE;
-}
-
-
-//**********************************************
-function rig_set_image_visible($image, $visible)
-//**********************************************
-// Returns TRUE if options changed
-{
-	global $list_hide;
-
-	if (!$image)
-		return;
-
-	if ($visible && !rig_is_visible(-1, -1, $image))
-	{
-		// remove the name from the hide list
-		foreach($list_hide as $key => $value)
-		{
-			if ($value == $image)
-			{
-				unset($list_hide[$key]);
-				return TRUE;
-			}
-		}
-	}
-	else if (!$visible && rig_is_visible(-1, -1, $image))
-	{
-		// add the name to the hide list
-		$list_hide[] = $image;
-		return TRUE;
-	}
-
-	return FALSE;
 }
 
 
@@ -1776,15 +1643,8 @@ function rig_parse_description_file($abs_path)
 	# Accepted names are "descript.ion" or "file_info.diz"
 	# Lines starting with # are ignored. So are empty lines.
 	# Line format is:
-	#	An image or album name followed by at least one tab then a description.
-	#	To split the description on multiple lines, the second lines and more must
-	#	begin by a whitespace. Note that the first separator between the name and
-	#	description MUST be a tab (in case the image name contains spaces), however
-	#	after that it can be be multiple spaces or tabs.
-	# The regexp is:
-	#   <img or album name>\t[ \t]*<description>\n
+	#   <img or album name>[ \t]+<description>\n
 	#   [ \t]+<continuation of previous description>\n
-	
 */
 {
 	global $list_description;
@@ -1859,7 +1719,7 @@ function rig_parse_description_file($abs_path)
 		{
 			// this is a new entry, get the name and the text
 			// format is "(name)[ \t]+(text)"
-			if (ereg("^([^\t]+)\t[ \t]*(.*)", $line, $reg) && is_string($reg[1]))
+			if (ereg("^([^ \t]+)[ \t]+(.*)", $line, $reg) && is_string($reg[1]))
 			{
 				$name = $reg[1];
 				$list_description[$name] = $reg[2];
@@ -1899,7 +1759,7 @@ function rig_set_cookie_val($name, $val, $set = TRUE)
 //***************************************************
 // $set: TRUE to set cookie, FALSE to delete cookie
 {
-	global $dir_abs_base;
+	global $dir_abs_album;
     global $pref_cookie_host;
 
 	$delay = 3600 * 24 * 365;
@@ -1908,7 +1768,7 @@ function rig_set_cookie_val($name, $val, $set = TRUE)
 	if (!$host)
 		$host = $_SERVER['HTTP_HOST'];
 
-    $path = $dir_abs_base;
+    $path = $dir_abs_album;
 
 	$time = ($set ? time() + $delay : time() - $delay);
 	// $time = gmstrftime("%A, %d-%b-%Y %H:%M:%S", ($set ? time() + $delay : time() - $delay));
@@ -2141,8 +2001,6 @@ function rig_setup()
 		if (is_string($lang_locale))
 		{
 			$l = setlocale(LC_TIME, $lang_locale);
-			if ($l == FALSE)
-				rig_debug("Set Locale: $lang_locale => ", $l);
 		}
 		else if (is_array($lang_locale))
 		{
@@ -2150,8 +2008,6 @@ function rig_setup()
 			foreach($lang_locale as $name)
 			{
 				$l = setlocale(LC_TIME, $name);
-				if ($l == FALSE)
-					rig_debug("Set Locale: $lang_locale => ", $l);
 				if (is_string($l) && $l != '')
 					break;
 			}
@@ -2201,11 +2057,6 @@ function rig_setup()
 	else
 		$rig_file_types = $pref_internal_file_types;
 
-
-	// -- setup logging [RM 20060901]
-
-	define_syslog_variables();
-	openlog("rig", LOG_ODELAY | LOG_PID, LOG_USER);
 }
 
 
@@ -2369,9 +2220,7 @@ function rig_check_expired($compare_date, &$path_list)
 			$tm = filemtime($path);
 			
 			if ($tm > $compare_date)
-			{
 				return TRUE;
-			}
 		}
 		else if (rig_is_dir($path))
 		{
@@ -2380,12 +2229,10 @@ function rig_check_expired($compare_date, &$path_list)
 			$tm = filemtime($path);
 
 			if ($tm > $compare_date)
-			{
 				return TRUE;
-			}
 
 			// if not, check all files in the directory (no recursion)
-			// note that there is no semantic associated to the path,
+			// note that since there is no semantic associated to the path,
 			// so it is not possible to exclude files based on the content
 			// of pref_album_ignore_list or pref_image_ignore_list.
 
@@ -2425,10 +2272,6 @@ function rig_begin_buffering()
 // Returns html filename to include or TRUE to start buffering and output or FALSE on errors
 // When FALSE is returned, the caller should proceed generating the page is if with buffering
 // except no buffering will occur.
-//
-// RM 20051126 v0.7.2: Buffering is also used for image pages now.
-// This should work transparently since the hash code contains the full url.
-// Also cache invalidation on album changed applies just fine.
 {
 	global $rig_abs_cache;
 	global $rig_tmp_cache;
@@ -2462,8 +2305,6 @@ function rig_begin_buffering()
 	global $rig_lang;
 	global $rig_theme;
 	global $rig_user;
-	global $rig_img_size;				// RM 20060909 fix: image size changed in web UI
-	global $pref_image_size;
 
 	// Get the absolute cache filename
 	// Note that the cache file depends on the follwing variables:
@@ -2476,7 +2317,7 @@ function rig_begin_buffering()
 	// - preference image nb col
 	// - self url (in order to get the extra fields: credits, phpinfo, _debug_, etc.) [RM 20040715 v 0.6.5]
 
-	$hash_ =  ($current_album_page > 1 ? rig_simplify_filename($current_album_page) . 'a_' : '')
+	$hash =  ($current_album_page > 1 ? rig_simplify_filename($current_album_page) . 'a_' : '')
 			. ($current_image_page > 1 ? rig_simplify_filename($current_image_page) . 'i_' : '')
 			. rig_simplify_filename($rig_lang) . '_'
 			. rig_simplify_filename($rig_theme) . '_'
@@ -2484,12 +2325,10 @@ function rig_begin_buffering()
 			. $pref_image_layout . "-"
 			. $pref_album_layout . "-"
 			. $pref_album_nb_col . "-"
-			. $pref_image_nb_col . "-"
-			. $rig_img_size      . "-"
-			. $pref_image_size   . "|"
+			. $pref_image_nb_col . "|"
 			. rig_self_url();
 
-	$hash = md5($hash_);
+	$hash = md5($hash);
 
 	$abs_html =   rig_post_sep($abs_album_cache_path)
 				. rig_post_sep($current_real_album)
@@ -2528,7 +2367,7 @@ function rig_begin_buffering()
 			$check_list[] = $dir_abs_locset;
 
 		// RM 20040601 v.0.6.4.5 - fix image=>album var name
-		// $check_list[] = $abs_album_cache_path . rig_prep_sep($current_real_album);
+		$check_list[] = $abs_album_cache_path . rig_prep_sep($current_real_album);
 
 		// cache is valid if not expired
 		$is_valid  = !rig_check_expired($tm_html, $check_list);
@@ -2538,18 +2377,10 @@ function rig_begin_buffering()
 			@unlink($abs_html);
 	}
 
-	// DEBUG
-	// var_dump($is_valid);
-	// var_dump($abs_html);
-	// var_dump($hash_);
-
 	if ($is_valid)
 	{
 		// no buffering is going on
 		$rig_abs_cache = FALSE;
-
-		// DEBUG
-		// echo "<b>CACHED</b> ";
 
 		// return the filename of the cached html
 		return $abs_html;
@@ -2581,15 +2412,13 @@ function rig_begin_buffering()
 		if (rig_is_file($rig_tmp_cache))
 			unlink($rig_tmp_cache);
 
-		// DEBUG
-		// echo "<b>CACHING</b> "; var_dump(strftime("%c")); var_dump($rig_tmp_cache);
-
 		// RM 20040715 [v0.6.5] register a cleanup function to remove the
 		// tmp cache if the script is aborted before the buffering ends
 		register_shutdown_function('rig_clean_buffering');
 
 		ob_implicit_flush(0);
 		ob_start();
+
 
 		// indicate should start output
 		return TRUE;
@@ -2656,6 +2485,7 @@ function rig_end_buffering()
 			}
 
 		}
+
 	}
 
 	// disable buffering
@@ -2717,6 +2547,9 @@ function rig_flush()
 }
 
 
+
+
+
 //****************************
 function rig_clean_buffering()
 //****************************
@@ -2759,7 +2592,7 @@ function rig_check_ignore_list($name, $ignore_list)
 		foreach($ignore_list as $pattern)
 			if (preg_match($pattern, $name) == 1)
 				return TRUE;
-
+	
 	return FALSE;
 }
 
@@ -2771,38 +2604,6 @@ function rig_check_ignore_list($name, $ignore_list)
 
 //-------------------------------------------------------------
 //	$Log: common.php,v $
-//	Revision 1.61  2007/01/10 09:07:42  ralfoide
-//	Changed renaming schemes to be more flexible
-//	
-//	Revision 1.60  2006/12/07 01:08:34  ralfoide
-//	v1.0.2:
-//	- Feature: Ability to automatically hide images based on name regexp
-//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-//
-//	Revision 1.59  2006/09/12 14:15:39  ralfoide
-//	Fixed broken image resize
-//	
-//	Revision 1.58  2006/01/11 08:24:23  ralfoide
-//	Propagating template variable in rig_self.
-//	Added rig_debug function.
-//	
-//	Revision 1.57  2005/12/26 22:09:30  ralfoide
-//	Added link to view full resolution image.
-//	Album thumbnail in admin album page.
-//	Incorrect escaping of "&" in jhead call.
-//	Submitting 0.7.3.
-//	
-//	Revision 1.56  2005/11/27 19:11:11  ralfoide
-//	Debug output
-//	
-//	Revision 1.55  2005/11/26 18:00:53  ralfoide
-//	Version 0.7.2.
-//	Ability to have absolute paths for albums, caches & options.
-//	Explained each setting in location.php.
-//	Fixed HTML cache invalidation bug.
-//	Added HTML cache to image view and overview.
-//	Added /th to stream images & movies previews via PHP.
-//	
 //	Revision 1.54  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.

@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: common_video.php,v 1.7 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -26,36 +26,6 @@
 
 
 //-----------------------------------------------------------------------
-
-
-
-//******************************
-function rig_stream_video($type)
-//******************************
-// Returns true if the video was found and streamed.
-{
-	$type_info = rig_video_type($type);
-	if ($type_info)
-	{
-		global $abs_album_path;
-		global $current_real_album;
-		global $current_image;
-
-		$abs = rig_post_sep($abs_album_path) . rig_post_sep($current_real_album) . $current_image;
-
-		if (rig_is_file($abs))
-		{
-			header("Content-type: " . $type);
-			header("Content-length: " . filesize($abs));
-
-			readfile($abs);
-
-			return TRUE;
-		}
-	}
-	
-	return FALSE;
-}
 
 
 //****************************
@@ -92,7 +62,7 @@ function rig_video_type($type)
 function rig_display_video($type)
 //*******************************
 {
-	global $dir_url_album;
+	global $dir_album;
 	global $abs_album_path;
 	global $current_real_album;					// RM 20030907
 	global $current_image;
@@ -105,32 +75,27 @@ function rig_display_video($type)
 	global $html_video_install_unnamed_player;	// RM 20040222
 	global $html_video_download;				// RM 20040226
 
+
+	global $_test_;
+	if (isset($_test_)) echo "Test type: $_test_<br>";
+
 	if ($rig_img_size != -2 && $rig_img_size < 1)
 		$rig_img_size = $pref_image_size;
-
-	// DEBUG
-	rig_debug("User Agent: ", rig_get($_SERVER, 'HTTP_USER_AGENT', ""));
 
 	// get the file type
 	$type_info = rig_video_type($type);
 	if ($type_info)
 	{
-		// Init to some defaults. These are not good defaults but they'll
-		// do in case we fail to detect anything at all.
-		$codec_name = $type_info['s'];
-		$codec_detail = "";
-		$codec_install = "";
-		$video_link = "";
-		
-		// get the full relative URL to the media file
-		$full = rig_self_url($current_image, $current_real_album, RIG_SELF_URL_THUMB, "sz=$rig_img_size");
+        $subtype = $type_info["s"];   // RM 20081002 for MM branch
 
-		// get actual info (size, type) of media
+		// RM 20030628 v0.6.3.4
+
+		// get the full relative URL to the media file
+		$full = rig_post_sep($dir_album) . rig_post_sep($current_real_album) . $current_image;
+
+		// get actual size of media
 		$abs = rig_post_sep($abs_album_path) . rig_post_sep($current_real_album) . $current_image;
 		$info = rig_image_info($abs);
-
-		// Add type to info array
-		$info['t'] = $type;
 		
 		if (isset($info["w"]))
 			$sx = $info["w"];
@@ -142,14 +107,12 @@ function rig_display_video($type)
 		else
 			$sy = 240;
 
-		// for QT, add 24 to the height to see the controls (cf doc above)
-		// RM 20051008 16=>24, 16 doesn't seem enough with new QT versions
+		// for QT, add 16 to the height to see the controls (cf doc above)
 		$sy2 = $sy+16;
 
 
-		// get some details based on the video codec and current OS
-		$codec_info = @array_merge(rig_display_os_detail(), rig_display_codec_detail($info));
-
+		// get some details based on the video codec
+		$codec_info = array_merge(rig_display_codec_detail($info), rig_display_os_detail());
 		$codec_install = "";
 
 		$codec_is_divx = false;
@@ -157,8 +120,8 @@ function rig_display_video($type)
 
 		if ($codec_info != NULL)
 		{
-			if (is_array($codec_info) && count($codec_info) > 0 && is_string($codec_info[0]))
-			{				
+			if (is_array($codec_info))
+			{
 				$codec_name = array_shift($codec_info);
 				$codec_url  = $codec_info;
 			}
@@ -212,29 +175,189 @@ function rig_display_video($type)
 			$codec_detail = "";
 		}
 
-		// Insert the appropriate <object> or <embed> tag
-		switch($type_info['s'])
-		{
-			case "avi":
-				rig_video_insert_avi($full, $sx, $sy, $sy2,
-									  $codec_is_windowsmedia,
-									  $codec_is_divx);
-				break;
-			case "mpeg":
-				rig_video_insert_mpeg($full, $sx, $sy);
-				break;
-			case "quicktime":
-				rig_video_insert_qt($full, $sx, $sy, $sy2);
-				break;
-			case "real":
-				rig_video_insert_real($full, $sx, $sy);
-				break;
-			case "flash":
-				rig_video_insert_flash($full, $sx, $sy);
-				break;
-		}
-			
 
+		if ($subtype == "avi")
+		{
+			// ----------------------------------------
+			// -------------- AVI ---------------------
+			// ----------------------------------------
+	
+			// Link
+			// Windows Media Player <object>
+			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/addwmwebpage.asp?frame=true&hidetoc=true
+			//
+			// WMV 7   class id: 6BF52A52-394A-11d3-B153-00C04F79FAA6
+			// WMV 6.4 class id: 22D6f312-B0F6-11D0-94AB-0080C74C7E95
+			
+			// Other random links:
+			// http://www.macromedia.com/support/dreamweaver/ts/documents/mediaplayer.htm
+			// http://www.webreference.com/js/column51/install.html
+			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmp6sdk/htm/controlclsids.asp
+			//		MediaPlayer 22D6F312-B0F6-11D0-94AB-0080C74C7E95
+			//		NSPlay 2179C5D3-EBFF-11cf-B6FD-00AA00B4E220
+			//		ActiveMovie 05589FA1-C356-11CE-BF01-00AA0055595A
+			// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/6-4compat.asp
+			//		Windows Media Player 9 Series 6BF52A52-394A-11d3-B153-00C04F79FAA6
+			// http://home.maconstate.edu/dadams/Tutorials/AV/AV03/av03-03.htm
+	
+			// Win32 Moz 1.4: doesn't work
+			// Win32 IE6: unsafe ActiveX, won't play
+			// <!-- object data="<@= $full @>" type="video/x-msvideo" / -->
+			// Win32  Moz 1.4: WMV7 displays but doesn't play
+			// Win32  IE6: WMV9 shows with bad aspect ratio, plays.
+			// MacOSX Safari: yes if WMV 7.1/MacOS X installed before
+	
+			rig_video_generate_javascript(
+				array(
+				"is_win" => array(
+							TRUE,
+							"<object "
+							. "	classid=\"CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6\""
+							. "	codebase=\"http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112\""
+							. "	id=\"mediaplayer1\">"
+							. "	<param name=\"URL\" value=\"$full\">"
+							. "	<param name=\"Filename\" value=\"$full\">"
+							. "	<param name=\"AutoStart\" value=\"True\">"
+							. "	<param name=\"ShowControls\" value=\"True\">"
+							. "	<param name=\"ShowStatusBar\" value=\"True\">"
+							. "	<param name=\"ShowDisplay\" value=\"True\">"
+							. "	<param name=\"AutoRewind\" value=\"True\"> "
+							. "<embed "
+							. "	type=\"application/x-mplayer2\""
+							. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\""
+							. "	src=\"$full\""
+							. "	width=\"$sx\" height=\"$sy\""
+							. "	filename=\"$full\""
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\""
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\""
+							. "	autorewind=\"True\"> "
+							. "</embed> "
+							. "</object> "
+							),
+				"is_mac" => array(
+							$codec_is_windowsmedia && !$codec_is_divx,
+							"<embed "
+							. "	type=\"application/x-mplayer2\" "
+							. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
+							. "	src=\"$full\" "
+							. "	width=\"$sx\" height=\"$sy2\" "
+							. "	filename=\"$full\" "
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\" "
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\" "
+							. "	autorewind=\"True\">"
+							. "</embed> ",
+							TRUE,
+							"<embed "
+							. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
+							. "	src=\"$full\" "
+							. "	width=\"$sx\" height=\"$sy2\" "
+							. "	filename=\"$full\" "
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\" "
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\" "
+							. "	autorewind=\"True\">"
+							. "</embed> "
+							),
+				// not windows, not mac (includes is_linux, etc.)
+				"else" => array(
+							TRUE,
+							"<embed "
+							. "	type=\"application/x-mplayer2\" "
+							. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
+							. "	src=\"$full\" "
+							. "	width=\"$sx\" height=\"$sy\" "
+							. "	filename=\"$full\" "
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\" "
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\" "
+							. "	autorewind=\"True\">"
+							. "</embed> "
+							),
+				// javascript not enabled
+				"noscript" => array(
+							"<embed "
+							. "	src=\"$full\" "
+							. "	width=\"$sx\" height=\"$sy\" "
+							. "	filename=\"$full\" "
+							. "	autostart=\"True\" "
+							. "	showcontrols=\"True\" "
+							. "	showstatusbar=\"False\" "
+							. "	showdisplay=\"False\" "
+							. "	autorewind=\"True\">"
+							. "</embed> ".
+							"<p>",
+							"Please enable JavaScript to allow this programm to select the most appropriate video ",
+							"viewer for your configuration."
+							)
+				)
+			);
+		} // end if avi
+		else if ($subtype == "mpeg")
+		{
+			// ----------------------------------------
+			// -------------- MPEG --------------------
+			// ----------------------------------------
+	
+			// Always use <embed>
+
+			?>
+				<embed
+					src="<?= $full ?>"
+					width="<?= $sx ?>" height="<?= $sy ?>"
+				>
+				</embed>
+			<?php
+		} // end if mpeg
+		else if ($subtype == "quicktime")
+		{
+			// ----------------------------------------
+			// -------------- QuickTime ---------------
+			// ----------------------------------------
+	
+			// QuickTime EMBED attributes are described here:
+			// http://www.apple.com/quicktime/authoring/embed2.html
+			//
+			// QuickTime OBJECT tag:
+			// http://www.apple.com/quicktime/tools_tips/tutorials/activex.html
+
+			/*
+				The following EMBED attributes are supposedly supported but break the QT player
+				when used:
+					type="video/quicktime"
+					qtsrc="url"
+					qtsrcdontusebrowser
+	
+				codebase="http://www.apple.com/qtactivex/qtplugin.cab">
+			*/
+	
+			?>
+				<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b"
+					codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"
+					width="<?= $sx ?>" height="<?= $sy ?>">
+					<param name="src" value="sample.mov">
+					<param name="autoplay" value="true">
+					<param name="controller" value="true">
+					<param name="autohref" value="true">
+					<param name="scale" value="aspect">
+				<embed
+					src="<?= $full ?>"
+					width="<?= $sx ?>" height="<?= $sy2 ?>"
+					controller="true"
+					scale="aspect"
+					autohref="yes"
+					autoplay="yes"
+					pluginspage="http://www.apple.com/quicktime/download/"
+				>
+				</embed>
+				</object>
+			<?php
+		} // end if qt
 
 		// ---------------------------------------------
 		// --- Display links & info below the player ---
@@ -259,327 +382,6 @@ function rig_display_video($type)
     // echo "<br>rig_img_size = '$rig_img_size'<br>\n";
     // echo "preview = '$preview'<br>\n";
 }
-
-
-//*********************************************
-function rig_video_insert_avi($full, $sx, $sy, $sy2,
-							  $codec_is_windowsmedia,
-							  $codec_is_divx)
-//*********************************************
-{
-	// ----------------------------------------
-	// -------------- AVI ---------------------
-	// ----------------------------------------
-
-	// Link
-	// Windows Media Player <object>
-	// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/addwmwebpage.asp?frame=true&hidetoc=true
-	//
-	// WMV 7   class id: 6BF52A52-394A-11d3-B153-00C04F79FAA6
-	// WMV 6.4 class id: 22D6f312-B0F6-11D0-94AB-0080C74C7E95
-	
-	// Other random links:
-	// http://www.macromedia.com/support/dreamweaver/ts/documents/mediaplayer.htm
-	// http://www.webreference.com/js/column51/install.html
-	// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/wmp6sdk/htm/controlclsids.asp
-	//		MediaPlayer 22D6F312-B0F6-11D0-94AB-0080C74C7E95
-	//		NSPlay 2179C5D3-EBFF-11cf-B6FD-00AA00B4E220
-	//		ActiveMovie 05589FA1-C356-11CE-BF01-00AA0055595A
-	// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnwmt/html/6-4compat.asp
-	//		Windows Media Player 9 Series 6BF52A52-394A-11d3-B153-00C04F79FAA6
-	// http://home.maconstate.edu/dadams/Tutorials/AV/AV03/av03-03.htm
-
-	// Win32 Moz 1.4: doesn't work
-	// Win32 IE6: unsafe ActiveX, won't play
-	// <!-- object data="<@= $full @>" type="video/x-msvideo" / -->
-	// Win32  Moz 1.4: WMV7 displays but doesn't play
-	// Win32  IE6: WMV9 shows with bad aspect ratio, plays.
-	// MacOSX Safari: yes if WMV 7.1/MacOS X installed before
-
-	rig_video_generate_javascript(
-		array(
-		"is_win" => array(
-					TRUE,
-					"<object "
-					. "	classid=\"CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6\""
-					. "	codebase=\"http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,4,7,1112\""
-					. "	id=\"mediaplayer1\">"
-					. "	<param name=\"URL\" value=\"$full\">"
-					. "	<param name=\"Filename\" value=\"$full\">"
-					. "	<param name=\"AutoStart\" value=\"True\">"
-					. "	<param name=\"ShowControls\" value=\"True\">"
-					. "	<param name=\"ShowStatusBar\" value=\"True\">"
-					. "	<param name=\"ShowDisplay\" value=\"True\">"
-					. "	<param name=\"AutoRewind\" value=\"True\"> "
-					. "<embed "
-					. "	type=\"application/x-mplayer2\""
-					. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\""
-					. "	src=\"$full\""
-					. "	width=\"$sx\" height=\"$sy\""
-					. "	filename=\"$full\""
-					. "	autostart=\"True\" "
-					. "	showcontrols=\"True\""
-					. "	showstatusbar=\"False\" "
-					. "	showdisplay=\"False\""
-					. "	autorewind=\"True\"> "
-					. "</embed> "
-					. "</object> "
-					),
-		"is_mac" => array(
-					$codec_is_windowsmedia && !$codec_is_divx,
-					"<embed "
-					. "	type=\"application/x-mplayer2\" "
-					. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
-					. "	src=\"$full\" "
-					. "	width=\"$sx\" height=\"$sy2\" "
-					. "	filename=\"$full\" "
-					. "	autostart=\"True\" "
-					. "	showcontrols=\"True\" "
-					. "	showstatusbar=\"False\" "
-					. "	showdisplay=\"False\" "
-					. "	autorewind=\"True\">"
-					. "</embed> ",
-					TRUE,
-					"<embed "
-					. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
-					. "	src=\"$full\" "
-					. "	width=\"$sx\" height=\"$sy2\" "
-					. "	filename=\"$full\" "
-					. "	autostart=\"True\" "
-					. "	showcontrols=\"True\" "
-					. "	showstatusbar=\"False\" "
-					. "	showdisplay=\"False\" "
-					. "	autorewind=\"True\">"
-					. "</embed> "
-					),
-		// not windows, not mac (includes is_linux, etc.)
-		"else" => array(
-					TRUE,
-					"<embed "
-					. "	type=\"application/x-mplayer2\" "
-					. "	pluginspage=\"http://www.microsoft.com/windows/windowsmedia/download/\" "
-					. "	src=\"$full\" "
-					. "	width=\"$sx\" height=\"$sy\" "
-					. "	filename=\"$full\" "
-					. "	autostart=\"True\" "
-					. "	showcontrols=\"True\" "
-					. "	showstatusbar=\"False\" "
-					. "	showdisplay=\"False\" "
-					. "	autorewind=\"True\">"
-					. "</embed> "
-					),
-		// javascript not enabled
-		"noscript" => array(
-					"<embed "
-					. "	src=\"$full\" "
-					. "	width=\"$sx\" height=\"$sy\" "
-					. "	filename=\"$full\" "
-					. "	autostart=\"True\" "
-					. "	showcontrols=\"True\" "
-					. "	showstatusbar=\"False\" "
-					. "	showdisplay=\"False\" "
-					. "	autorewind=\"True\">"
-					. "</embed> ".
-					"<p>",
-					"Please enable JavaScript to allow this programm to select the most appropriate video ",
-					"viewer for your configuration."
-					)
-		)
-	);
-} // end avi
-
-
-//*********************************************
-function rig_video_insert_mpeg($full, $sx, $sy)
-//*********************************************
-{
-	// ----------------------------------------
-	// -------------- MPEG --------------------
-	// ----------------------------------------
-
-	// Always use <embed>
-
-?>
-<embed
-	src="<?= $full ?>"
-	width="<?= $sx ?>" height="<?= $sy ?>"
->
-</embed>
-<?php
-} // end mpeg
-
-
-//*************************************************
-function rig_video_insert_qt($full, $sx, $sy, $sy2)
-//*************************************************
-{
-	// ----------------------------------------
-	// -------------- QuickTime ---------------
-	// ----------------------------------------
-
-	// QuickTime EMBED attributes are described here:
-	// http://www.apple.com/quicktime/authoring/embed2.html
-	//
-	// QuickTime OBJECT tag:
-	// http://www.apple.com/quicktime/tools_tips/tutorials/activex.html
-
-	/*
-		The following EMBED attributes are supposedly supported but break the QT player
-		when used:
-			type="video/quicktime"
-			qtsrc="url"
-			qtsrcdontusebrowser
-
-		codebase="http://www.apple.com/qtactivex/qtplugin.cab">
-	*/
-
-?>
-<object classid="clsid:02bf25d5-8c17-4b23-bc80-d3488abddc6b"
-	codebase="http://www.apple.com/qtactivex/qtplugin.cab#version=6,0,2,0"
-	width="<?= $sx ?>" height="<?= $sy ?>">
-	<param name="src" value="<?= $full ?>">
-	<param name="autoplay" value="true">
-	<param name="controller" value="true">
-	<param name="autohref" value="true">
-	<param name="scale" value="aspect">
-<embed
-	src="<?= $full ?>"
-	width="<?= $sx ?>" height="<?= $sy2 ?>"
-	controller="true"
-	scale="aspect"
-	autohref="yes"
-	autoplay="yes"
-	pluginspage="http://www.apple.com/quicktime/download/"
->
-</embed>
-</object>
-<?php
-} //end qt
-
-
-//*********************************************
-function rig_video_insert_real($full, $sx, $sy)
-//*********************************************
-{
-	// ----------------------------------------
-	// -------------- REAL --------------------
-	// ----------------------------------------
-
-	// Always use <embed>
-
-?>
-
-<object id="player" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" 
-        width="$sx" height="$sy">
-     <param name="CONTROLS" value="imagewindow">
-     <param name="AUTOGOTOURL" value="FALSE">
-     <param name="CONSOLE" value="radio">
-     <param name="AUTOSTART" value="TRUE">
-     <param name="SRC" value="<?= $full ?>">
-<embed name="player" type="audio/x-pn-realaudio-plugin" 
-       width="$sx" height="$sy" autostart="true" console="radio" controls="ImageWindow" 
-       src="<?= $full ?>"/>
-</object>
-<?php
-} // end real
-
-
-//*********************************************
-function rig_video_insert_flash($full, $sx, $sy)
-//*********************************************
-{
-	// ----------------------------------------
-	// -------------- FLASH --------------------
-	// ----------------------------------------
-
-	global $current_image;
-	global $dir_url_image_cache;
-	global $current_real_album;
-	$abs_cache_swf = rig_post_sep($dir_url_image_cache) . rig_post_sep($current_real_album) . $current_image . ".swf";
-
-	$x = 0;
-	$y = 0;
-	$xMin = 10;
-	$xMax = 200;
-
-	ming_useswfversion(7);
-	$movie = new SWFMovie(7);
-var_dump($movie);
-	$movie->setDimension($sx, $sy);
-	$movie->setBackground(0, 0, 0);
-	
-	$stream = new SWFVideoStream();
-	$stream->setDimension($sx, $sy);
-	$item = $movie->add($stream);
-	$item->moveTo($x, $y);
-	$item->setname("video");
-	
-	$as = "connection = new NetConnection(); "
-			. "connection.connect(null); "
-			. "stream = new NetStream(connection); "
-			. "video.attachVideo(stream); "
-			. "stream.setBufferTime(10); "
-			. "stream.play('$full'); ";
-	
-	$action = new SWFAction($as);
-	$movie->add($action);
-	
-/*	
-	$button = new SWFButton();
-	$flags = (SWFBUTTON_UP | SWFBUTTON_HIT | SWFBUTTON_OVER | SWFBUTTON_DOWN);
-	$button->addShape(ImageShape("images/pause.dbl"), $flags);
-	    
-	$action = new SWFAction("stream.pause();");
-	$button->addAction($action, SWFBUTTON_MOUSEDOWN);
-	
-	$button_ref = $movie->add($button);
-	$button_ref->moveTo($x, $y);
-
-	$mc = new SWFSprite();
-	$shape = new SWFShape();
-	$shape->setLine(4,25,0,0,128);
-	$shape->movePenTo(0, 5);
-	$shape->drawLineTo(0, 10);
-	$mc->add($shape);
-	$mc->nextFrame();
-	
-	$slider = $movie->add($mc);
-	$slider->moveTo($xMin, $y);
-	
-	$a = new SWFAction("startDrag(this, $xMin, $y, $xMax, $y, 1); drag = true;");
-	$slider->addAction($a, SWFACTION_MOUSEDOWN);
-	
-	$a = new SWFAction("stopDrag(); drag=false;");
-	$slider->addAction($a, SWFACTION_MOUSEUP);
-*/
-	
-	$movie->nextFrame();
-	$movie->save("$abs_cache_swf");
-	
-	// Always use <embed>
-
-?>
-<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-	width="$sx" height="$sy"
-	codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0">
-	<param name="movie"   value="$abs_cache_swf">
-	<param name="bgcolor" value="000000">
-	<param name="quality" value="high">
-	<param name="loop"    value="false">
-<embed src="$abs_cache_swf"
-	width="$sx" height="$sy"
-	bgcolor="000000"
-	quality="high" loop="false"
-	type="application/x-shockwave-flash"
-	pluginspage="http://www.macromedia.com/go/getflashplayer">
-</embed>
-</object>
-<?php
-} // end flash
-
-
-
-//---------------------------
 
 
 //******************************
@@ -610,15 +412,8 @@ function rig_display_codec_detail($info)
 //
 // TODO: refactor to get it rid of the annoying duplication of detailed entries.
 //
-// Return an empty array if there's no info detail
-//
-// Call to contributors: please feel free to expand this list or email me
-// whenever you have an unsupported codec type (please don't send me the video,
-// only send me a link to it!)
-// References:
-// - http://www.fourcc.org/
+// Return NULL if there's no info detail.
 {
-	// Parse the FOURCC codec name, returned by rig-thumnbail
 	if (is_array($info) && is_string($info['e']))
 	{
 		$fourcc = $info['e'];
@@ -670,22 +465,8 @@ function rig_display_codec_detail($info)
 			"MOV."			=> array("Quicktime Movie",
 									 "QuickTime" => "http://www.apple.com/quicktime/"
 									 ),
-			// RM 20051008 Fix: .mov files containing MJPEG return a "jpeg" fourcc code
-			"jpeg"			=> array("Quicktime MotionJPEG",
-									 "QuickTime" => "http://www.apple.com/quicktime/"
-									 ),
 			"IV[3-5][0-9]"	=> "Intel Indeo",
 			"cvid"			=> "Cinepak",
-
-			// RM 20060109
-			"FMP4" 			=> array("MPEG4 Mencoder Stream",
-									 "rig:is-divx-format",
-									 "(!is_mac && !is_linux)FFShow Filters" 	=> "http://ffdshow.sourceforge.net/",
-									 "(!is_mac && !is_linux)DivX Codec" 		=> "http://www.divx.com/",
-									 "(is_mac)DivX&nbsp;Codec" 					=> "http://www.divx.com/divx/mac",
-									 "(is_linux)DivX&nbsp;Codec" 				=> "http://www.divx.com/divx/linux/"
-									),
-
 
 			// Some other generic mappings
 			// More info at: http://www.microsoft.com/whdc/hwdev/archive/devdes/fourcc.mspx
@@ -797,30 +578,18 @@ function rig_display_codec_detail($info)
 			"YU92" => "Intel - YUV"
 		);
 
+
 		foreach($map as $filter => $detail)
+		{
 			if (preg_match('/' . $filter . '/', $fourcc) > 0)
+			{
 				return $detail;
+			}
+		}
+
 	}
-
-	// Parse the type name, returned by rig-thumbnail
-	if (is_array($info) && is_string($info['t']))
-	{
-		$type = $info['t'];
-
-		$map = array(
-			"video/real"	=> array("Real Video",
-									 "Real Player" => "http://www.realnetworks.com/products/media_players.html"
-									 ),
-			"video/flash"	=> "Flash Video Steam"
-		);
-
-		foreach($map as $filter => $detail)
-			if ($filter == $type)
-				return $detail;
-	}
-
 	
-	return array(); // RM 20060412 fix, pb found in 20060131 by Alfred Broda
+	return NULL;
 }
 
 
@@ -859,27 +628,21 @@ function rig_video_generate_javascript($desc)
 					if (is_string($codec))
 					{
 						if ($need_else)
-							echo " else ";
+							echo "else ";
 						else
 							$need_else = TRUE;
 	
 						if ($js_test != "else")
-							echo "if ($js_test) ";
-						
-						echo " { ";
-						
-						if (rig_is_debug())
-						 	echo " document.write('DEBUG: test = $js_test');";
+							echo "if ($js_test)\n";
 	
 						// Need to escape some characters from the written line
 						// f.ex. at least ' is not acceptable in write('something').
 						
 						$codec = str_replace("'", "\\'", $codec);
 	
-						// Generate the Javascript line
+					// Generate the Javascript line
 	
-						echo " document.write('$codec');";
-						echo " } \n";
+						echo " document.write('$codec');\n";
 					}
 					
 					// get remaining strings as links			
@@ -930,24 +693,7 @@ function rig_video_javascript_testline($test, $line)
 // end
 
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.11  2006/04/13 05:04:57  ralfoide
-//	Version 0.7.4. Polish translation. Fixes.
-//
-//	Revision 1.10  2006/01/11 08:23:17  ralfoide
-//	Added FMP4 codec (MPEG4 Mencoder Stream, divx-like, ffshow codec)
-//	
-//	Revision 1.9  2005/11/27 18:31:07  ralfoide
-//	Replace file_get_contents() by readfile() for backward compatibility with PHP 4.2.x
-//	
-//	Revision 1.8  2005/11/26 18:00:53  ralfoide
-//	Version 0.7.2.
-//	Ability to have absolute paths for albums, caches & options.
-//	Explained each setting in location.php.
-//	Fixed HTML cache invalidation bug.
-//	Added HTML cache to image view and overview.
-//	Added /th to stream images & movies previews via PHP.
-//	
+//	$Log: common_video.php,v $
 //	Revision 1.7  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

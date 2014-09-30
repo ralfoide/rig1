@@ -2,7 +2,7 @@
 // vim:tabstop=4 shiftwidth=4 softtabstop=4
 //************************************************************************
 /*
-	$Id$
+	$Id: common_media.php,v 1.2 2005/10/07 06:18:28 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -193,16 +193,10 @@ function rig_follow_album_symlink($abs_dir, &$current_album, &$current_real_albu
 //*****************************************************************
 function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 //******************************************************************
-// ${a,i}page is an integer:
-// -1: the pagination must be disabled (even if enabled in the preferences)
-//  0: default page must be shown (typically the first one) and there is
-//	   no need to generate the page display if there's only one page
-// 1..N: display page N, generate the page HTML display, pass back in URLs, etc.
 {
 	// List of globals defined for the album page by prepare_album():
 	// $current_album		- string
 	// $display_title		- string
-	// display_title_html	- string
 	// $display_album_title	- string
 
 	global $abs_album_path;
@@ -211,15 +205,12 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 	global $current_album_page;					// RM 20030908
 	global $current_image_page;					// RM 20030908
 	global $display_title;
-	global $display_title_html;					// RM 20060624 - v1.0
 	global $display_album_title;
 	global $html_album_title;
 	global $html_image_title;
 	global $html_none;
 	global $pref_album_ignore_list;				// RM 20030813 - v0.6.3.5
 	global $pref_enable_album_pagination;		// RM 20030908 - v0.6.4.3
-	global $pref_site_name;						// RM 20060624 - v1.0
-	global $pref_site_link;						// RM 20060624 - v1.0
 
 	$current_album		= FALSE;
 	$current_real_album = FALSE;
@@ -228,7 +219,6 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 	$current_image_page	= -1;
 	$abs_dir			= '';					// RM 20040601 - v0.6.4.5 - fix: declare vars
 	
-
 	// first try the index argument
 	// RM 20021021 not for rig 0.6.2
 
@@ -299,40 +289,27 @@ function rig_prepare_album($album, $apage=-1, $ipage=-1, $title="")
 	
 
 	// -- setup title of album
-
-	$link = FALSE;
-	if (!$title && $pref_site_name)
-	{
-		$title = $pref_site_name;
-		$link = $pref_site_link;
-	}
-
+	
 	if (!$title)
 		$title = $html_album_title;
 
 	if ($current_album)
 	{
-		$pretty = rig_pretty_name(rig_leaf_filename($current_album), FALSE, TRUE);
+		$items = explode(SEP, $current_album);
+		$pretty = rig_pretty_name($items[count($items)-1], FALSE, TRUE);
+		// RM 20051006 Don't show the $title part any 
+		// $display_title = "$title - " . $pretty;
 		$display_title = $pretty;
-		if ($link)
-			$display_title_html = "<a href='$link'>$title</a> &bull; " . $pretty;
-		else
-			$display_title_html = $display_title;
-		$display_album_title = "$html_album_title &bull; " . $pretty;
+		$display_album_title = "$html_album_title - " . $pretty;
 	}
 	else
 	{
 		$display_title = "$title - $html_none";
-		if ($link)
-			$display_title_html = "<a href='$link'>$title</a> &bull; " . $html_none;
-		else
-			$display_title_html = $display_title;
-		$display_album_title = "$html_album_title &bull; $html_none";
+		$display_album_title = "$html_album_title - $html_none";
 	}
 
 	// Read this album's options right now
 	rig_read_album_options($current_real_album);
-
 }
 
 
@@ -555,49 +532,8 @@ function rig_load_album_list($show_all = FALSE)
 	}
 	
 	rig_read_album_descriptions($current_real_album);
-
-	// RM 20061206 - v1.0.2 -- if we have no album options, auto-generate them
-	global $has_album_options;
-	if (!$has_album_options)
-		rig_auto_album_options();
 }
 
-
-//*******************************
-function rig_auto_album_options()
-//*******************************
-// RM 20061206 - v1.0.2 -- auto-hide images according to their name
-{
-	global $list_hide;
-	global $list_images;
-	global $current_album;
-	global $pref_auto_hide_images;
-	
-	if (!$list_images || !$pref_auto_hide_images)
-		return;
-
-	$hide = array();
-
-	foreach($list_images as $full_name)
-	{
-		$leaf = rig_leaf_filename($full_name);
-		if (preg_match($pref_auto_hide_images, $leaf) == 1)
-			$hide[] = $leaf;
-	}
-
-	if (count($hide) > 0) {
-		$modified = FALSE;
-
-		foreach($hide as $name)
-		{
-			if (rig_set_image_visible($name, FALSE))
-				$modified = TRUE;
-		}
-
-		if ($modified)
-			rig_write_album_options($current_album, !rig_is_debug());
-	}
-}
 
 //*****************************************************
 function rig_max_album_page($nb_col = -1, $nb_row = -1)
@@ -837,6 +773,11 @@ function rig_is_visible($id = -1, $album = -1, $image = -1)
 //***************************************************
 function rig_prepare_image($album, $image, $title="")
 //***************************************************
+// $page is an integer:
+// -1: the pagination must be disabled (even if enabled in the preferences)
+//  0: default page must be shown (typically the first one) and there is
+//	   no need to generate the page display if there's only one page
+// 1..N: display page N, generate the page HTML display, pass back in URLs, etc.
 {
 	rig_setup();
 
@@ -847,7 +788,6 @@ function rig_prepare_image($album, $image, $title="")
 	// $current_real_album	- string
 	// $current_img_info	- array of {format, width, height}
 	// $display_title		- string
-	// display_title_html	- string
 	// $display_album_title	- string
 
 	global $current_album;
@@ -861,11 +801,8 @@ function rig_prepare_image($album, $image, $title="")
 	global $abs_album_path;
 	global $pretty_image;
 	global $display_title;
-	global $display_title_html;					// RM 20060624 - v1.0
 	global $display_album_title;
 	global $html_image_title;
-	global $pref_site_name;						// RM 20060624 - v1.0
-	global $pref_site_link;						// RM 20060624 - v1.0
 
 
 	$current_album		= FALSE;
@@ -894,8 +831,7 @@ function rig_prepare_image($album, $image, $title="")
 		$current_real_album = '';
 	}
 
-	// RM 20030907 fix: was testing current-album name against image-ignore-list
-	if ($current_image && rig_check_ignore_list($current_image, $pref_image_ignore_list))
+	if ($current_image && rig_check_ignore_list($current_image, $pref_image_ignore_list))		// RM 20030907 fix: was testing current-album name against image-ignore-list
 	{
 		$image			= '';
 		$current_image	= '';
@@ -969,29 +905,20 @@ function rig_prepare_image($album, $image, $title="")
 	list($current_type, $dummy) = explode("/", rig_get_file_type($current_image), 2);
 
 	// -- setup title of album
-	$link = FALSE;
-	if ($pref_site_name)
-	{
-		$title = $pref_site_name;
-		$link = $pref_site_link;
-	}
-	else
-	{
-		$title = $html_image_title;
-	}
+	$title = $html_image_title;
+	if ($title)
+		$title .= " - ";
 
+	// RM 20051006 Don't show the $title part any 
+	// $display_title = $title . $pretty_image;
 	$display_title = $pretty_image;
-
-	if ($link)
-		$display_title_html = "<a href='$link'>$title</a> &bull; " . $pretty_image;
-	else
-		$display_title_html = $display_title;
 
 	// RM 20020715 fix: use current_album
 	if ($current_album)
 	{
+		$items = explode(SEP, $current_album);
 		// RM 20020711: rig_pretty_name with strip_numbers=FALSE
-		$display_album_title = rig_pretty_name(rig_leaf_filename($current_album), FALSE);
+		$display_album_title = rig_pretty_name($items[count($items)-1], FALSE);
 	}
 
 	rig_read_album_options($current_real_album);
@@ -1033,8 +960,7 @@ function rig_get_images_prev_next()
 		$file = $list_images[$key-1];
 
 		$pretty = rig_pretty_name($file, FALSE);
-		$preview = rig_build_preview_info($current_real_album, $file);
-		$preview = $preview["u"];
+		$preview = rig_encode_url_link(rig_build_preview($current_real_album, $file));
 
 		$display_prev_link = rig_self_url($file);
 		$display_prev_img = "<img src=\"$preview\" alt=\"$pretty\" title=\"$html_image: $pretty\" border=0>";
@@ -1045,8 +971,7 @@ function rig_get_images_prev_next()
 		$file = $list_images[$key+1];
 
 		$pretty = rig_pretty_name($file, FALSE);
-		$preview = rig_build_preview_info($current_real_album, $file);
-		$preview = $preview["u"];
+		$preview = rig_encode_url_link(rig_build_preview($current_real_album, $file));
 
 		$display_next_link = rig_self_url($file);
 		$display_next_img = "<img src=\"$preview\" alt=\"$pretty\" title=\"$html_image: $pretty\" border=0>";
@@ -1062,26 +987,7 @@ function rig_get_images_prev_next()
 // end
 
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.5  2006/12/07 01:08:34  ralfoide
-//	v1.0.2:
-//	- Feature: Ability to automatically hide images based on name regexp
-//	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-//
-//	Revision 1.4  2006/06/24 21:20:34  ralfoide
-//	Version 1.0:
-//	- Source: Set filename in thumbnail streaming headers
-//	- Source: Added pref_site_name and pref_site_link.
-//	- Fix: Fixed security vulnerability in check_entry.php
-//	
-//	Revision 1.3  2005/11/26 18:00:53  ralfoide
-//	Version 0.7.2.
-//	Ability to have absolute paths for albums, caches & options.
-//	Explained each setting in location.php.
-//	Fixed HTML cache invalidation bug.
-//	Added HTML cache to image view and overview.
-//	Added /th to stream images & movies previews via PHP.
-//	
+//	$Log: common_media.php,v $
 //	Revision 1.2  2005/10/07 06:18:28  ralfoide
 //	Don't show "rig album - " or "rig image - " in titles.
 //	

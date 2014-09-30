@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: login.php,v 1.10 2005/10/07 05:40:09 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -121,12 +121,12 @@ rig_display_body();
 </html>
 <?php
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: login.php,v $
 //	Revision 1.10  2005/10/07 05:40:09  ralfoide
 //	Extracted album/image handling from common into common_media.php.
 //	Removed all references to obsolete db/id.
 //	Added preliminary default image template.
-//
+//	
 //	Revision 1.9  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

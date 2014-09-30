@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: login_util.php,v 1.17 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -361,10 +361,10 @@ function rig_display_user_name($user = "")
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: login_util.php,v $
 //	Revision 1.17  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.16  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

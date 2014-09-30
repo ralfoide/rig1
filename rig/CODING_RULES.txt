@@ -1,7 +1,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: CODING_RULES.txt,v 1.3 2005/09/25 22:36:11 ralfoide Exp $
 
 	Copyright 2004, Raphael MOLL.
 
@@ -22,7 +22,7 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 //************************************************************************
-// $Id$
+// $Id: CODING_RULES.txt,v 1.3 2005/09/25 22:36:11 ralfoide Exp $
 
 
 To be added soon.

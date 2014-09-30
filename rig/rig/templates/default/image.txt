@@ -1,5 +1,5 @@
 # rig-template-v1.0
-# $Id$
+# $Id: image.txt,v 1.1 2005/10/07 05:40:09 ralfoide Exp $
 
 [[rig_html_header_start]]
 
@@ -71,7 +71,7 @@
 		[[rig_display_user_name]]
 	</span>
 	<span class="header-title">
-		{{display_title_html}}
+		{{display_title}}
 	</span>
 	<span class="header-copyright">
 		[[rig_display_image_copyright]]

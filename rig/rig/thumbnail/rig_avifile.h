@@ -1,7 +1,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: rig_avifile.h,v 1.7 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -38,7 +38,7 @@
 #ifndef _RIG_AVIFILE_H_
 #define _RIG_AVIFILE_H_
 
-#ifdef RIG_USES_AVIFILE
+#ifndef RIG_EXCLUDE_AVIFILE
 
 //---------------------------------------------------------------
 
@@ -50,18 +50,13 @@ RigRgb*	rig_avifile_read (const char* filename);
 
 //---------------------------------------------------------------
 
-#endif // RIG_USES_AVIFILE
+#endif // RIG_EXCLUDE_AVIFILE
 
 #endif // _RIG_AVIFILE_H_
 
 /****************************************************************
 
-	$Log$
-	Revision 1.8  2006/12/07 01:08:35  ralfoide
-	v1.0.2:
-	- Feature: Ability to automatically hide images based on name regexp
-	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-
+	$Log: rig_avifile.h,v $
 	Revision 1.7  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
 	

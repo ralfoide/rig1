@@ -32,10 +32,9 @@
 // - entries are composed of 2 lines:
 //	1- the variable to set (with the $ like in PHP)
 //	2- the string value for the variable
-// The scanner looks for lines starting with $ or @ and use the first word as the variable name.
-// If the line starts with @$, a second word is expected and is the named index in an array.
-// It then reads the *next* line, whatever it's content being, except the ending linefeed -- note
-// that comments are not skipped in the data line.
+// The scanner looks for lines starting with $ or @ and use the first word as the variable name
+// If the line was starting with @$, the second word will be the named index in an array
+// It then reads the *next* line, whatever it's content being, except the ending linefeed
 //
 // As a side effect, empty lines or lines starting with // or # will be ignored.
 //
@@ -59,7 +58,7 @@ UTF-8
 
 $html_language
 言語:
-// Language array
+// Language:
 
 @$html_desc_lang en
 English
@@ -69,9 +68,6 @@ Fran&ccedil;ais
 
 @$html_desc_lang sp
 Espa&ntilde;ol
-
-@$html_desc_lang pl
-Polski
 
 @$html_desc_lang jp
 日本語

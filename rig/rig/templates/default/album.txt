@@ -1,5 +1,5 @@
 # rig-template-v1.0
-# $Id$
+# $Id: album.txt,v 1.5 2005/10/02 22:22:25 ralfoide Exp $
 
 [[rig_html_header_start]]
 
@@ -22,7 +22,7 @@
 	<td><img class="header-thumb" src="rig-cache/Misc/album_icon.jpg"/>
 	</td>
 	<td class="header-desc">
-		<span class="header-title"> {{display_title_html}} </span>
+		<span class="header-title"> {{display_title}} </span>
 		<span class="header-date"> [[rig_display_user_name]]</span>
 		<span class="header-date"> Last Updated September 2005 </span>
 		<span class="header-info">

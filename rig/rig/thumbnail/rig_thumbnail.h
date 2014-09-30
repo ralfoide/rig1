@@ -1,7 +1,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: rig_thumbnail.h,v 1.4 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -61,7 +61,7 @@
 	typedef	long long			int64;
 
 	#include <assert.h>
-	#define rig_assert(x)		assert(x)
+	#define rig_assert(x)			assert(x)
 
 #endif
 
@@ -98,12 +98,7 @@ extern int64 rig_system_time(void);
 
 /*****************************************************************************
 
-	$Log$
-	Revision 1.5  2006/12/07 01:08:35  ralfoide
-	v1.0.2:
-	- Feature: Ability to automatically hide images based on name regexp
-	- Exp: Experimental support for mplayer to create movie thumbnails. Doesn't work. Commented out.
-
+	$Log: rig_thumbnail.h,v $
 	Revision 1.4  2005/09/25 22:36:15  ralfoide
 	Updated GPL header date.
 	

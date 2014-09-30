@@ -1,5 +1,5 @@
 //-------------------------
-/* $Id$ */
+/* $Id: album.js,v 1.2 2005/10/02 22:23:24 ralfoide Exp $ */
 //-------------------------
 function RA_GetElem(name) {
   var o = document.getElementById(name);

@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: album.php,v 1.3 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -31,10 +31,10 @@
 // end
 
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: album.php,v $
 //	Revision 1.3  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
-//
+//	
 //	Revision 1.2  2004/07/17 07:52:31  ralfoide
 //	GPL headers
 //	

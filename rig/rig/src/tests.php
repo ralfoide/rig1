@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: tests.php,v 1.9 2005/09/25 22:33:47 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -96,10 +96,10 @@ $result->report();
 
 <?php
 //-------------------------------------------------------------
-//	$Log$
+//	$Log: tests.php,v $
 //	Revision 1.9  2005/09/25 22:33:47  ralfoide
 //	Removed modules
-//
+//	
 //	Revision 1.8  2004/12/25 09:46:47  ralfoide
 //	Fixes and cleanup
 //	

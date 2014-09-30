@@ -2,7 +2,7 @@
 // vim: set tabstop=4 shiftwidth=4: //
 //************************************************************************
 /*
-	$Id$
+	$Id: str_jp.php,v 1.11 2005/09/25 22:36:15 ralfoide Exp $
 
 	Copyright 2001-2005 and beyond, Raphael MOLL.
 
@@ -101,17 +101,20 @@ $pref_date_YMD      = 'Y-M-D';          // Long format.  Must contain D & M & Y.
 // Parsing of the external data file
 //----------------------------------
 
-// This parses all the strings encoded in UTF-8.
+// At the site level you can decide which encoding you want to use for Japanse.
+// Each data file describes its own encoding, uncomment the correct one. UTF-8
+// is the preferred one.
+
 rig_parse_string_data('data_jpu8.bin');
+// rig_parse_string_data('data_jpjis.bin');
+// rig_parse_string_data('data_jpsjis.bin');
+// rig_parse_string_data('data_jpeuc.bin');
 
 
 // end
 
 //-------------------------------------------------------------
-//	$Log$
-//	Revision 1.12  2006/01/11 08:21:54  ralfoide
-//	Added polish translation by Alfred Broda, http://krypa.homelinux.net/
-//
+//	$Log: str_jp.php,v $
 //	Revision 1.11  2005/09/25 22:36:15  ralfoide
 //	Updated GPL header date.
 //	

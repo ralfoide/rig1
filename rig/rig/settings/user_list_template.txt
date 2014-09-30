@@ -1,0 +1,30 @@
+# User/password file - RIG 0.6.3 # do not remove signature line
+# Format:
+# - lines starting by # are comment, empty lines are ignored
+# - each line is in the format  "user:type:password:[display name]"
+# - the type is one of these letters:
+#	 empty : there is no password, _anythink_ is accepted
+#    t     : plain-text password
+#    c     : crypt(3) password -- cf mkpasswd(1)
+#    m     : md5 password -- not implemented yet, cf md5sum(1) and echo -n
+#    i     : invalid user, cannot log in
+# - a wrong type will invalid the user
+# - the display name is everything after the third colon till the end of the line and is optional
+# - colons are accepted in the display name
+# - colons are NOT accepted in user name, type or any form of password!
+# - the minimum user line should look like "username:::", colons are mandatory!
+#
+# A user "guest" is needed to log as guest (cf pref.php)
+
+# -samples-
+# empty::no-password:No Password
+# plain:t:default:Plain Password
+# md5:m:c21f969b5f03d33d43e04f8f136e7682:MD5:Sum Password
+# crypt:c:zxnQ9wTEcM7pE:Crypt Password
+# invalid:i:whatever:Invalid User
+
+guest:::Guest
+me:::Joe Hacker
+you:::Joe User
+foobar:::John Foo Bar
+
